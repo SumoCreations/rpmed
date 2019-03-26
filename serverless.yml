@@ -20,7 +20,7 @@ provider:
     REFRESH_TOKEN_LIFESPAN: 172800
     SALT_ROUNDS: 10
     OAUTH_SIGNATURE: 'Ph$2\@!Rq<ev_W;:N(2+>Bwxez$3?;9~srf*nxiVJLz:lw7Djgs(Q/UhwmZ@"YLi<'
-    DYNAMODB_ACCOUNTS_TABLE: ${self:service}-${opt:stage, self:provider.stage}-users
+    DYNAMODB_ACCOUNTS_TABLE: ${self:service}-${opt:stage, self:provider.stage}-accounts
     DYNAMODB_USER_LOOKUP_TABLE: ${self:service}-${opt:stage, self:provider.stage}-users-lookup
     DYNAMODB_TOKEN_LOOKUP_TABLE: ${self:service}-${opt:stage, self:provider.stage}-tokens-lookup
 
