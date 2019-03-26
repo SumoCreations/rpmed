@@ -1,0 +1,106 @@
+service:
+  name: rpmed-service-api
+
+plugins:
+  - serverless-webpack
+  - serverless-dynamodb-local
+  - serverless-offline
+
+custom:
+  dynamodb:
+    start:
+      migrate: true
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  profile: rpmed-serverless
+  environment:
+    ACCESS_TOKEN_LIFESPAN: 300
+    REFRESH_TOKEN_LIFESPAN: 172800
+    SALT_ROUNDS: 10
+    OAUTH_SIGNATURE: 'Ph$2\@!Rq<ev_W;:N(2+>Bwxez$3?;9~srf*nxiVJLz:lw7Djgs(Q/UhwmZ@"YLi<'
+    DYNAMODB_ACCOUNTS_TABLE: ${self:service}-${opt:stage, self:provider.stage}-users
+    DYNAMODB_USER_LOOKUP_TABLE: ${self:service}-${opt:stage, self:provider.stage}-users-lookup
+    DYNAMODB_TOKEN_LOOKUP_TABLE: ${self:service}-${opt:stage, self:provider.stage}-tokens-lookup
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:service}-${opt:stage, self:provider.stage}-*"
+
+functions:
+  token:
+    handler: app/token.createToken
+    events:
+      - http:
+          method: post
+          path: auth/token
+          cors: true
+  create:
+    handler: app/users.create
+    events:
+      - http:
+          method: post
+          path: users
+          cors: true
+
+resources:
+  Resources:
+    AccountsTable:
+      Type: "AWS::DynamoDB::Table"
+      Properties:
+        TableName: ${self:provider.environment.DYNAMODB_ACCOUNTS_TABLE}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+    UsersLookupTable:
+      Type: "AWS::DynamoDB::Table"
+      Properties:
+        TableName: ${self:provider.environment.DYNAMODB_USER_LOOKUP_TABLE}
+        AttributeDefinitions:
+          - AttributeName: email
+            AttributeType: S
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: email
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        GlobalSecondaryIndexes:
+          - IndexName: UserIdGSI
+            KeySchema:
+              - AttributeName: id
+                KeyType: HASH
+            Projection:
+              ProjectionType: KEYS_ONLY
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
+    TokenLookupTable:
+      Type: "AWS::DynamoDB::Table"
+      Properties:
+        TableName: ${self:provider.environment.DYNAMODB_TOKEN_LOOKUP_TABLE}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
