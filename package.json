@@ -5,6 +5,7 @@
   "main": "app/index.json",
   "scripts": {
     "test": "jest --config jestconfig.json",
+    "start": "npm run killDynamo; sls offline start",
     "lint": "tslint -p tsconfig.json",
     "killDynamo": "lsof -n -i:8000 | grep LISTEN | awk '{ print $2 }' | uniq | xargs kill -9"
   },
