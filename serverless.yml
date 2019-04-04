@@ -7,6 +7,8 @@ plugins:
   - serverless-offline
 
 custom:
+  serverless-offline:
+    port: 4000
   dynamodb:
     start:
       migrate: true
@@ -19,6 +21,7 @@ provider:
     ACCESS_TOKEN_LIFESPAN: 300
     REFRESH_TOKEN_LIFESPAN: 172800
     SALT_ROUNDS: 10
+    RECAPTCHA_KEY: 6LdOqZoUAAAAAJ79IuWa4mU57Urnd-N6oxP4XhiR
     OAUTH_SIGNATURE: 'Ph$2\@!Rq<ev_W;:N(2+>Bwxez$3?;9~srf*nxiVJLz:lw7Djgs(Q/UhwmZ@"YLi<'
     DYNAMODB_ACCOUNTS_TABLE: ${self:service}-${opt:stage, self:provider.stage}-accounts
     DYNAMODB_USER_LOOKUP_TABLE: ${self:service}-${opt:stage, self:provider.stage}-users-lookup
