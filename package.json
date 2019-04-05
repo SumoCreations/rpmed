@@ -13,10 +13,16 @@
     "app/**/*"
   ],
   "dependencies": {
+    "@types/lodash": "^4.14.123",
+    "apollo-server-lambda": "^2.4.8",
     "bcryptjs": "^2.4.3",
+    "graphql": "^14.2.1",
+    "graphql-tools": "^4.0.4",
     "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.11",
     "middy": "^0.23.0",
     "serverless": "^1.39.1",
+    "serverless-plugin-graphiql": "^0.3.0",
     "uuid": "^3.3.2",
     "validator": "^10.11.0"
   },
