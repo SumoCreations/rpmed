@@ -39,19 +39,19 @@ provider:
       Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:service}-${opt:stage, self:provider.stage}-*"
 
 functions:
+  graphql:
+    handler: app/apollo.graphqlHandler
+    events:
+      - http:
+          path: graphql
+          method: any
+          cors: true
   token:
     handler: app/token.createToken
     events:
       - http:
           method: post
           path: auth/token
-          cors: true
-  create:
-    handler: app/users.create
-    events:
-      - http:
-          method: post
-          path: users
           cors: true
 
 resources:
