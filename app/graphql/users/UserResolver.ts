@@ -1,4 +1,3 @@
-import { IFieldResolver } from "graphql-tools"
 import { IUser, IUserInput, User } from "../../models"
 
 export const resolvers = {
