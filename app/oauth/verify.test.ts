@@ -18,6 +18,8 @@ describe("verifyUser", () => {
   beforeAll(async () => {
     await User.create({
       email,
+      firstName: "Jim",
+      lastName: "Jeffers",
       password,
     })
   })

@@ -13,12 +13,16 @@ afterAll(async () => {
 
 const email = "shout@jimjeffers.com"
 const password = "thisisjustatest"
+const firstName = "Jim"
+const lastName = "Jeffers"
 
 describe("user", () => {
   let user: IUser
   beforeEach(async () => {
     user = await User.create({
       email,
+      firstName,
+      lastName,
       password,
     })
   })
@@ -37,10 +41,14 @@ describe("user", () => {
       try {
         await User.create({
           email: "email@exists.com",
+          firstName: "Some",
+          lastName: "One",
           password,
         })
         await User.create({
           email: "email@exists.com",
+          firstName: "Another",
+          lastName: "One",
           password,
         })
       } catch (e) {

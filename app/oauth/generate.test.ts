@@ -48,7 +48,12 @@ describe("generate", () => {
 
 describe("generate from credentials", () => {
   beforeEach(async () => {
-    return await User.create({ email, password })
+    return await User.create({
+      email,
+      firstName: "Jim",
+      lastName: "Jeffers",
+      password,
+    })
   })
 
   afterEach(async () => {

@@ -1,13 +1,22 @@
 import { v4 as uuid } from "uuid"
 import { hashPassword } from "../oauth"
-import { ICredentials } from "../parsers"
 import { getClient } from "../util"
 
 const client = getClient()
 
+export interface IUserInput {
+  email: string
+  firstName: string
+  id?: string
+  lastName: string
+  password: string
+}
+
 export interface IUser {
   email: string
+  firstName: string
   id: string
+  lastName: string
   password: string
 }
 
@@ -15,10 +24,10 @@ export interface IUser {
  * Generates a new user model in the database provided the supplied credentials are valid.
  * @param credentials The identifying credentials to assign to the account.
  */
-const create = async (credentials: ICredentials): Promise<IUser> => {
-  const hashedPassword = await hashPassword(credentials.password)
+const create = async (userInput: IUserInput): Promise<IUser> => {
+  const hashedPassword = await hashPassword(userInput.password)
   const item: IUser = {
-    email: credentials.email,
+    ...userInput,
     id: uuid(),
     password: hashedPassword,
   }
@@ -57,6 +66,17 @@ const find = async (id: string): Promise<IUser | null> => {
   }
   const result = await client.get(searchParams).promise()
   return result.Item ? (result.Item as IUser) : null
+}
+
+/**
+ * Retreives a list of all user accounts.
+ */
+const all = async (): Promise<IUser[]> => {
+  const searchParams = {
+    TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+  }
+  const result = await client.scan(searchParams).promise()
+  return result.Items ? (result.Items as IUser[]) : []
 }
 
 /**
@@ -145,6 +165,7 @@ const destroyByEmail = async (email: string): Promise<boolean> => {
 }
 
 export const User = {
+  all,
   create,
   destroy,
   destroyByEmail,
