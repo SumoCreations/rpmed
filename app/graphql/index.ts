@@ -1,9 +1,10 @@
 import { makeExecutableSchema, mergeSchemas } from "apollo-server-lambda"
+import * as products from "./products"
 import * as users from "./users"
 
-export const typeDefs = [users.schema]
-export const resolvers = { ...users.resolvers }
+export const schemas = [products, users]
 export const schema = mergeSchemas({
-  resolvers,
-  schemas: [makeExecutableSchema({ typeDefs: users.schema })],
+  schemas: schemas.map(({ typeDefs, resolvers }) =>
+    makeExecutableSchema({ typeDefs, resolvers })
+  ),
 })
