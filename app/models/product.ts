@@ -1,6 +1,6 @@
 import { v4 as uuid } from "uuid"
 import { getClient } from "../util"
-import { IModelNumber, ModelNumber } from "./modelNumber"
+import { IModelNumberOutput, ModelNumber } from "./modelNumber"
 
 const client = getClient()
 
@@ -22,7 +22,7 @@ export interface IProduct {
 export interface IProductOutput {
   name: string
   description: string
-  modelNumbers: () => Promise<IModelNumber[]>
+  modelNumbers: () => Promise<IModelNumberOutput[]>
   id: string
 }
 
