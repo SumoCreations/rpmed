@@ -90,7 +90,7 @@ export const generateTokenFromPassword = async (
   if (!user) {
     return null
   }
-  return generate({ userId: user.id })
+  return generate({ userId: user.partitionKey })
 }
 
 /**

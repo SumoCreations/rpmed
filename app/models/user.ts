@@ -4,6 +4,8 @@ import { getClient } from "../util"
 
 const client = getClient()
 
+const SECONDARY_KEY = "USER"
+
 export interface IUserInput {
   email: string
   firstName: string
@@ -15,35 +17,47 @@ export interface IUserInput {
 export interface IUser {
   email: string
   firstName: string
-  id: string
   lastName: string
   password: string
+  partitionKey: string
+  sortKey: string
+}
+
+export interface IUserOutput {
+  email: string
+  firstName: string
+  lastName: string
+  id: string
 }
 
 /**
  * Generates a new user model in the database provided the supplied credentials are valid.
  * @param credentials The identifying credentials to assign to the account.
  */
-const create = async (userInput: IUserInput): Promise<IUser> => {
+const create = async ({ id, ...userInput }: IUserInput): Promise<IUser> => {
   const hashedPassword = await hashPassword(userInput.password)
   const item: IUser = {
     ...userInput,
-    id: uuid(),
     password: hashedPassword,
+    partitionKey: uuid(),
+    sortKey: SECONDARY_KEY,
   }
   const params = {
     TransactItems: [
       {
         Put: {
           ConditionExpression: "attribute_not_exists(email)",
-          Item: { email: item.email, id: item.id },
+          Item: { email: item.email, id: item.partitionKey },
           TableName: process.env.DYNAMODB_USER_LOOKUP_TABLE,
         },
       },
       {
         Put: {
           ConditionExpression: "attribute_not_exists(id)",
-          Item: { ...item },
+          Item: {
+            ...item,
+            indexSortKey: [item.firstName, item.lastName, item.email].join("#"),
+          },
           TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
         },
       },
@@ -60,7 +74,8 @@ const create = async (userInput: IUserInput): Promise<IUser> => {
 const find = async (id: string): Promise<IUser | null> => {
   const searchParams = {
     Key: {
-      id,
+      partitionKey: id,
+      sortKey: SECONDARY_KEY,
     },
     TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
   }
@@ -73,9 +88,14 @@ const find = async (id: string): Promise<IUser | null> => {
  */
 const all = async (): Promise<IUser[]> => {
   const searchParams = {
+    ExpressionAttributeValues: {
+      ":rkey": SECONDARY_KEY,
+    },
+    IndexName: "GSI_1",
+    KeyConditionExpression: "sortKey = :rkey",
     TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
   }
-  const result = await client.scan(searchParams).promise()
+  const result = await client.query(searchParams).promise()
   return result.Items ? (result.Items as IUser[]) : []
 }
 
@@ -136,7 +156,7 @@ const destroy = async (id: string): Promise<boolean> => {
         ...(await destroyParamsForAssociatedEmailAddressesForUserId(id)),
         {
           Delete: {
-            Key: { id },
+            Key: { partitionKey: id, sortKey: SECONDARY_KEY },
             TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
           },
         },
@@ -164,11 +184,27 @@ const destroyByEmail = async (email: string): Promise<boolean> => {
   return typeof result === "undefined" ? false : await destroy(result.id)
 }
 
+/**
+ * Converts a user record to public output that can be consumed
+ * by the API.
+ */
+const output = ({
+  partitionKey,
+  sortKey,
+  password,
+  ...user
+}: IUser): IUserOutput => ({
+  ...user,
+  id: partitionKey,
+})
+
 export const User = {
+  SECONDARY_KEY,
   all,
   create,
   destroy,
   destroyByEmail,
   find,
   findByEmail,
+  output,
 }

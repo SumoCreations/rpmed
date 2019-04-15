@@ -91,7 +91,7 @@ describe("generate from credentials", () => {
       return jwt.sign(
         {
           refresh: true,
-          userId: user.id,
+          userId: user.partitionKey,
         },
         process.env.OAUTH_SIGNATURE,
         {

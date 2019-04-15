@@ -33,7 +33,8 @@ describe("user", () => {
 
   describe("create", () => {
     test("should generate a new user model", () => {
-      expect(isEmpty(user.id)).toBe(false)
+      expect(isEmpty(user.partitionKey)).toBe(false)
+      expect(user.sortKey).toBe(User.SECONDARY_KEY)
     })
 
     test("should not generate a new user if the email address was already used", async () => {
@@ -60,7 +61,7 @@ describe("user", () => {
   describe("find", () => {
     test("should return a user if one exists", async () => {
       expect.assertions(1)
-      const existingUser = await User.find(user.id)
+      const existingUser = await User.find(user.partitionKey)
       expect(existingUser).not.toBeNull()
     })
 
@@ -88,8 +89,8 @@ describe("user", () => {
   describe("destroy", () => {
     test("should delete a user and return true if one exists", async () => {
       expect.assertions(2)
-      expect(await User.destroy(user.id)).toBeTruthy()
-      const existingUser = await User.find(user.id)
+      expect(await User.destroy(user.partitionKey)).toBeTruthy()
+      const existingUser = await User.find(user.partitionKey)
       expect(existingUser).toBeNull()
     })
 
@@ -103,7 +104,7 @@ describe("user", () => {
     test("should delete a user and return true if the user exists", async () => {
       expect.assertions(2)
       expect(await User.destroyByEmail(user.email)).toBeTruthy()
-      const existingUser = await User.find(user.id)
+      const existingUser = await User.find(user.partitionKey)
       expect(existingUser).toBeNull()
     })
 
