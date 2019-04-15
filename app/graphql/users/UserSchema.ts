@@ -1,6 +1,6 @@
 import { gql } from "apollo-server-lambda"
 
-export const schema = gql`
+export const typeDefs = gql`
   """
   A registered user object from API. Could be a customer, admin, or partner account.
   """

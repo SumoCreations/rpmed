@@ -1,18 +1,19 @@
-import { IUser, IUserInput, User } from "../../models"
+import { IUserInput, IUserOutput, User } from "../../models"
 
 export const resolvers = {
   Mutation: {
     createUser: async (
       _: any,
       { email, password, firstName, lastName }: IUserInput
-    ): Promise<IUser> => {
+    ): Promise<IUserOutput> => {
       const user = await User.create({ email, password, firstName, lastName })
-      return user
+      return User.output(user)
     },
   },
   Query: {
-    user: async (_, args) => await User.find(args.id),
-    userWithEmail: async (_, args) => await User.findByEmail(args.email),
-    users: async () => await User.all(),
+    user: async (_, args) => User.output(await User.find(args.id)),
+    userWithEmail: async (_, args) =>
+      User.output(await User.findByEmail(args.email)),
+    users: async () => (await User.all()).map(User.output),
   },
 }
