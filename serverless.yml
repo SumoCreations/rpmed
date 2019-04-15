@@ -24,6 +24,7 @@ provider:
     RECAPTCHA_KEY: 6LdOqZoUAAAAAJ79IuWa4mU57Urnd-N6oxP4XhiR
     OAUTH_SIGNATURE: 'Ph$2\@!Rq<ev_W;:N(2+>Bwxez$3?;9~srf*nxiVJLz:lw7Djgs(Q/UhwmZ@"YLi<'
     DYNAMODB_ACCOUNTS_TABLE: ${self:service}-${opt:stage, self:provider.stage}-accounts
+    DYNAMODB_ACCOUNTS_GSI_1: GSI_1,
     DYNAMODB_USER_LOOKUP_TABLE: ${self:service}-${opt:stage, self:provider.stage}-users-lookup
     DYNAMODB_TOKEN_LOOKUP_TABLE: ${self:service}-${opt:stage, self:provider.stage}-tokens-lookup
 
@@ -61,14 +62,32 @@ resources:
       Properties:
         TableName: ${self:provider.environment.DYNAMODB_ACCOUNTS_TABLE}
         AttributeDefinitions:
-          - AttributeName: id
+          - AttributeName: partitionKey
+            AttributeType: S
+          - AttributeName: sortKey
+            AttributeType: S
+          - AttributeName: indexSortKey
             AttributeType: S
         KeySchema:
-          - AttributeName: id
+          - AttributeName: partitionKey
             KeyType: HASH
+          - AttributeName: sortKey
+            KeyType: RANGE
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
+        GlobalSecondaryIndexes:
+          - IndexName: GSI_1
+            KeySchema:
+              - AttributeName: sortKey
+                KeyType: HASH
+              - AttributeName: indexSortKey
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
     UsersLookupTable:
       Type: "AWS::DynamoDB::Table"
       Properties:
