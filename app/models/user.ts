@@ -11,7 +11,7 @@ export interface IUserInput {
   firstName: string
   id?: string
   lastName: string
-  password: string
+  password?: string
 }
 
 export interface IUser {
@@ -38,8 +38,8 @@ const create = async ({ id, ...userInput }: IUserInput): Promise<IUser> => {
   const hashedPassword = await hashPassword(userInput.password)
   const item: IUser = {
     ...userInput,
-    password: hashedPassword,
     partitionKey: uuid(),
+    password: hashedPassword,
     sortKey: SECONDARY_KEY,
   }
   const params = {
@@ -65,6 +65,47 @@ const create = async ({ id, ...userInput }: IUserInput): Promise<IUser> => {
   }
   await client.transactWrite(params).promise()
   return item
+}
+
+/**
+ * Updates an existing user model in the database provided the supplied 
+ * credentials are valid.
+ * @param credentials The identifying credentials to assign to the account.
+ */
+const update = async ({ id, ...userInput }: IUserInput): Promise<IUser> => {
+  const existingUser = await find(id)
+  if (existingUser.email !== userInput.email) {
+    // update email address.
+  }
+  const passwordExists = userInput.password && userInput.password.length > 0
+  const hashedPassword = passwordExists ? await hashPassword(userInput.password) : existingUser.password
+  const params = {
+    TransactItems: [
+      {
+        Update: {
+          ExpressionAttributeNames: { '#password': 'password', '#firstName': 'firstName', '#lastName': 'lastName', '#email': 'email' },
+          ExpressionAttributeValues: {
+            ':email': userInput.email,
+            ':firstName': userInput.firstName,
+            ':lastName': userInput.lastName,
+            ':password': hashedPassword,
+          },
+          Key: {
+            partitionKey: id,
+            sortKey: SECONDARY_KEY,
+          },
+          TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+          UpdateExpression: 'set #email = :email, #firstName = :firstName, #lastName = :lastName, #password = :password',
+        }
+      }
+    ],
+  }
+  await client.transactWrite(params).promise()
+  return {
+    ...existingUser,
+    ...userInput,
+    password: hashedPassword,
+  }
 }
 
 /**
@@ -121,7 +162,7 @@ const findByEmail = async (email: string): Promise<IUser | null> => {
 const destroyParamsForAssociatedEmailAddressesForUserId = async (
   userId: string
 ): Promise<
-  Array<{ [key: string]: { Key: { email: string }; TableName: string } }>
+Array<{ [key: string]: { Key: { email: string }; TableName: string } }>
 > => {
   const params = {
     ExpressionAttributeValues: {
@@ -207,4 +248,5 @@ export const User = {
   find,
   findByEmail,
   output,
+  update,
 }

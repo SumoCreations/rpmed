@@ -40,13 +40,31 @@ export const typeDefs = gql`
 
   type Mutation {
     """
-    Registers a new authenticatable user.
+    Creates a new authenticatable user.
     """
     createUser(
       email: String!
       password: String!
       firstName: String!
       lastName: String!
+    ): User!
+
+    """
+    Updates an existing user.
+    """
+    updateUser(
+      id: String!
+      email: String!
+      password: String
+      firstName: String!
+      lastName: String!
+    ): User!
+
+    """
+    Removes an existing user.
+    """
+    destroyUser(
+      id: String!
     ): User!
   }
 
