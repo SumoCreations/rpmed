@@ -21,7 +21,8 @@
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.11",
     "middy": "^0.23.0",
-    "serverless": "^1.39.1",
+    "rpmed-validation-schema": "git+https://github.com/SumoCreations/rpmed-validation-schema.git",
+    "serverless": "^1.41.0",
     "serverless-plugin-graphiql": "^0.3.0",
     "uuid": "^3.3.2",
     "validator": "^10.11.0"
@@ -37,7 +38,7 @@
     "@types/validator": "^10.9.0",
     "jest": "^24.5.0",
     "prettier": "^1.16.4",
-    "serverless-dynamodb-local": "^0.2.36",
+    "serverless-dynamodb-local": "^1.0.2",
     "serverless-offline": "^4.9.2",
     "serverless-webpack": "^5.1.1",
     "source-map-support": "^0.5.6",
