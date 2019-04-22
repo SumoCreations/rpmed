@@ -3,11 +3,11 @@ import * as AWS from "aws-sdk"
 export const getClient = () =>
   !process.env.AWS_ACCESS_KEY_ID
     ? new AWS.DynamoDB.DocumentClient({
-        accessKeyId: "DEFAULT_ACCESS_KEY",
-        endpoint: "http://localhost:8000",
-        region: "localhost",
-        secretAccessKey: "DEFAUlT_SECRET",
-      })
+      accessKeyId: "DEFAULT_ACCESS_KEY",
+      endpoint: "http://localhost:8000",
+      region: "localhost",
+      secretAccessKey: "DEFAUlT_SECRET",
+    })
     : new AWS.DynamoDB.DocumentClient()
 
 export const resetTable = async (
@@ -30,8 +30,24 @@ export const resetTable = async (
 
     await Promise.all(requests)
   } catch (e) {
-    // tslint:disable-next-line
+    // tslint:disable
+    console.log(`Could not reset table: ${tableName}`)
     console.log(e)
+    // tslint:enable
     return
   }
+}
+
+
+export const resetTestTables = async () => {
+  resetTable(process.env.DYNAMODB_USER_LOOKUP_TABLE, i => ({
+    email: i.email,
+  }))
+  resetTable(process.env.DYNAMODB_ACCOUNTS_TABLE, i => ({
+    partitionKey: i.partitionKey,
+    sortKey: i.sortKey
+  }))
+  resetTable(process.env.DYNAMODB_TOKEN_LOOKUP_TABLE, i => ({
+    id: i.id,
+  }))
 }

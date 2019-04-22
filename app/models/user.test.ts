@@ -1,15 +1,8 @@
 import { isEmpty } from "validator"
-import { resetTable } from "../util"
+import { resetTestTables } from "../util"
 import { IUser, User } from "./user"
 
-afterAll(async () => {
-  resetTable(process.env.DYNAMODB_USER_LOOKUP_TABLE, i => ({
-    email: i.email,
-  }))
-  resetTable(process.env.DYNAMODB_ACCOUNTS_TABLE, i => ({
-    id: i.id,
-  }))
-})
+afterAll(async () => await resetTestTables())
 
 const email = "shout@jimjeffers.com"
 const password = "thisisjustatest"

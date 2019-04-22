@@ -2,7 +2,7 @@ import * as jwt from "jsonwebtoken"
 import { v4 as uuid } from "uuid"
 import { isEmpty } from "validator"
 import { User } from "../models"
-import { resetTable } from "../util"
+import { resetTestTables } from "../util"
 import {
   generate,
   generateTokenFromPassword,
@@ -10,17 +10,7 @@ import {
   SUPPORTED_ALGORITHM,
 } from "./generate"
 
-afterAll(async () => {
-  resetTable(process.env.DYNAMODB_TOKEN_LOOKUP_TABLE, i => ({
-    id: i.id,
-  }))
-  resetTable(process.env.DYNAMODB_USER_LOOKUP_TABLE, i => ({
-    email: i.email,
-  }))
-  resetTable(process.env.DYNAMODB_ACCOUNTS_TABLE, i => ({
-    id: i.id,
-  }))
-})
+afterAll(async () => await resetTestTables())
 
 const userId = uuid()
 const email = "avaliduserforgeneratingtests@jimjeffers.com"
