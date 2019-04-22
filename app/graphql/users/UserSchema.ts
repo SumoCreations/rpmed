@@ -8,7 +8,7 @@ export const typeDefs = gql`
     """
     The unique identifier for this user
     """
-    id: String!
+    id: ID!
     """
     The email address for this user.
     """
@@ -21,6 +21,35 @@ export const typeDefs = gql`
     The actual last name of the user.
     """
     lastName: String
+  }
+
+  type ValidationError {
+    """
+    A path indicating the attribute that failed validation.
+    """
+    path: String!, 
+    """
+    A brief description of why the specified attribute failed validation.
+    """
+    message: String!
+  }
+  
+  """
+  All users in the system
+  """
+  type UserMutationOutput {
+    """
+    The resulting user if the operation was successful.
+    """
+    user: User
+    """
+    Any validation errors encountered while running the mutation.
+    """
+    errors: [ValidationError]
+    """
+    A simple boolean indicating whether or not the operation was successful.
+    """
+    success: Boolean!
   }
 
   type Query {
@@ -38,34 +67,48 @@ export const typeDefs = gql`
     userWithEmail(email: String!): User
   }
 
+  """
+  A set of fields used to create or update a user.
+  """
+  input NewUserInput {
+    email: String!
+    password: String!
+    firstName: String!
+    lastName: String!
+  }
+
+  """
+  A set of fields used to create or update a user.
+  """
+  input ExistingUserInput {
+    id: ID!
+    email: String!
+    password: String
+    firstName: String!
+    lastName: String!
+  }
+
   type Mutation {
     """
     Creates a new authenticatable user.
     """
     createUser(
-      email: String!
-      password: String!
-      firstName: String!
-      lastName: String!
-    ): User!
+      userInput: NewUserInput!
+    ): UserMutationOutput!
 
     """
     Updates an existing user.
     """
     updateUser(
-      id: String!
-      email: String!
-      password: String
-      firstName: String!
-      lastName: String!
-    ): User!
+      userInput: ExistingUserInput!
+    ): UserMutationOutput!
 
     """
     Removes an existing user.
     """
     destroyUser(
       id: String!
-    ): User!
+    ): UserMutationOutput!
   }
 
   schema {
