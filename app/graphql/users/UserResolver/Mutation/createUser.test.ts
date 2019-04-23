@@ -1,8 +1,5 @@
 import { User } from "../../../../models"
-import { resetTestTables } from "../../../../util"
 import { createUser } from "./createUser"
-
-afterAll(async () => await resetTestTables())
 
 const email = "create-user-test@jimjeffers.com"
 const password = "password"
@@ -12,18 +9,16 @@ const lastName = "Jeffers"
 const sampleParams = { email: "jim@sumocreations.com", firstName: "Jim", lastName: "Jeffers", password: "password" }
 
 describe("createUser", () => {
-  beforeEach(async () => {
+  beforeEach(async () =>
     await User.create({
       email,
       firstName,
       lastName,
       password,
     })
-  })
+  )
 
-  afterEach(async () => {
-    await User.destroyByEmail(email)
-  })
+  afterEach(async () => await User.destroyByEmail(email))
 
   test("should generate a new user model if the user is valid", async () => {
     expect.assertions(1)

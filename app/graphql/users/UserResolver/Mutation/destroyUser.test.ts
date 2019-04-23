@@ -1,19 +1,18 @@
 import { IUser, User } from "../../../../models"
-import { resetTestTables } from "../../../../util"
 import { destroyUser } from "./destroyUser"
-
-afterAll(async () => await resetTestTables())
 
 const sampleParams = { email: "destroy-user-test@example.com", firstName: "Jim", lastName: "Jeffers", password: "password" }
 
 describe("destroyUser", () => {
   let user: IUser
-  beforeEach(async () => {
+  beforeEach(async (done) => {
     user = await User.create({ ...sampleParams })
+    done()
   })
 
-  afterEach(async () => {
+  afterEach(async (done) => {
     await User.destroyByEmail(sampleParams.email)
+    done()
   })
 
   test("should destroy the user", async () => {
