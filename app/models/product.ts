@@ -131,10 +131,6 @@ const output = ({
     modelNumbers: async () =>
       (await ModelNumber.forProduct(partitionKey)).map(ModelNumber.output),
   }
-  // tslint:disable
-  console.log("Mapping product to output...")
-  console.log(result)
-  // tslint:enable
   return result
 }
 
