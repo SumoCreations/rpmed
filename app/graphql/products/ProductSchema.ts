@@ -74,6 +74,56 @@ export const typeDefs = gql`
     privateNotes: String
   }
 
+  """
+  Describes a product to be created or updated.
+  """
+  input ProductInput {
+    product: Product!
+  }
+
+  """
+  Describes a model number to be created or updated.
+  """
+  input ModelNumberInput {
+    modelNumber: ModelNumber!
+  }
+
+  """
+  The result of a mutation applied to a Product.
+  """
+  type ProductMutationOutput {
+    """
+    The resulting model if the operation was successful.
+    """
+    product: Product
+    """
+    Any validation errors encountered while running the mutation.
+    """
+    errors: [ValidationError]
+    """
+    A simple boolean indicating whether or not the operation was successful.
+    """
+    success: Boolean!
+  }
+
+  """
+  The result of a mutation applied to a ModelNumber.
+  """
+  type ModelNumberMutationOutput {
+    """
+    The resulting model if the operation was successful.
+    """
+    model: ModelNumber
+    """
+    Any validation errors encountered while running the mutation.
+    """
+    errors: [ValidationError]
+    """
+    A simple boolean indicating whether or not the operation was successful.
+    """
+    success: Boolean!
+  }
+
   type Query {
     """
     All products in the system.
@@ -93,24 +143,13 @@ export const typeDefs = gql`
     """
     Adds a new product to the database.
     """
-    createProduct(name: String!, description: String!): Product!
+    createProduct(productInput: ProductInput!): ProductMutationOutput!
     """
     Adds a new product variant to the database.
     """
     createModelNumber(
-      id: String!
-      productId: String!
-      description: String!
-      warrantyTerm: Int!
-      warrantyDescription: String!
-      feeWithWarranty: Float!
-      feeWithoutWarranty: Float!
-      resolutionWithWarranty: String
-      resolutionWithoutWarranty: String
-      publicNotes: String
-      privateNotes: String
-      lotted: Boolean!
-    ): ModelNumber!
+      modelNumberInput: ModelNumberInput!
+    ): ModelNumberMutationOutput!
   }
 
   schema {
