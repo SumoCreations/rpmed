@@ -38,7 +38,6 @@ export const resetTable = async (
   }
 }
 
-
 export const resetTestTables = async () => {
   resetTable(process.env.DYNAMODB_USER_LOOKUP_TABLE, i => ({
     email: i.email,

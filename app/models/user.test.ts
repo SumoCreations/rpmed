@@ -1,8 +1,5 @@
 import { isEmpty } from "validator"
-import { resetTestTables } from "../util"
 import { IUser, User } from "./user"
-
-afterAll(async () => await resetTestTables())
 
 const email = "shout@jimjeffers.com"
 const password = "thisisjustatest"
@@ -11,17 +8,19 @@ const lastName = "Jeffers"
 
 describe("user", () => {
   let user: IUser
-  beforeEach(async () => {
+  beforeEach(async (done) => {
     user = await User.create({
       email,
       firstName,
       lastName,
       password,
     })
+    done()
   })
 
-  afterEach(async () => {
+  afterEach(async (done) => {
     await User.destroyByEmail(email)
+    done()
   })
 
   describe("create", () => {
@@ -32,13 +31,13 @@ describe("user", () => {
 
     test("should not generate a new user if the email address was already used", async () => {
       expect.assertions(1)
+      await User.create({
+        email: "email@exists.com",
+        firstName: "Some",
+        lastName: "One",
+        password,
+      })
       try {
-        await User.create({
-          email: "email@exists.com",
-          firstName: "Some",
-          lastName: "One",
-          password,
-        })
         await User.create({
           email: "email@exists.com",
           firstName: "Another",

@@ -2,7 +2,6 @@ import * as jwt from "jsonwebtoken"
 import { v4 as uuid } from "uuid"
 import { isEmpty } from "validator"
 import { User } from "../models"
-import { resetTestTables } from "../util"
 import {
   generate,
   generateTokenFromPassword,
@@ -10,10 +9,8 @@ import {
   SUPPORTED_ALGORITHM,
 } from "./generate"
 
-afterAll(async () => await resetTestTables())
-
 const userId = uuid()
-const email = "avaliduserforgeneratingtests@jimjeffers.com"
+const email = "generate-user-test@example.com"
 const password = "thisisjustatest"
 
 describe("generate", () => {

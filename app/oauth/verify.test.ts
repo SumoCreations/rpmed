@@ -1,11 +1,9 @@
 import { User } from "../models"
-import { resetTestTables } from "../util"
 import { verifyUser } from "./verify"
 
 const email = "avaliduser@jimjeffers.com"
 const password = "thisisjustatest"
 
-afterAll(async () => await resetTestTables())
 
 describe("verifyUser", () => {
   beforeAll(async () => {
