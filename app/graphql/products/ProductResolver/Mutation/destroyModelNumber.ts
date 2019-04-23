@@ -12,7 +12,7 @@ export const destroyModelNumber = async (
     return { success: false, errors: [ErrorModelNumberIDDoesNotExist] }
   }
   try {
-    ModelNumber.destroy(id)
+    await ModelNumber.destroy(id)
   } catch (e) {
     return { success: false, errors: [ErrorModelNumberCouldNotBeDestroyed] }
   }

@@ -11,7 +11,7 @@ export const destroyUser = async (
     return { success: false, errors: [ErrorUserWithIDDoesNotExist] }
   }
   try {
-    User.destroy(id)
+    await User.destroy(id)
   } catch (e) {
     return { success: false, errors: [ErrorUserCouldNotBeDestroyed] }
   }
