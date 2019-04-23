@@ -13,6 +13,11 @@ export const ErrorModelNumberRelatedProductDoesNotExist = {
   path: "productId"
 }
 
+export const ErrorProductAlreadyExist = {
+  message: "A product with this name already exists.",
+  path: "name"
+}
+
 export const ErrorModelNumberCouldNotBeDestroyed = {
   message: "Model number could not be destroyed",
   path: "_"

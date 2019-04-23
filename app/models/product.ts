@@ -27,7 +27,7 @@ export interface IProductOutput {
 }
 
 /**
- * Generates a new user model in the database provided the supplied credentials are valid.
+ * Generates a new product model in the database provided the supplied credentials are valid.
  * @param credentials The identifying credentials to assign to the account.
  */
 const create = async ({
@@ -39,7 +39,7 @@ const create = async ({
     partitionKey: uuid(),
     sortKey: SECONDARY_KEY,
   }
-  const hsk = [productInput.name, productInput.description].join("#")
+  const hsk = productInput.name
   const params = {
     TransactItems: [
       {
@@ -59,8 +59,8 @@ const create = async ({
 }
 
 /**
- * Retreives a user by their unique ID.
- * @param id The UUID of the user to find.
+ * Retreives a product by unique ID.
+ * @param id The UUID of the product to find.
  */
 const find = async (id: string): Promise<IProduct | null> => {
   const searchParams = {
@@ -72,6 +72,25 @@ const find = async (id: string): Promise<IProduct | null> => {
   }
   const result = await client.get(searchParams).promise()
   return result.Item ? (result.Item as IProduct) : null
+}
+
+/**
+ * Retreives a product by it's name.
+ * @param name The name of the product to find.
+ */
+const findByName = async (name: string): Promise<IProduct | null> => {
+  const searchParams = {
+    ExpressionAttributeValues: {
+      ":hsk": name,
+      ":rkey": SECONDARY_KEY,
+    },
+    IndexName: "GSI_1",
+    KeyConditionExpression: "sortKey = :rkey AND indexSortKey = :hsk",
+    Limit: 1,
+    TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+  }
+  const result = await client.query(searchParams).promise()
+  return result.Items ? (result.Items[0] as IProduct) : null
 }
 
 /**
@@ -91,8 +110,8 @@ const all = async (): Promise<IProduct[]> => {
 }
 
 /**
- * Deletes a user from the database via UUID.
- * @param id The UUID of the user to delete.
+ * Deletes a product from the database via UUID.
+ * @param id The UUID of the product to delete.
  */
 const destroy = async (id: string): Promise<boolean> => {
   try {
@@ -117,7 +136,7 @@ const destroy = async (id: string): Promise<boolean> => {
 }
 
 /**
- * Converts a user record to public output that can be consumed
+ * Converts a product record to public output that can be consumed
  * by the API.
  */
 const output = ({
@@ -140,5 +159,6 @@ export const Product = {
   create,
   destroy,
   find,
+  findByName,
   output,
 }
