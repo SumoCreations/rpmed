@@ -13,10 +13,10 @@ export interface IModelNumberInput {
   warrantyDescription: string
   feeWithWarranty: number
   feeWithoutWarranty: number
-  resolutionWithWarranty: string | null | undefined
-  resolutionWithoutWarranty: string | null | undefined
-  publicNotes: string | null | undefined
-  privateNotes: string | null | undefined
+  resolutionWithWarranty?: string | null | undefined
+  resolutionWithoutWarranty?: string | null | undefined
+  publicNotes?: string | null | undefined
+  privateNotes?: string | null | undefined
 }
 
 export interface IModelNumber {
@@ -29,10 +29,10 @@ export interface IModelNumber {
   warrantyDescription: string
   feeWithWarranty: number
   feeWithoutWarranty: number
-  resolutionWithWarranty: string | null | undefined
-  resolutionWithoutWarranty: string | null | undefined
-  publicNotes: string | null | undefined
-  privateNotes: string | null | undefined
+  resolutionWithWarranty?: string | null | undefined
+  resolutionWithoutWarranty?: string | null | undefined
+  publicNotes?: string | null | undefined
+  privateNotes?: string | null | undefined
 }
 
 export interface IModelNumberOutput {
@@ -44,10 +44,10 @@ export interface IModelNumberOutput {
   warrantyDescription: string
   feeWithWarranty: number
   feeWithoutWarranty: number
-  resolutionWithWarranty: string | null | undefined
-  resolutionWithoutWarranty: string | null | undefined
-  publicNotes: string | null | undefined
-  privateNotes: string | null | undefined
+  resolutionWithWarranty?: string | null | undefined
+  resolutionWithoutWarranty?: string | null | undefined
+  publicNotes?: string | null | undefined
+  privateNotes?: string | null | undefined
 }
 
 /**
@@ -57,10 +57,10 @@ export interface IModelNumberOutput {
 const create = async ({
   id,
   productId,
-  ...productInput
+  ...modelNumberInput
 }: IModelNumberInput): Promise<IModelNumber> => {
   const item: IModelNumber = {
-    ...productInput,
+    ...modelNumberInput,
     indexSortKey: productId,
     partitionKey: id,
     sortKey: SECONDARY_KEY,
@@ -70,6 +70,36 @@ const create = async ({
       {
         Put: {
           ConditionExpression: "attribute_not_exists(partitionKey)",
+          Item: {
+            ...item,
+          },
+          TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+        },
+      },
+    ],
+  }
+  await client.transactWrite(params).promise()
+  return item
+}
+
+
+/**
+ * Updates an existing model number record in the database provided the supplied 
+ * input is valid.
+ * @param input The identifying credentials to assign to the account.
+ */
+const update = async ({ id, productId, ...modelNumberInput }: IModelNumberInput): Promise<IModelNumber> => {
+  const item: IModelNumber = {
+    ...modelNumberInput,
+    indexSortKey: productId,
+    partitionKey: id,
+    sortKey: SECONDARY_KEY,
+  }
+  const params = {
+    TransactItems: [
+      {
+        Put: {
+          ConditionExpression: "attribute_exists(partitionKey)",
           Item: {
             ...item,
           },
@@ -110,11 +140,7 @@ const all = async (): Promise<IModelNumber[]> => {
     KeyConditionExpression: "sortKey = :rkey",
     TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
   }
-  // tslint:disable-next-line
-  console.log(searchParams)
   const result = await client.query(searchParams).promise()
-  // tslint:disable-next-line
-  console.log(result)
   return result.Items ? (result.Items as IModelNumber[]) : []
 }
 
@@ -122,8 +148,6 @@ const all = async (): Promise<IModelNumber[]> => {
  * Retreives a list of all model number configurations for a specified product ID.
  */
 const forProduct = async (productId: string): Promise<IModelNumber[]> => {
-  // tslint:disable-next-line
-  console.log("Fetching model numbers for product...")
   const searchParams = {
     ExpressionAttributeValues: {
       ":productId": productId,
@@ -133,11 +157,7 @@ const forProduct = async (productId: string): Promise<IModelNumber[]> => {
     KeyConditionExpression: "sortKey = :rkey AND indexSortKey = :productId",
     TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
   }
-  // tslint:disable-next-line
-  console.log(searchParams)
   const result = await client.query(searchParams).promise()
-  // tslint:disable-next-line
-  console.log(result)
   return result.Items ? (result.Items as IModelNumber[]) : []
 }
 
@@ -182,10 +202,6 @@ const output = ({
     id: partitionKey,
     productId: indexSortKey,
   }
-  // tslint:disable
-  console.log("Mapping product to output...")
-  console.log(result)
-  // tslint:enable
   return result
 }
 
@@ -197,4 +213,5 @@ export const ModelNumber = {
   find,
   forProduct,
   output,
+  update,
 }
