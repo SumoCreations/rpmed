@@ -182,7 +182,7 @@ export const typeDefs = gql`
     """
     The resulting model if the operation was successful.
     """
-    model: ModelNumber
+    modelNumber: ModelNumber
     """
     Any validation errors encountered while running the mutation.
     """
