@@ -1,3 +1,13 @@
+export const ErrorProductIDDoesNotExist = {
+  message: "Product does not exist.",
+  path: "id"
+}
+
+export const ErrorProductCouldNotBeDestroyed = {
+  message: "Product could not be destroyed",
+  path: "_"
+}
+
 export const ErrorModelNumberIDDoesNotExist = {
   message: "Model number does not exist.",
   path: "id"
