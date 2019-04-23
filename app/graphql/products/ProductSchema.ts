@@ -214,15 +214,29 @@ export const typeDefs = gql`
 
   type Mutation {
     """
-    Adds a new product to the database.
+    Adds a new product.
     """
     createProduct(productInput: ProductInput!): ProductMutationOutput!
     """
-    Adds a new product variant to the database.
+    Updates an existing product.
     """
-    createModelNumber(
-      modelNumberInput: ModelNumberInput!
-    ): ModelNumberMutationOutput!
+    updateProduct(productInput: ProductInput!): ProductMutationOutput!
+    """
+    Removes an existing product.
+    """
+    destroyProduct(id: ID!): ProductMutationOutput!
+    """
+    Adds a new product variant.
+    """
+    createModelNumber(modelNumberInput: ModelNumberInput!): ModelNumberMutationOutput!
+    """
+    Updates an existing product variant.
+    """
+    updateModelNumber(modelNumberInput: ModelNumberInput!): ModelNumberMutationOutput!
+    """
+    Removes an existing product variant.
+    """
+    destroyModelNumber(id: ID!): ModelNumberMutationOutput!
   }
 
   schema {
