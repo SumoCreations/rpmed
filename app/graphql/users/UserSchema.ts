@@ -35,7 +35,7 @@ export const typeDefs = gql`
   }
   
   """
-  All users in the system
+  The result of a mutation applied to a user.
   """
   type UserMutationOutput {
     """
