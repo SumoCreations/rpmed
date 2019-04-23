@@ -44,7 +44,38 @@ const create = async ({
     TransactItems: [
       {
         Put: {
-          ConditionExpression: "attribute_not_exists(modelNumber)",
+          ConditionExpression: "attribute_not_exists(partitionKey)",
+          Item: {
+            ...item,
+            indexSortKey: hsk,
+          },
+          TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+        },
+      },
+    ],
+  }
+  await client.transactWrite(params).promise()
+  return item
+}
+
+/**
+ * Generates a new product model in the database provided the supplied credentials are valid.
+ * @param input An object representing the input to replace the supplied object.
+ */
+const update = async ({
+  id, ...productInput
+}: IProductInput): Promise<IProduct> => {
+  const existingItem = await find(id)
+  const item: IProduct = {
+    ...existingItem,
+    ...productInput
+  }
+  const hsk = productInput.name
+  const params = {
+    TransactItems: [
+      {
+        Put: {
+          ConditionExpression: "attribute_exists(partitionKey)",
           Item: {
             ...item,
             indexSortKey: hsk,
@@ -169,4 +200,5 @@ export const Product = {
   find,
   findByName,
   output,
+  update
 }
