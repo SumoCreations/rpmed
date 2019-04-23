@@ -4,6 +4,7 @@ import {
   ModelNumber,
   Product
 } from "../../../../models"
+import { generateMutationError } from "../../../../util"
 import { ErrorModelNumberIDAlreadyExists, ErrorModelNumberRelatedProductDoesNotExist } from "./productErrors"
 import { IModelNumberMutationOutput } from "./productMutationTypes"
 
@@ -19,20 +20,20 @@ export const createModelNumber: CreateModelNumberResolver = async (_, { modelNum
   try {
     await Validation.ModelNumber.Default.validate(modelNumberInput, { abortEarly: false })
   } catch (e) {
-    return { errors: Validation.formatError(e), success: false }
+    return generateMutationError(Validation.formatError(e))
   }
   try {
     const existingModel = await ModelNumber.find(modelNumberInput.id)
     if (existingModel) {
-      return { success: false, errors: [ErrorModelNumberIDAlreadyExists] }
+      return generateMutationError([ErrorModelNumberIDAlreadyExists])
     }
     const relatedProduct = await Product.find(modelNumberInput.productId)
     if (!relatedProduct) {
-      return { success: false, errors: [ErrorModelNumberRelatedProductDoesNotExist] }
+      return generateMutationError([ErrorModelNumberRelatedProductDoesNotExist])
     }
     const modelNumber = await ModelNumber.create(modelNumberInput)
     return { modelNumber: ModelNumber.output(modelNumber), success: true }
   } catch {
-    return { success: false, errors: [{ path: "_", message: "Could not create model number." }] }
+    return generateMutationError([{ path: "_", message: "Could not create model number." }])
   }
 }

@@ -1,7 +1,9 @@
 
 import { ModelNumber } from "../../../../models"
+import { generateMutationError } from "../../../../util";
 import { ErrorModelNumberCouldNotBeDestroyed, ErrorModelNumberIDDoesNotExist } from "./productErrors"
 import { IModelNumberMutationOutput } from "./productMutationTypes"
+
 
 export const destroyModelNumber = async (
   _: any,
@@ -9,12 +11,12 @@ export const destroyModelNumber = async (
 ): Promise<IModelNumberMutationOutput> => {
   const modelNumber = await ModelNumber.find(id)
   if (!modelNumber) {
-    return { success: false, errors: [ErrorModelNumberIDDoesNotExist] }
+    return generateMutationError([ErrorModelNumberIDDoesNotExist])
   }
   try {
     await ModelNumber.destroy(id)
   } catch (e) {
-    return { success: false, errors: [ErrorModelNumberCouldNotBeDestroyed] }
+    return generateMutationError([ErrorModelNumberCouldNotBeDestroyed])
   }
   return { modelNumber: ModelNumber.output(modelNumber), success: true }
 }

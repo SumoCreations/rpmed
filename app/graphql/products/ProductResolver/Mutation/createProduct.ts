@@ -3,7 +3,8 @@ import {
   IProductInput,
   Product,
 } from "../../../../models"
-import { ErrorModelNumberIDAlreadyExists } from "./productErrors"
+import { generateMutationError } from "../../../../util"
+import { ErrorProductAlreadyExist } from "./productErrors"
 import { IProductMutationOutput } from "./productMutationTypes"
 
 type CreateProductMutation = (
@@ -18,11 +19,11 @@ export const createProduct: CreateProductMutation = async (_, { productInput }) 
   try {
     await Validation.Product.Default.validate(productInput, { abortEarly: false })
   } catch (e) {
-    return { errors: Validation.formatError(e), success: false }
+    return generateMutationError(Validation.formatError(e))
   }
   const existingProduct = await Product.findByName(productInput.name)
   if (existingProduct) {
-    return { errors: [ErrorModelNumberIDAlreadyExists], success: false }
+    return generateMutationError([ErrorProductAlreadyExist])
   }
   const product = await Product.create(productInput)
   return { product: Product.output(product), success: true }

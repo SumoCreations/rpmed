@@ -1,5 +1,6 @@
 
 import { Product } from "../../../../models"
+import { generateMutationError } from "../../../../util";
 import { ErrorProductCouldNotBeDestroyed, ErrorProductIDDoesNotExist } from "./productErrors"
 import { IProductMutationOutput } from "./productMutationTypes"
 
@@ -9,12 +10,12 @@ export const destroyProduct = async (
 ): Promise<IProductMutationOutput> => {
   const product = await Product.find(id)
   if (!product) {
-    return { success: false, errors: [ErrorProductIDDoesNotExist] }
+    return generateMutationError([ErrorProductIDDoesNotExist])
   }
   try {
     await Product.destroy(id)
   } catch (e) {
-    return { success: false, errors: [ErrorProductCouldNotBeDestroyed] }
+    return generateMutationError([ErrorProductCouldNotBeDestroyed])
   }
   return { product: Product.output(product), success: true }
 }

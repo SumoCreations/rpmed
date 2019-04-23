@@ -4,6 +4,7 @@ import {
   ModelNumber,
   Product
 } from "../../../../models"
+import { generateMutationError } from "../../../../util";
 import { ErrorModelNumberIDDoesNotExist, ErrorModelNumberRelatedProductDoesNotExist } from "./productErrors"
 import { IModelNumberMutationOutput } from "./productMutationTypes"
 
@@ -24,15 +25,15 @@ export const updateModelNumber: UpdateModelNumberResolver = async (_, { modelNum
   try {
     const existingModel = await ModelNumber.find(modelNumberInput.id)
     if (!existingModel) {
-      return { success: false, errors: [ErrorModelNumberIDDoesNotExist] }
+      return generateMutationError([ErrorModelNumberIDDoesNotExist])
     }
     const relatedProduct = await Product.find(modelNumberInput.productId)
     if (!relatedProduct) {
-      return { success: false, errors: [ErrorModelNumberRelatedProductDoesNotExist] }
+      return generateMutationError([ErrorModelNumberRelatedProductDoesNotExist])
     }
     const modelNumber = await ModelNumber.update(modelNumberInput)
     return { modelNumber: ModelNumber.output(modelNumber), success: true }
   } catch (e) {
-    return { success: false, errors: [{ path: "_", message: "Could not update model number." }] }
+    return generateMutationError([{ path: "_", message: "Could not update model number." }])
   }
 }
