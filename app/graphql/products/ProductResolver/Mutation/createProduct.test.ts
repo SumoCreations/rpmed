@@ -39,7 +39,7 @@ describe("createProduct", () => {
       }
     })
     expect(output.success).toBe(false)
-    expect(output.errors.map(e => e.path)).toContain("id")
+    expect(output.errors.map(e => e.path)).toContain("name")
   })
 
   test("should fail if the model number does not pass validations", async () => {
