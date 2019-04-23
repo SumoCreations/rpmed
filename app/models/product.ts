@@ -110,7 +110,8 @@ const all = async (): Promise<IProduct[]> => {
 }
 
 /**
- * Deletes a product from the database via UUID.
+ * Deletes a product and associated child objects from the 
+ * database via UUID.
  * @param id The UUID of the product to delete.
  */
 const destroy = async (id: string): Promise<boolean> => {
@@ -118,8 +119,15 @@ const destroy = async (id: string): Promise<boolean> => {
     if (!(await find(id))) {
       return false
     }
+    const relatedModelNumbers = await ModelNumber.forProduct(id)
     const params = {
       TransactItems: [
+        ...relatedModelNumbers.map(({ partitionKey, sortKey }) => ({
+          Delete: {
+            Key: { partitionKey, sortKey },
+            TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+          }
+        })),
         {
           Delete: {
             Key: { partitionKey: id, sortKey: SECONDARY_KEY },
