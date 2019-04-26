@@ -5,7 +5,7 @@ describe("updateModelNumber", () => {
   let existingProduct: IProduct
   let existingModelNumber: IModelNumber
   let sampleParams: IModelNumberInput
-  beforeEach(async () => {
+  beforeEach(async (done) => {
     existingProduct = await Product.create({
       description: "MedLED Sapphire Top-Tier",
       name: "MedLED Sapphire (MLOD01)",
@@ -23,6 +23,7 @@ describe("updateModelNumber", () => {
       warrantyTerm: 12,
     }
     existingModelNumber = await ModelNumber.create(sampleParams)
+    done()
   })
 
   afterEach(async (done) => {

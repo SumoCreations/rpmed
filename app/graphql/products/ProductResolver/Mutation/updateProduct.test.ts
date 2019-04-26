@@ -1,10 +1,11 @@
 import { IProduct, Product } from "../../../../models";
 import { updateProduct } from "./updateProduct"
 
+
 describe("updateProduct", () => {
   let existingProduct: IProduct
   let conflictingProduct: IProduct
-  beforeEach(async () => {
+  beforeEach(async (done) => {
     existingProduct = await Product.create({
       description: "MedLED Onyx 2nd Gen Mid-Tier",
       name: "Updated MedLED Onyx (MLOX100)",
@@ -13,6 +14,7 @@ describe("updateProduct", () => {
       description: "An extremely bright magnified LED headlamp",
       name: "HyperBeam XS",
     })
+    done()
   })
 
   afterEach(async (done) => {

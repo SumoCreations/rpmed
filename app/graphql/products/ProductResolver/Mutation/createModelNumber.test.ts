@@ -16,7 +16,7 @@ const sampleParams = {
 describe("createModelNumber", () => {
   let existingProduct: IProduct
   let existingModelNumber: IModelNumber
-  beforeEach(async () => {
+  beforeEach(async (done) => {
     existingProduct = await Product.create({
       description: "MedLED Onyx Mid-Tier",
       name: "MedLED Onyx (MLOX01)",
@@ -33,6 +33,7 @@ describe("createModelNumber", () => {
       warrantyDescription: "Service after 6 mo.",
       warrantyTerm: 12,
     })
+    done()
   })
 
   afterEach(async (done) => {
