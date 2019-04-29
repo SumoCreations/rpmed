@@ -44,6 +44,10 @@ export const typeDefs = gql`
     """
     productId: String!
     """
+    The product this variant belongs to.
+    """
+    product: Product
+    """
     A brief description of this product variant.
     """
     description: String!
@@ -197,7 +201,7 @@ export const typeDefs = gql`
     """
     All products in the system.
     """
-    products: [Product]
+    products(search: String): [Product]
     """
     All product variants in the system.
     """
