@@ -1,4 +1,4 @@
-import { IProduct, Product } from "../../../models"
+import { IModelNumber, IProduct, ModelNumber, Product } from "../../../models"
 import * as Query from "./Query"
 
 describe("Query", () => {
@@ -53,6 +53,85 @@ describe("Query", () => {
         name: "MLOX101-BZL",
       })
       const output = await Query.products({}, {})
+      expect(output.length > 1).toEqual(true)
+    })
+  })
+
+  describe("Query.modelNumber", () => {
+    let existingModelNumber: IModelNumber
+
+    beforeEach(async (done) => {
+      existingModelNumber = await ModelNumber.create({
+        description: "MedLED Chrome MC7 PRO Hard Top; Standard Kit",
+        feeWithWarranty: 0,
+        feeWithoutWarranty: 250,
+        id: "MC7-HT-SK-TEST-1",
+        lotted: true,
+        productId: existingProduct.partitionKey,
+        resolutionWithWarranty: "Do something...",
+        resolutionWithoutWarranty: "Do something else..",
+        warrantyDescription: "All headlamps covered for 1 year",
+        warrantyTerm: 12,
+      })
+      await ModelNumber.create({
+        description: "MedLED Chrome MC7 PRO Hard Top; Standard Kit",
+        feeWithWarranty: 0,
+        feeWithoutWarranty: 250,
+        id: "MC7-HT-SK-TEST-2",
+        lotted: true,
+        productId: existingProduct.partitionKey,
+        resolutionWithWarranty: "Do something...",
+        resolutionWithoutWarranty: "Do something else..",
+        warrantyDescription: "All headlamps covered for 1 year",
+        warrantyTerm: 12,
+      })
+      done()
+    })
+
+    test("should return a modelNumber if it exists", async () => {
+      expect.assertions(1)
+      const output = await Query.modelNumber({}, { id: existingModelNumber.partitionKey })
+      expect(output.id).toEqual(existingModelNumber.partitionKey)
+    })
+
+    test("should return an error if it does not exist", async () => {
+      expect.assertions(1)
+      const output = await Query.modelNumber({}, { id: "DOES-NOT-EXIST" })
+      expect(output).toBeNull()
+    })
+  })
+
+  describe("Query.modelNumbers", () => {
+    test("should return all existing modelNumbers", async () => {
+      expect.assertions(1)
+      const modelNumbers = await ModelNumber.all()
+      await Promise.all(modelNumbers.map(async (p) => await ModelNumber.destroy(p.partitionKey)))
+
+      await ModelNumber.create({
+        description: "MedLED Chrome MC7 PRO Hard Top; Standard Kit",
+        feeWithWarranty: 0,
+        feeWithoutWarranty: 250,
+        id: "MC7-HT-SK-TEST-3",
+        lotted: true,
+        productId: existingProduct.partitionKey,
+        resolutionWithWarranty: "Do something...",
+        resolutionWithoutWarranty: "Do something else..",
+        warrantyDescription: "All headlamps covered for 1 year",
+        warrantyTerm: 12,
+      })
+      await ModelNumber.create({
+        description: "MedLED Chrome MC7 PRO Hard Top; Standard Kit",
+        feeWithWarranty: 0,
+        feeWithoutWarranty: 250,
+        id: "MC7-HT-SK-TEST-4",
+        lotted: true,
+        productId: existingProduct.partitionKey,
+        resolutionWithWarranty: "Do something...",
+        resolutionWithoutWarranty: "Do something else..",
+        warrantyDescription: "All headlamps covered for 1 year",
+        warrantyTerm: 12,
+      })
+      const output = await Query.modelNumbers({}, {})
       expect(output.length > 1).toEqual(true)
     })
   })
