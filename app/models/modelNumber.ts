@@ -1,5 +1,4 @@
 import { getClient } from "../util"
-
 const SECONDARY_KEY = "MODEL_NUMBER"
 
 const client = getClient()
@@ -195,10 +194,10 @@ const output = ({
   partitionKey,
   sortKey,
   indexSortKey,
-  ...product
+  ...modelNumber
 }: IModelNumber): IModelNumberOutput => {
   const result = {
-    ...product,
+    ...modelNumber,
     id: partitionKey,
     productId: indexSortKey,
   }
