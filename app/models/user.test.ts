@@ -1,46 +1,47 @@
 import { isEmpty } from "validator"
-import { resetTable } from "../util"
 import { IUser, User } from "./user"
-
-afterAll(async () => {
-  resetTable(process.env.DYNAMODB_USER_LOOKUP_TABLE, i => ({
-    email: i.email,
-  }))
-  resetTable(process.env.DYNAMODB_ACCOUNTS_TABLE, i => ({
-    id: i.id,
-  }))
-})
 
 const email = "shout@jimjeffers.com"
 const password = "thisisjustatest"
+const firstName = "Jim"
+const lastName = "Jeffers"
 
 describe("user", () => {
   let user: IUser
-  beforeEach(async () => {
+  beforeEach(async (done) => {
     user = await User.create({
       email,
+      firstName,
+      lastName,
       password,
     })
+    done()
   })
 
-  afterEach(async () => {
+  afterEach(async (done) => {
     await User.destroyByEmail(email)
+    done()
   })
 
   describe("create", () => {
     test("should generate a new user model", () => {
-      expect(isEmpty(user.id)).toBe(false)
+      expect(isEmpty(user.partitionKey)).toBe(false)
+      expect(user.sortKey).toBe(User.SECONDARY_KEY)
     })
 
     test("should not generate a new user if the email address was already used", async () => {
       expect.assertions(1)
+      await User.create({
+        email: "email@exists.com",
+        firstName: "Some",
+        lastName: "One",
+        password,
+      })
       try {
         await User.create({
           email: "email@exists.com",
-          password,
-        })
-        await User.create({
-          email: "email@exists.com",
+          firstName: "Another",
+          lastName: "One",
           password,
         })
       } catch (e) {
@@ -52,7 +53,7 @@ describe("user", () => {
   describe("find", () => {
     test("should return a user if one exists", async () => {
       expect.assertions(1)
-      const existingUser = await User.find(user.id)
+      const existingUser = await User.find(user.partitionKey)
       expect(existingUser).not.toBeNull()
     })
 
@@ -80,8 +81,8 @@ describe("user", () => {
   describe("destroy", () => {
     test("should delete a user and return true if one exists", async () => {
       expect.assertions(2)
-      expect(await User.destroy(user.id)).toBeTruthy()
-      const existingUser = await User.find(user.id)
+      expect(await User.destroy(user.partitionKey)).toBeTruthy()
+      const existingUser = await User.find(user.partitionKey)
       expect(existingUser).toBeNull()
     })
 
@@ -95,7 +96,7 @@ describe("user", () => {
     test("should delete a user and return true if the user exists", async () => {
       expect.assertions(2)
       expect(await User.destroyByEmail(user.email)).toBeTruthy()
-      const existingUser = await User.find(user.id)
+      const existingUser = await User.find(user.partitionKey)
       expect(existingUser).toBeNull()
     })
 

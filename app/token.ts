@@ -50,10 +50,6 @@ export const createToken: APIGatewayProxyHandler = async event => {
         }
       )
   }
-  // tslint:disable-next-line
-  console.log("Output:")
-  // tslint:disable-next-line
-  console.log(output)
   if (!output) {
     return response(
       Status.NotAuthorized,

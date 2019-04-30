@@ -1,23 +1,16 @@
 import { User } from "../models"
-import { resetTable } from "../util"
 import { verifyUser } from "./verify"
 
 const email = "avaliduser@jimjeffers.com"
 const password = "thisisjustatest"
 
-afterAll(async () => {
-  resetTable(process.env.DYNAMODB_USER_LOOKUP_TABLE, i => ({
-    email: i.email,
-  }))
-  resetTable(process.env.DYNAMODB_ACCOUNTS_TABLE, i => ({
-    id: i.id,
-  }))
-})
 
 describe("verifyUser", () => {
   beforeAll(async () => {
     await User.create({
       email,
+      firstName: "Jim",
+      lastName: "Jeffers",
       password,
     })
   })

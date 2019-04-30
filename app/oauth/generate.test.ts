@@ -2,7 +2,6 @@ import * as jwt from "jsonwebtoken"
 import { v4 as uuid } from "uuid"
 import { isEmpty } from "validator"
 import { User } from "../models"
-import { resetTable } from "../util"
 import {
   generate,
   generateTokenFromPassword,
@@ -10,20 +9,8 @@ import {
   SUPPORTED_ALGORITHM,
 } from "./generate"
 
-afterAll(async () => {
-  resetTable(process.env.DYNAMODB_TOKEN_LOOKUP_TABLE, i => ({
-    id: i.id,
-  }))
-  resetTable(process.env.DYNAMODB_USER_LOOKUP_TABLE, i => ({
-    email: i.email,
-  }))
-  resetTable(process.env.DYNAMODB_ACCOUNTS_TABLE, i => ({
-    id: i.id,
-  }))
-})
-
 const userId = uuid()
-const email = "avaliduserforgeneratingtests@jimjeffers.com"
+const email = "generate-user-test@example.com"
 const password = "thisisjustatest"
 
 describe("generate", () => {
@@ -48,7 +35,12 @@ describe("generate", () => {
 
 describe("generate from credentials", () => {
   beforeEach(async () => {
-    return await User.create({ email, password })
+    return await User.create({
+      email,
+      firstName: "Jim",
+      lastName: "Jeffers",
+      password,
+    })
   })
 
   afterEach(async () => {
@@ -86,7 +78,7 @@ describe("generate from credentials", () => {
       return jwt.sign(
         {
           refresh: true,
-          userId: user.id,
+          userId: user.partitionKey,
         },
         process.env.OAUTH_SIGNATURE,
         {
