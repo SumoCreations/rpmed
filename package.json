@@ -40,6 +40,7 @@
     "@types/yup": "^0.26.12",
     "jest": "^24.5.0",
     "prettier": "^1.16.4",
+    "serverless-domain-manager": "^3.2.1",
     "serverless-dynamodb-local": "^0.2.37",
     "serverless-offline": "^4.9.2",
     "serverless-webpack": "^5.1.1",
