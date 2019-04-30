@@ -13,8 +13,11 @@ custom:
   dynamodb:
     start:
       migrate: true
+  domain:
+    dev: dev.rpmed-apps.com
+    prod: rpmed-apps.com
   customDomain:
-    domainName: rpmed-apps.com
+    domainName: ${self:custom.domain.${opt:stage, self:provider.stage}}
     basePath: ""
     stage: ${self:provider.stage}
     createRoute53Record: true
