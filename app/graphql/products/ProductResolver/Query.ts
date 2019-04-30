@@ -39,7 +39,10 @@ export const modelNumber: ModelNumberResolver = async (_, args) => {
 /**
  * Retreives all model numbers in the system.
  */
-export const modelNumbers: ModelNumbersResolver = async () => (await ModelNumber.all()).map(ModelNumber.output).map(o => ({
-  ...o,
-  product: async () => Product.output(await Product.find(o.productId))
-}))
+export const modelNumbers: ModelNumbersResolver = async () => {
+  const output = (await ModelNumber.all()).map(ModelNumber.output).map(o => ({
+    ...o,
+    product: async () => Product.output(await Product.find(o.productId))
+  }))
+  return output
+}
