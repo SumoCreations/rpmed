@@ -1,4 +1,4 @@
-import { getClient } from "../util"
+import { filterBlankAttributes, getClient } from "../util"
 const SECONDARY_KEY = "MODEL_NUMBER"
 
 const client = getClient()
@@ -64,13 +64,14 @@ const create = async ({
     partitionKey: id,
     sortKey: SECONDARY_KEY,
   }
+
   const params = {
     TransactItems: [
       {
         Put: {
           ConditionExpression: "attribute_not_exists(partitionKey)",
           Item: {
-            ...item,
+            ...filterBlankAttributes(item),
           },
           TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
         },
@@ -100,7 +101,7 @@ const update = async ({ id, productId, ...modelNumberInput }: IModelNumberInput)
         Put: {
           ConditionExpression: "attribute_exists(partitionKey)",
           Item: {
-            ...item,
+            ...filterBlankAttributes(item),
           },
           TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
         },
@@ -199,7 +200,12 @@ const output = ({
   const result = {
     ...modelNumber,
     id: partitionKey,
+    lotted: modelNumber.lotted || false,
+    privateNotes: modelNumber.privateNotes || "",
     productId: indexSortKey,
+    publicNotes: modelNumber.publicNotes || "",
+    resolutionWithWarranty: modelNumber.resolutionWithWarranty || "",
+    resolutionWithoutWarranty: modelNumber.resolutionWithoutWarranty || "",
   }
   return result
 }
