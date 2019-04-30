@@ -19,6 +19,12 @@ jobs:
     steps:
       - checkout
 
+       - run: 
+          name: install java
+          command: |
+            apt-get install default-jre default-jdk
+      
+
       # Download and cache dependencies
       - restore_cache:
           keys:
@@ -36,9 +42,16 @@ jobs:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
-
-      # run tests!
-      - run: ./runTests.sh
+      
+      - run:
+          name: Install serverless
+          command: |
+            sls dynamodb install
+      
+      - run:
+          name: Run the test suite in our serverless environment
+          command: |
+            ./_runTests.sh
 
   deploy:
     machine:
