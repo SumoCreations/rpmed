@@ -1,4 +1,33 @@
 import { filterBlankAttributes, getClient } from "../util"
+
+/**
+ * Dynamo DB Model:
+ * MODEL NUMBER
+ * ==========================================================
+ * 
+ * This model represents a configuration of a given product.
+ * The configuration is the item directly associated to an
+ * RGA or product registration. It is more specific than a
+ * Product which actually represents a family of various
+ * configurations.
+ * 
+ * The table structure in dynamo DB is as follows:
+ * 
+ * --------------------------------------------------------------
+ * |                    | (GS1 Partition Key)   | (GS1 Sort Key)
+ * --------------------------------------------------------------
+ * | Partition Key      | Sort Key              | HSK
+ * --------------------------------------------------------------
+ * | UUID/ModelNumber   | "MODEL_NUMBER"        | ProductId
+ * --------------------------------------------------------------
+ * 
+ * This allows for the following access patterns:
+ * 
+ * 1. Fetch model number by unique name / ID. (PK is a user assigned model number)
+ * 2. Fetch all model numbers (SK matches 'MODEL_NUMBER')
+ * 3. Look up all model numbers for a given product (HSK matches ProductId)
+ */
+
 const SECONDARY_KEY = "MODEL_NUMBER"
 
 const client = getClient()
