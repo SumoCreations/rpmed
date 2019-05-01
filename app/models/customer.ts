@@ -14,9 +14,11 @@ import { getClient } from "../util"
  * The table structure in dynamo DB is as follows:
  * 
  * --------------------------------------------------------------
- * | Parition Key         | Sort Key              | HSK
+ * |                  | (GS1 Partition Key)    | (GS1 Sort Key)
  * --------------------------------------------------------------
- * | UUID                 | CONST                 | Email
+ * | Partition Key     | Sort Key              | HSK
+ * --------------------------------------------------------------
+ * | UUID             | CONST                 | Email
  * --------------------------------------------------------------
  * 
  * This allows for the following access patterns:

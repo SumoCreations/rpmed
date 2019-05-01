@@ -19,9 +19,11 @@ import { IModelNumberOutput, ModelNumber } from "./modelNumber"
  * The table structure in dynamo DB is as follows:
  * 
  * --------------------------------------------------------------
- * | Parition Key         | Sort Key              | HSK
+ * |                    | (GS1 Partition Key)    | (GS1 Sort Key)
  * --------------------------------------------------------------
- * | UUID                 | CONST                 | ProductName
+ * | Partition Key      | Sort Key              | HSK
+ * --------------------------------------------------------------
+ * | UUID               | CONST                 | ProductName
  * --------------------------------------------------------------
  * 
  * This allows for the following access patterns:
