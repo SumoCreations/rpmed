@@ -2,6 +2,33 @@ import { v4 as uuid } from "uuid"
 import { getClient } from "../util"
 import { IModelNumberOutput, ModelNumber } from "./modelNumber"
 
+/**
+ * Dynamo DB Model:
+ * PRODUCT
+ * ==========================================================
+ * 
+ * This model represents a product of RiverPoint medical. Products
+ * are key to nearly all of the interactions in the system whether
+ * it be for managing a troubleshooting request, an item in a specific
+ * RGA, or a registered product / warranty tracking for an individual
+ * user.
+ * 
+ * The table structure in dynamo DB is as follows:
+ * 
+ * --------------------------------------------------------------
+ * | Parition Key         | Sort Key              | HSK
+ * --------------------------------------------------------------
+ * | UUID                 | CONST                 | ProductName
+ * --------------------------------------------------------------
+ * 
+ * This allows for the following access patterns:
+ * 
+ * 1. Fetch product by unique id. (PK is generated uuid)
+ * 2. Fetch all products (SK matches 'CONST')
+ * 3. Look up a product via name (HSK matches Product)
+ * 4. Find all products beginning with string (HSK begins with search string)
+ */
+
 const client = getClient()
 
 const SECONDARY_KEY = "PRODUCT"
