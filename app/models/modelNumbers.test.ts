@@ -17,13 +17,13 @@ const existingModelParams = {
 describe("modelNumber", () => {
   let modelNumber: IModelNumber
   let product: IProduct
-  beforeEach(async (done) => {
+  beforeAll(async (done) => {
     product = await Product.create({ name: "Chrome MC7 Pro", description: "The chrome MedLED Pro Headlamp" })
     modelNumber = await ModelNumber.create({ ...existingModelParams, productId: product.partitionKey })
     done()
   })
 
-  afterEach(async (done) => {
+  afterAll(async (done) => {
     await ModelNumber.destroy(modelNumber.partitionKey)
     done()
   })

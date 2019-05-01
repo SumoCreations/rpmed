@@ -8,12 +8,12 @@ const existingCustomerParams = {
 
 describe("customer", () => {
   let customer: ICustomer
-  beforeEach(async (done) => {
+  beforeAll(async (done) => {
     customer = await Customer.create({ ...existingCustomerParams })
     done()
   })
 
-  afterEach(async (done) => {
+  afterAll(async (done) => {
     await Customer.destroy(customer.partitionKey)
     done()
   })

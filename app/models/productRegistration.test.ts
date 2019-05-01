@@ -17,17 +17,16 @@ describe("product registration", () => {
   let unrelatedReg2: IProductRegistration
   let unrelatedReg3: IProductRegistration
 
-  beforeEach(async (done) => {
-
+  beforeAll(async (done) => {
     product = await Product.create({
       description: "MedLED Chrome MC7 PRO",
-      name: "Chrome MC7 Test"
+      name: "Chrome Registration Tester 1"
     })
     modelNumber = await ModelNumber.create({
       description: "MedLED Chrome MC7 PRO Hard Top; Standard Kit",
       feeWithWarranty: 0,
       feeWithoutWarranty: 250,
-      id: "MC7-HT-SK",
+      id: "MC7-HT-SK-REGISTER-TESTS",
       lotted: true,
       productId: product.partitionKey,
       resolutionWithWarranty: "Do something...",
@@ -47,8 +46,8 @@ describe("product registration", () => {
       registeredOn: new Date().toISOString()
     })
     unrelatedProduct = await Product.create({
-      description: "MedLED Chrome MC7 PRO",
-      name: "Chrome MC7 Test"
+      description: "MedLED Chrome MC7 PRO ",
+      name: "Chrome Registration Tester 2"
     })
     unrelatedModel = await ModelNumber.create({
       description: "MedLED Chrome MC7 PRO Hard Top; Standard Kit",
@@ -83,11 +82,10 @@ describe("product registration", () => {
       productId: unrelatedProduct.partitionKey,
       registeredOn: new Date().toISOString()
     })
-
     done()
   })
 
-  afterEach(async (done) => {
+  afterAll(async (done) => {
     await Customer.destroy(customer.partitionKey)
     await ModelNumber.destroy(modelNumber.partitionKey)
     await ModelNumber.destroy(unrelatedModel.partitionKey)
