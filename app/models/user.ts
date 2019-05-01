@@ -2,9 +2,36 @@ import { v4 as uuid } from "uuid"
 import { hashPassword } from "../oauth"
 import { getClient } from "../util"
 
+/**
+ * Dynamo DB Model:
+ * USER
+ * ==========================================================
+ * 
+ * This model represents an authenticatable user in the admin
+ * or other related RPMed client applications.
+ * 
+ * The table structure in dynamo DB is as follows:
+ * 
+ * --------------------------------------------------------------
+ * |                  | (GS1 Partition Key)   | (GS1 Sort Key)
+ * --------------------------------------------------------------
+ * | Partition Key    | Sort Key              | HSK
+ * --------------------------------------------------------------
+ * | UUID             | CONST                 | Email
+ * --------------------------------------------------------------
+ * 
+ * This allows for the following access patterns:
+ * 
+ * 1. Fetch customer by unique id. (PK is generated uuid)
+ * 2. Fetch all customers (SK matches 'CONST')
+ * 3. Look up a customer via email (HSK matches Email)
+ */
+
 const client = getClient()
 
 const SECONDARY_KEY = "USER"
+
+interface IEmailLookup { email: string, id: string }
 
 export interface IUserInput {
   email: string
@@ -56,7 +83,7 @@ const create = async ({ id, ...userInput }: IUserInput): Promise<IUser> => {
           ConditionExpression: "attribute_not_exists(id)",
           Item: {
             ...item,
-            indexSortKey: [item.firstName, item.lastName, item.email].join("#"),
+            indexSortKey: [item.lastName, item.firstName, item.email].join("#"),
           },
           TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
         },
@@ -74,33 +101,55 @@ const create = async ({ id, ...userInput }: IUserInput): Promise<IUser> => {
  */
 const update = async ({ id, ...userInput }: IUserInput): Promise<IUser> => {
   const existingUser = await find(id)
+  const transactions = []
+  /**
+   * Delete the previous email address associated with the user if it 
+   * has been changed.
+   */
   if (existingUser.email !== userInput.email) {
-    // update email address.
+    transactions.push({
+      Put: {
+        ConditionExpression: "attribute_not_exists(email)",
+        Item: { email: userInput.email, id },
+        TableName: process.env.DYNAMODB_USER_LOOKUP_TABLE,
+      },
+    })
+    const existingEmail = await findEmail(userInput.email)
+    if (existingEmail) {
+      transactions.push({
+        DELETE: {
+          Key: {
+            email: userInput.email,
+            userId: id
+          },
+          TableName: process.env.DYNAMODB_USER_LOOKUP_TABLE,
+        }
+      })
+    }
   }
   const passwordExists = userInput.password && userInput.password.length > 0
   const hashedPassword = passwordExists ? await hashPassword(userInput.password) : existingUser.password
-  const params = {
-    TransactItems: [
-      {
-        Update: {
-          ExpressionAttributeNames: { '#password': 'password', '#firstName': 'firstName', '#lastName': 'lastName', '#email': 'email' },
-          ExpressionAttributeValues: {
-            ':email': userInput.email,
-            ':firstName': userInput.firstName,
-            ':lastName': userInput.lastName,
-            ':password': hashedPassword,
-          },
-          Key: {
-            partitionKey: id,
-            sortKey: SECONDARY_KEY,
-          },
-          TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
-          UpdateExpression: 'set #email = :email, #firstName = :firstName, #lastName = :lastName, #password = :password',
-        }
-      }
-    ],
-  }
-  await client.transactWrite(params).promise()
+  transactions.push({
+    Update: {
+      ExpressionAttributeNames: { '#indexSortKey': 'indexSortKey', '#password': 'password', '#firstName': 'firstName', '#lastName': 'lastName', '#email': 'email' },
+      ExpressionAttributeValues: {
+        ':email': userInput.email,
+        ':firstName': userInput.firstName,
+        ':indexSortKey': [userInput.lastName, userInput.firstName, userInput.email].join("#"),
+        ':lastName': userInput.lastName,
+        ':password': hashedPassword,
+      },
+      Key: {
+        partitionKey: id,
+        sortKey: SECONDARY_KEY,
+      },
+      TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+      UpdateExpression: 'set #indexSortKey = :indexSortKey, #email = :email, #firstName = :firstName, #lastName = :lastName, #password = :password',
+    }
+  })
+  await client.transactWrite({
+    TransactItems: transactions,
+  }).promise()
   return {
     ...existingUser,
     ...userInput,
@@ -141,10 +190,9 @@ const all = async (): Promise<IUser[]> => {
 }
 
 /**
- * Retreives a user by an associated email.
- * @param email The email of the user to look up.
+ * Retrieves an email record from the item
  */
-const findByEmail = async (email: string): Promise<IUser | null> => {
+const findEmail = async (email: string): Promise<IEmailLookup | null> => {
   const lookUpParams = {
     Key: {
       email,
@@ -152,6 +200,15 @@ const findByEmail = async (email: string): Promise<IUser | null> => {
     TableName: process.env.DYNAMODB_USER_LOOKUP_TABLE,
   }
   const result = (await client.get(lookUpParams).promise()).Item
+  return (result as IEmailLookup) || null
+}
+
+/**
+ * Retreives a user by an associated email.
+ * @param email The email of the user to look up.
+ */
+const findByEmail = async (email: string): Promise<IUser | null> => {
+  const result = await findEmail(email)
   if (!result) {
     return null
   }
