@@ -11,7 +11,10 @@ import { IModelNumberOutput, ModelNumber } from "./modelNumber"
  * are key to nearly all of the interactions in the system whether
  * it be for managing a troubleshooting request, an item in a specific
  * RGA, or a registered product / warranty tracking for an individual
- * user.
+ * user. A product is more or less a high level object representing
+ * a family of configurations. The configuration is refferred to as
+ * the ModelNumber. Review that model for more detailed associations
+ * to other entities in the system.
  * 
  * The table structure in dynamo DB is as follows:
  * 
