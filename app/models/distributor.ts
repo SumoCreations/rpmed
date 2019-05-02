@@ -15,9 +15,9 @@ import { getClient } from "../util"
  * The table structure in dynamo DB is as follows:
  * 
  * --------------------------------------------------------------
- * |                  | (GS1 Partition Key)    | (GS1 Sort Key)
+ * |                  | (GS1 Partition Key)   | (GS1 Sort Key)
  * --------------------------------------------------------------
- * | Partition Key     | Sort Key              | HSK
+ * | Partition Key    | Sort Key              | HSK
  * --------------------------------------------------------------
  * | UUID             | CONST                 | Domain
  * --------------------------------------------------------------
@@ -135,7 +135,7 @@ const find = async (id: string): Promise<IDistributor | null> => {
  * Retreives a distributor by their domain.
  * @param domain The domain of the distributor to find.
  */
-const findByEmail = async (domain: string): Promise<IDistributor | null> => {
+const findByDomain = async (domain: string): Promise<IDistributor | null> => {
   const searchParams = {
     ExpressionAttributeValues: {
       ":hsk": domain,
@@ -215,7 +215,7 @@ export const Distributor = {
   create,
   destroy,
   find,
-  findByEmail,
+  findByDomain,
   output,
   update
 }

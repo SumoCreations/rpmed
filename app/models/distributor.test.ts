@@ -39,6 +39,20 @@ describe("distributor", () => {
     })
   })
 
+  describe("findByDomain", () => {
+    test("should return a distributor if one exists", async () => {
+      expect.assertions(1)
+      const existingDistributor = await Distributor.findByDomain(distributor.domain)
+      expect(existingDistributor).not.toBeNull()
+    })
+
+    test("should return null if a distributor does not exist", async () => {
+      expect.assertions(1)
+      const existingDistributor = await Distributor.findByDomain("SomeOtherDomainId.co")
+      expect(existingDistributor).toBeUndefined()
+    })
+  })
+
   describe("destroy", () => {
     test("should delete a distributor and return true if one exists", async () => {
       expect.assertions(2)
