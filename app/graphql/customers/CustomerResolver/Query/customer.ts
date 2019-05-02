@@ -17,7 +17,7 @@ export const customer = async (_, args): Promise<ICustomerQueryOutput> => {
     }
   } catch (e) {
     return {
-      errors: [{ path: "_", message: e.localizedMessage || "Could not retreive user" }],
+      errors: [{ path: "_", message: e.localizedMessage || "Could not retrieve customer" }],
       success: false
     }
   }
