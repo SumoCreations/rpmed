@@ -34,7 +34,7 @@ describe("generate", () => {
 })
 
 describe("generate from credentials", () => {
-  beforeEach(async () => {
+  beforeAll(async () => {
     return await User.create({
       email,
       firstName: "Jim",
@@ -43,7 +43,7 @@ describe("generate from credentials", () => {
     })
   })
 
-  afterEach(async () => {
+  afterAll(async () => {
     return await User.destroyByEmail(email)
   })
 
