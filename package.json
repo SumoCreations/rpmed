@@ -4,7 +4,7 @@
   "description": "A serverless GraphQL API for the RPMed Customer Service Portal.",
   "main": "app/index.json",
   "scripts": {
-    "test": "jest --config jestconfig.json",
+    "test": "jest --runInBand --config jestconfig.json",
     "start": "npm run killDynamo; sls offline start",
     "lint": "tslint -p tsconfig.json",
     "installDynamo": "sls dynamodb install --localPath ./bin",
