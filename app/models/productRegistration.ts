@@ -52,6 +52,7 @@ export interface IProductRegistration {
   modelNumber: string
   registeredOn: string
   partitionKey: string
+  serial?: string
   sortKey: string
 }
 
@@ -60,6 +61,7 @@ export interface IProductRegistrationOutput {
   modelNumber: string
   productId: string
   registeredOn: string
+  serial: string
   id: string
 }
 
@@ -250,6 +252,7 @@ const output = ({
   const result = {
     ...productRegistation,
     id: partitionKey,
+    serial: productRegistation.serial || "",
   }
   return result
 }

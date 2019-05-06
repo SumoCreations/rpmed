@@ -8,6 +8,21 @@ export const ErrorProductRegistrationWithSerialCannotBeBlank = {
   path: "serial"
 }
 
+export const ErrorProductRegistrationWithSerialMustBeBlank = {
+  message: "The product / model you are registering cannot have a serial number",
+  path: "serial"
+}
+
+export const ErrorProductRegistrationCustomerDoesNotExist = {
+  message: "The customer you are registering this for does not exist",
+  path: "customerId"
+}
+
+export const ErrorProductRegistrationModelNumberDoesNotExist = {
+  message: "The model number supplied does not exist",
+  path: "modelNumber"
+}
+
 export const ErrorProductRegistrationCredentialsInvalid = {
   message: "The product registration credentials provided were not valid.",
   path: "_"

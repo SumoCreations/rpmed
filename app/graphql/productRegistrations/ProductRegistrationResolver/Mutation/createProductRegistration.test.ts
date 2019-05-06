@@ -26,6 +26,20 @@ describe("createProductRegistration", () => {
     expect(output.success).toBe(true)
   })
 
+  test("should fail if the product does not exist", async () => {
+    expect.assertions(2)
+    const output = await createProductRegistration(null, { productRegistrationInput: { ...lottedSample.sampleParams, modelNumber: "model-does-not-exist" } })
+    expect(output.success).toBe(false)
+    expect(output.errors.map(e => e.path)).toContain("modelNumber")
+  })
+
+  test("should fail if the customer does not exist", async () => {
+    expect.assertions(2)
+    const output = await createProductRegistration(null, { productRegistrationInput: { ...lottedSample.sampleParams, customerId: "customer-does-not-exist" } })
+    expect(output.success).toBe(false)
+    expect(output.errors.map(e => e.path)).toContain("customerId")
+  })
+
   test("should fail if the serial number is blank on a lotted product", async () => {
     expect.assertions(2)
     const output = await createProductRegistration(null, { productRegistrationInput: { ...lottedSample.sampleParams, serial: "" } })

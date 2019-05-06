@@ -1,6 +1,6 @@
 import * as Validation from "rpmed-validation-schema"
 import { v4 as uuid } from "uuid"
-import { IProductRegistrationInput, ModelNumber, ProductRegistration } from "../../../../models"
+import { Customer, IProductRegistrationInput, ModelNumber, ProductRegistration } from "../../../../models"
 import * as E from "../productRegistrationErrors"
 import { IProductRegistrationMutationOutput } from "./productRegistrationMutationTypes"
 
@@ -14,7 +14,21 @@ export const createProductRegistration = async (
     return { errors: Validation.formatError(e), success: false }
   }
 
+  const relatedCustomer = await Customer.find(productRegistrationInput.customerId)
+  if (!relatedCustomer) {
+    return {
+      errors: [E.ErrorProductRegistrationCustomerDoesNotExist],
+      success: false
+    }
+  }
+
   const relatedModel = await ModelNumber.find(productRegistrationInput.modelNumber)
+  if (!relatedModel) {
+    return {
+      errors: [E.ErrorProductRegistrationModelNumberDoesNotExist],
+      success: false
+    }
+  }
   const hasSerial = productRegistrationInput.serial && productRegistrationInput.serial.length > 0
   if (relatedModel.lotted && !hasSerial) {
     return {
@@ -22,9 +36,14 @@ export const createProductRegistration = async (
       success: false
     }
   }
+  if (!relatedModel.lotted && hasSerial) {
+    return {
+      errors: [E.ErrorProductRegistrationWithSerialMustBeBlank],
+      success: false
+    }
+  }
 
   const id = productRegistrationInput.serial || uuid()
-
   const existingProductRegistration = await ProductRegistration.find(id)
   if (existingProductRegistration) {
     return {
@@ -34,7 +53,7 @@ export const createProductRegistration = async (
   }
 
   try {
-    const productRegistration = await ProductRegistration.create(productRegistrationInput)
+    const productRegistration = await ProductRegistration.create({ ...productRegistrationInput, productId: relatedModel.indexSortKey, serial: id })
     return { productRegistration: ProductRegistration.output(productRegistration), success: true }
   } catch (e) {
     return { success: false, errors: [E.ErrorProductRegistrationCredentialsInvalid] }

@@ -10,33 +10,25 @@ export const ProductRegistrationTypeDef = gql`
     """
     id: ID!
     """
-    The domain to match email addresses to via this registration.
+    The date the product was registered.
     """
-    domain: String!
+    registeredOn: String!
     """
-    The actual name of the registration.
+    The id of the customer the product has been registered.
     """
-    name: String!
+    customerId: String!
     """
-    A hint or maintenance tip to prevent the registration.
+    The id of the product that has been registered.
     """
-    careTip: String
+    productId: String!
     """
-    A description of the registration and/or it's cause in detail.
+    The the model number of the product that has been registered.
     """
-    synopsis: String!
+    modelNumber: String!
     """
-    A solution to resolve the registration.
+    The serial number associated to the product if applicable.
     """
-    solution: String!
-    """
-    An associated fee for servicing this issue.
-    """
-    fee: Int!
-    """
-    An official code used to identify this registration.
-    """
-    faultCode: String!
+    serial: String
   }
 `
 
@@ -117,8 +109,16 @@ export const typeDefs = gql`
   A set of fields used to create or update a registration.
   """
   input NewProductRegistrationInput {
-    domain: String!
-    name: String
+    customerId: String!
+    modelNumber: String!
+    """
+    The serial number associate to the product if it is lotted.
+    """
+    serial: String
+    """
+    The date the product was registered.
+    """
+    registeredOn: String!
   }
 
   """
@@ -126,8 +126,16 @@ export const typeDefs = gql`
   """
   input ExistingProductRegistrationInput {
     id: ID!
-    domain: String!
-    name: String
+    customerId: String!
+    modelNumber: String!
+    """
+    The serial number associate to the product if it is lotted.
+    """
+    serial: String
+    """
+    The date the product was registered.
+    """
+    registeredOn: String!
   }
 
   type Mutation {
