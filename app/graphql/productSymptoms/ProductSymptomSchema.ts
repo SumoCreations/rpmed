@@ -10,10 +10,6 @@ export const typeDefs = gql`
     """
     id: ID!
     """
-    The domain to match email addresses to via this symptom.
-    """
-    domain: String!
-    """
     The actual name of the symptom.
     """
     name: String!
@@ -113,7 +109,11 @@ export const typeDefs = gql`
   A set of fields used to create or update a symptom.
   """
   input NewProductSymptomInput {
-    domain: String!
+    faultCode: String
+    fee: Int
+    careTip: String
+    solution: String
+    synopsis: String
     name: String
   }
 
@@ -122,7 +122,11 @@ export const typeDefs = gql`
   """
   input ExistingProductSymptomInput {
     id: ID!
-    domain: String!
+    faultCode: String
+    fee: Int
+    careTip: String
+    solution: String
+    synopsis: String
     name: String
   }
 
