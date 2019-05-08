@@ -1,4 +1,4 @@
-import { ProductRegistration } from "../../../../models"
+import { Customer, ProductRegistration } from "../../../../models"
 import { ErrorProductRegistrationWithIDDoesNotExist } from "../productRegistrationErrors"
 import { IProductRegistrationQueryOutput } from "./productRegistrationQueryTypes"
 
@@ -12,7 +12,10 @@ export const productRegistration = async (_, args): Promise<IProductRegistration
       }
     }
     return {
-      productRegistration: ProductRegistration.output(result),
+      productRegistration: {
+        ...ProductRegistration.output(result),
+        customer: async () => Customer.output(await Customer.find(result.customerId))
+      },
       success: true
     }
   } catch (e) {
