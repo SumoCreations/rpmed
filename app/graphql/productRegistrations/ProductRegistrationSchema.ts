@@ -1,6 +1,25 @@
 import { gql } from "apollo-server-lambda"
 
 export const ProductRegistrationTypeDef = gql`
+
+  """
+  The profile of a customer associated to a registration.
+  """
+  type Customer {
+    """
+    The id of the customer the product has been registered.
+    """
+    id: String!
+    """
+    The full name of the customer.
+    """
+    name: String!
+    """
+    The email address associated to the customer.
+    """
+    email: String!
+  }
+
   """
   A troubleshooting registration for a product.
   """
@@ -13,6 +32,10 @@ export const ProductRegistrationTypeDef = gql`
     The date the product was registered.
     """
     registeredOn: String!
+    """
+    The customer profile associated to the registration.
+    """
+    customer: Customer!
     """
     The id of the customer the product has been registered.
     """
@@ -109,7 +132,13 @@ export const typeDefs = gql`
   A set of fields used to create or update a registration.
   """
   input NewProductRegistrationInput {
+    """
+    The id of the customer associated to the registration.
+    """
     customerId: String!
+    """
+    The model number for representing the specific product configuration being registered.
+    """
     modelNumber: String!
     """
     The serial number associate to the product if it is lotted.
@@ -126,7 +155,13 @@ export const typeDefs = gql`
   """
   input ExistingProductRegistrationInput {
     id: ID!
+    """
+    The id of the customer associated to the registration.
+    """
     customerId: String!
+    """
+    The model number for representing the specific product configuration being registered.
+    """
     modelNumber: String!
     """
     The serial number associate to the product if it is lotted.

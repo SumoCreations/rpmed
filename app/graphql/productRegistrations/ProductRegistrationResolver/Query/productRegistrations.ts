@@ -1,11 +1,14 @@
-import { ProductRegistration } from "../../../../models"
+import { Customer, ProductRegistration } from "../../../../models"
 import { IProductRegistrationQueryOutput } from "./productRegistrationQueryTypes"
 
 export const productRegistrations = async (): Promise<IProductRegistrationQueryOutput> => {
   try {
     const results = await ProductRegistration.all()
     return {
-      productRegistrations: results.map(ProductRegistration.output),
+      productRegistrations: results.map(ProductRegistration.output).map(o => ({
+        ...o,
+        customer: async () => Customer.output((await Customer.find(o.customerId)))
+      })),
       success: true
     }
   } catch (e) {
