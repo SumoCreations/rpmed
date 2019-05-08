@@ -55,32 +55,14 @@ functions:
       - http:
           path: graphql
           method: any
-          cors:
-            origin: "*" # <-- Specify allowed origin
-            headers: # <-- Specify allowed headers
-              - Content-Type
-              - X-Amz-Date
-              - Authorization
-              - X-Api-Key
-              - X-Amz-Security-Token
-              - X-Amz-User-Agent
-              - X-Apollo-Tracing
+          cors: true
   token:
     handler: app/token.createToken
     events:
       - http:
           method: post
           path: auth/token
-          cors:
-            origin: "*" # <-- Specify allowed origin
-            headers: # <-- Specify allowed headers
-              - Content-Type
-              - X-Amz-Date
-              - Authorization
-              - X-Api-Key
-              - X-Amz-Security-Token
-              - X-Amz-User-Agent
-              - X-Apollo-Tracing
+          cors: true
 
 resources:
   Resources:
