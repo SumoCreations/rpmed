@@ -82,7 +82,7 @@ export const typeDefs = gql`
     """
     All customers in the system
     """
-    customers: CustomerQueryOutput!
+    customers(search: String): CustomerQueryOutput!
     """
     A specific customer in the system via ID.
     """

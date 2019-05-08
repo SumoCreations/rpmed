@@ -15,7 +15,7 @@ describe("Query", () => {
         email: "customers-query-test-4@rpmed.com",
         name: "Test User 2",
       })
-      const output = await customers()
+      const output = await customers({}, {})
       expect(output.success).toEqual(true)
       expect(output.customer).toBeUndefined()
       expect(output.customers).toBeDefined()
