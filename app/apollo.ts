@@ -10,4 +10,9 @@ const server = new ApolloServer({
   schema,
 })
 
-export const graphqlHandler = server.createHandler()
+export const graphqlHandler = server.createHandler({
+  cors: {
+    credentials: true,
+    origin: true,
+  },
+})
