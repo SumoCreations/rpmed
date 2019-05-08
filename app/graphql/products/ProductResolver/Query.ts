@@ -8,7 +8,7 @@ import {
 type ProductResolver = (context: any, args: { id: string }) => Promise<IProductOutput | null>
 type ProductsResolver = (context: any, args: { search?: string }) => Promise<IProductOutput[]>
 type ModelNumberResolver = (context: any, args: { id: string }) => Promise<IModelNumberOutput | null>
-type ModelNumbersResolver = (context: any, args: any) => Promise<IModelNumberOutput[]>
+type ModelNumbersResolver = (context: any, args: { search?: string, productId?: string }) => Promise<IModelNumberOutput[]>
 
 /**
  * Retrieves a specific product in the system.
@@ -39,10 +39,13 @@ export const modelNumber: ModelNumberResolver = async (_, args) => {
 /**
  * Retreives all model numbers in the system.
  */
-export const modelNumbers: ModelNumbersResolver = async () => {
-  const output = (await ModelNumber.all()).map(ModelNumber.output).map(o => ({
-    ...o,
-    product: async () => Product.output(await Product.find(o.productId))
-  }))
+export const modelNumbers: ModelNumbersResolver = async (_, { productId, search }) => {
+  const results = productId ? ModelNumber.forProduct(productId) : ModelNumber.all()
+  const output = (await results).map(ModelNumber.output)
+    .filter(p => search ? p.id.toLowerCase().indexOf(search.toLowerCase()) >= 0 : true)
+    .map(o => ({
+      ...o,
+      product: async () => Product.output(await Product.find(o.productId))
+    }))
   return output
 }
