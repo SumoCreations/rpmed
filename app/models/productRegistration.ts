@@ -61,7 +61,7 @@ export interface IProductRegistration {
 export interface IProductRegistrationOutput {
   customerId: string
   modelNumber: string
-  lotted: string
+  lotted: boolean
   productId: string
   registeredOn: string
   serial: string
