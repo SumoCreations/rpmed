@@ -13,6 +13,14 @@ custom:
   dynamodb:
     start:
       migrate: true
+      seed: true
+    seed:
+      dev:
+        sources:
+          - table: ${self:service}-${opt:stage, self:provider.stage}-resources
+            sources: [./seed/resources.json]
+          - table: ${self:service}-${opt:stage, self:provider.stage}-users-lookup
+            sources: [./seed/usersLookup.json]
   domain:
     dev: dev.rpmed-apps.com
     prod: rpmed-apps.com
