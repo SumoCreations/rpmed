@@ -1,7 +1,7 @@
 
 import { ModelNumber } from "../../../../models"
 import { generateMutationError } from "../../../../util";
-import { ErrorModelNumberCouldNotBeDestroyed, ErrorModelNumberIDDoesNotExist } from "./productErrors"
+import { ErrorModelNumberCouldNotBeDestroyed, ErrorModelNumberIDDoesNotExist } from "../productErrors"
 import { IModelNumberMutationOutput } from "./productMutationTypes"
 
 

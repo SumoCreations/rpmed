@@ -4,7 +4,7 @@ import {
   Product,
 } from "../../../../models"
 import { generateMutationError } from "../../../../util"
-import { ErrorProductAlreadyExist } from "./productErrors"
+import { ErrorProductAlreadyExist } from "../productErrors"
 import { IProductMutationOutput } from "./productMutationTypes"
 
 type CreateProductMutation = (

@@ -1,7 +1,7 @@
 
 import { Product } from "../../../../models"
 import { generateMutationError } from "../../../../util";
-import { ErrorProductCouldNotBeDestroyed, ErrorProductIDDoesNotExist } from "./productErrors"
+import { ErrorProductCouldNotBeDestroyed, ErrorProductIDDoesNotExist } from "../productErrors"
 import { IProductMutationOutput } from "./productMutationTypes"
 
 export const destroyProduct = async (

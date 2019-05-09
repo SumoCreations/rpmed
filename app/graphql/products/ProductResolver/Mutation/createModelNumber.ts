@@ -5,7 +5,7 @@ import {
   Product
 } from "../../../../models"
 import { generateMutationError } from "../../../../util"
-import { ErrorModelNumberIDAlreadyExists, ErrorModelNumberRelatedProductDoesNotExist } from "./productErrors"
+import { ErrorModelNumberIDAlreadyExists, ErrorModelNumberRelatedProductDoesNotExist } from "../productErrors"
 import { IModelNumberMutationOutput } from "./productMutationTypes"
 
 type CreateModelNumberResolver = (

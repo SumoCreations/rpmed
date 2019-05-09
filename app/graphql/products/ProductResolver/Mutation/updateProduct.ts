@@ -4,7 +4,7 @@ import {
   Product,
 } from "../../../../models"
 import { generateMutationError } from "../../../../util";
-import { ErrorProductAlreadyExist, ErrorProductIDDoesNotExist } from "./productErrors"
+import { ErrorProductAlreadyExist, ErrorProductIDDoesNotExist } from "../productErrors"
 import { IProductMutationOutput } from "./productMutationTypes"
 
 
