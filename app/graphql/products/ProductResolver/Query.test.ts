@@ -25,13 +25,13 @@ describe("Query", () => {
     test("should return a product if it exists", async () => {
       expect.assertions(1)
       const output = await Query.product({}, { id: existingProduct.partitionKey })
-      expect(output.name).toEqual(existingProduct.name)
+      expect(output.product.name).toEqual(existingProduct.name)
     })
 
     test("should return an error if it does not exist", async () => {
       expect.assertions(1)
       const output = await Query.product({}, { id: "DOES-NOT-EXIST" })
-      expect(output).toBeNull()
+      expect(output.success).toEqual(false)
     })
   })
 
@@ -53,7 +53,7 @@ describe("Query", () => {
         name: "MLOX101-BZL",
       })
       const output = await Query.products({}, {})
-      expect(output.length > 1).toEqual(true)
+      expect(output.products.length > 1).toEqual(true)
     })
   })
 
@@ -91,13 +91,13 @@ describe("Query", () => {
     test("should return a modelNumber if it exists", async () => {
       expect.assertions(1)
       const output = await Query.modelNumber({}, { id: existingModelNumber.partitionKey })
-      expect(output.id).toEqual(existingModelNumber.partitionKey)
+      expect(output.modelNumber.id).toEqual(existingModelNumber.partitionKey)
     })
 
     test("should return an error if it does not exist", async () => {
       expect.assertions(1)
       const output = await Query.modelNumber({}, { id: "DOES-NOT-EXIST" })
-      expect(output).toBeNull()
+      expect(output.success).toEqual(false)
     })
   })
 
@@ -132,7 +132,7 @@ describe("Query", () => {
         warrantyTerm: 12,
       })
       const output = await Query.modelNumbers({}, {})
-      expect(output.length > 1).toEqual(true)
+      expect(output.modelNumbers.length > 1).toEqual(true)
     })
   })
 })

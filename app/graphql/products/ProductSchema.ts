@@ -201,19 +201,79 @@ export const typeDefs = gql`
     """
     All products in the system.
     """
-    products(search: String): [Product]
+    products(search: String): ProductQueryOutput
     """
     All product variants in the system.
     """
-    modelNumbers(search: String, productId: String): [ModelNumber]
+    modelNumbers(search: String, productId: String): ModelNumberQueryOutput
     """
     A specific product in the system via ID.
     """
-    product(id: String!): Product
+    product(id: String!): ProductQueryOutput
     """
     A specific model number in the system via ID.
     """
-    modelNumber(id: String!): ModelNumber
+    modelNumber(id: String!): ModelNumberQueryOutput
+  }
+
+  """
+  The result of a query for a product or products.
+  """
+  type ProductQueryOutput {
+    """
+    The resulting product if the operation was successful.
+    """
+    product: Product
+    """
+    The resulting products if the operation was successful and multiple results were returned.
+    """
+    products: [Product]
+    """
+    The size of the paginated results.
+    """
+    pageSize: Int
+    """
+    This key can be used to continue querying paginated results.
+    """
+    lastEvaluatedKey: String
+    """
+    Any validation errors encountered while running the mutation.
+    """
+    errors: [ValidationError]
+    """
+    A simple boolean indicating whether or not the operation was successful.
+    """
+    success: Boolean!
+  }
+
+    """
+  The result of a query for a modelNumber or modelNumbers.
+  """
+  type ModelNumberQueryOutput {
+    """
+    The resulting model number if the operation was successful.
+    """
+    modelNumber: ModelNumber
+    """
+    The resulting model numbers if the operation was successful and multiple results were returned.
+    """
+    modelNumbers: [ModelNumber]
+    """
+    The size of the paginated results.
+    """
+    pageSize: Int
+    """
+    This key can be used to continue querying paginated results.
+    """
+    lastEvaluatedKey: String
+    """
+    Any validation errors encountered while running the mutation.
+    """
+    errors: [ValidationError]
+    """
+    A simple boolean indicating whether or not the operation was successful.
+    """
+    success: Boolean!
   }
 
   type Mutation {
