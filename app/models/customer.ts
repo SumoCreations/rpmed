@@ -16,9 +16,9 @@ import { getClient } from "../util"
  * --------------------------------------------------------------
  * |                  | (GS1 Partition Key)    | (GS1 Sort Key)
  * --------------------------------------------------------------
- * | Partition Key     | Sort Key              | HSK
+ * | Partition Key    | Sort Key               | HSK
  * --------------------------------------------------------------
- * | UUID             | CONST                 | Email
+ * | UUID             | CONST                  | Email
  * --------------------------------------------------------------
  * 
  * This allows for the following access patterns:
