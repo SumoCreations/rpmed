@@ -52,6 +52,10 @@ export const ProductRegistrationTypeDef = gql`
     The serial number associated to the product if applicable.
     """
     serial: String
+    """
+    Indicates whether or not the registration belongs to a lotted model number.
+    """
+    lotted: Boolean
   }
 `
 

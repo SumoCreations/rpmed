@@ -40,6 +40,7 @@ interface IRegistrationSortKeyInput { productId: string, modelNumber: string }
 export interface IProductRegistrationInput {
   customerId: string
   productId: string
+  lotted: boolean
   modelNumber: string
   serial?: string
   registeredOn: string
@@ -49,6 +50,7 @@ export interface IProductRegistrationInput {
 export interface IProductRegistration {
   customerId: string
   productId: string
+  lotted: boolean
   modelNumber: string
   registeredOn: string
   partitionKey: string
@@ -59,6 +61,7 @@ export interface IProductRegistration {
 export interface IProductRegistrationOutput {
   customerId: string
   modelNumber: string
+  lotted: string
   productId: string
   registeredOn: string
   serial: string
@@ -81,6 +84,7 @@ const create = async ({
     modelNumber,
     partitionKey: serial || uuid(),
     productId,
+    serial,
     sortKey: SECONDARY_KEY,
   }
   const hsk = `${productId}#${modelNumber}`

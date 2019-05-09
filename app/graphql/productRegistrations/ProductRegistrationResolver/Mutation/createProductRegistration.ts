@@ -53,8 +53,18 @@ export const createProductRegistration = async (
   }
 
   try {
-    const productRegistration = await ProductRegistration.create({ ...productRegistrationInput, productId: relatedModel.indexSortKey, serial: id })
-    return { productRegistration: ProductRegistration.output(productRegistration), success: true }
+    const productRegistration = await ProductRegistration.create({
+      ...productRegistrationInput,
+      lotted: relatedModel.lotted,
+      productId: relatedModel.indexSortKey,
+      serial: id
+    })
+    return {
+      productRegistration: {
+        ...ProductRegistration.output(productRegistration),
+        customer: async () => Customer.output((await Customer.find(productRegistration.customerId)))
+      }, success: true
+    }
   } catch (e) {
     return { success: false, errors: [E.ErrorProductRegistrationCredentialsInvalid] }
   }
