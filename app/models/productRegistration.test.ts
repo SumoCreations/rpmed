@@ -41,6 +41,7 @@ describe("product registration", () => {
     productRegistration = await ProductRegistration.create({
       customerId: customer.partitionKey,
       id: uuid(),
+      lotted: modelNumber.lotted,
       modelNumber: modelNumber.partitionKey,
       productId: product.partitionKey,
       registeredOn: new Date().toISOString()
@@ -64,6 +65,7 @@ describe("product registration", () => {
     unrelatedReg1 = await ProductRegistration.create({
       customerId: customer.partitionKey,
       id: uuid(),
+      lotted: modelNumber.lotted,
       modelNumber: modelNumber.partitionKey,
       productId: product.partitionKey,
       registeredOn: new Date().toISOString()
@@ -71,6 +73,7 @@ describe("product registration", () => {
     unrelatedReg2 = await ProductRegistration.create({
       customerId: customer.partitionKey,
       id: uuid(),
+      lotted: unrelatedModel.lotted,
       modelNumber: unrelatedModel.partitionKey,
       productId: product.partitionKey,
       registeredOn: new Date().toISOString()
@@ -78,6 +81,7 @@ describe("product registration", () => {
     unrelatedReg3 = await ProductRegistration.create({
       customerId: customer.partitionKey,
       id: uuid(),
+      lotted: unrelatedModel.lotted,
       modelNumber: unrelatedModel.partitionKey,
       productId: unrelatedProduct.partitionKey,
       registeredOn: new Date().toISOString()
