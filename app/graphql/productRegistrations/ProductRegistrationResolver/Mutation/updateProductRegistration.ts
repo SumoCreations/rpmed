@@ -1,27 +1,31 @@
-import * as Validation from "rpmed-validation-schema"
-import { IProductRegistrationInput, ProductRegistration } from "../../../../models"
-import * as E from "../productRegistrationErrors"
+
+import { Customer, IProductRegistrationInput, ProductRegistration } from "../../../../models"
 import { IProductRegistrationMutationOutput } from "./productRegistrationMutationTypes"
+import { validateRegistrationInput } from "./validateRegistrationInput"
 
 export const updateProductRegistration = async (
   _: any,
   { productRegistrationInput }: { productRegistrationInput: IProductRegistrationInput }
 ): Promise<IProductRegistrationMutationOutput> => {
+  const { errorResponse, input, customer } = await validateRegistrationInput(productRegistrationInput)
+  if (errorResponse) {
+    return errorResponse
+  }
   try {
-    await Validation.ProductRegistration.Default.validate(productRegistrationInput, { abortEarly: false })
+    const productRegistration = await ProductRegistration.update(input)
+    return {
+      productRegistration: {
+        ...ProductRegistration.output(productRegistration),
+        customer: (async () => Customer.output(customer || (await Customer.find(productRegistration.customerId))))
+      }, success: true
+    }
   } catch (e) {
-    return { errors: Validation.formatError(e), success: false }
-  }
-  let productRegistration = await ProductRegistration.find(productRegistrationInput.id)
-  if (!productRegistration) {
-    return { success: false, errors: [E.ErrorProductRegistrationWithIDDoesNotExist] }
-  }
-  if (productRegistrationInput.serial && productRegistrationInput.serial !== productRegistration.partitionKey) {
-    const existingRegistration = await ProductRegistration.find(productRegistrationInput.serial)
-    if (existingRegistration) {
-      return { success: false, errors: [E.ErrorProductRegistrationWithSerialAlreadyExists] }
+    return {
+      errors: [{
+        message: e.localizedMessage || `Could not update registration with id ${productRegistrationInput.id}`,
+        path: "_"
+      }],
+      success: false,
     }
   }
-  productRegistration = await ProductRegistration.update(productRegistrationInput)
-  return { productRegistration: ProductRegistration.output(productRegistration), success: true }
 }
