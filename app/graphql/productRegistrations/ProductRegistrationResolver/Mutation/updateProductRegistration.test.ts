@@ -19,19 +19,9 @@ describe("updateProductRegistration", () => {
 
   test("should update the productRegistration", async () => {
     expect.assertions(1)
-    const productRegistrationInput = { ...sample1.sampleParams, id: registration.partitionKey, serial: "UPDATETEST2000" }
+    const productRegistrationInput = { ...sample1.sampleParams, id: registration.partitionKey, registeredOn: new Date().toISOString() }
     const output = await updateProductRegistration(null, { productRegistrationInput })
     expect(output.success).toBe(true)
-  })
-
-  test("should fail if the serial is already in use", async () => {
-    expect.assertions(2)
-    const existingSerial = "ALREADYEXISTS"
-    await ProductRegistration.create({ ...sample1.sampleParams, serial: existingSerial })
-    const productRegistrationInput = { ...sample1.sampleParams, id: registration.partitionKey, serial: existingSerial }
-    const output = await updateProductRegistration(null, { productRegistrationInput })
-    expect(output.success).toBe(false)
-    expect(output.errors.map(e => e.path)).toContain("serial")
   })
 
   test("should fail if the productRegistration does not exist", async () => {
