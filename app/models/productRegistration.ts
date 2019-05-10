@@ -1,5 +1,5 @@
 import { v4 as uuid } from "uuid"
-import { getClient } from "../util"
+import { filterBlankAttributes, getClient } from "../util"
 
 /**
  * Dynamo DB Model:
@@ -19,7 +19,7 @@ import { getClient } from "../util"
  * ----------------------------------------------------------------------
  * | Partition Key      | Sort Key            | HSK
  * ----------------------------------------------------------------------
- * | Serial/UUID        | CONST               | ProductId#ModelNumber
+ * | Serial/UUID        | CONST               | ProductId#ModelNumber#customerId
  * ----------------------------------------------------------------------
  * 
  * This allows for the following access patterns:
@@ -73,6 +73,7 @@ export interface IProductRegistrationOutput {
  * @param credentials The identifying credentials to assign to the account.
  */
 const create = async ({
+  customerId,
   id,
   productId,
   modelNumber,
@@ -81,20 +82,21 @@ const create = async ({
 }: IProductRegistrationInput): Promise<IProductRegistration> => {
   const item: IProductRegistration = {
     ...registrationInput,
+    customerId,
     modelNumber,
     partitionKey: serial || uuid(),
     productId,
     serial,
     sortKey: SECONDARY_KEY,
   }
-  const hsk = `${productId}#${modelNumber}`
+  const hsk = `${productId}#${modelNumber}#${customerId}`
   const params = {
     TransactItems: [
       {
         Put: {
           ConditionExpression: "attribute_not_exists(partitionKey)",
           Item: {
-            ...item,
+            ...filterBlankAttributes(item),
             indexSortKey: hsk,
           },
           TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
@@ -107,24 +109,24 @@ const create = async ({
 }
 
 /**
- * Generates a new registration model in the database provided the supplied credentials are valid.
+ * Updates an existing registration model in the database provided the supplied 
+ * credentials are valid. Some attributes cannot be changed such as the serial
+ * or model number.
  * @param input An object representing the input to replace the supplied object.
  */
 const update = async ({
+  customerId,
   id,
-  modelNumber,
-  productId,
   registeredOn
 }: IProductRegistrationInput): Promise<IProductRegistration> => {
   const existingItem = await find(id)
   const item: IProductRegistration = {
     ...existingItem,
-    modelNumber,
-    productId,
+    customerId,
     registeredOn,
     sortKey: SECONDARY_KEY,
   }
-  const hsk = `${productId}#${modelNumber}`
+  const hsk = `${existingItem.productId}#${existingItem.modelNumber}#${customerId}`
   const params = {
     TransactItems: [
       {
@@ -172,7 +174,7 @@ const forModel = async ({ productId, modelNumber }: IRegistrationSortKeyInput): 
       ":rkey": `${productId}#${modelNumber}`,
     },
     IndexName: "GSI_1",
-    KeyConditionExpression: "sortKey = :pk and indexSortKey = :rkey",
+    KeyConditionExpression: "sortKey = :pk and begins_with(indexSortKey, :rkey)",
     Limit: 500,
     TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
   }
