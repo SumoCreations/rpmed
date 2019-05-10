@@ -1,7 +1,7 @@
 import { isEmpty } from "validator"
 import { IUser, User } from "./user"
 
-const email = "shout@jimjeffers.com"
+const email = "not-seeded-yet@jimjeffers.com"
 const password = "thisisjustatest"
 const firstName = "Jim"
 const lastName = "Jeffers"

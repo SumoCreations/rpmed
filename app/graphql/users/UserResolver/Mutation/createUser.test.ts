@@ -1,12 +1,12 @@
 import { User } from "../../../../models"
 import { createUser } from "./createUser"
 
-const email = "create-user-test@jimjeffers.com"
+const email = "create-user-test@example.com"
 const password = "password"
 const firstName = "Jim"
 const lastName = "Jeffers"
 
-const sampleParams = { email: "jim@sumocreations.com", firstName: "Jim", lastName: "Jeffers", password: "password" }
+const sampleParams = { email: "jim-developer@example.com", firstName: "Jim", lastName: "Jeffers", password: "password" }
 
 describe("createUser", () => {
   beforeEach(async () =>
