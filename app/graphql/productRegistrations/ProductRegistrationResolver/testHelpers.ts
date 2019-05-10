@@ -49,10 +49,11 @@ export const generateSampleParams = async (inputs: IRegistrationTestHelperInput)
     product,
     sampleParams: {
       customerId: customer.partitionKey,
+      lotted: modelNumber.lotted,
       modelNumber: modelNumber.partitionKey,
       productId: product.partitionKey,
       registeredOn: new Date().toISOString(),
-      serial: inputs.serial || uuid(),
+      serial: inputs.lotted ? inputs.serial || uuid() : null,
     }
   }
 }
