@@ -1,4 +1,4 @@
-import { ModelNumber } from "../../../../models"
+import { ModelNumber, Product } from "../../../../models"
 import { ErrorModelNumberIDDoesNotExist } from "../productErrors"
 import { IModelNumberQueryOutput } from "./productQueryTypes"
 
@@ -14,9 +14,11 @@ export const modelNumber = async (_, args: { id: string }): Promise<IModelNumber
         success: false
       }
     }
+    const output = ModelNumber.output(result)
     return {
       modelNumber: {
-        ...ModelNumber.output(result),
+        ...output,
+        product: async () => Product.output(await Product.find(output.productId))
       },
       success: true
     }

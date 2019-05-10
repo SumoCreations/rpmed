@@ -1,6 +1,10 @@
 import { ErrorList } from "rpmed-validation-schema"
 import { IModelNumberOutput, IProductOutput } from "../../../../models"
 
+interface IExtendedModelNumberOutput extends IModelNumberOutput {
+  product: () => Promise<IProductOutput | null>
+}
+
 export interface IProductQueryOutput {
   lastEvaluatedKey?: string
   pageSize?: number
@@ -13,8 +17,8 @@ export interface IProductQueryOutput {
 export interface IModelNumberQueryOutput {
   lastEvaluatedKey?: string
   pageSize?: number
-  modelNumbers?: IModelNumberOutput[]
-  modelNumber?: IModelNumberOutput
+  modelNumbers?: IExtendedModelNumberOutput[]
+  modelNumber?: IExtendedModelNumberOutput
   errors?: ErrorList
   success: boolean
 }
