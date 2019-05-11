@@ -119,6 +119,21 @@ const update = async ({
  * Retreives a distributor by unique ID.
  * @param id The UUID of the distributor to find.
  */
+const findOrCreateWithDomain = async (domain: string): Promise<IDistributor> => {
+  const existing = await findByDomain(domain)
+  if (existing) {
+    return existing
+  }
+  return await create({
+    domain,
+    name: domain
+  })
+}
+
+/**
+ * Retreives a distributor by unique ID.
+ * @param id The UUID of the distributor to find.
+ */
 const find = async (id: string): Promise<IDistributor | null> => {
   const searchParams = {
     Key: {
@@ -216,6 +231,7 @@ export const Distributor = {
   destroy,
   find,
   findByDomain,
+  findOrCreateWithDomain,
   output,
   update
 }
