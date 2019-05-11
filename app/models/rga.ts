@@ -1,3 +1,4 @@
+import { padStart } from "lodash"
 import { DateTime } from "luxon"
 import { filterBlankAttributes, getClient } from "../util"
 
@@ -59,32 +60,11 @@ export interface IRGAOutput {
   submittedOn: string
 }
 
-const DATE_FORMAT = "MMddyyyy"
+const DATE_FORMAT = "MMddyyyy'MR'-mmssSSS"
 
 const generateDate = (isoString?: string) => (isoString ? DateTime.fromISO(isoString) : DateTime.utc()).toFormat(DATE_FORMAT)
-
-const generateId = (dateString: string, id: number) => `${dateString}MR-${id}`
-
-const deconstructId = (id: string) => {
-  const partitions = id.split("MR-")
-  return {
-    dateString: partitions[0],
-    id: parseInt(partitions[1], 0)
-  }
-}
-
-const generateUsableId = async (isoString?: string) => {
-  const results = await submittedOnDate(isoString)
-  const currentDateString = generateDate(isoString)
-  if (results.length < 1) {
-    return generateId(currentDateString, 1)
-  }
-  const latestItem = deconstructId(results[0].partitionKey)
-  if (latestItem.dateString === currentDateString) {
-    return generateId(currentDateString, latestItem.id + 1)
-  }
-  return generateId(currentDateString, 1)
-}
+const randomPaddedTwoDigit = () => padStart(`${Math.round(Math.random() * 99)}`, 2, '0')
+const generateId = (dateString: string) => `${generateDate(dateString)}${randomPaddedTwoDigit()}`
 
 /**
  * Generates a new RGA model in the database provided the supplied credentials are valid.
@@ -95,7 +75,7 @@ const create = async ({
   submittedOn,
   ...rgaInput
 }: IRGAInput): Promise<IRGA> => {
-  const partitionKey = await generateUsableId(submittedOn)
+  const partitionKey = await generateId(submittedOn)
   const item: IRGA = {
     ...rgaInput,
     indexSortKey: submittedOn,
@@ -103,7 +83,6 @@ const create = async ({
     sortKey: SECONDARY_KEY,
     submittedOn
   }
-
   const params = {
     TransactItems: [
       {
@@ -155,7 +134,7 @@ const all = async (): Promise<IRGA[]> => {
 }
 
 /**
- * Retreives a list of all model number configurations for a specified product ID.
+ * Retreives a list of all RGAs submitted for a specified date.
  */
 const submittedOnDate = async (isoString: string): Promise<IRGA[]> => {
   const searchParams = {
