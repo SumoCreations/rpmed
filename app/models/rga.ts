@@ -59,7 +59,7 @@ export interface IRGAOutput {
   submittedOn: string
 }
 
-const DATE_FORMAT = "MMDDYYYY"
+const DATE_FORMAT = "MMddyyyy"
 
 const generateDate = (isoString?: string) => (isoString ? DateTime.fromISO(isoString) : DateTime.utc()).toFormat(DATE_FORMAT)
 
@@ -74,7 +74,7 @@ const deconstructId = (id: string) => {
 }
 
 const generateUsableId = async (isoString?: string) => {
-  const results = await all()
+  const results = await submittedOnDate(isoString)
   const currentDateString = generateDate(isoString)
   if (results.length < 1) {
     return generateId(currentDateString, 1)
@@ -157,14 +157,16 @@ const all = async (): Promise<IRGA[]> => {
 /**
  * Retreives a list of all model number configurations for a specified product ID.
  */
-const submittedOnDate = async (submittedOn: string): Promise<IRGA[]> => {
+const submittedOnDate = async (isoString: string): Promise<IRGA[]> => {
   const searchParams = {
     ExpressionAttributeValues: {
-      ":hsk": submittedOn,
+      ":maxDate": DateTime.fromISO(isoString).endOf("day").toISO(),
+      ":minDate": DateTime.fromISO(isoString).startOf("day").toISO(),
       ":rkey": SECONDARY_KEY,
     },
     IndexName: "GSI_1",
-    KeyConditionExpression: "sortKey = :rkey AND begins_with(indexSortKey, :hsk)",
+    KeyConditionExpression: "sortKey = :rkey and indexSortKey BETWEEN :minDate and :maxDate",
+    ScanIndexForward: false,
     TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
   }
   const result = await client.query(searchParams).promise()
