@@ -41,7 +41,7 @@ describe("rga", () => {
         ...existingRGAParams,
         distributorId: distributor.partitionKey
       })
-      expect(rgaOnSameDay.partitionKey).toEqual("05072019MR-2")
+      expect(rgaOnSameDay.partitionKey).toMatch(/^05072019MR/)
     })
 
     test("should start over for a later date", async () => {
@@ -51,7 +51,7 @@ describe("rga", () => {
         distributorId: distributor.partitionKey,
         submittedOn: DateTime.utc(2019, 5, 8, 7, 30, 1, 1).toISO()
       })
-      expect(rgaOnSameDay.partitionKey).toEqual("05082019MR-1")
+      expect(rgaOnSameDay.partitionKey).toMatch(/^05082019MR/)
     })
 
     test("should start over for a previous date", async () => {
@@ -61,7 +61,7 @@ describe("rga", () => {
         distributorId: distributor.partitionKey,
         submittedOn: DateTime.utc(2019, 5, 6, 7, 30, 1, 1).toISO()
       })
-      expect(rgaOnSameDay.partitionKey).toEqual("05062019MR-1")
+      expect(rgaOnSameDay.partitionKey).toMatch(/^05062019MR/)
     })
 
     test("should increment the ID again if its on the same date", async () => {
@@ -70,7 +70,7 @@ describe("rga", () => {
         ...existingRGAParams,
         distributorId: distributor.partitionKey
       })
-      expect(rgaOnSameDay.partitionKey).toEqual("05072019MR-3")
+      expect(rgaOnSameDay.partitionKey).toMatch(/^05072019MR/)
     })
   })
 
