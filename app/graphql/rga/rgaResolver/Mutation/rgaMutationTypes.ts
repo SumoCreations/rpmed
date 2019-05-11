@@ -2,7 +2,7 @@ import { ErrorList } from "rpmed-validation-schema"
 import { IRGAOutput } from "../../../../models"
 
 export interface IRGAMutationOutput {
-  product?: IRGAOutput
+  rga?: IRGAOutput
   errors?: ErrorList
   success: boolean
 }
