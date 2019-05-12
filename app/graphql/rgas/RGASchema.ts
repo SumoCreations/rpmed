@@ -23,6 +23,24 @@ export const typeDefs = gql`
     distributor: Distributor!
   }
 
+  """
+  A distributor of Riverpoint Medical.
+  """
+  type Distributor {
+    """
+    The unique identifier for this distributor
+    """
+    id: ID!
+    """
+    The domain to match email addresses to via this distributor.
+    """
+    domain: String!
+    """
+    The actual name of the distributor.
+    """
+    name: String
+  }
+
   type ValidationError {
     """
     A path indicating the attribute that failed validation.
