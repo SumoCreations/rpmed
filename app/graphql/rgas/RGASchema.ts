@@ -17,6 +17,10 @@ export const typeDefs = gql`
     The email address of the user whom submitted the RGA.
     """
     submittedBy: String!
+    """
+    The distributor associated to the the RGA.
+    """
+    distributor: Distributor!
   }
 
   type ValidationError {

@@ -1,15 +1,15 @@
 import { ErrorList } from "rpmed-validation-schema"
-import { IRGAOutput } from "../../../../models"
+import { IDistributorOutput, IRGAOutput } from "../../../../models"
 
-// interface IExtendedRGAOutput extends IRGAOutput {
-//   customer: () => Promise<ICustomerOutput | null>
-// }
+interface IExtendedRGAOutput extends IRGAOutput {
+  distributor: () => Promise<IDistributorOutput | null>
+}
 
 export interface IRGAQueryOutput {
   lastEvaluatedKey?: string
   pageSize?: number
-  rgas?: IRGAOutput[]
-  rga?: IRGAOutput
+  rgas?: IExtendedRGAOutput[]
+  rga?: IExtendedRGAOutput
   errors?: ErrorList
   success: boolean
 }

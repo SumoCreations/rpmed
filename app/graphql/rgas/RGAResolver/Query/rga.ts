@@ -1,4 +1,4 @@
-import { RGA } from "../../../../models"
+import { Distributor, RGA } from "../../../../models"
 import { ErrorRGAWithIDDoesNotExist } from "../rgaErrors"
 import { IRGAQueryOutput } from "./rgaQueryTypes"
 
@@ -14,6 +14,7 @@ export const rga = async (_, args): Promise<IRGAQueryOutput> => {
     return {
       rga: {
         ...RGA.output(result),
+        distributor: async () => Distributor.output(await Distributor.find(result.distributorId))
       },
       success: true
     }

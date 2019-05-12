@@ -1,4 +1,4 @@
-import { RGA } from "../../../../models"
+import { Distributor, RGA } from "../../../../models"
 import { IRGAQueryOutput } from "./rgaQueryTypes"
 
 export const rgas = async (): Promise<IRGAQueryOutput> => {
@@ -6,7 +6,8 @@ export const rgas = async (): Promise<IRGAQueryOutput> => {
     const results = await RGA.all()
     return {
       rgas: results.map(RGA.output).map(o => ({
-        ...o
+        ...o,
+        distributor: async () => Distributor.output(await Distributor.find(o.distributorId))
       })),
       success: true
     }
