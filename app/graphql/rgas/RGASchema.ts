@@ -41,7 +41,7 @@ export const typeDefs = gql`
     """
     The resulting RGAs if the operation was successful and multiple results were returned.
     """
-    rga: [RGA]
+    rgas: [RGA]
     """
     The size of the paginated results.
     """
