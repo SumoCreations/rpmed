@@ -25,13 +25,8 @@ export const createRGA: CreateRGAMutation = async (_, { rgaInput }) => {
   }
 
   // Find or generate an associated distributor
-  // tslint:disable
   const emailDomain = rgaInput.submittedBy.split("@")[1]
-  console.log("Attempting to create distributor")
-  console.log(emailDomain)
   const distributor = await Distributor.findOrCreateWithDomain(emailDomain)
-  console.log("Found distributor")
-  console.log(distributor)
 
   const rga = await RGA.create({
     ...rgaInput,
