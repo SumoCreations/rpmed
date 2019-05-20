@@ -110,8 +110,6 @@ const create = async ({
     sortKey: `${SECONDARY_KEY}_${id}`,
     submittedOn: submittedOn || new Date().toISOString()
   }
-  // tslint:disable
-  console.log("Creating RGA Good")
   const params = {
     TransactItems: [
       {
@@ -125,9 +123,7 @@ const create = async ({
       },
     ],
   }
-  console.log(params)
   await client.transactWrite(params).promise()
-  console.log("WROTE RGA ITEM.")
   return item
 }
 
@@ -136,7 +132,6 @@ const create = async ({
  * @param serialOrUuid The serial or UUID used to look up the good.
  */
 const find = async (rgaId: string, id: string): Promise<IRGAGood | null> => {
-  console.log("Attempting to look up item with serial: " + id)
   const searchParams = {
     Key: {
       partitionKey: rgaId,

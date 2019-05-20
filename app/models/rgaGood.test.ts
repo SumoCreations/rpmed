@@ -7,11 +7,10 @@ const PRODUCT_ID = "TEST-PRODUCT-ID"
 const SYMPTOM_ID = "TEST-SYMPTOM-ID"
 const SERIAL = "TEST-SERIAL-NUMBER"
 const DATE = DateTime.utc(2019, 5, 7, 1, 12, 11, 10).toISO()
-// tslint:disable
+
 describe("rga", () => {
   let existingGood: IRGAGood
   beforeAll(async (done) => {
-    console.log("Creating existing good for tests...")
     try {
       existingGood = await RGAGood.create({
         lotted: false,
@@ -25,11 +24,8 @@ describe("rga", () => {
         warrantied: true,
       })
     } catch (e) {
-      console.log("COULD NOT CREATE GOOD")
-      console.log(e)
       done()
     }
-    console.log(existingGood)
     done()
   })
 
