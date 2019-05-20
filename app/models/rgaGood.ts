@@ -107,6 +107,7 @@ const create = async ({
     indexSortKey,
     partitionKey,
     rgaId,
+    serial: id,
     sortKey: `${SECONDARY_KEY}_${id}`,
     submittedOn: submittedOn || new Date().toISOString()
   }
@@ -196,11 +197,11 @@ const output = ({
   partitionKey,
   sortKey,
   indexSortKey,
-  ...rga
+  ...rgaGood
 }: IRGAGood): IRGAGoodOutput => {
   const result = {
-    ...rga,
-    id: partitionKey,
+    ...rgaGood,
+    id: rgaGood.id,
   }
   return result
 }
