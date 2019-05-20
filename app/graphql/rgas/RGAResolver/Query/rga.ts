@@ -1,4 +1,4 @@
-import { Distributor, RGA } from "../../../../models"
+import { Distributor, RGA, RGAGood } from "../../../../models"
 import { ErrorRGAWithIDDoesNotExist } from "../rgaErrors"
 import { IRGAQueryOutput } from "./rgaQueryTypes"
 
@@ -14,7 +14,8 @@ export const rga = async (_, args): Promise<IRGAQueryOutput> => {
     return {
       rga: {
         ...RGA.output(result),
-        distributor: async () => Distributor.output(await Distributor.find(result.distributorId))
+        distributor: async () => Distributor.output(await Distributor.find(result.distributorId)),
+        goods: async () => ((await RGAGood.forRGA(result.partitionKey)) || []).map(RGAGood.output)
       },
       success: true
     }
