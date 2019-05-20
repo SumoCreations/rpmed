@@ -21,6 +21,68 @@ export const typeDefs = gql`
     The distributor associated to the the RGA.
     """
     distributor: Distributor!
+    """
+    The goods associated to the the RGA.
+    """
+    goods: [RGAGood]!
+  }
+
+  """
+  A good associated to a particular RGA.
+  """
+  type RGAGood {
+    """
+    The unique serial number or uuid associated to the good.
+    """
+    id: ID!
+    """
+    Indicates whether or not this product is currently under warranty.
+    """
+    warrantied: Boolean!
+    """
+    The symptom / reason this product is being returned.
+    """
+    symptomId: String!
+    """
+    The RGA this good is assigned to.
+    """
+    rgaId: String!
+    """
+    The model number for representing the specific product configuration for this good.
+    """
+    modelNumber: String!
+    """
+    The serial number unique to this good if lotted. If left blank and not lotted a uuid will be generated.
+    """
+    serial: String
+    """
+    The associated RMA from our distributor / partner's records.
+    """
+    rma: String
+    """
+    The associated PO from our distributor / partner's records.
+    """
+    po: String
+    """
+    Any additional notes about this good specifically..
+    """
+    notes: String
+    """
+    The name of the customer this good belongs to - it will be automatically registered if it hasn't already been.
+    """
+    customerName: String
+    """
+    The name of the customer this good belongs to - it will be automatically registered if it hasn't already been.
+    """
+    customerEmail: String
+    """
+    The email address of the contact who created the RGA.
+    """
+    submittedBy: String!
+    """
+    The date the RGA was submitted.
+    """
+    submittedOn: String!
   }
 
   """
@@ -100,6 +162,24 @@ export const typeDefs = gql`
     success: Boolean!
   }
 
+  """
+  The result of a mutation applied to a RGA.
+  """
+  type RGAGoodMutationOutput {
+    """
+    The resulting RGA Good if the operation was successful.
+    """
+    rgaGood: RGAGood
+    """
+    Any validation errors encountered while running the mutation.
+    """
+    errors: [ValidationError]
+    """
+    A simple boolean indicating whether or not the operation was successful.
+    """
+    success: Boolean!
+  }
+
   type Query {
     """
     All RGAs in the system
@@ -116,13 +196,59 @@ export const typeDefs = gql`
   """
   input NewRGAInput {
     """
-    The id of the customer associated to the RGA.
+    The email address of the contact who created the RGA.
     """
     submittedBy: String!
     """
-    The model number for representing the specific product configuration being registered.
+    The date the RGA was submitted.
     """
     submittedOn: String!
+  }
+
+  """
+  A set of fields used to create or update a RGA.
+  """
+  input NewRGAGoodInput {
+    """
+    Indicates whether or not this product is currently under warranty.
+    """
+    warrantied: Boolean!
+    """
+    The symptom / reason this product is being returned.
+    """
+    symptomId: String!
+    """
+    The RGA this good is assigned to.
+    """
+    rgaId: String!
+    """
+    The model number for representing the specific product configuration for this good.
+    """
+    modelNumber: String!
+    """
+    The serial number unique to this good if lotted. If left blank and not lotted a uuid will be generated.
+    """
+    serial: String
+    """
+    The associated RMA from our distributor / partner's records.
+    """
+    rma: String
+    """
+    The associated PO from our distributor / partner's records.
+    """
+    po: String
+    """
+    Any additional notes about this good specifically..
+    """
+    notes: String
+    """
+    The name of the customer this good belongs to - it will be automatically registered if it hasn't already been.
+    """
+    customerName: String
+    """
+    The name of the customer this good belongs to - it will be automatically registered if it hasn't already been.
+    """
+    customerEmail: String
   }
 
   type Mutation {
@@ -132,6 +258,16 @@ export const typeDefs = gql`
     createRGA(
       rgaInput: NewRGAInput!
     ): RGAMutationOutput!
+    """
+    Creates a new good for an existing RGA.
+    """
+    createRGAGood(
+      rgaGoodInput: NewRGAGoodInput!
+    ): RGAGoodMutationOutput!
+    """
+    Removes an existing RGA good.
+    """
+    destroyRGAGood(id: ID!, rgaId: String!): RGAGoodMutationOutput!
   }
 
   schema {

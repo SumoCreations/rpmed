@@ -1,8 +1,9 @@
 import { ErrorList } from "rpmed-validation-schema"
-import { IDistributorOutput, IRGAOutput } from "../../../../models"
+import { IDistributorOutput, IRGAGoodOutput, IRGAOutput } from "../../../../models"
 
 interface IExtendedRGAOutput extends IRGAOutput {
   distributor: () => Promise<IDistributorOutput | null>
+  goods: () => Promise<IRGAGoodOutput[] | null>
 }
 
 export interface IRGAQueryOutput {
@@ -10,6 +11,7 @@ export interface IRGAQueryOutput {
   pageSize?: number
   rgas?: IExtendedRGAOutput[]
   rga?: IExtendedRGAOutput
+  rgaGood?: IRGAGoodOutput
   errors?: ErrorList
   success: boolean
 }
