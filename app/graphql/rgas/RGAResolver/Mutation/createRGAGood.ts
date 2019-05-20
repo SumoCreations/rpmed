@@ -17,7 +17,7 @@ interface IRGAGoodInputParams {
     notes?: string
     customerName?: string
     customerEmail?: string
-    submittedBy: string
+    submittedBy?: string
     submittedOn?: string
   }
 }
@@ -47,10 +47,21 @@ export const createRGAGood: CreateRGAGoodMutation = async (_, { rgaGoodInput }) 
     return { errors: [{ path: "modelNumber", message: `Model number '${rgaGoodInput.modelNumber}' does not exist` }], success: false }
   }
 
+  if (modelNumber.lotted && !present(rgaGoodInput.serial)) {
+    return { errors: [{ path: "serial", message: `Serial number cannot be blank` }], success: false }
+  }
+
+  const existingGood = modelNumber.lotted ? (await RGAGood.find(rga.partitionKey, rgaGoodInput.serial)) : null
+  if (existingGood) {
+    return { errors: [{ path: "serial", message: `Product with serial'${rgaGoodInput.serial}' already assigned to an RGA` }], success: false }
+  }
+
   let rgaGood: IRGAGood
   try {
     rgaGood = await RGAGood.create({
       ...rgaGoodInput,
+      submittedBy: rgaGoodInput.submittedBy || rga.submittedBy,
+      submittedOn: rgaGoodInput.submittedOn || rga.submittedOn
     })
   } catch (e) {
     // tslint:disable-next-line
