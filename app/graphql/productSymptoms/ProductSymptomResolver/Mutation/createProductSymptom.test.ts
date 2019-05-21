@@ -3,7 +3,7 @@ import { createProductSymptom } from "./createProductSymptom"
 
 const sampleParams = {
   careTip: "Improper cleaning can result in damage (see Cleaning Guide)",
-  faultCode: "EHIJ",
+  faultCode: "EHIJ-TEST",
   fee: 0,
   name: "Light randomly turns off (stobes/blinks)",
   solution: "Replace light housing module because it needs a new wire harness and/or circuit boards.",

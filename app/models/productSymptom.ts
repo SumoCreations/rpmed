@@ -49,6 +49,7 @@ export interface IProductSymptom {
   solution: string
   partitionKey: string
   sortKey: string
+  modelNumbers: string[]
 }
 
 export interface IProductSymptomOutput {
@@ -70,6 +71,7 @@ const create = async ({
 }: IProductSymptomInput): Promise<IProductSymptom> => {
   const item: IProductSymptom = {
     ...symptomInput,
+    modelNumbers: [],
     partitionKey: uuid(),
     sortKey: SECONDARY_KEY,
   }
@@ -135,6 +137,27 @@ const find = async (id: string): Promise<IProductSymptom | null> => {
   }
   const result = await client.query(searchParams).promise()
   return result.Items[0] ? (result.Items[0] as IProductSymptom) : null
+}
+
+/**
+ * Retreive a symptom by serial / uuid.
+ * @param ids An array of specific uuids of symptoms to find.
+ */
+const findAll = async (ids: string[]): Promise<IProductSymptom[]> => {
+  const searchParams = {
+    RequestItems: {
+      [process.env.DYNAMODB_ACCOUNTS_TABLE]: {
+        Keys: [
+          ...ids.map(symptom => ({
+            partitionKey: symptom,
+            sortKey: SECONDARY_KEY
+          }))
+        ]
+      }
+    }
+  }
+  const result = await client.batchGet(searchParams).promise()
+  return (result.Responses[process.env.DYNAMODB_ACCOUNTS_TABLE] as IProductSymptom[]) || []
 }
 
 /**
@@ -222,6 +245,7 @@ export const ProductSymptom = {
   create,
   destroy,
   find,
+  findAll,
   findByFaultCode,
   output,
   update

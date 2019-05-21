@@ -149,6 +149,19 @@ describe("createRGAGood", () => {
     expect(output.errors.map(e => e.path)).toContain("modelNumber")
   })
 
+  test("should fail if the Serial Number was already used in conjunciton with another RGA", async () => {
+    expect.assertions(2)
+    const output = await createRGAGood(null, {
+      rgaGoodInput: {
+        ...sampleParams,
+        modelNumber: modelNumberId,
+        rgaId: existingRGAId,
+      }
+    })
+    expect(output.success).toBe(false)
+    expect(output.errors.map(e => e.path)).toContain("serial")
+  })
+
   test("should fail if the RGA Good does not pass validations", async () => {
     expect.assertions(3)
     const invalidInput: any = {

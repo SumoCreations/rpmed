@@ -51,6 +51,7 @@ export interface IModelNumber {
   description: string
   partitionKey: string // id
   sortKey: string
+  symptoms: string[],
   indexSortKey: string // productId
   lotted: boolean
   warrantyTerm: number
@@ -92,6 +93,7 @@ const create = async ({
     indexSortKey: productId,
     partitionKey: id,
     sortKey: SECONDARY_KEY,
+    symptoms: []
   }
 
   const params = {
@@ -118,7 +120,9 @@ const create = async ({
  * @param input The identifying credentials to assign to the account.
  */
 const update = async ({ id, productId, ...modelNumberInput }: IModelNumberInput): Promise<IModelNumber> => {
+  const existingModelNumber = await find(id)
   const item: IModelNumber = {
+    ...existingModelNumber,
     ...modelNumberInput,
     indexSortKey: productId,
     partitionKey: id,
@@ -171,6 +175,27 @@ const all = async (): Promise<IModelNumber[]> => {
   }
   const result = await client.query(searchParams).promise()
   return result.Items ? (result.Items as IModelNumber[]) : []
+}
+
+/**
+ * Retreive a symptom by serial / uuid.
+ * @param ids An array of specific uuids of symptoms to find.
+ */
+const findAll = async (ids: string[]): Promise<IModelNumber[]> => {
+  const searchParams = {
+    RequestItems: {
+      [process.env.DYNAMODB_ACCOUNTS_TABLE]: {
+        Keys: [
+          ...ids.map(modelNumberId => ({
+            partitionKey: modelNumberId,
+            sortKey: SECONDARY_KEY
+          }))
+        ]
+      }
+    }
+  }
+  const result = await client.batchGet(searchParams).promise()
+  return (result.Responses[process.env.DYNAMODB_ACCOUNTS_TABLE] as IModelNumber[]) || []
 }
 
 /**
@@ -245,6 +270,7 @@ export const ModelNumber = {
   create,
   destroy,
   find,
+  findAll,
   forProduct,
   output,
   update,
