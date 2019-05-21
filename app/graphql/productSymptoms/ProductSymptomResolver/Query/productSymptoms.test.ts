@@ -3,7 +3,7 @@ import { productSymptoms } from "./productSymptoms"
 
 const sampleParams = {
   careTip: "Improper cleaning can result in damage (see Cleaning Guide)",
-  faultCode: "EHIJ",
+  faultCode: "EHIJ-QUERY-TESTER",
   fee: 0,
   name: "Light randomly turns off (stobes/blinks)",
   solution: "Replace light housing module because it needs a new wire harness and/or circuit boards.",
@@ -25,7 +25,7 @@ describe("Query", () => {
         ...sampleParams,
         faultCode: "MULTISYMPTST2"
       })
-      const output = await productSymptoms()
+      const output = await productSymptoms({}, {})
       expect(output.success).toEqual(true)
       expect(output.productSymptom).toBeUndefined()
       expect(output.productSymptoms).toBeDefined()

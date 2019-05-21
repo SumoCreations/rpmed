@@ -1,3 +1,4 @@
+export * from "./productSymptomToModelAssociation"
 export * from "./customer"
 export * from "./distributor"
 export * from "./product"

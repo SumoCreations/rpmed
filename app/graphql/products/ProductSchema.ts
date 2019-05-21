@@ -205,7 +205,7 @@ export const typeDefs = gql`
     """
     All product variants in the system.
     """
-    modelNumbers(search: String, productId: String): ModelNumberQueryOutput
+    modelNumbers(search: String, productId: String, symptom: String): ModelNumberQueryOutput
     """
     A specific product in the system via ID.
     """

@@ -1,12 +1,16 @@
-import { ModelNumber, Product } from "../../../../models"
+import { ModelNumber, modelNumbersForSymptom, Product } from "../../../../models"
 import { IModelNumberQueryOutput } from "./productQueryTypes"
 
 /**
  * Retrieves all model numbers or a filtered search of some model numbers.
  */
-export const modelNumbers = async (_, args: { search?: string, productId?: string }): Promise<IModelNumberQueryOutput> => {
+export const modelNumbers = async (_, args: { search?: string, productId?: string, symptom?: string }): Promise<IModelNumberQueryOutput> => {
   try {
-    const results = args.productId ? ModelNumber.forProduct(args.productId) : ModelNumber.all()
+    const results = args.symptom ?
+      modelNumbersForSymptom(args.symptom) :
+      args.productId ?
+        ModelNumber.forProduct(args.productId) :
+        ModelNumber.all()
     const output = (await results).map(ModelNumber.output)
       .filter(p => args.search ? p.id.toLowerCase().indexOf(args.search.toLowerCase()) >= 0 : true)
       .map(o => ({

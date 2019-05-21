@@ -57,7 +57,7 @@ export const typeDefs = gql`
     """
     The resulting symptoms if the operation was successful and multiple results were returned.
     """
-    productSymptoms: [ProductSymptom]
+    productSymptoms(modelNumber: String): [ProductSymptom]
     """
     The size of the paginated results.
     """
