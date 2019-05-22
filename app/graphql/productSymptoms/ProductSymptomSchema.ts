@@ -33,6 +33,10 @@ export const typeDefs = gql`
     An official code used to identify this symptom.
     """
     faultCode: String!
+    """
+    A list of all associated model numbers related to this symptom.
+    """
+    associatedModelNumbers: [String]!
   }
 
   type ValidationError {
@@ -150,6 +154,15 @@ export const typeDefs = gql`
     """
     destroyProductSymptom(
       id: String!
+    ): ProductSymptomMutationOutput!
+
+    """
+    Links an existing model number to an existing symptom.
+    """
+    linkSymptomToModel(
+      modelNumber: String!
+      symptomId: String!
+      linked: Boolean!
     ): ProductSymptomMutationOutput!
   }
 
