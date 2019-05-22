@@ -9,6 +9,7 @@ export const linkSymptomToModel = async (
   _: any,
   { modelNumber, symptomId, linked }: ILinkSymptomMutationArguments
 ): Promise<IProductSymptomMutationOutput> => {
+
   const argumentSchema = validation({
     linked: RequiredBoolean(),
     modelNumber: RequiredString(),
