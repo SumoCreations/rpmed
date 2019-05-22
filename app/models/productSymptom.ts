@@ -234,6 +234,7 @@ const output = ({
 }: IProductSymptom): IProductSymptomOutput => {
   const result = {
     ...productSymptom,
+    associatedModelNumbers: productSymptom.modelNumbers || [],
     id: partitionKey,
   }
   return result
