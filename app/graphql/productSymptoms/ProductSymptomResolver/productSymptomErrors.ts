@@ -17,3 +17,13 @@ export const ErrorProductSymptomWithIDDoesNotExist = {
   message: `No productSymptom exists with the supplied ID.`,
   path: "_"
 }
+
+export const ErrorModelNumberIDDoesNotExist = {
+  message: `No model number exists with the supplied ID.`,
+  path: "_"
+}
+
+export const ErrorProductSymptomAndModelNumberAssociationFailed = {
+  message: "Could not link / unlink the supplied model number and product symptom.",
+  path: "_"
+}
