@@ -35,6 +35,8 @@ const client = getClient()
 export interface IRGAGoodInput {
   warrantied: boolean
   symptomId: string
+  symptomDescription: string
+  faultCode: string
   rgaId: string
   productId: string
   lotted: boolean
@@ -43,6 +45,7 @@ export interface IRGAGoodInput {
   rma?: string
   po?: string
   notes?: string
+  customerId?: string
   customerName?: string
   customerEmail?: string
   submittedBy: string
@@ -56,6 +59,8 @@ export interface IRGAGood {
   id: string
   warrantied: boolean
   symptomId: string
+  symptomDescription: string
+  faultCode: string
   rgaId: string
   productId: string
   lotted: boolean
@@ -64,6 +69,7 @@ export interface IRGAGood {
   rma?: string
   po?: string
   notes?: string
+  customerId?: string
   customerName?: string
   customerEmail?: string
   submittedBy: string
@@ -74,6 +80,8 @@ export interface IRGAGoodOutput {
   id: string
   warrantied: boolean
   symptomId: string
+  symptomDescription: string
+  faultCode: string
   rgaId: string
   productId: string
   lotted: boolean
@@ -82,6 +90,7 @@ export interface IRGAGoodOutput {
   rma?: string
   po?: string
   notes?: string
+  customerId?: string
   customerName?: string
   customerEmail?: string
   submittedBy: string

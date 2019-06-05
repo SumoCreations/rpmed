@@ -13,6 +13,7 @@ describe("rga", () => {
   beforeAll(async (done) => {
     try {
       existingGood = await RGAGood.create({
+        faultCode: "EHIJ",
         lotted: false,
         modelNumber: "MLD-X01",
         productId: PRODUCT_ID,
@@ -20,6 +21,7 @@ describe("rga", () => {
         serial: SERIAL,
         submittedBy: "test@klsmartin.com",
         submittedOn: DATE,
+        symptomDescription: "This is a sympyom",
         symptomId: SYMPTOM_ID,
         warrantied: true,
       })
@@ -44,6 +46,7 @@ describe("rga", () => {
       expect.assertions(1)
       try {
         await RGAGood.create({
+          faultCode: "EHIJ",
           lotted: false,
           modelNumber: "MLD-X01",
           productId: PRODUCT_ID,
@@ -51,6 +54,7 @@ describe("rga", () => {
           serial: SERIAL,
           submittedBy: "test@klsmartin.com",
           submittedOn: DATE,
+          symptomDescription: "Testing",
           symptomId: SYMPTOM_ID,
           warrantied: true,
         })
@@ -78,6 +82,7 @@ describe("rga", () => {
     test("should return all goods for the specific rga if they exists", async () => {
       expect.assertions(2)
       await RGAGood.create({
+        faultCode: "Test",
         lotted: false,
         modelNumber: "MLD-X01",
         productId: PRODUCT_ID,
@@ -85,6 +90,7 @@ describe("rga", () => {
         serial: "SERIAL-B",
         submittedBy: "test@klsmartin.com",
         submittedOn: DATE,
+        symptomDescription: "Another test",
         symptomId: SYMPTOM_ID,
         warrantied: true,
       })

@@ -43,6 +43,14 @@ export const typeDefs = gql`
     The symptom / reason this product is being returned.
     """
     symptomId: String!
+        """
+    The current description of the symptom.
+    """
+    symptomDescription: String!
+    """
+    The fault code associated to the prescribed symptom.
+    """
+    faultCode: String!
     """
     The RGA this good is assigned to.
     """
@@ -67,6 +75,10 @@ export const typeDefs = gql`
     Any additional notes about this good specifically..
     """
     notes: String
+    """
+    The id of the customer if the product has been registered to a user.
+    """
+    customerId: String
     """
     The name of the customer this good belongs to - it will be automatically registered if it hasn't already been.
     """

@@ -119,6 +119,7 @@ describe("createRGAGood", () => {
         modelNumber: modelNumberId,
         rgaId: existingRGAId,
         serial: `${SERIAL}-4`,
+        symptomId: "test",
       }
     })
     expect(output.success).toBe(true)

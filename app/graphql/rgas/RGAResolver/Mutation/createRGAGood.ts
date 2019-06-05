@@ -1,5 +1,5 @@
 import * as Validation from "rpmed-validation-schema"
-import { Customer, IRGAGood, ModelNumber, ProductRegistration, RGA, RGAGood } from "../../../../models"
+import { Customer, ICustomer, IRGAGood, ModelNumber, ProductRegistration, ProductSymptom, RGA, RGAGood } from "../../../../models"
 import { generateMutationError } from "../../../../util"
 import { IRGAGoodMutationOutput } from "./rgaMutationTypes"
 
@@ -56,12 +56,35 @@ export const createRGAGood: CreateRGAGoodMutation = async (_, { rgaGoodInput }) 
     return { errors: [{ path: "serial", message: `Product with serial'${rgaGoodInput.serial}' already assigned to an RGA` }], success: false }
   }
 
+  const existingSymptom = await ProductSymptom.find(rgaGoodInput.symptomId)
+
+  let customer: ICustomer | null
+  if (present(rgaGoodInput.customerEmail) &&
+    present(rgaGoodInput.customerName)) {
+    try {
+      customer =
+        (await Customer.findByEmail(rgaGoodInput.customerEmail)) ||
+        (await Customer.create({
+          email: rgaGoodInput.customerEmail,
+          name: rgaGoodInput.customerName
+        }))
+    } catch (e) {
+      // tslint:disable no-console
+      console.log("Could not create customer:")
+      console.log(e)
+      // tslint:enable no-console
+    }
+  }
+
   let rgaGood: IRGAGood
   try {
     rgaGood = await RGAGood.create({
       ...rgaGoodInput,
+      customerId: customer.partitionKey,
+      faultCode: existingSymptom.faultCode,
       submittedBy: rgaGoodInput.submittedBy || rga.submittedBy,
-      submittedOn: rgaGoodInput.submittedOn || rga.submittedOn
+      submittedOn: rgaGoodInput.submittedOn || rga.submittedOn,
+      symptomDescription: existingSymptom.name
     })
   } catch (e) {
     // tslint:disable-next-line
@@ -70,17 +93,10 @@ export const createRGAGood: CreateRGAGoodMutation = async (_, { rgaGoodInput }) 
   }
 
   if (
-    present(rgaGoodInput.customerEmail) &&
-    present(rgaGoodInput.customerName) &&
+    customer &&
     !(await ProductRegistration.find(rgaGood.id))
   ) {
     try {
-      const customer =
-        (await Customer.findByEmail(rgaGoodInput.customerEmail)) ||
-        (await Customer.create({
-          email: rgaGoodInput.customerEmail,
-          name: rgaGoodInput.customerName
-        }))
       await ProductRegistration.create({
         customerId: customer.partitionKey,
         lotted: modelNumber.lotted,
