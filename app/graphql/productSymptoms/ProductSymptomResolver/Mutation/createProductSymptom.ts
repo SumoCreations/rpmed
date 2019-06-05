@@ -1,7 +1,7 @@
 import * as Validation from "rpmed-validation-schema"
 import { IProductSymptomInput, ProductSymptom } from "../../../../models"
 import { ErrorProductSymptomCredentialsInvalid, ErrorProductSymptomWithFaultCodeAlreadyExists } from "../productSymptomErrors"
-import { extendSymptomOutput } from "./extendProductSymptomOutput"
+import { extendSymptomOutput } from "./extendOutput"
 import { IProductSymptomMutationOutput } from "./productSymptomMutationTypes"
 
 export const createProductSymptom = async (
@@ -25,7 +25,7 @@ export const createProductSymptom = async (
 
   try {
     const productSymptom = await ProductSymptom.create(productSymptomInput)
-    return { productSymptom: extendSymptomOutput(productSymptom), success: true }
+    return { productSymptom: async () => extendSymptomOutput(productSymptom), success: true }
   } catch (e) {
     return { success: false, errors: [ErrorProductSymptomCredentialsInvalid] }
   }

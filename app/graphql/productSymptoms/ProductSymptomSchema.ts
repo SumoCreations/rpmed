@@ -112,6 +112,10 @@ export const typeDefs = gql`
     """
     productSymptom: ProductSymptom
     """
+    The resulting details for the associated model number if am association operation was successful.
+    """
+    modelNumber: ModelNumberSymptomDetail
+    """
     Any validation errors encountered while running the mutation.
     """
     errors: [ValidationError]

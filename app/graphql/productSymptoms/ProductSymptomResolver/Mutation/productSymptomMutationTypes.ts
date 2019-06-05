@@ -10,7 +10,8 @@ interface IExtendedProductSymptomOutput extends IProductSymptomOutput {
 }
 
 export interface IProductSymptomMutationOutput {
-  productSymptom?: IExtendedProductSymptomOutput
+  modelNumber?: () => Promise<IExtendedModelNumberOutput>
+  productSymptom?: () => Promise<IExtendedProductSymptomOutput>
   errors?: ErrorList
   success: boolean
 }
