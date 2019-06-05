@@ -129,7 +129,7 @@ export const typeDefs = gql`
     """
     All symptoms in the system
     """
-    productSymptoms: ProductSymptomQueryOutput!
+    productSymptoms(search: String, modelNumber: String): ProductSymptomQueryOutput!
     """
     A specific symptom in the system via ID.
     """
