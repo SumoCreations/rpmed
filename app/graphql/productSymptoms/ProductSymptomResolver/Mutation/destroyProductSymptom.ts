@@ -1,7 +1,8 @@
 
 import { ProductSymptom } from "../../../../models"
-import { generateMutationError } from "../../../../util";
+import { generateMutationError } from "../../../../util"
 import { ErrorProductSymptomCouldNotBeDestroyed, ErrorProductSymptomWithIDDoesNotExist } from "../productSymptomErrors"
+import { extendSymptomOutput } from "./extendProductSymptomOutput"
 import { IProductSymptomMutationOutput } from "./productSymptomMutationTypes"
 
 export const destroyProductSymptom = async (
@@ -17,5 +18,8 @@ export const destroyProductSymptom = async (
   } catch (e) {
     return generateMutationError([ErrorProductSymptomCouldNotBeDestroyed])
   }
-  return { productSymptom: ProductSymptom.output(productSymptom), success: true }
+  return {
+    productSymptom: extendSymptomOutput(productSymptom),
+    success: true
+  }
 }

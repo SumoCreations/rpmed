@@ -1,4 +1,4 @@
-import { ModelNumber, Product } from "../../../../models"
+import { ModelNumber, Product, ProductSymptom, productSymptomsForModel } from "../../../../models"
 import { ErrorModelNumberIDDoesNotExist } from "../productErrors"
 import { IModelNumberQueryOutput } from "./productQueryTypes"
 
@@ -18,7 +18,8 @@ export const modelNumber = async (_, args: { id: string }): Promise<IModelNumber
     return {
       modelNumber: {
         ...output,
-        product: async () => Product.output(await Product.find(output.productId))
+        product: async () => Product.output(await Product.find(output.productId)),
+        symptoms: async () => (await productSymptomsForModel(result.partitionKey)).map(ProductSymptom.output)
       },
       success: true
     }

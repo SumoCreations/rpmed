@@ -1,6 +1,7 @@
 import { formatError, RequiredBoolean, RequiredString, validation } from "rpmed-validation-schema"
 import { addSymptomToModelNumber, ModelNumber, ProductSymptom, removeSymptomFromModelNumber } from "../../../../models"
 import { ErrorModelNumberIDDoesNotExist, ErrorProductSymptomAndModelNumberAssociationFailed, ErrorProductSymptomWithIDDoesNotExist } from "../productSymptomErrors"
+import { extendSymptomOutput } from "./extendProductSymptomOutput"
 import { IProductSymptomMutationOutput } from "./productSymptomMutationTypes"
 
 interface ILinkSymptomMutationArguments { modelNumber: string, symptomId: string, linked: boolean }
@@ -44,6 +45,7 @@ export const linkSymptomToModel = async (
       await removeSymptomFromModelNumber(symptomId, modelNumber)
     }
     return {
+      productSymptom: extendSymptomOutput(await ProductSymptom.find(symptomId)),
       success: true
     }
   } catch (e) {

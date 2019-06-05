@@ -1,4 +1,4 @@
-import { ProductSymptom } from "../../../../models"
+import { ModelNumber, modelNumbersForSymptom, ProductSymptom } from "../../../../models"
 import { ErrorProductSymptomWithIDDoesNotExist } from "../productSymptomErrors"
 import { IProductSymptomQueryOutput } from "./productSymptomQueryTypes"
 
@@ -12,7 +12,10 @@ export const productSymptom = async (_, args): Promise<IProductSymptomQueryOutpu
       }
     }
     return {
-      productSymptom: ProductSymptom.output(result),
+      productSymptom: {
+        ...ProductSymptom.output(result),
+        modelNumbers: async () => (await modelNumbersForSymptom(result.partitionKey)).map(ModelNumber.output)
+      },
       success: true
     }
   } catch (e) {

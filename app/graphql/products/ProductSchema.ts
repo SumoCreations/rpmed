@@ -11,6 +11,28 @@ export const typeDefs = gql`
     """
     message: String!
   }
+
+  """
+  A troubleshooting symptom for a product.
+  """
+  type SimplifiedProductSymptom {
+    """
+    The unique identifier for this symptom
+    """
+    id: ID!
+    """
+    The actual name of the symptom.
+    """
+    name: String!
+    """
+    An associated fee for servicing this issue.
+    """
+    fee: Int!
+    """
+    An official code used to identify this symptom.
+    """
+    faultCode: String!
+  }
   
   """
   A registered user object from API. Could be a customer, admin, or partner account.
@@ -87,6 +109,11 @@ export const typeDefs = gql`
     Any internal notes for employess when servicing this model variation.
     """
     privateNotes: String
+    """
+    A list of all associated symptoms related to this model number.
+    """
+    symptoms: [SimplifiedProductSymptom]!
+
   }
 
   """

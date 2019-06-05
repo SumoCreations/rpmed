@@ -1,4 +1,4 @@
-import { ModelNumber, modelNumbersForSymptom, Product } from "../../../../models"
+import { ModelNumber, modelNumbersForSymptom, Product, ProductSymptom, productSymptomsForModel } from "../../../../models"
 import { IModelNumberQueryOutput } from "./productQueryTypes"
 
 /**
@@ -15,7 +15,8 @@ export const modelNumbers = async (_, args: { search?: string, productId?: strin
       .filter(p => args.search ? p.id.toLowerCase().indexOf(args.search.toLowerCase()) >= 0 : true)
       .map(o => ({
         ...o,
-        product: async () => Product.output(await Product.find(o.productId))
+        product: async () => Product.output(await Product.find(o.productId)),
+        symptoms: async () => (await productSymptomsForModel(o.id)).map(ProductSymptom.output)
       }))
     return {
       modelNumbers: output,

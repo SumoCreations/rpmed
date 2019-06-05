@@ -1,6 +1,25 @@
 import { gql } from "apollo-server-lambda"
 
 export const typeDefs = gql`
+
+  """
+  A subset of the model number type
+  """
+  type ModelNumberSymptomDetail {
+    """
+    The model number identifying a product variant.
+    """
+    id: ID!
+    """
+    The id of the product this variant belongs to.
+    """
+    productId: String!
+    """
+    All associated symptoms related to this model number.
+    """
+    symptoms: [ProductSymptom]!
+  }
+
   """
   A troubleshooting symptom for a product.
   """
@@ -37,6 +56,10 @@ export const typeDefs = gql`
     A list of all associated model numbers related to this symptom.
     """
     associatedModelNumbers: [String]!
+    """
+    The resulting symptoms if the operation was successful and multiple results were returned.
+    """
+    modelNumbers: [ModelNumberSymptomDetail]
   }
 
   type ValidationError {

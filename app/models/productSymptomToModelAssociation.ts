@@ -1,6 +1,6 @@
 import { getClient } from "../util"
-import { ModelNumber } from "./modelNumber"
-import { ProductSymptom } from "./productSymptom"
+import { IModelNumber, ModelNumber } from "./modelNumber"
+import { IProductSymptom, ProductSymptom } from "./productSymptom"
 
 const client = getClient()
 
@@ -87,6 +87,7 @@ export const removeSymptomFromModelNumber = async (symptomId: string, modelNumbe
 export const productSymptomsForModel = async (modelNumberString: string) => {
   const modelNumber = await ModelNumber.find(modelNumberString)
   const symptoms = [...new Set([...(modelNumber.symptoms || [])])]
+  if (symptoms.length < 1) { return [] as IProductSymptom[] }
   return await ProductSymptom.findAll(symptoms)
 }
 
@@ -96,5 +97,6 @@ export const productSymptomsForModel = async (modelNumberString: string) => {
 export const modelNumbersForSymptom = async (productSymptomId: string) => {
   const symptom = await ProductSymptom.find(productSymptomId)
   const modelNumbers = [...new Set([...(symptom.modelNumbers || [])])]
+  if (modelNumbers.length < 1) { return [] as IModelNumber[] }
   return await ModelNumber.findAll(modelNumbers)
 }
