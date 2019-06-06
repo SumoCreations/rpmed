@@ -34,6 +34,7 @@ provider:
   name: aws
   runtime: nodejs8.10
   profile: rpmed-serverless
+  region: us-west-2
   environment:
     ACCESS_TOKEN_LIFESPAN: 300
     REFRESH_TOKEN_LIFESPAN: 172800
