@@ -4,8 +4,9 @@ import { productSymptom } from "./productSymptom"
 const sampleParams = {
   careTip: "Improper cleaning can result in damage (see Cleaning Guide)",
   faultCode: "EHIJ",
-  fee: 0,
+  fee: false,
   name: "Light randomly turns off (stobes/blinks)",
+  preApproved: true,
   solution: "Replace light housing module because it needs a new wire harness and/or circuit boards.",
   synopsis: "LED signal interrupted due to a break in the wire or the circuit board(s) are corroded or damaged.",
 }

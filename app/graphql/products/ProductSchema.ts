@@ -27,7 +27,7 @@ export const typeDefs = gql`
     """
     An associated fee for servicing this issue.
     """
-    fee: Int!
+    fee: Boolean!
     """
     An official code used to identify this symptom.
     """

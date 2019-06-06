@@ -45,9 +45,13 @@ export const typeDefs = gql`
     """
     solution: String!
     """
-    An associated fee for servicing this issue.
+    Indicates if there is an associated fee for servicing this issue.
     """
-    fee: Int!
+    fee: Boolean!
+    """
+    Indicates whether or not this is a pre-approved repair regardless of warranty.
+    """
+    preApproved: Boolean!
     """
     An official code used to identify this symptom.
     """
@@ -141,7 +145,8 @@ export const typeDefs = gql`
   """
   input NewProductSymptomInput {
     faultCode: String
-    fee: Int
+    fee: Boolean
+    preApproved: Boolean
     careTip: String
     solution: String
     synopsis: String
@@ -154,7 +159,8 @@ export const typeDefs = gql`
   input ExistingProductSymptomInput {
     id: ID!
     faultCode: String
-    fee: Int
+    fee: Boolean
+    preApproved: Boolean
     careTip: String
     solution: String
     synopsis: String

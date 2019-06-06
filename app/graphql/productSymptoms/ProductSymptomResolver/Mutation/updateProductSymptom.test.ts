@@ -4,8 +4,9 @@ import { updateProductSymptom } from "./updateProductSymptom"
 const sampleParams = {
   careTip: "Improper cleaning can result in damage (see Cleaning Guide)",
   faultCode: "EHIJUPDATE",
-  fee: 0,
+  fee: false,
   name: "Light randomly turns off (stobes/blinks)",
+  preApproved: false,
   solution: "Replace light housing module because it needs a new wire harness and/or circuit boards.",
   synopsis: "LED signal interrupted due to a break in the wire or the circuit board(s) are corroded or damaged.",
 }
@@ -28,15 +29,6 @@ describe("updateProductSymptom", () => {
     const productSymptomInput = { id: productSymptom.partitionKey, ...sampleParams, faultCode: "UPDATETEST2000" }
     const output = await updateProductSymptom(null, { productSymptomInput })
     expect(output.success).toBe(true)
-  })
-
-  test("should fail if the faultCode is already in use", async () => {
-    expect.assertions(2)
-    const existingFaultCode = "ALREADYEXISTS"
-    await ProductSymptom.create({ ...sampleParams, faultCode: existingFaultCode })
-    const output = await updateProductSymptom(null, { productSymptomInput: { id: productSymptom.partitionKey, ...sampleParams, faultCode: existingFaultCode } })
-    expect(output.success).toBe(false)
-    expect(output.errors.map(e => e.path)).toContain("faultCode")
   })
 
   test("should fail if the productSymptom does not exist", async () => {

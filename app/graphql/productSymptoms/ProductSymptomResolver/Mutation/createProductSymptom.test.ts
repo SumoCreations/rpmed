@@ -4,8 +4,9 @@ import { createProductSymptom } from "./createProductSymptom"
 const sampleParams = {
   careTip: "Improper cleaning can result in damage (see Cleaning Guide)",
   faultCode: "EHIJ-TEST",
-  fee: 0,
+  fee: false,
   name: "Light randomly turns off (stobes/blinks)",
+  preApproved: false,
   solution: "Replace light housing module because it needs a new wire harness and/or circuit boards.",
   synopsis: "LED signal interrupted due to a break in the wire or the circuit board(s) are corroded or damaged.",
 }
@@ -16,8 +17,9 @@ describe("createProductSymptom", () => {
     productSymptom = await ProductSymptom.create({
       careTip: "Improper cleaning can result in damage (see Cleaning Guide)",
       faultCode: "EFT",
-      fee: 0,
+      fee: false,
       name: "Light randomly turns off (stobes/blinks)",
+      preApproved: false,
       solution: "Replace light housing module because it needs a new wire harness and/or circuit boards.",
       synopsis: "LED signal interrupted due to a break in the wire or the circuit board(s) are corroded or damaged.",
     })
@@ -44,13 +46,6 @@ describe("createProductSymptom", () => {
     expect(output.success).toBe(false)
     expect(output.errors.map(e => e.path)).toContain("faultCode")
     expect(output.errors.map(e => e.path)).toContain("name")
-  })
-
-  test("should fail if the faultCode is already in use", async () => {
-    expect.assertions(2)
-    const output = await createProductSymptom(null, { productSymptomInput: { ...sampleParams, faultCode: sampleParams.faultCode } })
-    expect(output.success).toBe(false)
-    expect(output.errors.map(e => e.path)).toContain("faultCode")
   })
 
 })

@@ -33,9 +33,10 @@ const SECONDARY_KEY = "PRODUCT_SYMPTOM"
 export interface IProductSymptomInput {
   careTip?: string
   faultCode: string
-  fee: number
+  fee: boolean
   id?: string
   name: string
+  preApproved: boolean
   synopsis: string
   solution: string
 }
@@ -43,11 +44,12 @@ export interface IProductSymptomInput {
 export interface IProductSymptom {
   careTip?: string
   faultCode: string
-  fee: number
+  fee: boolean
   name: string
   synopsis: string
   solution: string
   partitionKey: string
+  preApproved: boolean
   sortKey: string
   modelNumbers: string[]
 }
@@ -55,9 +57,10 @@ export interface IProductSymptom {
 export interface IProductSymptomOutput {
   careTip?: string
   faultCode: string
-  fee: number
+  fee: boolean
   id: string
   name: string
+  preApproved: boolean
   synopsis: string
   solution: string
 }
@@ -236,6 +239,7 @@ const output = ({
     ...productSymptom,
     associatedModelNumbers: productSymptom.modelNumbers || [],
     id: partitionKey,
+    preApproved: productSymptom.preApproved || false
   }
   return result
 }

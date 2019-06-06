@@ -44,8 +44,10 @@ describe("destroyRGAGood", () => {
     })
     const good = await RGAGood.create({
       ...sampleParams,
+      faultCode: "EHIJ",
       modelNumber: modelNumber.partitionKey,
       rgaId: rga.partitionKey,
+      symptomDescription: "Test"
     })
     existingRGAId = rga.partitionKey
     existingRGAGoodId = good.id
