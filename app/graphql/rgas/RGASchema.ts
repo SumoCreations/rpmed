@@ -179,6 +179,10 @@ export const typeDefs = gql`
   """
   type RGAGoodMutationOutput {
     """
+    The id the resulting RGA Good belongs to if the operation was successful.
+    """
+    rgaId: String
+    """
     The resulting RGA Good if the operation was successful.
     """
     rgaGood: RGAGood

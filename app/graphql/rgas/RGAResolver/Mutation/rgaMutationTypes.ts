@@ -8,6 +8,7 @@ export interface IRGAMutationOutput {
 }
 
 export interface IRGAGoodMutationOutput {
+  rgaId?: string
   rgaGood?: IRGAGoodOutput
   errors?: ErrorList
   success: boolean
