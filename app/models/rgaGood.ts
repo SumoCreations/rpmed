@@ -16,7 +16,7 @@ import { filterBlankAttributes, getClient } from "../util"
  * --------------------------------------------------------------
  * | Partition Key      | Sort Key              | HSK
  * --------------------------------------------------------------
- * | RGA-ID             | GOOD_Serial           | ProductId:ModelNumber
+ * | RGA-ID             | GOOD_Serial           | ProductId#ModelNumber
  * --------------------------------------------------------------
  * 
  * This allows for the following access patterns:
@@ -25,7 +25,7 @@ import { filterBlankAttributes, getClient } from "../util"
  * 2. Fetch all RGAs (PK matches RGA-ID and SK begins with 'GOOD_')
  * 3. Look up all RGA goods for an associated serial number (SK matches GOOD_Serial)
  * 4. Look up all RGA goods for an associated product (HSK beginsWith ProductId)
- * 5. Look up all RGA goods for an associated model number (HSK matches ProductId:ModelNumber)
+ * 5. Look up all RGA goods for an associated model number (HSK matches ProductId#ModelNumber)
  */
 
 const SECONDARY_KEY = "GOOD"
@@ -109,7 +109,7 @@ const create = async ({
 }: IRGAGoodInput): Promise<IRGAGood> => {
   const partitionKey = rgaId
   const id = serial || uuid()
-  const indexSortKey = `${good.productId}:${good.modelNumber}`
+  const indexSortKey = `${good.productId}#${good.modelNumber}`
   const item: IRGAGood = {
     ...good,
     id,
