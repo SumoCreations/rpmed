@@ -72,7 +72,6 @@ functions:
           method: post
           path: auth/token
           cors: true
-
 resources:
   Resources:
     AccountsTable:
