@@ -21,7 +21,7 @@ const s3 = getS3()
 
 const getUploadURL = (key: string): Promise<IUpload> => new Promise((resolve, reject) => {
   const params = {
-    Bucket: 'rpmed-dev-uploads',
+    Bucket: process.env.ATTACHED_IMAGES_BUCKET,
     Key: key
   }
   s3.getSignedUrl('putObject', params, (err, data) => {

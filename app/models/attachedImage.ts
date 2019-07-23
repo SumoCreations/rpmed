@@ -20,7 +20,7 @@ export interface IAttachedImageOutput extends IAttachedImage {
 
 const getDownloadUrl = (key: string): Promise<string> => new Promise((resolve, reject) => {
   const params = {
-    Bucket: 'rpmed-dev-uploads',
+    Bucket: process.env.ATTACHED_IMAGES_BUCKET,
     Key: key
   }
   s3.getSignedUrl('getObject', params, (err, data) => {
