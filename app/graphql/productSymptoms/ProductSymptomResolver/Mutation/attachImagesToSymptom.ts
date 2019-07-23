@@ -1,10 +1,10 @@
 import { formatError, RequiredNumber, RequiredString, validation } from "rpmed-validation-schema"
-import { mergeImages, ProductSymptom } from "../../../../models"
+import { AttachedImageStatus, mergeImages, ProductSymptom } from "../../../../models"
 import { ErrorProductSymptomAndAttachedImageUpdateFailed, ErrorProductSymptomWithIDDoesNotExist } from "../productSymptomErrors"
 import { extendSymptomOutput } from "./extendOutput"
 import { IProductSymptomMutationOutput } from "./productSymptomMutationTypes"
 
-interface IAttachedImageInput { status: string, id: string, position: number }
+interface IAttachedImageInput { status: AttachedImageStatus, id: string, position: number }
 interface IAttachImageToSymptomMutationArguments { symptomId: string, attachedImages: IAttachedImageInput[] }
 
 export const attachImagesToSymptom = async (

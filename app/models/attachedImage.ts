@@ -2,10 +2,16 @@ import { getS3 } from "../util"
 
 const s3 = getS3()
 
+export enum AttachedImageStatus {
+  Available = "AVAILABLE",
+  Pending = "PENDING",
+  Deleted = "DELETED"
+}
+
 export interface IAttachedImage {
   position: number
   id: string
-  status: string
+  status: AttachedImageStatus
 }
 
 export interface IAttachedImageOutput extends IAttachedImage {

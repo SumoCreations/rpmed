@@ -1,6 +1,6 @@
 import { v4 as uuid } from "uuid"
 import { getClient } from "../util"
-import AttachedImage, { IAttachedImage } from "./attachedImage"
+import AttachedImage, { AttachedImageStatus, IAttachedImage } from "./attachedImage"
 
 /**
  * Dynamo DB Model:
@@ -254,7 +254,11 @@ const output = ({
   const result = {
     ...productSymptom,
     associatedModelNumbers: productSymptom.modelNumbers || [],
-    attachedImages: Promise.all((productSymptom.attachedImages || []).map(AttachedImage.output)),
+    attachedImages: Promise.all(
+      (productSymptom.attachedImages || [])
+        .filter(i => i.status !== AttachedImageStatus.Pending)
+        .map(AttachedImage.output)
+    ),
     id: partitionKey,
     preApproved: productSymptom.preApproved || false,
   }
