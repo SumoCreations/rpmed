@@ -3,6 +3,11 @@ export const ErrorProductSymptomWithFaultCodeAlreadyExists = {
   path: "faultCode"
 }
 
+export const ErrorProductSymptomAndAttachedImageUpdateFailed = {
+  message: "Could not update images for this symptom",
+  path: "_"
+}
+
 export const ErrorProductSymptomCredentialsInvalid = {
   message: "The productSymptom credentials provided were not valid.",
   path: "_"
