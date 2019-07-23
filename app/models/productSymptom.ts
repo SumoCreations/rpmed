@@ -1,5 +1,6 @@
 import { v4 as uuid } from "uuid"
 import { getClient } from "../util"
+import AttachedImage, { IAttachedImage } from "./attachedImage"
 
 /**
  * Dynamo DB Model:
@@ -39,6 +40,7 @@ export interface IProductSymptomInput {
   preApproved: boolean
   synopsis: string
   solution: string
+  attachedImages?: IAttachedImage[]
 }
 
 export interface IProductSymptom {
@@ -52,9 +54,11 @@ export interface IProductSymptom {
   preApproved: boolean
   sortKey: string
   modelNumbers: string[]
+  attachedImages: IAttachedImage[]
 }
 
 export interface IProductSymptomOutput {
+  attachedImages: Promise<IAttachedImage[]>
   careTip?: string
   faultCode: string
   fee: boolean
@@ -74,6 +78,7 @@ const create = async ({
 }: IProductSymptomInput): Promise<IProductSymptom> => {
   const item: IProductSymptom = {
     ...symptomInput,
+    attachedImages: [],
     modelNumbers: [],
     partitionKey: uuid(),
     sortKey: SECONDARY_KEY,
@@ -226,6 +231,17 @@ const destroy = async (id: string): Promise<boolean> => {
   }
 }
 
+
+/**
+ * Merges an attached image to a product symptom.
+ */
+export const mergeImages = async (symptom: IProductSymptom, newImages: IAttachedImage[]): Promise<IProductSymptom> => {
+  const newIds = (newImages || []).map(i => i.id)
+  const existingImages = (symptom.attachedImages || []).filter(i => !newIds.includes(i.id))
+  const attachedImages = [...existingImages, ...newImages]
+  return await update({ ...output(symptom), attachedImages })
+}
+
 /**
  * Converts a productSymptom record to public output that can be consumed
  * by the API.
@@ -238,8 +254,9 @@ const output = ({
   const result = {
     ...productSymptom,
     associatedModelNumbers: productSymptom.modelNumbers || [],
+    attachedImages: Promise.all((productSymptom.attachedImages || []).map(AttachedImage.output)),
     id: partitionKey,
-    preApproved: productSymptom.preApproved || false
+    preApproved: productSymptom.preApproved || false,
   }
   return result
 }

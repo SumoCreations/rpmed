@@ -20,6 +20,37 @@ export const typeDefs = gql`
     symptoms: [ProductSymptom]!
   }
 
+"""
+Indicates whether or not an image is currently transferring, available, or even deleted.
+"""
+enum UploadStatus {
+  PENDING
+  AVAILABLE
+  DELETED
+}
+
+  """
+  An image that can be associated to any another type.
+  """
+  type AttachedImage {
+    """
+    The unique ID or Key on AWS S3 representing the image.
+    """
+    id: ID!
+    """
+    A pre-signed url to fetch this image from S3.
+    """
+    url: String
+    """
+    The user defined sort priority for the attached image.
+    """
+    position: Int!
+    """
+    The current upload status of the image regarding its availability on S3.
+    """
+    status: UploadStatus!
+  }
+
   """
   A troubleshooting symptom for a product.
   """
@@ -64,6 +95,10 @@ export const typeDefs = gql`
     The resulting symptoms if the operation was successful and multiple results were returned.
     """
     modelNumbers: [ModelNumberSymptomDetail]
+    """
+    An array of attached images hosted via AWS S3.
+    """
+    attachedImages: [AttachedImage]
   }
 
   type ValidationError {
@@ -167,6 +202,12 @@ export const typeDefs = gql`
     name: String
   }
 
+  input AttachedImageInput {
+    id: ID!
+    status: UploadStatus
+    position: Int!
+  }
+
   type Mutation {
     """
     Creates a new symptom.
@@ -196,6 +237,14 @@ export const typeDefs = gql`
       modelNumber: String!
       symptomId: String!
       linked: Boolean!
+    ): ProductSymptomMutationOutput!
+
+    """
+    Attaches / removes a images to a product symptom.
+    """
+    attachImagesToSymptom(
+      symptomId: String!
+      attachedImages: [AttachedImageInput]!
     ): ProductSymptomMutationOutput!
   }
 
