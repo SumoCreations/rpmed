@@ -1,0 +1,38 @@
+import { getS3 } from "../util"
+
+const s3 = getS3()
+
+export interface IAttachedImage {
+  position: number
+  id: string
+  status: string
+}
+
+export interface IAttachedImageOutput extends IAttachedImage {
+  url: string | null
+}
+
+const getDownloadUrl = (key: string): Promise<string> => new Promise((resolve, reject) => {
+  const params = {
+    Bucket: 'rpmed-dev-uploads',
+    Key: key
+  }
+  s3.getSignedUrl('getObject', params, (err, data) => {
+    if (err) {
+      // tslint:disable-next-line
+      console.error('Presigning get URL data encountered an error', err)
+      reject(err)
+    } else {
+      resolve(data)
+    }
+  })
+})
+
+const output = async (attachedImage: IAttachedImage) => ({
+  ...attachedImage,
+  url: attachedImage.status === "AVAILABLE" ? await getDownloadUrl(attachedImage.id) : null
+})
+
+export default {
+  output
+}
