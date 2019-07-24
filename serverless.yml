@@ -51,6 +51,11 @@ provider:
   iamRoleStatements:
     - Effect: Allow
       Action:
+        - s3:PutObject
+        - s3:GetObject
+      Resource: "arn:aws:s3:::${self:provider.environment.ATTACHED_IMAGES_BUCKET}/*"
+    - Effect: Allow
+      Action:
         - dynamodb:Query
         - dynamodb:Scan
         - dynamodb:GetItem

@@ -1,16 +1,18 @@
 import * as AWS from "aws-sdk"
 
-export const getS3 = () => process.env.IS_OFFLINE ? new AWS.S3({
+export const isOffline = () => process.env.IS_OFFLINE === "true"
+
+export const getS3 = () => isOffline() ? new AWS.S3({
   accessKeyId: "AKIAWGRSBMEEDQRPXZTT",
   region: "us-west-2",
   secretAccessKey: "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",
   signatureVersion: 'v4'
 }) : new AWS.S3({ signatureVersion: 'v4' })
 
-export const getS3Bucket = () => process.env.IS_OFFLINE ? "rpmed-dev-uploads" : process.env.ATTACHED_IMAGES_BUCKET
+export const getS3Bucket = () => isOffline() ? "rpmed-dev-uploads" : process.env.ATTACHED_IMAGES_BUCKET
 
 export const getClient = () =>
-  process.env.IS_OFFLINE
+  isOffline()
     ? new AWS.DynamoDB.DocumentClient({
       accessKeyId: "DEFAULT_ACCESS_KEY",
       endpoint: "http://localhost:8000",
@@ -18,6 +20,7 @@ export const getClient = () =>
       secretAccessKey: "DEFAUlT_SECRET",
     })
     : new AWS.DynamoDB.DocumentClient()
+
 
 export const resetTable = async (
   tableName: string,
