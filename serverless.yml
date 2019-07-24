@@ -28,7 +28,7 @@ custom:
   customDomain:
     domainName: ${self:custom.domain.${opt:stage, self:provider.stage}}
     basePath: ""
-    stage: ${self:provider.stage}
+    stage: ${opt:stage, self:provider.stage}
     createRoute53Record: true
 
 provider:
