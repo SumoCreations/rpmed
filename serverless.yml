@@ -1,0 +1,87 @@
+service:
+  name: rpmed-service-api
+
+plugins:
+  - serverless-webpack
+  - serverless-dynamodb-local
+  - serverless-offline
+  - serverless-domain-manager
+
+custom:
+  serverless-offline:
+    port: 4000
+  dynamodb:
+    start:
+      migrate: true
+      seed: true
+    seed:
+      dev:
+        sources:
+          - table: ${self:service}-${opt:stage, self:provider.stage}-resources
+            sources: [./seed/resources.json]
+          - table: ${self:service}-${opt:stage, self:provider.stage}-users-lookup
+            sources: [./seed/usersLookup.json]
+  domain:
+    dev: dev.rpmed-apps.com
+    staging: staging.rpmed-apps.com
+    prod: prod.rpmed-apps.com
+  customDomain:
+    domainName: ${self:custom.domain.${opt:stage, self:provider.stage}}
+    basePath: ""
+    stage: ${opt:stage, self:provider.stage}
+    createRoute53Record: true
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  profile: rpmed-serverless
+  region: us-west-2
+  environment:
+    ACCESS_TOKEN_LIFESPAN: 300
+    REFRESH_TOKEN_LIFESPAN: 172800
+    SALT_ROUNDS: 10
+    RECAPTCHA_KEY: 6LdOqZoUAAAAAJ79IuWa4mU57Urnd-N6oxP4XhiR
+    OAUTH_SIGNATURE: 'Ph$2\@!Rq<ev_W;:N(2+>Bwxez$3?;9~srf*nxiVJLz:lw7Djgs(Q/UhwmZ@"YLi<'
+    ATTACHED_IMAGES_BUCKET: ${self:service}-${opt:stage, self:provider.stage}-attached-images
+    DYNAMODB_ACCOUNTS_TABLE: ${self:service}-${opt:stage, self:provider.stage}-resources
+    DYNAMODB_ACCOUNTS_GSI_1: GSI_1,
+    DYNAMODB_USER_LOOKUP_TABLE: ${self:service}-${opt:stage, self:provider.stage}-users-lookup
+    DYNAMODB_TOKEN_LOOKUP_TABLE: ${self:service}-${opt:stage, self:provider.stage}-tokens-lookup
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:PutObject
+        - s3:GetObject
+      Resource: "arn:aws:s3:::${self:provider.environment.ATTACHED_IMAGES_BUCKET}/*"
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+        - dynamodb:BatchGetItem
+      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:service}-${opt:stage, self:provider.stage}-*"
+
+functions:
+  graphql:
+    handler: app/apollo.graphqlHandler
+    events:
+      - http:
+          path: graphql
+          method: any
+          cors: true
+  token:
+    handler: app/token.createToken
+    events:
+      - http:
+          method: post
+          path: auth/token
+          cors: true
+resources:
+  # S3
+  - ${file(resources/s3-bucket.yml)}
+  # DynamoDB
+  - ${file(resources/dynamo.yml)}
