@@ -7,6 +7,8 @@ export const getS3 = () => !process.env.AWS_ACCESS_KEY_ID ? new AWS.S3({
   signatureVersion: 'v4'
 }) : new AWS.S3({ signatureVersion: 'v4' })
 
+export const getS3Bucket = () => !process.env.AWS_ACCESS_KEY_ID ? "rpmed-dev-uploads" : process.env.ATTACHED_IMAGES_BUCKET
+
 export const getClient = () =>
   !process.env.AWS_ACCESS_KEY_ID
     ? new AWS.DynamoDB.DocumentClient({
