@@ -80,7 +80,7 @@ export const createRGAGood: CreateRGAGoodMutation = async (_, { rgaGoodInput }) 
   try {
     rgaGood = await RGAGood.create({
       ...rgaGoodInput,
-      customerId: customer.partitionKey,
+      customerId: customer ? customer.partitionKey : null,
       faultCode: existingSymptom.faultCode,
       submittedBy: rgaGoodInput.submittedBy || rga.submittedBy,
       submittedOn: rgaGoodInput.submittedOn || rga.submittedOn,
@@ -89,7 +89,7 @@ export const createRGAGood: CreateRGAGoodMutation = async (_, { rgaGoodInput }) 
   } catch (e) {
     // tslint:disable-next-line
     console.log(e)
-    return { errors: [{ path: "_", message: "Could not create RGA." }], success: false }
+    return { errors: [{ path: "_", message: "Could not create good for RGA." }], success: false }
   }
 
   if (
@@ -113,5 +113,5 @@ export const createRGAGood: CreateRGAGoodMutation = async (_, { rgaGoodInput }) 
     }
   }
 
-  return { rgaGood: RGAGood.output(rgaGood), success: true }
+  return { rgaId: rgaGood.rgaId, rgaGood: RGAGood.output(rgaGood), success: true }
 }

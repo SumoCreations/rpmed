@@ -24,6 +24,8 @@ export const modelNumber = async (_, args: { id: string }): Promise<IModelNumber
       success: true
     }
   } catch (e) {
+    // tslint:disable-next-line
+    console.log(e)
     return {
       errors: [{ path: "_", message: e.localizedMessage || "Could not retrieve model number" }],
       success: false

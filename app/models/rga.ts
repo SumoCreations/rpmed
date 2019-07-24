@@ -17,19 +17,20 @@ import { filterBlankAttributes, getClient } from "../util"
  * --------------------------------------------------------------
  * | Partition Key      | Sort Key              | HSK
  * --------------------------------------------------------------
- * | RGA-ID             | "RGA"                 | SubmittedOn
+ * | RGA-ID             | "RGA"                 | Status#SubmittedOn
  * --------------------------------------------------------------
  * 
  * This allows for the following access patterns:
  * 
  * 1. Fetch any RGA by unique ID.
  * 2. Fetch all RGAs (SK matches 'RGA')
- * 3. Look up all RGAs for a given date or date range (HSK matches SubmittedOn)
+ * 3. Fetch all RGAs for a given status (SK matches 'RGA' and HSK begins with Status)
+ * 3. Look up all RGAs for a given status and date or date range (HSK matches Status#SubmittedOn)
  * 
- * The RGA-ID is a special type of UUID key utilizing the date and an increment:
- * 05072019MR-1
- * 05072019MR-2
- * 05082019MR-1
+ * The RGA-ID is a special type of UUID key utilizing the date, time, and some randomness:
+ * 06212019MR-565583319
+ * 06212019MR-293346429
+ * 06212019MR-284397710
  * 
  */
 

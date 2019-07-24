@@ -1,5 +1,5 @@
 import { v4 as uuid } from "uuid"
-import { getClient } from "../util"
+import { filterBlankAttributes, getClient } from "../util"
 import { IModelNumberOutput, ModelNumber } from "./modelNumber"
 
 /**
@@ -78,7 +78,7 @@ const create = async ({
         Put: {
           ConditionExpression: "attribute_not_exists(partitionKey)",
           Item: {
-            ...item,
+            ...filterBlankAttributes(item),
             indexSortKey: hsk,
           },
           TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
@@ -109,7 +109,7 @@ const update = async ({
         Put: {
           ConditionExpression: "attribute_exists(partitionKey)",
           Item: {
-            ...item,
+            ...filterBlankAttributes(item),
             indexSortKey: hsk,
           },
           TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,

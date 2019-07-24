@@ -23,11 +23,12 @@ custom:
             sources: [./seed/usersLookup.json]
   domain:
     dev: dev.rpmed-apps.com
-    prod: rpmed-apps.com
+    staging: staging.rpmed-apps.com
+    prod: prod.rpmed-apps.com
   customDomain:
     domainName: ${self:custom.domain.${opt:stage, self:provider.stage}}
     basePath: ""
-    stage: ${self:provider.stage}
+    stage: ${opt:stage, self:provider.stage}
     createRoute53Record: true
 
 provider:
@@ -41,6 +42,7 @@ provider:
     SALT_ROUNDS: 10
     RECAPTCHA_KEY: 6LdOqZoUAAAAAJ79IuWa4mU57Urnd-N6oxP4XhiR
     OAUTH_SIGNATURE: 'Ph$2\@!Rq<ev_W;:N(2+>Bwxez$3?;9~srf*nxiVJLz:lw7Djgs(Q/UhwmZ@"YLi<'
+    ATTACHED_IMAGES_BUCKET: ${self:service}-${opt:stage, self:provider.stage}-attached-images
     DYNAMODB_ACCOUNTS_TABLE: ${self:service}-${opt:stage, self:provider.stage}-resources
     DYNAMODB_ACCOUNTS_GSI_1: GSI_1,
     DYNAMODB_USER_LOOKUP_TABLE: ${self:service}-${opt:stage, self:provider.stage}-users-lookup
@@ -49,12 +51,18 @@ provider:
   iamRoleStatements:
     - Effect: Allow
       Action:
+        - s3:PutObject
+        - s3:GetObject
+      Resource: "arn:aws:s3:::${self:provider.environment.ATTACHED_IMAGES_BUCKET}/*"
+    - Effect: Allow
+      Action:
         - dynamodb:Query
         - dynamodb:Scan
         - dynamodb:GetItem
         - dynamodb:PutItem
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
+        - dynamodb:BatchGetItem
       Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:service}-${opt:stage, self:provider.stage}-*"
 
 functions:
@@ -72,75 +80,8 @@ functions:
           method: post
           path: auth/token
           cors: true
-
 resources:
-  Resources:
-    AccountsTable:
-      Type: "AWS::DynamoDB::Table"
-      Properties:
-        TableName: ${self:provider.environment.DYNAMODB_ACCOUNTS_TABLE}
-        AttributeDefinitions:
-          - AttributeName: partitionKey
-            AttributeType: S
-          - AttributeName: sortKey
-            AttributeType: S
-          - AttributeName: indexSortKey
-            AttributeType: S
-        KeySchema:
-          - AttributeName: partitionKey
-            KeyType: HASH
-          - AttributeName: sortKey
-            KeyType: RANGE
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
-        GlobalSecondaryIndexes:
-          - IndexName: GSI_1
-            KeySchema:
-              - AttributeName: sortKey
-                KeyType: HASH
-              - AttributeName: indexSortKey
-                KeyType: RANGE
-            Projection:
-              ProjectionType: ALL
-            ProvisionedThroughput:
-              ReadCapacityUnits: 1
-              WriteCapacityUnits: 1
-    UsersLookupTable:
-      Type: "AWS::DynamoDB::Table"
-      Properties:
-        TableName: ${self:provider.environment.DYNAMODB_USER_LOOKUP_TABLE}
-        AttributeDefinitions:
-          - AttributeName: email
-            AttributeType: S
-          - AttributeName: id
-            AttributeType: S
-        KeySchema:
-          - AttributeName: email
-            KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
-        GlobalSecondaryIndexes:
-          - IndexName: UserIdGSI
-            KeySchema:
-              - AttributeName: id
-                KeyType: HASH
-            Projection:
-              ProjectionType: KEYS_ONLY
-            ProvisionedThroughput:
-              ReadCapacityUnits: 1
-              WriteCapacityUnits: 1
-    TokenLookupTable:
-      Type: "AWS::DynamoDB::Table"
-      Properties:
-        TableName: ${self:provider.environment.DYNAMODB_TOKEN_LOOKUP_TABLE}
-        AttributeDefinitions:
-          - AttributeName: id
-            AttributeType: S
-        KeySchema:
-          - AttributeName: id
-            KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
+  # S3
+  - ${file(resources/s3-bucket.yml)}
+  # DynamoDB
+  - ${file(resources/dynamo.yml)}
