@@ -1,16 +1,16 @@
 import * as AWS from "aws-sdk"
 
-export const getS3 = () => !process.env.AWS_ACCESS_KEY_ID ? new AWS.S3({
+export const getS3 = () => process.env.IS_OFFLINE ? new AWS.S3({
   accessKeyId: "AKIAWGRSBMEEDQRPXZTT",
   region: "us-west-2",
   secretAccessKey: "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",
   signatureVersion: 'v4'
 }) : new AWS.S3({ signatureVersion: 'v4' })
 
-export const getS3Bucket = () => !process.env.AWS_ACCESS_KEY_ID ? "rpmed-dev-uploads" : process.env.ATTACHED_IMAGES_BUCKET
+export const getS3Bucket = () => process.env.IS_OFFLINE ? "rpmed-dev-uploads" : process.env.ATTACHED_IMAGES_BUCKET
 
 export const getClient = () =>
-  !process.env.AWS_ACCESS_KEY_ID
+  process.env.IS_OFFLINE
     ? new AWS.DynamoDB.DocumentClient({
       accessKeyId: "DEFAULT_ACCESS_KEY",
       endpoint: "http://localhost:8000",
