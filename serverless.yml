@@ -23,7 +23,8 @@ custom:
             sources: [./seed/usersLookup.json]
   domain:
     dev: dev.rpmed-apps.com
-    prod: rpmed-apps.com
+    staging: staging.rpmed-apps.com
+    prod: prod.rpmed-apps.com
   customDomain:
     domainName: ${self:custom.domain.${opt:stage, self:provider.stage}}
     basePath: ""
