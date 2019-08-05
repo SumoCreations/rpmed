@@ -83,6 +83,13 @@ functions:
           method: post
           path: auth/token
           cors: true
+  sheets:
+    handler: app/sheets.import
+    events:
+      - http:
+          method: get
+          path: sheets
+          cors: true
 resources:
   # S3
   - ${file(resources/s3-bucket.yml)}
