@@ -4,11 +4,12 @@
   "description": "A serverless GraphQL API for the RPMed Customer Service Portal.",
   "main": "app/index.json",
   "scripts": {
-    "test": "jest --runInBand --config jestconfig.json",
-    "start": "npm run killDynamo; sls offline start",
+    "jestInline": "jest --runInBand --config jestconfig.json",
+    "test": "sls offline start --exec \"npm run jestInline\"",
+    "start": "sls offline start",
     "lint": "tslint -p tsconfig.json",
-    "installDynamo": "sls dynamodb install --localPath ./bin",
-    "killDynamo": "lsof -n -i:8000 | grep LISTEN | awk '{ print $2 }' | uniq | xargs kill -9"
+    "startDynamo": "docker run --name dynamoLocal -d -p 8000:8000 amazon/dynamodb-local",
+    "stopDynamo": "docker stop dynamoLocal"
   },
   "files": [
     "app/**/*"
@@ -16,6 +17,7 @@
   "dependencies": {
     "apollo-server-lambda": "^2.4.8",
     "bcryptjs": "^2.4.3",
+    "googleapis": "^39.2.0",
     "graphql": "^14.2.1",
     "graphql-tools": "^4.0.4",
     "jsonwebtoken": "^8.5.1",

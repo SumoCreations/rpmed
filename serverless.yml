@@ -11,9 +11,12 @@ custom:
   serverless-offline:
     port: 4000
   dynamodb:
+    stages:
+      - dev
     start:
       migrate: true
       seed: true
+      noStart: true
     seed:
       dev:
         sources:

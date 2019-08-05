@@ -14,13 +14,12 @@ export const getS3Bucket = () => isOffline() ? "rpmed-dev-uploads" : process.env
 export const getClient = () =>
   isOffline()
     ? new AWS.DynamoDB.DocumentClient({
-      accessKeyId: "DEFAULT_ACCESS_KEY",
+      accessKeyId: "MOCK_ACCESS_KEY_ID",
       endpoint: "http://localhost:8000",
       region: "localhost",
-      secretAccessKey: "DEFAUlT_SECRET",
+      secretAccessKey: "MOCK_SECRET_ACCESS_KEY",
     })
     : new AWS.DynamoDB.DocumentClient()
-
 
 export const resetTable = async (
   tableName: string,
