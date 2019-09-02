@@ -1,6 +1,9 @@
 import * as Validation from "rpmed-validation-schema"
 import { IUserInput, User } from "../../../../models"
-import { ErrorUserCredentialsInvalid, ErrorUserWithEmailAlreadyExists } from "./userErrors"
+import {
+  ErrorUserCredentialsInvalid,
+  ErrorUserWithEmailAlreadyExists,
+} from "./userErrors"
 import { IMutationOutput } from "./userMutationTypes"
 
 export const createUser = async (
@@ -18,7 +21,7 @@ export const createUser = async (
   if (existingUser) {
     return {
       errors: [ErrorUserWithEmailAlreadyExists],
-      success: false
+      success: false,
     }
   }
 

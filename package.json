@@ -6,10 +6,13 @@
   "scripts": {
     "jestInline": "jest --runInBand --config jestconfig.json",
     "test": "sls offline start --exec \"npm run jestInline\"",
+    "testLocal": "npm run resetDynamo; sls offline start --exec \"npm run jestInline\"",
     "start": "sls offline start",
     "lint": "tslint -p tsconfig.json",
     "startDynamo": "docker run --name dynamoLocal -d -p 8000:8000 amazon/dynamodb-local",
-    "stopDynamo": "docker stop dynamoLocal"
+    "stopDynamo": "docker stop dynamoLocal; docker rm dynamoLocal",
+    "resetDynamo": "npm run stopDynamo; npm run startDynamo",
+    "prettier": "prettier --config ./.prettierrc 'app/**/*.{ts,tsx}' --write"
   },
   "files": [
     "app/**/*"
@@ -18,7 +21,7 @@
     "apollo-server-lambda": "^2.4.8",
     "bcryptjs": "^2.4.3",
     "googleapis": "^39.2.0",
-    "graphql": "^14.2.1",
+    "graphql": "^14.4.2",
     "graphql-tools": "^4.0.4",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.11",

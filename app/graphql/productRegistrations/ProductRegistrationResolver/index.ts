@@ -3,5 +3,5 @@ import * as Query from "./Query"
 
 export const resolvers = {
   Mutation,
-  Query
+  Query,
 }

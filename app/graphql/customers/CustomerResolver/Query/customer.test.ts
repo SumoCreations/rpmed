@@ -2,10 +2,9 @@ import { Customer, ICustomer } from "../../../../models"
 import { customer } from "./customer"
 
 describe("Query", () => {
-
   let existingCustomer: ICustomer
   let existingCustomer2: ICustomer
-  beforeAll(async (done) => {
+  beforeAll(async done => {
     existingCustomer = await Customer.create({
       email: "customers-query-test-1@rpmed.com",
       name: "Test User 1",
@@ -17,7 +16,7 @@ describe("Query", () => {
     done()
   })
 
-  afterAll(async (done) => {
+  afterAll(async done => {
     await Customer.destroy(existingCustomer.partitionKey)
     await Customer.destroy(existingCustomer2.partitionKey)
     done()
@@ -43,5 +42,4 @@ describe("Query", () => {
       expect(output.errors).toBeDefined()
     })
   })
-
 })

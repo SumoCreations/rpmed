@@ -1,11 +1,17 @@
-import { IModelNumber, IModelNumberInput, IProduct, ModelNumber, Product } from "../../../../models";
+import {
+  IModelNumber,
+  IModelNumberInput,
+  IProduct,
+  ModelNumber,
+  Product,
+} from "../../../../models"
 import { updateModelNumber } from "./updateModelNumber"
 
 describe("updateModelNumber", () => {
   let existingProduct: IProduct
   let existingModelNumber: IModelNumber
   let sampleParams: IModelNumberInput
-  beforeEach(async (done) => {
+  beforeEach(async done => {
     existingProduct = await Product.create({
       description: "MedLED Sapphire Top-Tier",
       name: "MedLED Sapphire (MLOD01)",
@@ -26,7 +32,7 @@ describe("updateModelNumber", () => {
     done()
   })
 
-  afterEach(async (done) => {
+  afterEach(async done => {
     await Product.destroy(existingProduct.partitionKey)
     await ModelNumber.destroy(existingModelNumber.partitionKey)
     done()
@@ -39,8 +45,8 @@ describe("updateModelNumber", () => {
         ...sampleParams,
         lotted: true,
         resolutionWithWarranty: "Buy a new one.",
-        warrantyTerm: 6
-      }
+        warrantyTerm: 6,
+      },
     })
     expect(output.success).toBe(true)
     const updatedModel = await ModelNumber.find(sampleParams.id)
@@ -55,7 +61,7 @@ describe("updateModelNumber", () => {
       modelNumberInput: {
         ...sampleParams,
         productId: "SOME-FAKE-KEY",
-      }
+      },
     })
     expect(output.success).toBe(false)
     expect(output.errors.map(e => e.path)).toContain("productId")
@@ -67,7 +73,7 @@ describe("updateModelNumber", () => {
       modelNumberInput: {
         ...sampleParams,
         id: "ID-DOES-NOT-EXIST",
-      }
+      },
     })
     expect(output.success).toBe(false)
     expect(output.errors.map(e => e.path)).toContain("id")
@@ -80,7 +86,7 @@ describe("updateModelNumber", () => {
         ...sampleParams,
         lotted: null,
         warrantyTerm: "",
-      }
+      },
     }
     const output = await updateModelNumber(null, invalidInput)
     expect(output.success).toBe(false)

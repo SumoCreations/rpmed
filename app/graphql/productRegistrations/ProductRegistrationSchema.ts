@@ -1,7 +1,6 @@
 import { gql } from "apollo-server-lambda"
 
 export const ProductRegistrationTypeDef = gql`
-
   """
   The profile of a customer associated to a registration.
   """
@@ -66,7 +65,7 @@ export const typeDefs = gql`
     """
     A path indicating the attribute that failed validation.
     """
-    path: String!, 
+    path: String!
     """
     A brief description of why the specified attribute failed validation.
     """
@@ -102,7 +101,7 @@ export const typeDefs = gql`
     """
     success: Boolean!
   }
-  
+
   """
   The result of a mutation applied to a registration.
   """
@@ -195,9 +194,7 @@ export const typeDefs = gql`
     """
     Removes an existing registration.
     """
-    destroyProductRegistration(
-      id: String!
-    ): ProductRegistrationMutationOutput!
+    destroyProductRegistration(id: String!): ProductRegistrationMutationOutput!
   }
 
   schema {

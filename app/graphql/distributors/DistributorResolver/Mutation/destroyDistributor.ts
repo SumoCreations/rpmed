@@ -1,7 +1,9 @@
-
 import { Distributor } from "../../../../models"
-import { generateMutationError } from "../../../../util";
-import { ErrorDistributorCouldNotBeDestroyed, ErrorDistributorWithIDDoesNotExist } from "../distributorErrors"
+import { generateMutationError } from "../../../../util"
+import {
+  ErrorDistributorCouldNotBeDestroyed,
+  ErrorDistributorWithIDDoesNotExist,
+} from "../distributorErrors"
 import { IDistributorMutationOutput } from "./distributorMutationTypes"
 
 export const destroyDistributor = async (

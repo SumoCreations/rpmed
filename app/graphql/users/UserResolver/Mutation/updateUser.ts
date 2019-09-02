@@ -14,7 +14,12 @@ export const updateUser = async (
   }
   let user = await User.find(userInput.id)
   if (!user) {
-    return { success: false, errors: [{ message: "The requested user could not be found.", path: "_" }] }
+    return {
+      success: false,
+      errors: [
+        { message: "The requested user could not be found.", path: "_" },
+      ],
+    }
   }
   const userWithEmail = await User.findByEmail(userInput.email)
   if (userWithEmail && userWithEmail.partitionKey !== user.partitionKey) {

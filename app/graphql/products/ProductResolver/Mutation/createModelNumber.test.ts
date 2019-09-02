@@ -1,4 +1,9 @@
-import { IModelNumber, IProduct, ModelNumber, Product } from "../../../../models";
+import {
+  IModelNumber,
+  IProduct,
+  ModelNumber,
+  Product,
+} from "../../../../models"
 import { createModelNumber } from "./createModelNumber"
 
 const sampleParams = {
@@ -16,7 +21,7 @@ const sampleParams = {
 describe("createModelNumber", () => {
   let existingProduct: IProduct
   let existingModelNumber: IModelNumber
-  beforeEach(async (done) => {
+  beforeEach(async done => {
     existingProduct = await Product.create({
       description: "MedLED Onyx Mid-Tier",
       name: "MedLED Onyx (MLOX01)",
@@ -36,7 +41,7 @@ describe("createModelNumber", () => {
     done()
   })
 
-  afterEach(async (done) => {
+  afterEach(async done => {
     await Product.destroy(existingProduct.partitionKey)
     await ModelNumber.destroy(existingModelNumber.partitionKey)
     done()
@@ -47,8 +52,8 @@ describe("createModelNumber", () => {
     const output = await createModelNumber(null, {
       modelNumberInput: {
         ...sampleParams,
-        productId: existingProduct.partitionKey
-      }
+        productId: existingProduct.partitionKey,
+      },
     })
     expect(output.success).toBe(true)
   })
@@ -60,7 +65,7 @@ describe("createModelNumber", () => {
         ...sampleParams,
         id: "MLOX01-PK",
         productId: "SOME-FAKE-KEY",
-      }
+      },
     })
     expect(output.success).toBe(false)
     expect(output.errors.map(e => e.path)).toContain("productId")
@@ -73,7 +78,7 @@ describe("createModelNumber", () => {
         ...sampleParams,
         id: existingModelNumber.partitionKey,
         productId: existingProduct.partitionKey,
-      }
+      },
     })
     expect(output.success).toBe(false)
     expect(output.errors.map(e => e.path)).toContain("id")
@@ -87,7 +92,7 @@ describe("createModelNumber", () => {
         lotted: null,
         productId: existingProduct.partitionKey,
         warrantyTerm: "",
-      }
+      },
     }
     const output = await createModelNumber(null, invalidInput)
     expect(output.success).toBe(false)

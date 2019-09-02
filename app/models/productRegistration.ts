@@ -5,15 +5,15 @@ import { filterBlankAttributes, getClient } from "../util"
  * Dynamo DB Model:
  * PRODUCT REGISTRATION
  * ==========================================================
- * 
+ *
  * This model represents a product being registered to a given
  * customer. This can be achieved either directly by a customer
  * submitting a product registration directly or by a distributor
  * or team member filing an RGA and associating the appropriate
  * customer credentials for the product.
- * 
+ *
  * The table structure in dynamo DB is as follows:
- * 
+ *
  * ----------------------------------------------------------------------
  * |                    | (GS1 Partition Key) | (GS1 Sort Key)
  * ----------------------------------------------------------------------
@@ -21,9 +21,9 @@ import { filterBlankAttributes, getClient } from "../util"
  * ----------------------------------------------------------------------
  * | Serial/UUID        | CONST               | ProductId#ModelNumber#customerId
  * ----------------------------------------------------------------------
- * 
+ *
  * This allows for the following access patterns:
- * 
+ *
  * 1. Fetch a registration via serial number (PK matches Serial Number)
  * 2. Fetch registration by unique id if the product was not lotted. (PK matches uuid)
  * 3. Fetch all product registrations (Sort Key matches 'CONST')
@@ -35,7 +35,10 @@ const client = getClient()
 
 const SECONDARY_KEY = "PRODUCT_REGISTRATION"
 
-interface IRegistrationSortKeyInput { productId: string, modelNumber: string }
+interface IRegistrationSortKeyInput {
+  productId: string
+  modelNumber: string
+}
 
 export interface IProductRegistrationInput {
   customerId: string
@@ -109,7 +112,7 @@ const create = async ({
 }
 
 /**
- * Updates an existing registration model in the database provided the supplied 
+ * Updates an existing registration model in the database provided the supplied
  * credentials are valid. Some attributes cannot be changed such as the serial
  * or model number.
  * @param input An object representing the input to replace the supplied object.
@@ -117,7 +120,7 @@ const create = async ({
 const update = async ({
   customerId,
   id,
-  registeredOn
+  registeredOn,
 }: IProductRegistrationInput): Promise<IProductRegistration> => {
   const existingItem = await find(id)
   const item: IProductRegistration = {
@@ -126,7 +129,9 @@ const update = async ({
     registeredOn,
     sortKey: SECONDARY_KEY,
   }
-  const hsk = `${existingItem.productId}#${existingItem.modelNumber}#${customerId}`
+  const hsk = `${existingItem.productId}#${
+    existingItem.modelNumber
+  }#${customerId}`
   const params = {
     TransactItems: [
       {
@@ -167,14 +172,18 @@ const find = async (id: string): Promise<IProductRegistration | null> => {
  * Retreive all registrations for a given product and model number configuration.
  * @param productConfig The product Id and model number of the registrations to find.
  */
-const forModel = async ({ productId, modelNumber }: IRegistrationSortKeyInput): Promise<IProductRegistration[] | null> => {
+const forModel = async ({
+  productId,
+  modelNumber,
+}: IRegistrationSortKeyInput): Promise<IProductRegistration[] | null> => {
   const searchParams = {
     ExpressionAttributeValues: {
       ":pk": SECONDARY_KEY,
       ":rkey": `${productId}#${modelNumber}`,
     },
     IndexName: "GSI_1",
-    KeyConditionExpression: "sortKey = :pk and begins_with(indexSortKey, :rkey)",
+    KeyConditionExpression:
+      "sortKey = :pk and begins_with(indexSortKey, :rkey)",
     Limit: 500,
     TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
   }
@@ -182,19 +191,21 @@ const forModel = async ({ productId, modelNumber }: IRegistrationSortKeyInput): 
   return result.Items ? (result.Items as IProductRegistration[]) : []
 }
 
-
 /**
  * Retreive all registrations for a given product across all configurations.
  * @param productId The product Id of the registrations to find.
  */
-const forProduct = async (productId: string): Promise<IProductRegistration[] | null> => {
+const forProduct = async (
+  productId: string
+): Promise<IProductRegistration[] | null> => {
   const searchParams = {
     ExpressionAttributeValues: {
       ":pk": SECONDARY_KEY,
       ":rkey": productId,
     },
     IndexName: "GSI_1",
-    KeyConditionExpression: "sortKey = :pk and begins_with(indexSortKey, :rkey)",
+    KeyConditionExpression:
+      "sortKey = :pk and begins_with(indexSortKey, :rkey)",
     Limit: 500,
     TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
   }
@@ -219,14 +230,14 @@ const all = async (): Promise<IProductRegistration[]> => {
 }
 
 /**
- * Deletes a product and associated child objects from the 
+ * Deletes a product and associated child objects from the
  * database via UUID.
  * @param id The UUID of the product to delete.
  */
 const destroy = async (id: string): Promise<boolean> => {
   const registration = await find(id)
   try {
-    if (!(registration)) {
+    if (!registration) {
       return false
     }
     const params = {
@@ -272,5 +283,5 @@ export const ProductRegistration = {
   forModel,
   forProduct,
   output,
-  update
+  update,
 }

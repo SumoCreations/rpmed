@@ -3,17 +3,17 @@ import { IProduct, Product } from "./product"
 
 const existingProductParams = {
   description: "MedLED Chrome MC7 PRO Hard Top; Standard Kit",
-  name: "Chrome MC7 Test"
+  name: "Chrome MC7 Test",
 }
 
 describe("product", () => {
   let product: IProduct
-  beforeEach(async (done) => {
+  beforeEach(async done => {
     product = await Product.create({ ...existingProductParams })
     done()
   })
 
-  afterEach(async (done) => {
+  afterEach(async done => {
     await Product.destroy(product.partitionKey)
     done()
   })

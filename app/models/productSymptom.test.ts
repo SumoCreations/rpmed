@@ -7,18 +7,20 @@ const existingSymptomParams = {
   fee: false,
   name: "Light randomly turns off (stobes/blinks)",
   preApproved: false,
-  solution: "Replace light housing module because it needs a new wire harness and/or circuit boards.",
-  synopsis: "LED signal interrupted due to a break in the wire or the circuit board(s) are corroded or damaged.",
+  solution:
+    "Replace light housing module because it needs a new wire harness and/or circuit boards.",
+  synopsis:
+    "LED signal interrupted due to a break in the wire or the circuit board(s) are corroded or damaged.",
 }
 
 describe("productSymptom", () => {
   let productSymptom: IProductSymptom
-  beforeAll(async (done) => {
+  beforeAll(async done => {
     productSymptom = await ProductSymptom.create({ ...existingSymptomParams })
     done()
   })
 
-  afterAll(async (done) => {
+  afterAll(async done => {
     await ProductSymptom.destroy(productSymptom.partitionKey)
     done()
   })
@@ -33,7 +35,9 @@ describe("productSymptom", () => {
   describe("find", () => {
     test("should return a productSymptom if one exists", async () => {
       expect.assertions(1)
-      const existingSymptom = await ProductSymptom.find(productSymptom.partitionKey)
+      const existingSymptom = await ProductSymptom.find(
+        productSymptom.partitionKey
+      )
       expect(existingSymptom).not.toBeNull()
     })
 
@@ -47,19 +51,33 @@ describe("productSymptom", () => {
   describe("findAll", () => {
     test("should return all productSymptoms for the supplied IDs", async () => {
       expect.assertions(3)
-      const anotherProductSymptom = await ProductSymptom.create({ ...existingSymptomParams, faultCode: "ANOTHER-EHIJ-TEST" })
-      const symptoms = await ProductSymptom.findAll([productSymptom.partitionKey, anotherProductSymptom.partitionKey])
+      const anotherProductSymptom = await ProductSymptom.create({
+        ...existingSymptomParams,
+        faultCode: "ANOTHER-EHIJ-TEST",
+      })
+      const symptoms = await ProductSymptom.findAll([
+        productSymptom.partitionKey,
+        anotherProductSymptom.partitionKey,
+      ])
       expect(symptoms).not.toBeNull()
-      expect(symptoms.map(s => s.partitionKey)).toContain(productSymptom.partitionKey)
-      expect(symptoms.map(s => s.partitionKey)).toContain(anotherProductSymptom.partitionKey)
+      expect(symptoms.map(s => s.partitionKey)).toContain(
+        productSymptom.partitionKey
+      )
+      expect(symptoms.map(s => s.partitionKey)).toContain(
+        anotherProductSymptom.partitionKey
+      )
     })
   })
 
   describe("destroy", () => {
     test("should delete a productSymptom and return true if one exists", async () => {
       expect.assertions(2)
-      expect(await ProductSymptom.destroy(productSymptom.partitionKey)).toBeTruthy()
-      const existingSymptom = await ProductSymptom.find(productSymptom.partitionKey)
+      expect(
+        await ProductSymptom.destroy(productSymptom.partitionKey)
+      ).toBeTruthy()
+      const existingSymptom = await ProductSymptom.find(
+        productSymptom.partitionKey
+      )
       expect(existingSymptom).toBeNull()
     })
 

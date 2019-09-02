@@ -1,6 +1,9 @@
 import * as Validation from "rpmed-validation-schema"
 import { Customer, ICustomerInput } from "../../../../models"
-import { ErrorCustomerCredentialsInvalid, ErrorCustomerWithEmailAlreadyExists } from "../customerErrors"
+import {
+  ErrorCustomerCredentialsInvalid,
+  ErrorCustomerWithEmailAlreadyExists,
+} from "../customerErrors"
 import { ICustomerMutationOutput } from "./customerMutationTypes"
 
 export const createCustomer = async (
@@ -8,7 +11,9 @@ export const createCustomer = async (
   { customerInput }: { customerInput: ICustomerInput }
 ): Promise<ICustomerMutationOutput> => {
   try {
-    await Validation.Customer.Default.validate(customerInput, { abortEarly: false })
+    await Validation.Customer.Default.validate(customerInput, {
+      abortEarly: false,
+    })
   } catch (e) {
     return { errors: Validation.formatError(e), success: false }
   }
@@ -18,7 +23,7 @@ export const createCustomer = async (
   if (existingCustomer) {
     return {
       errors: [ErrorCustomerWithEmailAlreadyExists],
-      success: false
+      success: false,
     }
   }
 

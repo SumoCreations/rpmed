@@ -4,11 +4,13 @@ interface IMutationError {
 }
 
 interface IMutationErrorOutput {
-  success: boolean,
+  success: boolean
   errors: IMutationError[]
 }
 
-export const generateMutationError = (errors: IMutationError[]): IMutationErrorOutput => ({
+export const generateMutationError = (
+  errors: IMutationError[]
+): IMutationErrorOutput => ({
   errors,
   success: false,
 })

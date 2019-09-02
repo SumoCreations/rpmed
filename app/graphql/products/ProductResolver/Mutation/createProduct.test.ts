@@ -1,4 +1,4 @@
-import { IProduct, Product } from "../../../../models";
+import { IProduct, Product } from "../../../../models"
 import { createProduct } from "./createProduct"
 
 const sampleParams = {
@@ -8,7 +8,7 @@ const sampleParams = {
 
 describe("createProduct", () => {
   let existingProduct: IProduct
-  beforeEach(async (done) => {
+  beforeEach(async done => {
     existingProduct = await Product.create({
       description: "MedLED Onyx 2nd Gen Mid-Tier",
       name: "MedLED Onyx (MLOX100)",
@@ -16,7 +16,7 @@ describe("createProduct", () => {
     done()
   })
 
-  afterEach(async (done) => {
+  afterEach(async done => {
     await Product.destroy(existingProduct.partitionKey)
     done()
   })
@@ -26,8 +26,8 @@ describe("createProduct", () => {
     const output = await createProduct(null, {
       productInput: {
         ...sampleParams,
-        name: "MedLED MC7 PRO"
-      }
+        name: "MedLED MC7 PRO",
+      },
     })
     expect(output.success).toBe(true)
   })
@@ -38,7 +38,7 @@ describe("createProduct", () => {
       productInput: {
         ...sampleParams,
         name: existingProduct.name,
-      }
+      },
     })
     expect(output.success).toBe(false)
     expect(output.errors.map(e => e.path)).toContain("name")
@@ -50,8 +50,8 @@ describe("createProduct", () => {
       productInput: {
         ...sampleParams,
         description: null,
-        name: null
-      }
+        name: null,
+      },
     }
     const output = await createProduct(null, invalidInput)
     expect(output.success).toBe(false)

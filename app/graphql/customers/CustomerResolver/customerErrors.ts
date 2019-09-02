@@ -1,24 +1,24 @@
 export const ErrorCustomerWithEmailAlreadyExists = {
   message: "A customer with this email address already exists.",
-  path: "email"
+  path: "email",
 }
 
 export const ErrorCustomerCredentialsInvalid = {
   message: "The customer credentials provided were not valid.",
-  path: "_"
+  path: "_",
 }
 
 export const ErrorCustomerCouldNotBeDestroyed = {
   message: "Could not remove customer.",
-  path: "_"
+  path: "_",
 }
 
 export const ErrorCustomerWithIDDoesNotExist = {
   message: `No customer exists with the supplied ID.`,
-  path: "_"
+  path: "_",
 }
 
 export const ErrorCustomerNotFound = {
   message: `No customer exists with the supplied ID.`,
-  path: "_"
+  path: "_",
 }

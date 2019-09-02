@@ -8,33 +8,43 @@ const client = getClient()
  * Adds a symptom / model number to their respective embedded
  * association lists.
  */
-export const addSymptomToModelNumber = async (symptomId: string, modelNumberString: string) => {
+export const addSymptomToModelNumber = async (
+  symptomId: string,
+  modelNumberString: string
+) => {
   const modelNumber = await ModelNumber.find(modelNumberString)
   const symptom = await ProductSymptom.find(symptomId)
-  const modelNumbers = [...new Set([...(symptom.modelNumbers || []), modelNumber.partitionKey])];
-  const symptoms = [...new Set([...(modelNumber.symptoms || []), symptom.partitionKey])];
+  const modelNumbers = [
+    ...new Set([...(symptom.modelNumbers || []), modelNumber.partitionKey]),
+  ]
+  const symptoms = [
+    ...new Set([...(modelNumber.symptoms || []), symptom.partitionKey]),
+  ]
   const params = {
     TransactItems: [
       {
         Update: {
-          ExpressionAttributeNames: { '#modelNumbers': 'modelNumbers' },
+          ExpressionAttributeNames: { "#modelNumbers": "modelNumbers" },
           ExpressionAttributeValues: {
-            ':modelNumbers': modelNumbers,
+            ":modelNumbers": modelNumbers,
           },
           Key: { partitionKey: symptomId, sortKey: symptom.sortKey },
           TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
-          UpdateExpression: 'set #modelNumbers = :modelNumbers',
+          UpdateExpression: "set #modelNumbers = :modelNumbers",
         },
       },
       {
         Update: {
-          ExpressionAttributeNames: { '#symptoms': 'symptoms' },
+          ExpressionAttributeNames: { "#symptoms": "symptoms" },
           ExpressionAttributeValues: {
-            ':symptoms': symptoms,
+            ":symptoms": symptoms,
           },
-          Key: { partitionKey: modelNumberString, sortKey: modelNumber.sortKey },
+          Key: {
+            partitionKey: modelNumberString,
+            sortKey: modelNumber.sortKey,
+          },
           TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
-          UpdateExpression: 'set #symptoms = :symptoms',
+          UpdateExpression: "set #symptoms = :symptoms",
         },
       },
     ],
@@ -46,33 +56,43 @@ export const addSymptomToModelNumber = async (symptomId: string, modelNumberStri
  * Removes a symptom / model number from their respective embedded
  * association lists.
  */
-export const removeSymptomFromModelNumber = async (symptomId: string, modelNumberString: string) => {
+export const removeSymptomFromModelNumber = async (
+  symptomId: string,
+  modelNumberString: string
+) => {
   const modelNumber = await ModelNumber.find(modelNumberString)
   const symptom = await ProductSymptom.find(symptomId)
-  const modelNumbers = [...new Set([...(symptom.modelNumbers || [])])].filter(i => i !== modelNumber.partitionKey);
-  const symptoms = [...new Set([...(modelNumber.symptoms || [])])].filter(i => i !== symptom.partitionKey);
+  const modelNumbers = [...new Set([...(symptom.modelNumbers || [])])].filter(
+    i => i !== modelNumber.partitionKey
+  )
+  const symptoms = [...new Set([...(modelNumber.symptoms || [])])].filter(
+    i => i !== symptom.partitionKey
+  )
   const params = {
     TransactItems: [
       {
         Update: {
-          ExpressionAttributeNames: { '#modelNumbers': 'modelNumbers' },
+          ExpressionAttributeNames: { "#modelNumbers": "modelNumbers" },
           ExpressionAttributeValues: {
-            ':modelNumbers': modelNumbers,
+            ":modelNumbers": modelNumbers,
           },
           Key: { partitionKey: symptomId, sortKey: symptom.sortKey },
           TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
-          UpdateExpression: 'set #modelNumbers = :modelNumbers',
+          UpdateExpression: "set #modelNumbers = :modelNumbers",
         },
       },
       {
         Update: {
-          ExpressionAttributeNames: { '#symptoms': 'symptoms' },
+          ExpressionAttributeNames: { "#symptoms": "symptoms" },
           ExpressionAttributeValues: {
-            ':symptoms': symptoms,
+            ":symptoms": symptoms,
           },
-          Key: { partitionKey: modelNumberString, sortKey: modelNumber.sortKey },
+          Key: {
+            partitionKey: modelNumberString,
+            sortKey: modelNumber.sortKey,
+          },
           TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
-          UpdateExpression: 'set #symptoms = :symptoms',
+          UpdateExpression: "set #symptoms = :symptoms",
         },
       },
     ],
@@ -80,14 +100,15 @@ export const removeSymptomFromModelNumber = async (symptomId: string, modelNumbe
   await client.transactWrite(params).promise()
 }
 
-
 /**
  * Returns a list of product symptoms for a specific model.
  */
 export const productSymptomsForModel = async (modelNumberString: string) => {
   const modelNumber = await ModelNumber.find(modelNumberString)
   const symptoms = [...new Set([...(modelNumber.symptoms || [])])]
-  if (symptoms.length < 1) { return [] as IProductSymptom[] }
+  if (symptoms.length < 1) {
+    return [] as IProductSymptom[]
+  }
   return await ProductSymptom.findAll(symptoms)
 }
 
@@ -97,6 +118,8 @@ export const productSymptomsForModel = async (modelNumberString: string) => {
 export const modelNumbersForSymptom = async (productSymptomId: string) => {
   const symptom = await ProductSymptom.find(productSymptomId)
   const modelNumbers = [...new Set([...(symptom.modelNumbers || [])])]
-  if (modelNumbers.length < 1) { return [] as IModelNumber[] }
+  if (modelNumbers.length < 1) {
+    return [] as IModelNumber[]
+  }
   return await ModelNumber.findAll(modelNumbers)
 }

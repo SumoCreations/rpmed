@@ -43,7 +43,7 @@ export const typeDefs = gql`
     The symptom / reason this product is being returned.
     """
     symptomId: String!
-        """
+    """
     The current description of the symptom.
     """
     symptomDescription: String!
@@ -119,7 +119,7 @@ export const typeDefs = gql`
     """
     A path indicating the attribute that failed validation.
     """
-    path: String!, 
+    path: String!
     """
     A brief description of why the specified attribute failed validation.
     """
@@ -155,7 +155,7 @@ export const typeDefs = gql`
     """
     success: Boolean!
   }
-  
+
   """
   The result of a mutation applied to a RGA.
   """
@@ -271,15 +271,11 @@ export const typeDefs = gql`
     """
     Creates a new RGA.
     """
-    createRGA(
-      rgaInput: NewRGAInput!
-    ): RGAMutationOutput!
+    createRGA(rgaInput: NewRGAInput!): RGAMutationOutput!
     """
     Creates a new good for an existing RGA.
     """
-    createRGAGood(
-      rgaGoodInput: NewRGAGoodInput!
-    ): RGAGoodMutationOutput!
+    createRGAGood(rgaGoodInput: NewRGAGoodInput!): RGAGoodMutationOutput!
     """
     Removes an existing RGA good.
     """

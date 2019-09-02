@@ -9,14 +9,19 @@ export const createProductSymptom = async (
   { productSymptomInput }: { productSymptomInput: IProductSymptomInput }
 ): Promise<IProductSymptomMutationOutput> => {
   try {
-    await Validation.ProductSymptom.Default.validate(productSymptomInput, { abortEarly: false })
+    await Validation.ProductSymptom.Default.validate(productSymptomInput, {
+      abortEarly: false,
+    })
   } catch (e) {
     return { errors: Validation.formatError(e), success: false }
   }
 
   try {
     const productSymptom = await ProductSymptom.create(productSymptomInput)
-    return { productSymptom: async () => extendSymptomOutput(productSymptom), success: true }
+    return {
+      productSymptom: async () => extendSymptomOutput(productSymptom),
+      success: true,
+    }
   } catch (e) {
     return { success: false, errors: [ErrorProductSymptomCredentialsInvalid] }
   }

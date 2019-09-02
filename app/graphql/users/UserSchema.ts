@@ -27,13 +27,13 @@ export const typeDefs = gql`
     """
     A path indicating the attribute that failed validation.
     """
-    path: String!, 
+    path: String!
     """
     A brief description of why the specified attribute failed validation.
     """
     message: String!
   }
-  
+
   """
   The result of a mutation applied to a user.
   """
@@ -92,23 +92,17 @@ export const typeDefs = gql`
     """
     Creates a new authenticatable user.
     """
-    createUser(
-      userInput: NewUserInput!
-    ): UserMutationOutput!
+    createUser(userInput: NewUserInput!): UserMutationOutput!
 
     """
     Updates an existing user.
     """
-    updateUser(
-      userInput: ExistingUserInput!
-    ): UserMutationOutput!
+    updateUser(userInput: ExistingUserInput!): UserMutationOutput!
 
     """
     Removes an existing user.
     """
-    destroyUser(
-      id: String!
-    ): UserMutationOutput!
+    destroyUser(id: String!): UserMutationOutput!
   }
 
   schema {

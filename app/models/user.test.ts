@@ -8,7 +8,7 @@ const lastName = "Jeffers"
 
 describe("user", () => {
   let user: IUser
-  beforeEach(async (done) => {
+  beforeEach(async done => {
     user = await User.create({
       email,
       firstName,
@@ -18,7 +18,7 @@ describe("user", () => {
     done()
   })
 
-  afterEach(async (done) => {
+  afterEach(async done => {
     await User.destroyByEmail(email)
     done()
   })

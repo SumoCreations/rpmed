@@ -8,6 +8,8 @@ import {
 import { ICredentials, parseCredentials } from "./parsers"
 
 export const createToken: APIGatewayProxyHandler = async event => {
+  // tslint:disable no-console
+  console.log(event)
   const { grantType } = JSON.parse(event.body)
   if (!["password", "refresh"].includes(grantType)) {
     return response(

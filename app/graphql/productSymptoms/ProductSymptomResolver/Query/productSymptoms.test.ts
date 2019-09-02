@@ -7,24 +7,29 @@ const sampleParams = {
   fee: true,
   name: "Light randomly turns off (stobes/blinks)",
   preApproved: true,
-  solution: "Replace light housing module because it needs a new wire harness and/or circuit boards.",
-  synopsis: "LED signal interrupted due to a break in the wire or the circuit board(s) are corroded or damaged.",
+  solution:
+    "Replace light housing module because it needs a new wire harness and/or circuit boards.",
+  synopsis:
+    "LED signal interrupted due to a break in the wire or the circuit board(s) are corroded or damaged.",
 }
-
 
 describe("Query", () => {
   describe("productSymptoms", () => {
     test("should return all existing productSymptoms", async () => {
       expect.assertions(4)
       const existingProductSymptoms = await ProductSymptom.all()
-      await Promise.all(existingProductSymptoms.map(async (p) => await ProductSymptom.destroy(p.partitionKey)))
+      await Promise.all(
+        existingProductSymptoms.map(
+          async p => await ProductSymptom.destroy(p.partitionKey)
+        )
+      )
       await ProductSymptom.create({
         ...sampleParams,
-        faultCode: "MULTISYMPTST1"
+        faultCode: "MULTISYMPTST1",
       })
       await ProductSymptom.create({
         ...sampleParams,
-        faultCode: "MULTISYMPTST2"
+        faultCode: "MULTISYMPTST2",
       })
       const output = await productSymptoms({}, {})
       expect(output.success).toEqual(true)
@@ -33,5 +38,4 @@ describe("Query", () => {
       expect(output.productSymptoms.length > 1).toEqual(true)
     })
   })
-
 })

@@ -4,7 +4,6 @@ import { verifyUser } from "./verify"
 const email = "avaliduser@jimjeffers.com"
 const password = "thisisjustatest"
 
-
 describe("verifyUser", () => {
   beforeAll(async () => {
     await User.create({

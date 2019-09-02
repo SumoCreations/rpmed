@@ -5,14 +5,14 @@ import { getClient } from "../util"
  * Dynamo DB Model:
  * CUSTOMER
  * ==========================================================
- * 
- * This model represents a customer of Riverpoint Medical. 
+ *
+ * This model represents a customer of Riverpoint Medical.
  * Customers are tracked in order to track product registrations
- * and warranties. It also helps us maintain a centralized 
+ * and warranties. It also helps us maintain a centralized
  * database of all service interactions with a direct customer.
- * 
+ *
  * The table structure in dynamo DB is as follows:
- * 
+ *
  * --------------------------------------------------------------
  * |                  | (GS1 Partition Key)    | (GS1 Sort Key)
  * --------------------------------------------------------------
@@ -20,9 +20,9 @@ import { getClient } from "../util"
  * --------------------------------------------------------------
  * | UUID             | CONST                  | Email
  * --------------------------------------------------------------
- * 
+ *
  * This allows for the following access patterns:
- * 
+ *
  * 1. Fetch customer by unique id. (PK is generated uuid)
  * 2. Fetch all customers (SK matches 'CONST')
  * 3. Look up a customer via email (HSK matches Email)
@@ -88,12 +88,13 @@ const create = async ({
  * @param input An object representing the input to replace the supplied object.
  */
 const update = async ({
-  id, ...customerInput
+  id,
+  ...customerInput
 }: ICustomerInput): Promise<ICustomer> => {
   const existingItem = await find(id)
   const item: ICustomer = {
     ...existingItem,
-    ...customerInput
+    ...customerInput,
   }
   const hsk = customerInput.email
   const params = {
@@ -166,7 +167,7 @@ const all = async (): Promise<ICustomer[]> => {
 }
 
 /**
- * Deletes a customer and associated child objects from the 
+ * Deletes a customer and associated child objects from the
  * database via UUID.
  * @param id The UUID of the customer to delete.
  */
@@ -203,7 +204,7 @@ const output = ({
 }: ICustomer): ICustomerOutput => {
   const result = {
     ...customer,
-    id: partitionKey
+    id: partitionKey,
   }
   return result
 }
@@ -216,5 +217,5 @@ export const Customer = {
   find,
   findByEmail,
   output,
-  update
+  update,
 }

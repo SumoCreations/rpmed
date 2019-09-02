@@ -1,23 +1,43 @@
-import { formatError, RequiredBoolean, RequiredString, validation } from "rpmed-validation-schema"
-import { addSymptomToModelNumber, ModelNumber, ProductSymptom, removeSymptomFromModelNumber } from "../../../../models"
-import { ErrorModelNumberIDDoesNotExist, ErrorProductSymptomAndModelNumberAssociationFailed, ErrorProductSymptomWithIDDoesNotExist } from "../productSymptomErrors"
+import {
+  formatError,
+  RequiredBoolean,
+  RequiredString,
+  validation,
+} from "rpmed-validation-schema"
+import {
+  addSymptomToModelNumber,
+  ModelNumber,
+  ProductSymptom,
+  removeSymptomFromModelNumber,
+} from "../../../../models"
+import {
+  ErrorModelNumberIDDoesNotExist,
+  ErrorProductSymptomAndModelNumberAssociationFailed,
+  ErrorProductSymptomWithIDDoesNotExist,
+} from "../productSymptomErrors"
 import { extendModelOutput, extendSymptomOutput } from "./extendOutput"
 import { IProductSymptomMutationOutput } from "./productSymptomMutationTypes"
 
-interface ILinkSymptomMutationArguments { modelNumber: string, symptomId: string, linked: boolean }
+interface ILinkSymptomMutationArguments {
+  modelNumber: string
+  symptomId: string
+  linked: boolean
+}
 
 export const linkSymptomToModel = async (
   _: any,
   { modelNumber, symptomId, linked }: ILinkSymptomMutationArguments
 ): Promise<IProductSymptomMutationOutput> => {
-
   const argumentSchema = validation({
     linked: RequiredBoolean(),
     modelNumber: RequiredString(),
     symptomId: RequiredString(),
   })
   try {
-    await argumentSchema.validate({ modelNumber, symptomId, linked }, { abortEarly: false })
+    await argumentSchema.validate(
+      { modelNumber, symptomId, linked },
+      { abortEarly: false }
+    )
   } catch (e) {
     return { errors: formatError(e), success: false }
   }
@@ -26,7 +46,7 @@ export const linkSymptomToModel = async (
   if (!existingProductSymptom) {
     return {
       errors: [ErrorProductSymptomWithIDDoesNotExist],
-      success: false
+      success: false,
     }
   }
 
@@ -34,7 +54,7 @@ export const linkSymptomToModel = async (
   if (!existingModelNumber) {
     return {
       errors: [ErrorModelNumberIDDoesNotExist],
-      success: false
+      success: false,
     }
   }
 
@@ -45,13 +65,18 @@ export const linkSymptomToModel = async (
       await removeSymptomFromModelNumber(symptomId, modelNumber)
     }
     return {
-      modelNumber: async () => extendModelOutput(await ModelNumber.find(modelNumber)),
-      productSymptom: async () => extendSymptomOutput(await ProductSymptom.find(symptomId)),
-      success: true
+      modelNumber: async () =>
+        extendModelOutput(await ModelNumber.find(modelNumber)),
+      productSymptom: async () =>
+        extendSymptomOutput(await ProductSymptom.find(symptomId)),
+      success: true,
     }
   } catch (e) {
     // tslint:disable-next-line
     console.log(e)
-    return { success: false, errors: [ErrorProductSymptomAndModelNumberAssociationFailed] }
+    return {
+      success: false,
+      errors: [ErrorProductSymptomAndModelNumberAssociationFailed],
+    }
   }
 }

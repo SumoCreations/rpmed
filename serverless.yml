@@ -40,8 +40,8 @@ provider:
   profile: rpmed-serverless
   region: us-west-2
   environment:
-    ACCESS_TOKEN_LIFESPAN: 300
-    REFRESH_TOKEN_LIFESPAN: 172800
+    ACCESS_TOKEN_LIFESPAN: 5m
+    REFRESH_TOKEN_LIFESPAN: 7d
     SALT_ROUNDS: 10
     RECAPTCHA_KEY: 6LdOqZoUAAAAAJ79IuWa4mU57Urnd-N6oxP4XhiR
     OAUTH_SIGNATURE: 'Ph$2\@!Rq<ev_W;:N(2+>Bwxez$3?;9~srf*nxiVJLz:lw7Djgs(Q/UhwmZ@"YLi<'

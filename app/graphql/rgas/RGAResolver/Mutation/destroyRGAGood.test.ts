@@ -26,7 +26,7 @@ const sampleParams = {
 describe("destroyRGAGood", () => {
   let existingRGAId: string
   let existingRGAGoodId: string
-  beforeAll(async (done) => {
+  beforeAll(async done => {
     const modelNumber = await ModelNumber.create({
       description: "test",
       feeWithWarranty: 0,
@@ -47,7 +47,7 @@ describe("destroyRGAGood", () => {
       faultCode: "EHIJ",
       modelNumber: modelNumber.partitionKey,
       rgaId: rga.partitionKey,
-      symptomDescription: "Test"
+      symptomDescription: "Test",
     })
     existingRGAId = rga.partitionKey
     existingRGAGoodId = good.id
@@ -58,7 +58,7 @@ describe("destroyRGAGood", () => {
     expect.assertions(1)
     const output = await destroyRGAGood(null, {
       id: existingRGAGoodId,
-      rgaId: "existingRGAId-does-not-exist"
+      rgaId: "existingRGAId-does-not-exist",
     })
     expect(output.success).toBe(false)
   })
@@ -67,7 +67,7 @@ describe("destroyRGAGood", () => {
     expect.assertions(1)
     const output = await destroyRGAGood(null, {
       id: "existingRGAGoodId-does-not-exist",
-      rgaId: existingRGAId
+      rgaId: existingRGAId,
     })
     expect(output.success).toBe(false)
   })
@@ -76,9 +76,8 @@ describe("destroyRGAGood", () => {
     expect.assertions(1)
     const output = await destroyRGAGood(null, {
       id: existingRGAGoodId,
-      rgaId: existingRGAId
+      rgaId: existingRGAId,
     })
     expect(output.success).toBe(true)
   })
-
 })

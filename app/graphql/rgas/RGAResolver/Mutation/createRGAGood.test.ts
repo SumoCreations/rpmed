@@ -1,5 +1,11 @@
 import { DateTime } from "luxon"
-import { Customer, ModelNumber, ProductRegistration, ProductSymptom, RGA } from "../../../../models"
+import {
+  Customer,
+  ModelNumber,
+  ProductRegistration,
+  ProductSymptom,
+  RGA,
+} from "../../../../models"
 import { createRGAGood } from "./createRGAGood"
 
 const RGA_ID = "TEST-RGA-ID"
@@ -25,7 +31,7 @@ describe("createRGAGood", () => {
   let existingRGAId: string
   let modelNumberId: string
   let existingSymptomId: string
-  beforeAll(async (done) => {
+  beforeAll(async done => {
     const modelNumber = await ModelNumber.create({
       description: "test",
       feeWithWarranty: 0,
@@ -42,13 +48,20 @@ describe("createRGAGood", () => {
       submittedBy: "someone-ex1@partner.com",
       submittedOn: DateTime.utc(2019, 5, 7, 1, 12, 11, 10).toISO(),
     })
-    const existingSymptom = await ProductSymptom.create({ faultCode: "EHIJ", fee: true, name: "Test", preApproved: false, synopsis: "Test", solution: "Test" })
+    const existingSymptom = await ProductSymptom.create({
+      faultCode: "EHIJ",
+      fee: true,
+      name: "Test",
+      preApproved: false,
+      synopsis: "Test",
+      solution: "Test",
+    })
     existingSymptomId = existingSymptom.partitionKey
     existingRGAId = rga.partitionKey
     done()
   })
 
-  afterAll(async (done) => {
+  afterAll(async done => {
     await RGA.destroy(existingRGAId)
     done()
   })
@@ -60,8 +73,8 @@ describe("createRGAGood", () => {
         ...sampleParams,
         modelNumber: modelNumberId,
         rgaId: existingRGAId,
-        symptomId: existingSymptomId
-      }
+        symptomId: existingSymptomId,
+      },
     })
     expect(output.success).toBe(true)
   })
@@ -74,8 +87,8 @@ describe("createRGAGood", () => {
         modelNumber: modelNumberId,
         rgaId: existingRGAId,
         serial: `${SERIAL}-2`,
-        symptomId: existingSymptomId
-      }
+        symptomId: existingSymptomId,
+      },
     })
     const registration = await ProductRegistration.find(`${SERIAL}-2`)
     const customer = await Customer.findByEmail(CUSTOMER_EMAIL)
@@ -95,7 +108,7 @@ describe("createRGAGood", () => {
       modelNumber: modelNumberId,
       productId: "made-it-up-for-this-test",
       registeredOn: new Date().toISOString(),
-      serial: `${SERIAL}-3`
+      serial: `${SERIAL}-3`,
     })
     const output = await createRGAGood(null, {
       rgaGoodInput: {
@@ -103,8 +116,8 @@ describe("createRGAGood", () => {
         modelNumber: modelNumberId,
         rgaId: existingRGAId,
         serial: `${SERIAL}-3`,
-        symptomId: existingSymptomId
-      }
+        symptomId: existingSymptomId,
+      },
     })
     const registration = await ProductRegistration.find(`${SERIAL}-3`)
     const customer = await Customer.findByEmail(CUSTOMER_EMAIL)
@@ -123,8 +136,8 @@ describe("createRGAGood", () => {
         modelNumber: modelNumberId,
         rgaId: existingRGAId,
         serial: `${SERIAL}-4`,
-        symptomId: existingSymptomId
-      }
+        symptomId: existingSymptomId,
+      },
     })
     expect(output.success).toBe(true)
     const registration = await ProductRegistration.find(`${SERIAL}-4`)
@@ -136,8 +149,8 @@ describe("createRGAGood", () => {
     const output = await createRGAGood(null, {
       rgaGoodInput: {
         ...sampleParams,
-        symptomId: existingSymptomId
-      }
+        symptomId: existingSymptomId,
+      },
     })
     expect(output.success).toBe(false)
     expect(output.errors.map(e => e.path)).toContain("rgaId")
@@ -149,8 +162,8 @@ describe("createRGAGood", () => {
       rgaGoodInput: {
         ...sampleParams,
         rgaId: existingRGAId,
-        symptomId: existingSymptomId
-      }
+        symptomId: existingSymptomId,
+      },
     })
     expect(output.success).toBe(false)
     expect(output.errors.map(e => e.path)).toContain("modelNumber")
@@ -163,8 +176,8 @@ describe("createRGAGood", () => {
         ...sampleParams,
         modelNumber: modelNumberId,
         rgaId: existingRGAId,
-        symptomId: existingSymptomId
-      }
+        symptomId: existingSymptomId,
+      },
     })
     expect(output.success).toBe(false)
     expect(output.errors.map(e => e.path)).toContain("serial")
@@ -177,8 +190,8 @@ describe("createRGAGood", () => {
         ...sampleParams,
         customerEmail: "john@notvalid",
         modelNumber: null,
-        symptomId: existingSymptomId
-      }
+        symptomId: existingSymptomId,
+      },
     }
     const output = await createRGAGood(null, invalidInput)
     expect(output.success).toBe(false)

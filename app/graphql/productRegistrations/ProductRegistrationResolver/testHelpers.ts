@@ -1,7 +1,6 @@
 import { v4 as uuid } from "uuid"
 import * as M from "../../../models"
 
-
 let idIncrement = 1000
 const makeId = (key: string, model: string) => {
   idIncrement += 1
@@ -21,14 +20,16 @@ export interface IRegistrationSampleParamOutput {
   sampleParams: M.IProductRegistrationInput
 }
 
-export const generateSampleParams = async (inputs: IRegistrationTestHelperInput): Promise<IRegistrationSampleParamOutput> => {
+export const generateSampleParams = async (
+  inputs: IRegistrationTestHelperInput
+): Promise<IRegistrationSampleParamOutput> => {
   const customer = await M.Customer.create({
     email: `${makeId(inputs.key, "customerEmail")}@rpmed.com`,
     name: makeId(inputs.key, "Customer-Name"),
   })
   const product = await M.Product.create({
     description: makeId(inputs.key, "This is a description "),
-    name: makeId(inputs.key, "Product-Name")
+    name: makeId(inputs.key, "Product-Name"),
   })
   const input = {
     description: "MedLED Chrome MC7 PRO Hard Top; Standard Kit",
@@ -54,6 +55,6 @@ export const generateSampleParams = async (inputs: IRegistrationTestHelperInput)
       productId: product.partitionKey,
       registeredOn: new Date().toISOString(),
       serial: inputs.lotted ? inputs.serial || uuid() : null,
-    }
+    },
   }
 }

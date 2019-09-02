@@ -1,8 +1,5 @@
 import * as Validation from "rpmed-validation-schema"
-import {
-  IProductInput,
-  Product,
-} from "../../../../models"
+import { IProductInput, Product } from "../../../../models"
 import { generateMutationError } from "../../../../util"
 import { ErrorProductAlreadyExist } from "../productErrors"
 import { IProductMutationOutput } from "./productMutationTypes"
@@ -15,9 +12,14 @@ type CreateProductMutation = (
 /**
  * A GraphQL resolver that handles the 'CreateProduct' mutation.
  */
-export const createProduct: CreateProductMutation = async (_, { productInput }) => {
+export const createProduct: CreateProductMutation = async (
+  _,
+  { productInput }
+) => {
   try {
-    await Validation.Product.Default.validate(productInput, { abortEarly: false })
+    await Validation.Product.Default.validate(productInput, {
+      abortEarly: false,
+    })
   } catch (e) {
     return generateMutationError(Validation.formatError(e))
   }

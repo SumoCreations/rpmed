@@ -23,7 +23,7 @@ export const typeDefs = gql`
     """
     A path indicating the attribute that failed validation.
     """
-    path: String!, 
+    path: String!
     """
     A brief description of why the specified attribute failed validation.
     """
@@ -59,7 +59,7 @@ export const typeDefs = gql`
     """
     success: Boolean!
   }
-  
+
   """
   The result of a mutation applied to a distributor.
   """
@@ -124,9 +124,7 @@ export const typeDefs = gql`
     """
     Removes an existing distributor.
     """
-    destroyDistributor(
-      id: String!
-    ): DistributorMutationOutput!
+    destroyDistributor(id: String!): DistributorMutationOutput!
   }
 
   schema {

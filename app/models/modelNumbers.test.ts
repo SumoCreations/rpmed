@@ -17,13 +17,19 @@ const existingModelParams = {
 describe("modelNumber", () => {
   let modelNumber: IModelNumber
   let product: IProduct
-  beforeAll(async (done) => {
-    product = await Product.create({ name: "Chrome MC7 Pro", description: "The chrome MedLED Pro Headlamp" })
-    modelNumber = await ModelNumber.create({ ...existingModelParams, productId: product.partitionKey })
+  beforeAll(async done => {
+    product = await Product.create({
+      name: "Chrome MC7 Pro",
+      description: "The chrome MedLED Pro Headlamp",
+    })
+    modelNumber = await ModelNumber.create({
+      ...existingModelParams,
+      productId: product.partitionKey,
+    })
     done()
   })
 
-  afterAll(async (done) => {
+  afterAll(async done => {
     await ModelNumber.destroy(modelNumber.partitionKey)
     done()
   })
@@ -39,7 +45,7 @@ describe("modelNumber", () => {
       try {
         await ModelNumber.create({
           ...existingModelParams,
-          productId: product.partitionKey
+          productId: product.partitionKey,
         })
       } catch (e) {
         expect(isEmpty(e.message)).toBe(false)
@@ -50,7 +56,9 @@ describe("modelNumber", () => {
   describe("find", () => {
     test("should return a modelNumber if one exists", async () => {
       expect.assertions(1)
-      const existingModelNumber = await ModelNumber.find(modelNumber.partitionKey)
+      const existingModelNumber = await ModelNumber.find(
+        modelNumber.partitionKey
+      )
       expect(existingModelNumber).not.toBeNull()
     })
 
@@ -71,8 +79,13 @@ describe("modelNumber", () => {
 
     test("should return a modelNumber if one exists", async () => {
       expect.assertions(2)
-      const newProduct = await Product.create({ name: "Chrome MC7 Pro NEW EXAMPLE", description: "The chrome..." })
-      const matchingModels = await ModelNumber.forProduct(newProduct.partitionKey)
+      const newProduct = await Product.create({
+        name: "Chrome MC7 Pro NEW EXAMPLE",
+        description: "The chrome...",
+      })
+      const matchingModels = await ModelNumber.forProduct(
+        newProduct.partitionKey
+      )
       expect(matchingModels).not.toBeNull()
       expect(matchingModels.length).toEqual(0)
     })
@@ -89,7 +102,9 @@ describe("modelNumber", () => {
     test("should delete a modelNumber and return true if one exists", async () => {
       expect.assertions(2)
       expect(await ModelNumber.destroy(modelNumber.partitionKey)).toBeTruthy()
-      const existingModelNumber = await ModelNumber.find(modelNumber.partitionKey)
+      const existingModelNumber = await ModelNumber.find(
+        modelNumber.partitionKey
+      )
       expect(existingModelNumber).toBeNull()
     })
 

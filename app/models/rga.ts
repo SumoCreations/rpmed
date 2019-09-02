@@ -6,12 +6,12 @@ import { filterBlankAttributes, getClient } from "../util"
  * Dynamo DB Model:
  * RGA
  * ==========================================================
- * 
+ *
  * This model represents an RGA request submitted by a partner
  * or distributor.
- * 
+ *
  * The table structure in dynamo DB is as follows:
- * 
+ *
  * --------------------------------------------------------------
  * |                    | (GS1 Partition Key)   | (GS1 Sort Key)
  * --------------------------------------------------------------
@@ -19,19 +19,19 @@ import { filterBlankAttributes, getClient } from "../util"
  * --------------------------------------------------------------
  * | RGA-ID             | "RGA"                 | Status#SubmittedOn
  * --------------------------------------------------------------
- * 
+ *
  * This allows for the following access patterns:
- * 
+ *
  * 1. Fetch any RGA by unique ID.
  * 2. Fetch all RGAs (SK matches 'RGA')
  * 3. Fetch all RGAs for a given status (SK matches 'RGA' and HSK begins with Status)
  * 3. Look up all RGAs for a given status and date or date range (HSK matches Status#SubmittedOn)
- * 
+ *
  * The RGA-ID is a special type of UUID key utilizing the date, time, and some randomness:
  * 06212019MR-565583319
  * 06212019MR-293346429
  * 06212019MR-284397710
- * 
+ *
  */
 
 const SECONDARY_KEY = "RGA"
@@ -63,9 +63,14 @@ export interface IRGAOutput {
 
 const DATE_FORMAT = "MMddyyyy'MR'-mmssSSS"
 
-const generateDate = (isoString?: string) => (isoString ? DateTime.fromISO(isoString) : DateTime.utc()).toFormat(DATE_FORMAT)
-const randomPaddedTwoDigit = () => padStart(`${Math.round(Math.random() * 99)}`, 2, '0')
-const generateId = (dateString: string) => `${generateDate(dateString)}${randomPaddedTwoDigit()}`
+const generateDate = (isoString?: string) =>
+  (isoString ? DateTime.fromISO(isoString) : DateTime.utc()).toFormat(
+    DATE_FORMAT
+  )
+const randomPaddedTwoDigit = () =>
+  padStart(`${Math.round(Math.random() * 99)}`, 2, "0")
+const generateId = (dateString: string) =>
+  `${generateDate(dateString)}${randomPaddedTwoDigit()}`
 
 /**
  * Generates a new RGA model in the database provided the supplied credentials are valid.
@@ -82,7 +87,7 @@ const create = async ({
     indexSortKey: submittedOn,
     partitionKey,
     sortKey: SECONDARY_KEY,
-    submittedOn
+    submittedOn,
   }
   const params = {
     TransactItems: [
@@ -140,12 +145,17 @@ const all = async (): Promise<IRGA[]> => {
 const submittedOnDate = async (isoString: string): Promise<IRGA[]> => {
   const searchParams = {
     ExpressionAttributeValues: {
-      ":maxDate": DateTime.fromISO(isoString).endOf("day").toISO(),
-      ":minDate": DateTime.fromISO(isoString).startOf("day").toISO(),
+      ":maxDate": DateTime.fromISO(isoString)
+        .endOf("day")
+        .toISO(),
+      ":minDate": DateTime.fromISO(isoString)
+        .startOf("day")
+        .toISO(),
       ":rkey": SECONDARY_KEY,
     },
     IndexName: "GSI_1",
-    KeyConditionExpression: "sortKey = :rkey and indexSortKey BETWEEN :minDate and :maxDate",
+    KeyConditionExpression:
+      "sortKey = :rkey and indexSortKey BETWEEN :minDate and :maxDate",
     ScanIndexForward: false,
     TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
   }

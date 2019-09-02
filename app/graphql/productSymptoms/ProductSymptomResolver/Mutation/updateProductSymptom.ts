@@ -9,7 +9,9 @@ export const updateProductSymptom = async (
   { productSymptomInput }: { productSymptomInput: IProductSymptomInput }
 ): Promise<IProductSymptomMutationOutput> => {
   try {
-    await Validation.ProductSymptom.Default.validate(productSymptomInput, { abortEarly: false })
+    await Validation.ProductSymptom.Default.validate(productSymptomInput, {
+      abortEarly: false,
+    })
   } catch (e) {
     return { errors: Validation.formatError(e), success: false }
   }
@@ -18,5 +20,8 @@ export const updateProductSymptom = async (
     return { success: false, errors: [ErrorProductSymptomWithIDDoesNotExist] }
   }
   productSymptom = await ProductSymptom.update(productSymptomInput)
-  return { productSymptom: async () => extendSymptomOutput(productSymptom), success: true }
+  return {
+    productSymptom: async () => extendSymptomOutput(productSymptom),
+    success: true,
+  }
 }

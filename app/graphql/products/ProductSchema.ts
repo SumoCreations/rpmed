@@ -5,7 +5,7 @@ export const typeDefs = gql`
     """
     A path indicating the attribute that failed validation.
     """
-    path: String!, 
+    path: String!
     """
     A brief description of why the specified attribute failed validation.
     """
@@ -33,7 +33,7 @@ export const typeDefs = gql`
     """
     faultCode: String!
   }
-  
+
   """
   A registered user object from API. Could be a customer, admin, or partner account.
   """
@@ -113,7 +113,6 @@ export const typeDefs = gql`
     A list of all associated symptoms related to this model number.
     """
     symptoms: [SimplifiedProductSymptom]!
-
   }
 
   """
@@ -232,7 +231,11 @@ export const typeDefs = gql`
     """
     All product variants in the system.
     """
-    modelNumbers(search: String, productId: String, symptom: String): ModelNumberQueryOutput
+    modelNumbers(
+      search: String
+      productId: String
+      symptom: String
+    ): ModelNumberQueryOutput
     """
     A specific product in the system via ID.
     """
@@ -273,7 +276,7 @@ export const typeDefs = gql`
     success: Boolean!
   }
 
-    """
+  """
   The result of a query for a modelNumber or modelNumbers.
   """
   type ModelNumberQueryOutput {
@@ -319,11 +322,15 @@ export const typeDefs = gql`
     """
     Adds a new product variant.
     """
-    createModelNumber(modelNumberInput: ModelNumberInput!): ModelNumberMutationOutput!
+    createModelNumber(
+      modelNumberInput: ModelNumberInput!
+    ): ModelNumberMutationOutput!
     """
     Updates an existing product variant.
     """
-    updateModelNumber(modelNumberInput: ModelNumberInput!): ModelNumberMutationOutput!
+    updateModelNumber(
+      modelNumberInput: ModelNumberInput!
+    ): ModelNumberMutationOutput!
     """
     Removes an existing product variant.
     """

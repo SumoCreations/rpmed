@@ -4,7 +4,7 @@ import * as Query from "./Query"
 describe("Query", () => {
   let existingProduct: IProduct
 
-  beforeEach(async (done) => {
+  beforeEach(async done => {
     existingProduct = await Product.create({
       description: "MedLED Onyx 2nd Bezel",
       name: "MLOX100-BZL",
@@ -16,7 +16,7 @@ describe("Query", () => {
     done()
   })
 
-  afterEach(async (done) => {
+  afterEach(async done => {
     await Product.destroy(existingProduct.partitionKey)
     done()
   })
@@ -24,7 +24,10 @@ describe("Query", () => {
   describe("Query.product", () => {
     test("should return a product if it exists", async () => {
       expect.assertions(1)
-      const output = await Query.product({}, { id: existingProduct.partitionKey })
+      const output = await Query.product(
+        {},
+        { id: existingProduct.partitionKey }
+      )
       expect(output.product.name).toEqual(existingProduct.name)
     })
 
@@ -39,7 +42,9 @@ describe("Query", () => {
     test("should return all existing products", async () => {
       expect.assertions(1)
       const products = await Product.all()
-      await Promise.all(products.map(async (p) => await Product.destroy(p.partitionKey)))
+      await Promise.all(
+        products.map(async p => await Product.destroy(p.partitionKey))
+      )
       await Product.create({
         description: "MedLED Onyx 3rd Bezel 001",
         name: "MLOX101-BZL",
@@ -60,7 +65,7 @@ describe("Query", () => {
   describe("Query.modelNumber", () => {
     let existingModelNumber: IModelNumber
 
-    beforeEach(async (done) => {
+    beforeEach(async done => {
       existingModelNumber = await ModelNumber.create({
         description: "MedLED Chrome MC7 PRO Hard Top; Standard Kit",
         feeWithWarranty: 0,
@@ -90,7 +95,10 @@ describe("Query", () => {
 
     test("should return a modelNumber if it exists", async () => {
       expect.assertions(1)
-      const output = await Query.modelNumber({}, { id: existingModelNumber.partitionKey })
+      const output = await Query.modelNumber(
+        {},
+        { id: existingModelNumber.partitionKey }
+      )
       expect(output.modelNumber.id).toEqual(existingModelNumber.partitionKey)
     })
 
@@ -105,7 +113,9 @@ describe("Query", () => {
     test("should return all existing modelNumbers", async () => {
       expect.assertions(1)
       const modelNumbers = await ModelNumber.all()
-      await Promise.all(modelNumbers.map(async (p) => await ModelNumber.destroy(p.partitionKey)))
+      await Promise.all(
+        modelNumbers.map(async p => await ModelNumber.destroy(p.partitionKey))
+      )
 
       await ModelNumber.create({
         description: "MedLED Chrome MC7 PRO Hard Top; Standard Kit",

@@ -6,7 +6,7 @@ import { IModelNumberOutput, ModelNumber } from "./modelNumber"
  * Dynamo DB Model:
  * PRODUCT
  * ==========================================================
- * 
+ *
  * This model represents a product of RiverPoint medical. Products
  * are key to nearly all of the interactions in the system whether
  * it be for managing a troubleshooting request, an item in a specific
@@ -15,9 +15,9 @@ import { IModelNumberOutput, ModelNumber } from "./modelNumber"
  * a family of configurations. The configuration is refferred to as
  * the ModelNumber. Review that model for more detailed associations
  * to other entities in the system.
- * 
+ *
  * The table structure in dynamo DB is as follows:
- * 
+ *
  * --------------------------------------------------------------
  * |                    | (GS1 Partition Key)    | (GS1 Sort Key)
  * --------------------------------------------------------------
@@ -25,9 +25,9 @@ import { IModelNumberOutput, ModelNumber } from "./modelNumber"
  * --------------------------------------------------------------
  * | UUID               | CONST                 | ProductName
  * --------------------------------------------------------------
- * 
+ *
  * This allows for the following access patterns:
- * 
+ *
  * 1. Fetch product by unique id. (PK is generated uuid)
  * 2. Fetch all products (SK matches 'CONST')
  * 3. Look up a product via name (HSK matches Product)
@@ -95,12 +95,13 @@ const create = async ({
  * @param input An object representing the input to replace the supplied object.
  */
 const update = async ({
-  id, ...productInput
+  id,
+  ...productInput
 }: IProductInput): Promise<IProduct> => {
   const existingItem = await find(id)
   const item: IProduct = {
     ...existingItem,
-    ...productInput
+    ...productInput,
   }
   const hsk = productInput.name
   const params = {
@@ -173,7 +174,7 @@ const all = async (): Promise<IProduct[]> => {
 }
 
 /**
- * Deletes a product and associated child objects from the 
+ * Deletes a product and associated child objects from the
  * database via UUID.
  * @param id The UUID of the product to delete.
  */
@@ -189,7 +190,7 @@ const destroy = async (id: string): Promise<boolean> => {
           Delete: {
             Key: { partitionKey, sortKey },
             TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
-          }
+          },
         })),
         {
           Delete: {
@@ -232,5 +233,5 @@ export const Product = {
   find,
   findByName,
   output,
-  update
+  update,
 }

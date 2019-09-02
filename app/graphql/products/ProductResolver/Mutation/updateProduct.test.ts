@@ -1,11 +1,10 @@
-import { IProduct, Product } from "../../../../models";
+import { IProduct, Product } from "../../../../models"
 import { updateProduct } from "./updateProduct"
-
 
 describe("updateProduct", () => {
   let existingProduct: IProduct
   let conflictingProduct: IProduct
-  beforeEach(async (done) => {
+  beforeEach(async done => {
     existingProduct = await Product.create({
       description: "MedLED Onyx 2nd Gen Mid-Tier",
       name: "Updated MedLED Onyx (MLOX100)",
@@ -17,7 +16,7 @@ describe("updateProduct", () => {
     done()
   })
 
-  afterEach(async (done) => {
+  afterEach(async done => {
     await Product.destroy(existingProduct.partitionKey)
     done()
   })
@@ -29,7 +28,7 @@ describe("updateProduct", () => {
         description: "This is an updated description.",
         id: existingProduct.partitionKey,
         name: "Something New",
-      }
+      },
     })
     expect(output.success).toBe(true)
   })
@@ -41,7 +40,7 @@ describe("updateProduct", () => {
         description: "The name is the same but not the description.",
         id: existingProduct.partitionKey,
         name: existingProduct.name,
-      }
+      },
     })
     expect(output.success).toBe(true)
   })
@@ -53,7 +52,7 @@ describe("updateProduct", () => {
         description: existingProduct.description,
         id: existingProduct.partitionKey,
         name: conflictingProduct.name,
-      }
+      },
     })
     expect(output.success).toBe(false)
     expect(output.errors.map(e => e.path)).toContain("name")
@@ -66,7 +65,7 @@ describe("updateProduct", () => {
         description: existingProduct.description,
         id: "SOME-MADE-UP-KEY",
         name: existingProduct.name,
-      }
+      },
     })
     expect(output.success).toBe(false)
     expect(output.errors.map(e => e.path)).toContain("id")
@@ -78,8 +77,8 @@ describe("updateProduct", () => {
       productInput: {
         description: null,
         id: existingProduct.partitionKey,
-        name: null
-      }
+        name: null,
+      },
     }
     const output = await updateProduct(null, invalidInput)
     expect(output.success).toBe(false)

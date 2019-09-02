@@ -7,15 +7,16 @@ const sampleParams = {
   fee: false,
   name: "Light randomly turns off (stobes/blinks)",
   preApproved: true,
-  solution: "Replace light housing module because it needs a new wire harness and/or circuit boards.",
-  synopsis: "LED signal interrupted due to a break in the wire or the circuit board(s) are corroded or damaged.",
+  solution:
+    "Replace light housing module because it needs a new wire harness and/or circuit boards.",
+  synopsis:
+    "LED signal interrupted due to a break in the wire or the circuit board(s) are corroded or damaged.",
 }
 
 describe("Query", () => {
-
   let existingProductSymptom: IProductSymptom
   let existingProductSymptom2: IProductSymptom
-  beforeAll(async (done) => {
+  beforeAll(async done => {
     existingProductSymptom = await ProductSymptom.create({
       ...sampleParams,
       faultCode: "SYMPQUERYTST1",
@@ -27,7 +28,7 @@ describe("Query", () => {
     done()
   })
 
-  afterAll(async (done) => {
+  afterAll(async done => {
     await ProductSymptom.destroy(existingProductSymptom.partitionKey)
     await ProductSymptom.destroy(existingProductSymptom2.partitionKey)
     done()
@@ -36,12 +37,17 @@ describe("Query", () => {
   describe("productSymptom", () => {
     test("should return a productSymptom if it exists", async () => {
       expect.assertions(5)
-      const output = await productSymptom({}, { id: existingProductSymptom.partitionKey })
+      const output = await productSymptom(
+        {},
+        { id: existingProductSymptom.partitionKey }
+      )
       expect(output.success).toEqual(true)
       expect(output.productSymptom).toBeDefined()
       expect(output.productSymptoms).toBeUndefined()
       expect(output.productSymptom.name).toEqual(existingProductSymptom.name)
-      expect(output.productSymptom.faultCode).toEqual(existingProductSymptom.faultCode)
+      expect(output.productSymptom.faultCode).toEqual(
+        existingProductSymptom.faultCode
+      )
     })
 
     test("should return an error if it does not exist", async () => {
@@ -53,5 +59,4 @@ describe("Query", () => {
       expect(output.errors).toBeDefined()
     })
   })
-
 })

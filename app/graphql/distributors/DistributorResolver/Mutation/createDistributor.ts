@@ -1,6 +1,9 @@
 import * as Validation from "rpmed-validation-schema"
 import { Distributor, IDistributorInput } from "../../../../models"
-import { ErrorDistributorCredentialsInvalid, ErrorDistributorWithDomainAlreadyExists } from "../distributorErrors"
+import {
+  ErrorDistributorCredentialsInvalid,
+  ErrorDistributorWithDomainAlreadyExists,
+} from "../distributorErrors"
 import { IDistributorMutationOutput } from "./distributorMutationTypes"
 
 export const createDistributor = async (
@@ -8,7 +11,9 @@ export const createDistributor = async (
   { distributorInput }: { distributorInput: IDistributorInput }
 ): Promise<IDistributorMutationOutput> => {
   try {
-    await Validation.Distributor.Default.validate(distributorInput, { abortEarly: false })
+    await Validation.Distributor.Default.validate(distributorInput, {
+      abortEarly: false,
+    })
   } catch (e) {
     return { errors: Validation.formatError(e), success: false }
   }
@@ -18,7 +23,7 @@ export const createDistributor = async (
   if (existingDistributor) {
     return {
       errors: [ErrorDistributorWithDomainAlreadyExists],
-      success: false
+      success: false,
     }
   }
 

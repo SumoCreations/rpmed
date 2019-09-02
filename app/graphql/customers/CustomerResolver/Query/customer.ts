@@ -8,17 +8,22 @@ export const customer = async (_, args): Promise<ICustomerQueryOutput> => {
     if (!result) {
       return {
         errors: [ErrorCustomerNotFound],
-        success: false
+        success: false,
       }
     }
     return {
       customer: Customer.output(result),
-      success: true
+      success: true,
     }
   } catch (e) {
     return {
-      errors: [{ path: "_", message: e.localizedMessage || "Could not retrieve customer" }],
-      success: false
+      errors: [
+        {
+          path: "_",
+          message: e.localizedMessage || "Could not retrieve customer",
+        },
+      ],
+      success: false,
     }
   }
 }

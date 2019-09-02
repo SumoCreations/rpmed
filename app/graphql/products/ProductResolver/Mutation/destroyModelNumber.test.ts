@@ -1,4 +1,9 @@
-import { IModelNumber, IProduct, ModelNumber, Product } from "../../../../models"
+import {
+  IModelNumber,
+  IProduct,
+  ModelNumber,
+  Product,
+} from "../../../../models"
 import { destroyModelNumber } from "./destroyModelNumber"
 
 const sampleParams = {
@@ -16,16 +21,19 @@ const sampleParams = {
 describe("destroyModelNumber", () => {
   let modelNumber: IModelNumber
   let existingProduct: IProduct
-  beforeEach(async (done) => {
+  beforeEach(async done => {
     existingProduct = await Product.create({
       description: "MedLED Sapphire Top-Tier",
       name: "MedLED Sapphire (MLOD01)",
     })
-    modelNumber = await ModelNumber.create({ ...sampleParams, productId: existingProduct.partitionKey })
+    modelNumber = await ModelNumber.create({
+      ...sampleParams,
+      productId: existingProduct.partitionKey,
+    })
     done()
   })
 
-  afterEach(async (done) => {
+  afterEach(async done => {
     await Product.destroy(existingProduct.partitionKey)
     await ModelNumber.destroy(modelNumber.partitionKey)
     done()
@@ -33,14 +41,17 @@ describe("destroyModelNumber", () => {
 
   test("should destroy the ModelNumber", async () => {
     expect.assertions(1)
-    const output = await destroyModelNumber(null, { id: modelNumber.partitionKey })
+    const output = await destroyModelNumber(null, {
+      id: modelNumber.partitionKey,
+    })
     expect(output.success).toBe(true)
   })
 
   test("should fail the ModelNumber does not exist", async () => {
     expect.assertions(1)
-    const output = await destroyModelNumber(null, { id: "some-made-up-id-or-key" })
+    const output = await destroyModelNumber(null, {
+      id: "some-made-up-id-or-key",
+    })
     expect(output.success).toBe(false)
   })
-
 })

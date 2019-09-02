@@ -1,10 +1,14 @@
 import { RGA, RGAGood } from "../../../../models"
-import { ErrorRGAGoodCouldNotBeDestroyed, ErrorRGAGoodWithIDDoesNotExist, ErrorRGAWithIDDoesNotExist } from "../rgaErrors"
+import {
+  ErrorRGAGoodCouldNotBeDestroyed,
+  ErrorRGAGoodWithIDDoesNotExist,
+  ErrorRGAWithIDDoesNotExist,
+} from "../rgaErrors"
 import { IRGAGoodMutationOutput } from "./rgaMutationTypes"
 
 export const destroyRGAGood = async (
   _: any,
-  { rgaId, id }: { rgaId: string, id: string }
+  { rgaId, id }: { rgaId: string; id: string }
 ): Promise<IRGAGoodMutationOutput> => {
   const rga = await RGA.find(rgaId)
   if (!rga) {

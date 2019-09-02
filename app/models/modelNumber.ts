@@ -4,15 +4,15 @@ import { filterBlankAttributes, getClient } from "../util"
  * Dynamo DB Model:
  * MODEL NUMBER
  * ==========================================================
- * 
+ *
  * This model represents a configuration of a given product.
  * The configuration is the item directly associated to an
  * RGA or product registration. It is more specific than a
  * Product which actually represents a family of various
  * configurations.
- * 
+ *
  * The table structure in dynamo DB is as follows:
- * 
+ *
  * --------------------------------------------------------------
  * |                    | (GS1 Partition Key)   | (GS1 Sort Key)
  * --------------------------------------------------------------
@@ -20,9 +20,9 @@ import { filterBlankAttributes, getClient } from "../util"
  * --------------------------------------------------------------
  * | UUID/ModelNumber   | "MODEL_NUMBER"        | ProductId
  * --------------------------------------------------------------
- * 
+ *
  * This allows for the following access patterns:
- * 
+ *
  * 1. Fetch model number by unique name / ID. (PK is a user assigned model number)
  * 2. Fetch all model numbers (SK matches 'MODEL_NUMBER')
  * 3. Look up all model numbers for a given product (HSK matches ProductId)
@@ -51,7 +51,7 @@ export interface IModelNumber {
   description: string
   partitionKey: string // id
   sortKey: string
-  symptoms: string[],
+  symptoms: string[]
   indexSortKey: string // productId
   lotted: boolean
   warrantyTerm: number
@@ -93,7 +93,7 @@ const create = async ({
     indexSortKey: productId,
     partitionKey: id,
     sortKey: SECONDARY_KEY,
-    symptoms: []
+    symptoms: [],
   }
 
   const params = {
@@ -113,13 +113,16 @@ const create = async ({
   return item
 }
 
-
 /**
- * Updates an existing model number record in the database provided the supplied 
+ * Updates an existing model number record in the database provided the supplied
  * input is valid.
  * @param input The identifying credentials to assign to the account.
  */
-const update = async ({ id, productId, ...modelNumberInput }: IModelNumberInput): Promise<IModelNumber> => {
+const update = async ({
+  id,
+  productId,
+  ...modelNumberInput
+}: IModelNumberInput): Promise<IModelNumber> => {
   const existingModelNumber = await find(id)
   const item: IModelNumber = {
     ...existingModelNumber,
@@ -188,14 +191,17 @@ const findAll = async (ids: string[]): Promise<IModelNumber[]> => {
         Keys: [
           ...ids.map(modelNumberId => ({
             partitionKey: modelNumberId,
-            sortKey: SECONDARY_KEY
-          }))
-        ]
-      }
-    }
+            sortKey: SECONDARY_KEY,
+          })),
+        ],
+      },
+    },
   }
   const result = await client.batchGet(searchParams).promise()
-  return (result.Responses[process.env.DYNAMODB_ACCOUNTS_TABLE] as IModelNumber[]) || []
+  return (
+    (result.Responses[process.env.DYNAMODB_ACCOUNTS_TABLE] as IModelNumber[]) ||
+    []
+  )
 }
 
 /**

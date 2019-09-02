@@ -5,26 +5,25 @@ import { IRGA, RGA } from "./rga"
 
 const existingRGAParams = {
   submittedBy: "example-user@klsmartin.com",
-  submittedOn: DateTime.utc(2019, 5, 7, 7, 30, 1, 1).toISO()
+  submittedOn: DateTime.utc(2019, 5, 7, 7, 30, 1, 1).toISO(),
 }
-
 
 describe("rga", () => {
   let rga: IRGA
   let distributor: IDistributor
-  beforeAll(async (done) => {
+  beforeAll(async done => {
     distributor = await Distributor.create({
       domain: "klsmartin.com",
       name: "klsMartin",
     })
     rga = await RGA.create({
       ...existingRGAParams,
-      distributorId: distributor.partitionKey
+      distributorId: distributor.partitionKey,
     })
     done()
   })
 
-  afterAll(async (done) => {
+  afterAll(async done => {
     await RGA.destroy(rga.partitionKey)
     done()
   })
@@ -39,7 +38,7 @@ describe("rga", () => {
       expect.assertions(1)
       const rgaOnSameDay = await RGA.create({
         ...existingRGAParams,
-        distributorId: distributor.partitionKey
+        distributorId: distributor.partitionKey,
       })
       expect(rgaOnSameDay.partitionKey).toMatch(/^05072019MR/)
     })
@@ -49,7 +48,7 @@ describe("rga", () => {
       const rgaOnSameDay = await RGA.create({
         ...existingRGAParams,
         distributorId: distributor.partitionKey,
-        submittedOn: DateTime.utc(2019, 5, 8, 7, 30, 1, 1).toISO()
+        submittedOn: DateTime.utc(2019, 5, 8, 7, 30, 1, 1).toISO(),
       })
       expect(rgaOnSameDay.partitionKey).toMatch(/^05082019MR/)
     })
@@ -59,7 +58,7 @@ describe("rga", () => {
       const rgaOnSameDay = await RGA.create({
         ...existingRGAParams,
         distributorId: distributor.partitionKey,
-        submittedOn: DateTime.utc(2019, 5, 6, 7, 30, 1, 1).toISO()
+        submittedOn: DateTime.utc(2019, 5, 6, 7, 30, 1, 1).toISO(),
       })
       expect(rgaOnSameDay.partitionKey).toMatch(/^05062019MR/)
     })
@@ -68,7 +67,7 @@ describe("rga", () => {
       expect.assertions(1)
       const rgaOnSameDay = await RGA.create({
         ...existingRGAParams,
-        distributorId: distributor.partitionKey
+        distributorId: distributor.partitionKey,
       })
       expect(rgaOnSameDay.partitionKey).toMatch(/^05072019MR/)
     })

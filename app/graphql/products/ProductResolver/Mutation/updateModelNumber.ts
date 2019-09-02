@@ -1,11 +1,10 @@
 import * as Validation from "rpmed-validation-schema"
+import { IModelNumberInput, ModelNumber, Product } from "../../../../models"
+import { generateMutationError } from "../../../../util"
 import {
-  IModelNumberInput,
-  ModelNumber,
-  Product
-} from "../../../../models"
-import { generateMutationError } from "../../../../util";
-import { ErrorModelNumberIDDoesNotExist, ErrorModelNumberRelatedProductDoesNotExist } from "../productErrors"
+  ErrorModelNumberIDDoesNotExist,
+  ErrorModelNumberRelatedProductDoesNotExist,
+} from "../productErrors"
 import { IModelNumberMutationOutput } from "./productMutationTypes"
 
 type UpdateModelNumberResolver = (
@@ -16,9 +15,14 @@ type UpdateModelNumberResolver = (
 /**
  * A GraphQL resolver that handles the 'UpdateModelNumber' mutation.
  */
-export const updateModelNumber: UpdateModelNumberResolver = async (_, { modelNumberInput }) => {
+export const updateModelNumber: UpdateModelNumberResolver = async (
+  _,
+  { modelNumberInput }
+) => {
   try {
-    await Validation.ModelNumber.Default.validate(modelNumberInput, { abortEarly: false })
+    await Validation.ModelNumber.Default.validate(modelNumberInput, {
+      abortEarly: false,
+    })
   } catch (e) {
     return { errors: Validation.formatError(e), success: false }
   }
@@ -34,6 +38,8 @@ export const updateModelNumber: UpdateModelNumberResolver = async (_, { modelNum
     const modelNumber = await ModelNumber.update(modelNumberInput)
     return { modelNumber: ModelNumber.output(modelNumber), success: true }
   } catch (e) {
-    return generateMutationError([{ path: "_", message: "Could not update model number." }])
+    return generateMutationError([
+      { path: "_", message: "Could not update model number." },
+    ])
   }
 }

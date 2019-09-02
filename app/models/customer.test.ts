@@ -3,17 +3,17 @@ import { Customer, ICustomer } from "./customer"
 
 const existingCustomerParams = {
   email: "doug@klsmartin.com",
-  name: "KLS Martin"
+  name: "KLS Martin",
 }
 
 describe("customer", () => {
   let customer: ICustomer
-  beforeAll(async (done) => {
+  beforeAll(async done => {
     customer = await Customer.create({ ...existingCustomerParams })
     done()
   })
 
-  afterAll(async (done) => {
+  afterAll(async done => {
     await Customer.destroy(customer.partitionKey)
     done()
   })

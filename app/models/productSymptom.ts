@@ -1,17 +1,20 @@
 import { v4 as uuid } from "uuid"
 import { filterBlankAttributes, getClient } from "../util"
-import AttachedImage, { AttachedImageStatus, IAttachedImage } from "./attachedImage"
+import AttachedImage, {
+  AttachedImageStatus,
+  IAttachedImage,
+} from "./attachedImage"
 
 /**
  * Dynamo DB Model:
  * PRODUCT SYMPTOM
  * ==========================================================
- * 
+ *
  * This model represents a product troubleshooting symptom applicable
  * to a product or set of products.
- * 
+ *
  * The table structure in dynamo DB is as follows:
- * 
+ *
  * ----------------------------------------------------------------------
  * |                    | (GS1 Partition Key) | (GS1 Sort Key)
  * ----------------------------------------------------------------------
@@ -19,9 +22,9 @@ import AttachedImage, { AttachedImageStatus, IAttachedImage } from "./attachedIm
  * ----------------------------------------------------------------------
  * | UUID               | "PRODUCT_SYMPTOM"   | faultCode
  * ----------------------------------------------------------------------
- * 
+ *
  * This allows for the following access patterns:
- * 
+ *
  * 1. Fetch a symptom via serial number (PK matches UUID Number)
  * 2. Fetch all product symptoms (Sort Key matches 'PRODUCT_SYMPTOM')
  * 3. Fetch all product symptoms for a given product (HSK matchs faultCode)
@@ -74,7 +77,8 @@ export interface IProductSymptomOutput {
  * @param symptomInput The identifying symptomInput to assign to the account.
  */
 const create = async ({
-  id, ...symptomInput
+  id,
+  ...symptomInput
 }: IProductSymptomInput): Promise<IProductSymptom> => {
   const item: IProductSymptom = {
     ...symptomInput,
@@ -105,11 +109,14 @@ const create = async ({
  * Generates a new symptom model in the database provided the supplied credentials are valid.
  * @param symptomInput An object representing the symptomInput to replace the supplied object.
  */
-const update = async ({ id, ...symptomInput }: IProductSymptomInput): Promise<IProductSymptom> => {
+const update = async ({
+  id,
+  ...symptomInput
+}: IProductSymptomInput): Promise<IProductSymptom> => {
   const existingItem = await find(id)
   const item: IProductSymptom = {
     ...existingItem,
-    ...symptomInput
+    ...symptomInput,
   }
   const params = {
     TransactItems: [
@@ -158,21 +165,27 @@ const findAll = async (ids: string[]): Promise<IProductSymptom[]> => {
         Keys: [
           ...ids.map(symptom => ({
             partitionKey: symptom,
-            sortKey: SECONDARY_KEY
-          }))
-        ]
-      }
-    }
+            sortKey: SECONDARY_KEY,
+          })),
+        ],
+      },
+    },
   }
   const result = await client.batchGet(searchParams).promise()
-  return (result.Responses[process.env.DYNAMODB_ACCOUNTS_TABLE] as IProductSymptom[]) || []
+  return (
+    (result.Responses[
+      process.env.DYNAMODB_ACCOUNTS_TABLE
+    ] as IProductSymptom[]) || []
+  )
 }
 
 /**
  * Retreive a symptom by faultCode.
  * @param faultCode The faultCode of the product to find.
  */
-const findByFaultCode = async (faultCode: string): Promise<IProductSymptom | null> => {
+const findByFaultCode = async (
+  faultCode: string
+): Promise<IProductSymptom | null> => {
   const searchParams = {
     ExpressionAttributeValues: {
       ":indexSortKey": faultCode,
@@ -204,14 +217,14 @@ const all = async (): Promise<IProductSymptom[]> => {
 }
 
 /**
- * Deletes a symptom and associated child objects from the 
+ * Deletes a symptom and associated child objects from the
  * database via UUID.
  * @param id The UUID of the product to delete.
  */
 const destroy = async (id: string): Promise<boolean> => {
   const symptom = await find(id)
   try {
-    if (!(symptom)) {
+    if (!symptom) {
       return false
     }
     const params = {
@@ -231,13 +244,17 @@ const destroy = async (id: string): Promise<boolean> => {
   }
 }
 
-
 /**
  * Merges an attached image to a product symptom.
  */
-export const mergeImages = async (symptom: IProductSymptom, newImages: IAttachedImage[]): Promise<IProductSymptom> => {
+export const mergeImages = async (
+  symptom: IProductSymptom,
+  newImages: IAttachedImage[]
+): Promise<IProductSymptom> => {
   const newIds = (newImages || []).map(i => i.id)
-  const existingImages = (symptom.attachedImages || []).filter(i => !newIds.includes(i.id))
+  const existingImages = (symptom.attachedImages || []).filter(
+    i => !newIds.includes(i.id)
+  )
   const attachedImages = [...existingImages, ...newImages]
   return await update({ ...output(symptom), attachedImages })
 }
@@ -274,5 +291,5 @@ export const ProductSymptom = {
   findAll,
   findByFaultCode,
   output,
-  update
+  update,
 }

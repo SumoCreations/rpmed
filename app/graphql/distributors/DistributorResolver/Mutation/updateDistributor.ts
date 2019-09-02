@@ -1,6 +1,9 @@
 import * as Validation from "rpmed-validation-schema"
 import { Distributor, IDistributorInput } from "../../../../models"
-import { ErrorDistributorWithDomainAlreadyExists, ErrorDistributorWithIDDoesNotExist } from "../distributorErrors"
+import {
+  ErrorDistributorWithDomainAlreadyExists,
+  ErrorDistributorWithIDDoesNotExist,
+} from "../distributorErrors"
 import { IDistributorMutationOutput } from "./distributorMutationTypes"
 
 export const updateDistributor = async (
@@ -8,7 +11,9 @@ export const updateDistributor = async (
   { distributorInput }: { distributorInput: IDistributorInput }
 ): Promise<IDistributorMutationOutput> => {
   try {
-    await Validation.Distributor.Default.validate(distributorInput, { abortEarly: false })
+    await Validation.Distributor.Default.validate(distributorInput, {
+      abortEarly: false,
+    })
   } catch (e) {
     return { errors: Validation.formatError(e), success: false }
   }
@@ -16,8 +21,13 @@ export const updateDistributor = async (
   if (!distributor) {
     return { success: false, errors: [ErrorDistributorWithIDDoesNotExist] }
   }
-  const distributorWithDomain = await Distributor.findByDomain(distributorInput.domain)
-  if (distributorWithDomain && distributorWithDomain.partitionKey !== distributor.partitionKey) {
+  const distributorWithDomain = await Distributor.findByDomain(
+    distributorInput.domain
+  )
+  if (
+    distributorWithDomain &&
+    distributorWithDomain.partitionKey !== distributor.partitionKey
+  ) {
     return { success: false, errors: [ErrorDistributorWithDomainAlreadyExists] }
   }
   distributor = await Distributor.update(distributorInput)

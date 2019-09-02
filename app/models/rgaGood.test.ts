@@ -10,7 +10,7 @@ const DATE = DateTime.utc(2019, 5, 7, 1, 12, 11, 10).toISO()
 
 describe("rga", () => {
   let existingGood: IRGAGood
-  beforeAll(async (done) => {
+  beforeAll(async done => {
     try {
       existingGood = await RGAGood.create({
         faultCode: "EHIJ",
@@ -31,7 +31,7 @@ describe("rga", () => {
     done()
   })
 
-  afterAll(async (done) => {
+  afterAll(async done => {
     await RGAGood.destroy(RGA_ID, existingGood.id)
     done()
   })
@@ -39,7 +39,9 @@ describe("rga", () => {
   describe("create", () => {
     test("should generate a new rga", () => {
       expect(isEmpty(existingGood.partitionKey)).toBe(false)
-      expect(existingGood.sortKey).toBe(`${RGAGood.SECONDARY_KEY}_${existingGood.id}`)
+      expect(existingGood.sortKey).toBe(
+        `${RGAGood.SECONDARY_KEY}_${existingGood.id}`
+      )
     })
 
     test("should fail if the same serial is used twice", async () => {

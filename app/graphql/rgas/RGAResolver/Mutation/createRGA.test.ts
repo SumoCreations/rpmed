@@ -9,7 +9,7 @@ const sampleParams = {
 
 describe("createRGA", () => {
   let existingRGA: IRGA
-  beforeAll(async (done) => {
+  beforeAll(async done => {
     existingRGA = await RGA.create({
       distributorId: "something-made-up",
       submittedBy: "someone-ex1@partner.com",
@@ -18,7 +18,7 @@ describe("createRGA", () => {
     done()
   })
 
-  afterAll(async (done) => {
+  afterAll(async done => {
     await RGA.destroy(existingRGA.partitionKey)
     done()
   })
@@ -28,7 +28,7 @@ describe("createRGA", () => {
     const output = await createRGA(null, {
       rgaInput: {
         ...sampleParams,
-      }
+      },
     })
     expect(output.success).toBe(true)
   })
@@ -38,7 +38,7 @@ describe("createRGA", () => {
     const output = await createRGA(null, {
       rgaInput: {
         ...sampleParams,
-      }
+      },
     })
     const distributor = await Distributor.find(output.rga.distributorId)
     expect(output.success).toEqual(true)
@@ -51,8 +51,8 @@ describe("createRGA", () => {
       rgaInput: {
         ...sampleParams,
         submittedBy: "john@notvalid",
-        submittedOn: null
-      }
+        submittedOn: null,
+      },
     }
     const output = await createRGA(null, invalidInput)
     expect(output.success).toBe(false)

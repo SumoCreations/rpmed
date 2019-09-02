@@ -1,5 +1,8 @@
 import { User } from "../../../../models"
-import { ErrorUserCouldNotBeDestroyed, ErrorUserWithIDDoesNotExist } from "./userErrors"
+import {
+  ErrorUserCouldNotBeDestroyed,
+  ErrorUserWithIDDoesNotExist,
+} from "./userErrors"
 import { IMutationOutput } from "./userMutationTypes"
 
 export const destroyUser = async (

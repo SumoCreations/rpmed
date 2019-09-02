@@ -2,20 +2,22 @@ import { Distributor, IDistributor, RGA } from "../../../../models"
 import { rgas } from "./rgas"
 
 describe("Query", () => {
-
   let existingDistributor: IDistributor
 
-  beforeAll(async (done) => {
-    existingDistributor = await Distributor.create({ name: "Example Distributor 2", domain: "example-dist.com" })
-    await RGA.create({
-      distributorId: existingDistributor.partitionKey,
-      submittedBy: "some-one@example-dist.com",
-      submittedOn: new Date().toISOString()
+  beforeAll(async done => {
+    existingDistributor = await Distributor.create({
+      name: "Example Distributor 2",
+      domain: "example-dist.com",
     })
     await RGA.create({
       distributorId: existingDistributor.partitionKey,
       submittedBy: "some-one@example-dist.com",
-      submittedOn: new Date().toISOString()
+      submittedOn: new Date().toISOString(),
+    })
+    await RGA.create({
+      distributorId: existingDistributor.partitionKey,
+      submittedBy: "some-one@example-dist.com",
+      submittedOn: new Date().toISOString(),
     })
     done()
   })
@@ -30,5 +32,4 @@ describe("Query", () => {
       expect(output.rgas.length > 1).toEqual(true)
     })
   })
-
 })

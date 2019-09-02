@@ -23,7 +23,7 @@ export const typeDefs = gql`
     """
     A path indicating the attribute that failed validation.
     """
-    path: String!, 
+    path: String!
     """
     A brief description of why the specified attribute failed validation.
     """
@@ -59,7 +59,7 @@ export const typeDefs = gql`
     """
     success: Boolean!
   }
-  
+
   """
   The result of a mutation applied to a customer.
   """
@@ -110,9 +110,7 @@ export const typeDefs = gql`
     """
     Creates a new customer.
     """
-    createCustomer(
-      customerInput: NewCustomerInput!
-    ): CustomerMutationOutput!
+    createCustomer(customerInput: NewCustomerInput!): CustomerMutationOutput!
 
     """
     Updates an existing customer.
@@ -124,9 +122,7 @@ export const typeDefs = gql`
     """
     Removes an existing customer.
     """
-    destroyCustomer(
-      id: String!
-    ): CustomerMutationOutput!
+    destroyCustomer(id: String!): CustomerMutationOutput!
   }
 
   schema {

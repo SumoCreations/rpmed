@@ -5,12 +5,12 @@ import { filterBlankAttributes, getClient } from "../util"
  * Dynamo DB Model:
  * RGA Good
  * ==========================================================
- * 
- * This model represents a specific good attached to an RGA 
+ *
+ * This model represents a specific good attached to an RGA
  * request.
- * 
+ *
  * The table structure in dynamo DB is as follows:
- * 
+ *
  * --------------------------------------------------------------
  * |                    | (GS1 Partition Key)   | (GS1 Sort Key)
  * --------------------------------------------------------------
@@ -18,9 +18,9 @@ import { filterBlankAttributes, getClient } from "../util"
  * --------------------------------------------------------------
  * | RGA-ID             | GOOD_Serial           | ProductId#ModelNumber
  * --------------------------------------------------------------
- * 
+ *
  * This allows for the following access patterns:
- * 
+ *
  * 1. Fetch any RGA by unique composite ID (PK + SK).
  * 2. Fetch all RGAs (PK matches RGA-ID and SK begins with 'GOOD_')
  * 3. Look up all RGA goods for an associated serial number (SK matches GOOD_Serial)
@@ -118,7 +118,7 @@ const create = async ({
     rgaId,
     serial: id,
     sortKey: `${SECONDARY_KEY}_${id}`,
-    submittedOn: submittedOn || new Date().toISOString()
+    submittedOn: submittedOn || new Date().toISOString(),
   }
   const params = {
     TransactItems: [
@@ -163,13 +163,13 @@ const forRGA = async (rgaId: string): Promise<IRGAGood[]> => {
       ":pkey": rgaId,
       ":rkey": SECONDARY_KEY,
     },
-    KeyConditionExpression: "partitionKey = :pkey and begins_with(sortKey, :rkey)",
+    KeyConditionExpression:
+      "partitionKey = :pkey and begins_with(sortKey, :rkey)",
     TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
   }
   const result = await client.query(searchParams).promise()
   return result.Items ? (result.Items as IRGAGood[]) : []
 }
-
 
 /**
  * Deletes an RGA good for a given request.

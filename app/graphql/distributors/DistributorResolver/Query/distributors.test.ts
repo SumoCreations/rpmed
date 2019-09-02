@@ -6,7 +6,11 @@ describe("Query", () => {
     test("should return all existing distributors", async () => {
       expect.assertions(4)
       const existingDistributors = await Distributor.all()
-      await Promise.all(existingDistributors.map(async (p) => await Distributor.destroy(p.partitionKey)))
+      await Promise.all(
+        existingDistributors.map(
+          async p => await Distributor.destroy(p.partitionKey)
+        )
+      )
       await Distributor.create({
         domain: "distributors-query-test-3@rpmed.com",
         name: "Test User 1",
@@ -22,5 +26,4 @@ describe("Query", () => {
       expect(output.distributors.length > 1).toEqual(true)
     })
   })
-
 })
