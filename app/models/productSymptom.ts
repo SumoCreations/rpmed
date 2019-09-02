@@ -1,5 +1,5 @@
 import { v4 as uuid } from "uuid"
-import { filterBlankAttributes, getClient } from "../util"
+import { filterBlankAttributes, getDynamoClient } from "../util"
 import AttachedImage, {
   AttachedImageStatus,
   IAttachedImage,
@@ -30,7 +30,7 @@ import AttachedImage, {
  * 3. Fetch all product symptoms for a given product (HSK matchs faultCode)
  */
 
-const client = getClient()
+const client = getDynamoClient()
 
 const SECONDARY_KEY = "PRODUCT_SYMPTOM"
 

@@ -1,6 +1,6 @@
-import { getS3, getUploadsBucket } from "../util"
+import { getS3Client, getUploadsBucket } from "../util"
 
-const s3 = getS3()
+const s3 = getS3Client()
 
 export enum AttachedImageStatus {
   Available = "AVAILABLE",

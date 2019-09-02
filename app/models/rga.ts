@@ -1,6 +1,6 @@
 import { padStart } from "lodash"
 import { DateTime } from "luxon"
-import { filterBlankAttributes, getClient } from "../util"
+import { filterBlankAttributes, getDynamoClient } from "../util"
 
 /**
  * Dynamo DB Model:
@@ -36,7 +36,7 @@ import { filterBlankAttributes, getClient } from "../util"
 
 const SECONDARY_KEY = "RGA"
 
-const client = getClient()
+const client = getDynamoClient()
 
 export interface IRGAInput {
   id?: string

@@ -1,6 +1,6 @@
 import * as jwt from "jsonwebtoken"
 import { User } from "../models"
-import { getClient } from "../util"
+import { getDynamoClient } from "../util"
 import { verifyUser } from "./verify"
 
 export interface ITokenInput {
@@ -20,7 +20,7 @@ export interface IRefreshToken {
   exp: number
 }
 
-const client = getClient()
+const client = getDynamoClient()
 export const SUPPORTED_ALGORITHM = "HS512"
 
 /**

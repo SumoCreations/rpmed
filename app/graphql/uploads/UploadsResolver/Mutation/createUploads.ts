@@ -1,5 +1,5 @@
 import { ErrorList } from "rpmed-validation-schema"
-import { getS3, getUploadsBucket } from "../../../../util"
+import { getS3Client, getUploadsBucket } from "../../../../util"
 
 interface IUploadInput {
   keys: string[]
@@ -17,7 +17,7 @@ export interface IUploadMutationOutput {
   success: boolean
 }
 
-const s3 = getS3()
+const s3 = getS3Client()
 
 const getUploadURL = (key: string): Promise<IUpload> =>
   new Promise((resolve, reject) => {

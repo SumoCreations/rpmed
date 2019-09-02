@@ -1,8 +1,8 @@
-import { getClient } from "../util"
+import { getDynamoClient } from "../util"
 import { IModelNumber, ModelNumber } from "./modelNumber"
 import { IProductSymptom, ProductSymptom } from "./productSymptom"
 
-const client = getClient()
+const client = getDynamoClient()
 
 /**
  * Adds a symptom / model number to their respective embedded

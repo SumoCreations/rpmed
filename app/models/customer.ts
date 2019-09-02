@@ -1,5 +1,5 @@
 import { v4 as uuid } from "uuid"
-import { getClient } from "../util"
+import { getDynamoClient } from "../util"
 
 /**
  * Dynamo DB Model:
@@ -28,7 +28,7 @@ import { getClient } from "../util"
  * 3. Look up a customer via email (HSK matches Email)
  */
 
-const client = getClient()
+const client = getDynamoClient()
 
 const SECONDARY_KEY = "CUSTOMER"
 

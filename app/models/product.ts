@@ -1,5 +1,5 @@
 import { v4 as uuid } from "uuid"
-import { filterBlankAttributes, getClient } from "../util"
+import { filterBlankAttributes, getDynamoClient } from "../util"
 import { IModelNumberOutput, ModelNumber } from "./modelNumber"
 
 /**
@@ -34,7 +34,7 @@ import { IModelNumberOutput, ModelNumber } from "./modelNumber"
  * 4. Find all products beginning with string (HSK begins with search string)
  */
 
-const client = getClient()
+const client = getDynamoClient()
 
 const SECONDARY_KEY = "PRODUCT"
 

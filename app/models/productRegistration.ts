@@ -1,5 +1,5 @@
 import { v4 as uuid } from "uuid"
-import { filterBlankAttributes, getClient } from "../util"
+import { filterBlankAttributes, getDynamoClient } from "../util"
 
 /**
  * Dynamo DB Model:
@@ -31,7 +31,7 @@ import { filterBlankAttributes, getClient } from "../util"
  * 5. Fetch all product registrations for a given product configuration (HSK matches #ProductId#ModelNumber)
  */
 
-const client = getClient()
+const client = getDynamoClient()
 
 const SECONDARY_KEY = "PRODUCT_REGISTRATION"
 
@@ -131,7 +131,7 @@ const update = async ({
   }
   const hsk = `${existingItem.productId}#${
     existingItem.modelNumber
-  }#${customerId}`
+    }#${customerId}`
   const params = {
     TransactItems: [
       {

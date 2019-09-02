@@ -1,5 +1,5 @@
 import { v4 as uuid } from "uuid"
-import { filterBlankAttributes, getClient } from "../util"
+import { filterBlankAttributes, getDynamoClient } from "../util"
 
 /**
  * Dynamo DB Model:
@@ -30,7 +30,7 @@ import { filterBlankAttributes, getClient } from "../util"
 
 const SECONDARY_KEY = "GOOD"
 
-const client = getClient()
+const client = getDynamoClient()
 
 export interface IRGAGoodInput {
   warrantied: boolean
