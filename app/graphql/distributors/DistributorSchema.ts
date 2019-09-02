@@ -19,17 +19,6 @@ export const typeDefs = gql`
     name: String
   }
 
-  type ValidationError {
-    """
-    A path indicating the attribute that failed validation.
-    """
-    path: String!
-    """
-    A brief description of why the specified attribute failed validation.
-    """
-    message: String!
-  }
-
   """
   The result of a query for a distributor or distributors.
   """
@@ -78,7 +67,7 @@ export const typeDefs = gql`
     success: Boolean!
   }
 
-  type Query {
+  extend type Query {
     """
     All distributors in the system
     """
@@ -106,7 +95,7 @@ export const typeDefs = gql`
     name: String
   }
 
-  type Mutation {
+  extend type Mutation {
     """
     Creates a new distributor.
     """
@@ -125,10 +114,5 @@ export const typeDefs = gql`
     Removes an existing distributor.
     """
     destroyDistributor(id: String!): DistributorMutationOutput!
-  }
-
-  schema {
-    query: Query
-    mutation: Mutation
   }
 `

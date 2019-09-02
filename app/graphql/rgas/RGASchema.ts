@@ -196,7 +196,7 @@ export const typeDefs = gql`
     success: Boolean!
   }
 
-  type Query {
+  extend type Query {
     """
     All RGAs in the system
     """
@@ -267,7 +267,7 @@ export const typeDefs = gql`
     customerEmail: String
   }
 
-  type Mutation {
+  extend type Mutation {
     """
     Creates a new RGA.
     """
@@ -280,10 +280,5 @@ export const typeDefs = gql`
     Removes an existing RGA good.
     """
     destroyRGAGood(id: ID!, rgaId: String!): RGAGoodMutationOutput!
-  }
-
-  schema {
-    query: Query
-    mutation: Mutation
   }
 `

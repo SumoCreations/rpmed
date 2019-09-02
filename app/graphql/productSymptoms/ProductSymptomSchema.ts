@@ -100,17 +100,6 @@ export const typeDefs = gql`
     attachedImages: [AttachedImage]
   }
 
-  type ValidationError {
-    """
-    A path indicating the attribute that failed validation.
-    """
-    path: String!
-    """
-    A brief description of why the specified attribute failed validation.
-    """
-    message: String!
-  }
-
   """
   The result of a query for a symptom or symptoms.
   """
@@ -163,7 +152,7 @@ export const typeDefs = gql`
     success: Boolean!
   }
 
-  type Query {
+  extend type Query {
     """
     All symptoms in the system
     """
@@ -210,7 +199,7 @@ export const typeDefs = gql`
     position: Int!
   }
 
-  type Mutation {
+  extend type Mutation {
     """
     Creates a new symptom.
     """
@@ -246,10 +235,5 @@ export const typeDefs = gql`
       symptomId: String!
       attachedImages: [AttachedImageInput]!
     ): ProductSymptomMutationOutput!
-  }
-
-  schema {
-    query: Query
-    mutation: Mutation
   }
 `

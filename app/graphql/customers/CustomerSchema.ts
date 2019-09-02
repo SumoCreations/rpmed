@@ -19,17 +19,6 @@ export const typeDefs = gql`
     name: String
   }
 
-  type ValidationError {
-    """
-    A path indicating the attribute that failed validation.
-    """
-    path: String!
-    """
-    A brief description of why the specified attribute failed validation.
-    """
-    message: String!
-  }
-
   """
   The result of a query for a customer or customers.
   """
@@ -78,7 +67,7 @@ export const typeDefs = gql`
     success: Boolean!
   }
 
-  type Query {
+  extend type Query {
     """
     All customers in the system
     """
@@ -106,7 +95,7 @@ export const typeDefs = gql`
     name: String
   }
 
-  type Mutation {
+  exted type Mutation {
     """
     Creates a new customer.
     """
@@ -123,10 +112,5 @@ export const typeDefs = gql`
     Removes an existing customer.
     """
     destroyCustomer(id: String!): CustomerMutationOutput!
-  }
-
-  schema {
-    query: Query
-    mutation: Mutation
   }
 `

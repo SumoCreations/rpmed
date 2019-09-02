@@ -1,17 +1,6 @@
 import { gql } from "apollo-server-lambda"
 
 export const typeDefs = gql`
-  type ValidationError {
-    """
-    A path indicating the attribute that failed validation.
-    """
-    path: String!
-    """
-    A brief description of why the specified attribute failed validation.
-    """
-    message: String!
-  }
-
   type UploadURL {
     """
     The unique file key to use on AWS S3.
@@ -48,19 +37,14 @@ export const typeDefs = gql`
     keys: [String]!
   }
 
-  type Mutation {
+  extend type Mutation {
     """
     Returns a set of upload endpoints from AWS S3.
     """
     createUploads(uploadInput: UploadInput!): UploadMutationOutput!
   }
 
-  type Query {
+  extend type Query {
     info: String
-  }
-
-  schema {
-    query: Query
-    mutation: Mutation
   }
 `

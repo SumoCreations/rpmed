@@ -1,17 +1,6 @@
 import { gql } from "apollo-server-lambda"
 
 export const typeDefs = gql`
-  type ValidationError {
-    """
-    A path indicating the attribute that failed validation.
-    """
-    path: String!
-    """
-    A brief description of why the specified attribute failed validation.
-    """
-    message: String!
-  }
-
   """
   A troubleshooting symptom for a product.
   """
@@ -223,7 +212,7 @@ export const typeDefs = gql`
     success: Boolean!
   }
 
-  type Query {
+  extend type Query {
     """
     All products in the system.
     """
@@ -306,7 +295,7 @@ export const typeDefs = gql`
     success: Boolean!
   }
 
-  type Mutation {
+  extend type Mutation {
     """
     Adds a new product.
     """
@@ -335,10 +324,5 @@ export const typeDefs = gql`
     Removes an existing product variant.
     """
     destroyModelNumber(id: ID!): ModelNumberMutationOutput!
-  }
-
-  schema {
-    query: Query
-    mutation: Mutation
   }
 `

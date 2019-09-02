@@ -1,5 +1,5 @@
 import { ErrorList } from "rpmed-validation-schema"
-import { getS3, getS3Bucket } from "../../../../util"
+import { getS3, getUploadsBucket } from "../../../../util"
 
 interface IUploadInput {
   keys: string[]
@@ -22,7 +22,7 @@ const s3 = getS3()
 const getUploadURL = (key: string): Promise<IUpload> =>
   new Promise((resolve, reject) => {
     const params = {
-      Bucket: getS3Bucket(),
+      Bucket: getUploadsBucket(),
       Key: key,
     }
     s3.getSignedUrl("putObject", params, (err, data) => {
