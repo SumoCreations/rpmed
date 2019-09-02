@@ -84,6 +84,13 @@ functions:
           method: post
           path: auth/token
           cors: true
+  forgotPassword:
+    handler: app/forgot.sendResetPasswordEmail
+    events:
+      - http:
+          method: post
+          path: auth/forgot
+          cors: true
   sheets:
     handler: app/sheets.import
     events:
