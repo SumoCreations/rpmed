@@ -1,17 +1,17 @@
-import { Distributor, IDistributor } from "../../../../models"
-import { distributor } from "./distributor"
+import { Distributor, IDistributor } from '../../../../models'
+import { distributor } from './distributor'
 
-describe("Query", () => {
+describe('Query', () => {
   let existingDistributor: IDistributor
   let existingDistributor2: IDistributor
   beforeAll(async done => {
     existingDistributor = await Distributor.create({
-      domain: "distributors-query-test-1@rpmed.com",
-      name: "Test Distributor 1",
+      domain: 'distributors-query-test-1@rpmed.com',
+      name: 'Test Distributor 1',
     })
     existingDistributor2 = await Distributor.create({
-      domain: "distributors-query-test-2@rpmed.com",
-      name: "Test Distributor 2",
+      domain: 'distributors-query-test-2@rpmed.com',
+      name: 'Test Distributor 2',
     })
     done()
   })
@@ -22,8 +22,8 @@ describe("Query", () => {
     done()
   })
 
-  describe("distributor", () => {
-    test("should return a distributor if it exists", async () => {
+  describe('distributor', () => {
+    test('should return a distributor if it exists', async () => {
       expect.assertions(5)
       const output = await distributor(
         {},
@@ -36,9 +36,9 @@ describe("Query", () => {
       expect(output.distributor.domain).toEqual(existingDistributor.domain)
     })
 
-    test("should return an error if it does not exist", async () => {
+    test('should return an error if it does not exist', async () => {
       expect.assertions(4)
-      const output = await distributor({}, { id: "DOES-NOT-EXIST" })
+      const output = await distributor({}, { id: 'DOES-NOT-EXIST' })
       expect(output.success).toEqual(false)
       expect(output.distributor).toBeUndefined()
       expect(output.distributors).toBeUndefined()

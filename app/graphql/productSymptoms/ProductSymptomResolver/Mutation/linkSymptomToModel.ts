@@ -3,20 +3,20 @@ import {
   RequiredBoolean,
   RequiredString,
   validation,
-} from "rpmed-validation-schema"
+} from 'rpmed-validation-schema'
 import {
   addSymptomToModelNumber,
   ModelNumber,
   ProductSymptom,
   removeSymptomFromModelNumber,
-} from "../../../../models"
+} from '../../../../models'
 import {
   ErrorModelNumberIDDoesNotExist,
   ErrorProductSymptomAndModelNumberAssociationFailed,
   ErrorProductSymptomWithIDDoesNotExist,
-} from "../productSymptomErrors"
-import { extendModelOutput, extendSymptomOutput } from "./extendOutput"
-import { IProductSymptomMutationOutput } from "./productSymptomMutationTypes"
+} from '../productSymptomErrors'
+import { extendModelOutput, extendSymptomOutput } from './extendOutput'
+import { IProductSymptomMutationOutput } from './productSymptomMutationTypes'
 
 interface ILinkSymptomMutationArguments {
   modelNumber: string

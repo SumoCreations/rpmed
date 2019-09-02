@@ -1,8 +1,8 @@
-import * as Validation from "rpmed-validation-schema"
-import { IProductSymptomInput, ProductSymptom } from "../../../../models"
-import { ErrorProductSymptomWithIDDoesNotExist } from "../productSymptomErrors"
-import { extendSymptomOutput } from "./extendOutput"
-import { IProductSymptomMutationOutput } from "./productSymptomMutationTypes"
+import * as Validation from 'rpmed-validation-schema'
+import { IProductSymptomInput, ProductSymptom } from '../../../../models'
+import { ErrorProductSymptomWithIDDoesNotExist } from '../productSymptomErrors'
+import { extendSymptomOutput } from './extendOutput'
+import { IProductSymptomMutationOutput } from './productSymptomMutationTypes'
 
 export const updateProductSymptom = async (
   _: any,

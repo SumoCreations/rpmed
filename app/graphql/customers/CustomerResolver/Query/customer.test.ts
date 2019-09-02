@@ -1,17 +1,17 @@
-import { Customer, ICustomer } from "../../../../models"
-import { customer } from "./customer"
+import { Customer, ICustomer } from '../../../../models'
+import { customer } from './customer'
 
-describe("Query", () => {
+describe('Query', () => {
   let existingCustomer: ICustomer
   let existingCustomer2: ICustomer
   beforeAll(async done => {
     existingCustomer = await Customer.create({
-      email: "customers-query-test-1@rpmed.com",
-      name: "Test User 1",
+      email: 'customers-query-test-1@rpmed.com',
+      name: 'Test User 1',
     })
     existingCustomer2 = await Customer.create({
-      email: "customers-query-test-2@rpmed.com",
-      name: "Test User 2",
+      email: 'customers-query-test-2@rpmed.com',
+      name: 'Test User 2',
     })
     done()
   })
@@ -22,8 +22,8 @@ describe("Query", () => {
     done()
   })
 
-  describe("customer", () => {
-    test("should return a customer if it exists", async () => {
+  describe('customer', () => {
+    test('should return a customer if it exists', async () => {
       expect.assertions(5)
       const output = await customer({}, { id: existingCustomer.partitionKey })
       expect(output.success).toEqual(true)
@@ -33,9 +33,9 @@ describe("Query", () => {
       expect(output.customer.email).toEqual(existingCustomer.email)
     })
 
-    test("should return an error if it does not exist", async () => {
+    test('should return an error if it does not exist', async () => {
       expect.assertions(4)
-      const output = await customer({}, { id: "DOES-NOT-EXIST" })
+      const output = await customer({}, { id: 'DOES-NOT-EXIST' })
       expect(output.success).toEqual(false)
       expect(output.customer).toBeUndefined()
       expect(output.customers).toBeUndefined()

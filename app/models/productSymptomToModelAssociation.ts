@@ -1,6 +1,6 @@
-import { getDynamoClient } from "../util"
-import { IModelNumber, ModelNumber } from "./modelNumber"
-import { IProductSymptom, ProductSymptom } from "./productSymptom"
+import { getDynamoClient } from '../util'
+import { IModelNumber, ModelNumber } from './modelNumber'
+import { IProductSymptom, ProductSymptom } from './productSymptom'
 
 const client = getDynamoClient()
 
@@ -24,27 +24,27 @@ export const addSymptomToModelNumber = async (
     TransactItems: [
       {
         Update: {
-          ExpressionAttributeNames: { "#modelNumbers": "modelNumbers" },
+          ExpressionAttributeNames: { '#modelNumbers': 'modelNumbers' },
           ExpressionAttributeValues: {
-            ":modelNumbers": modelNumbers,
+            ':modelNumbers': modelNumbers,
           },
           Key: { partitionKey: symptomId, sortKey: symptom.sortKey },
           TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
-          UpdateExpression: "set #modelNumbers = :modelNumbers",
+          UpdateExpression: 'set #modelNumbers = :modelNumbers',
         },
       },
       {
         Update: {
-          ExpressionAttributeNames: { "#symptoms": "symptoms" },
+          ExpressionAttributeNames: { '#symptoms': 'symptoms' },
           ExpressionAttributeValues: {
-            ":symptoms": symptoms,
+            ':symptoms': symptoms,
           },
           Key: {
             partitionKey: modelNumberString,
             sortKey: modelNumber.sortKey,
           },
           TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
-          UpdateExpression: "set #symptoms = :symptoms",
+          UpdateExpression: 'set #symptoms = :symptoms',
         },
       },
     ],
@@ -72,27 +72,27 @@ export const removeSymptomFromModelNumber = async (
     TransactItems: [
       {
         Update: {
-          ExpressionAttributeNames: { "#modelNumbers": "modelNumbers" },
+          ExpressionAttributeNames: { '#modelNumbers': 'modelNumbers' },
           ExpressionAttributeValues: {
-            ":modelNumbers": modelNumbers,
+            ':modelNumbers': modelNumbers,
           },
           Key: { partitionKey: symptomId, sortKey: symptom.sortKey },
           TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
-          UpdateExpression: "set #modelNumbers = :modelNumbers",
+          UpdateExpression: 'set #modelNumbers = :modelNumbers',
         },
       },
       {
         Update: {
-          ExpressionAttributeNames: { "#symptoms": "symptoms" },
+          ExpressionAttributeNames: { '#symptoms': 'symptoms' },
           ExpressionAttributeValues: {
-            ":symptoms": symptoms,
+            ':symptoms': symptoms,
           },
           Key: {
             partitionKey: modelNumberString,
             sortKey: modelNumber.sortKey,
           },
           TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
-          UpdateExpression: "set #symptoms = :symptoms",
+          UpdateExpression: 'set #symptoms = :symptoms',
         },
       },
     ],

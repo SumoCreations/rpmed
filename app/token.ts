@@ -1,17 +1,17 @@
-import { APIGatewayProxyHandler } from "aws-lambda"
-import { response, Status } from "./net"
+import { APIGatewayProxyHandler } from 'aws-lambda'
+import { response, Status } from './net'
 import {
   generateTokenFromPassword,
   generateTokenFromRefreshToken,
   ITokenOutput,
-} from "./oauth"
-import { ICredentials, parseCredentials } from "./parsers"
+} from './oauth'
+import { ICredentials, parseCredentials } from './parsers'
 
 export const createToken: APIGatewayProxyHandler = async event => {
   // tslint:disable no-console
   console.log(event)
   const { grantType } = JSON.parse(event.body)
-  if (!["password", "refresh"].includes(grantType)) {
+  if (!['password', 'refresh'].includes(grantType)) {
     return response(
       Status.BadRequest,
       {},
@@ -20,7 +20,7 @@ export const createToken: APIGatewayProxyHandler = async event => {
   }
   let output: ITokenOutput | null
   switch (grantType) {
-    case "password":
+    case 'password':
       let credentials: ICredentials | null
       try {
         credentials = parseCredentials(event.body)
@@ -32,13 +32,13 @@ export const createToken: APIGatewayProxyHandler = async event => {
         credentials.password
       )
       break
-    case "refresh":
+    case 'refresh':
       const { refreshToken } = JSON.parse(event.body)
       if (!refreshToken) {
         return response(
           Status.BadRequest,
           {},
-          { refreshToken: "Cannot be blank" }
+          { refreshToken: 'Cannot be blank' }
         )
       }
       output = await generateTokenFromRefreshToken(refreshToken)
@@ -66,6 +66,6 @@ export const createToken: APIGatewayProxyHandler = async event => {
     accessToken: output.token,
     expiresIn: output.expiresIn,
     refreshToken: output.refresh,
-    tokenType: "bearer",
+    tokenType: 'bearer',
   })
 }

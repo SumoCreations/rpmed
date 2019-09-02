@@ -1,9 +1,9 @@
-import { Distributor, IDistributor } from "../../../../models"
-import { updateDistributor } from "./updateDistributor"
+import { Distributor, IDistributor } from '../../../../models'
+import { updateDistributor } from './updateDistributor'
 
-const sampleParams = { domain: "example.com", name: "Jim Jeffers" }
+const sampleParams = { domain: 'example.com', name: 'Jim Jeffers' }
 
-describe("updateDistributor", () => {
+describe('updateDistributor', () => {
   let distributor: IDistributor
   beforeEach(async done => {
     distributor = await Distributor.create({ ...sampleParams })
@@ -15,20 +15,20 @@ describe("updateDistributor", () => {
     done()
   })
 
-  test("should update the distributor", async () => {
+  test('should update the distributor', async () => {
     expect.assertions(1)
     const distributorInput = {
       id: distributor.partitionKey,
       ...sampleParams,
-      domain: "example2.com",
+      domain: 'example2.com',
     }
     const output = await updateDistributor(null, { distributorInput })
     expect(output.success).toBe(true)
   })
 
-  test("should fail if the domain is already in use", async () => {
+  test('should fail if the domain is already in use', async () => {
     expect.assertions(2)
-    const existingDomain = "distributor.com"
+    const existingDomain = 'distributor.com'
     await Distributor.create({ ...sampleParams, domain: existingDomain })
     const output = await updateDistributor(null, {
       distributorInput: {
@@ -38,13 +38,13 @@ describe("updateDistributor", () => {
       },
     })
     expect(output.success).toBe(false)
-    expect(output.errors.map(e => e.path)).toContain("domain")
+    expect(output.errors.map(e => e.path)).toContain('domain')
   })
 
-  test("should fail if the distributor does not exist", async () => {
+  test('should fail if the distributor does not exist', async () => {
     expect.assertions(1)
     const output = await updateDistributor(null, {
-      distributorInput: { id: "some-made-up-key", ...sampleParams },
+      distributorInput: { id: 'some-made-up-key', ...sampleParams },
     })
     expect(output.success).toBe(false)
   })

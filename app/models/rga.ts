@@ -1,6 +1,6 @@
-import { padStart } from "lodash"
-import { DateTime } from "luxon"
-import { filterBlankAttributes, getDynamoClient } from "../util"
+import { padStart } from 'lodash'
+import { DateTime } from 'luxon'
+import { filterBlankAttributes, getDynamoClient } from '../util'
 
 /**
  * Dynamo DB Model:
@@ -34,7 +34,7 @@ import { filterBlankAttributes, getDynamoClient } from "../util"
  *
  */
 
-const SECONDARY_KEY = "RGA"
+const SECONDARY_KEY = 'RGA'
 
 const client = getDynamoClient()
 
@@ -68,7 +68,7 @@ const generateDate = (isoString?: string) =>
     DATE_FORMAT
   )
 const randomPaddedTwoDigit = () =>
-  padStart(`${Math.round(Math.random() * 99)}`, 2, "0")
+  padStart(`${Math.round(Math.random() * 99)}`, 2, '0')
 const generateId = (dateString: string) =>
   `${generateDate(dateString)}${randomPaddedTwoDigit()}`
 
@@ -93,7 +93,7 @@ const create = async ({
     TransactItems: [
       {
         Put: {
-          ConditionExpression: "attribute_not_exists(partitionKey)",
+          ConditionExpression: 'attribute_not_exists(partitionKey)',
           Item: {
             ...filterBlankAttributes(item),
           },
@@ -128,10 +128,10 @@ const find = async (id: string): Promise<IRGA | null> => {
 const all = async (): Promise<IRGA[]> => {
   const searchParams = {
     ExpressionAttributeValues: {
-      ":rkey": SECONDARY_KEY,
+      ':rkey': SECONDARY_KEY,
     },
-    IndexName: "GSI_1",
-    KeyConditionExpression: "sortKey = :rkey",
+    IndexName: 'GSI_1',
+    KeyConditionExpression: 'sortKey = :rkey',
     ScanIndexForward: false,
     TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
   }
@@ -145,17 +145,17 @@ const all = async (): Promise<IRGA[]> => {
 const submittedOnDate = async (isoString: string): Promise<IRGA[]> => {
   const searchParams = {
     ExpressionAttributeValues: {
-      ":maxDate": DateTime.fromISO(isoString)
-        .endOf("day")
+      ':maxDate': DateTime.fromISO(isoString)
+        .endOf('day')
         .toISO(),
-      ":minDate": DateTime.fromISO(isoString)
-        .startOf("day")
+      ':minDate': DateTime.fromISO(isoString)
+        .startOf('day')
         .toISO(),
-      ":rkey": SECONDARY_KEY,
+      ':rkey': SECONDARY_KEY,
     },
-    IndexName: "GSI_1",
+    IndexName: 'GSI_1',
     KeyConditionExpression:
-      "sortKey = :rkey and indexSortKey BETWEEN :minDate and :maxDate",
+      'sortKey = :rkey and indexSortKey BETWEEN :minDate and :maxDate',
     ScanIndexForward: false,
     TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
   }

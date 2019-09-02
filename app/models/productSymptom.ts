@@ -1,9 +1,9 @@
-import { v4 as uuid } from "uuid"
-import { filterBlankAttributes, getDynamoClient } from "../util"
+import { v4 as uuid } from 'uuid'
+import { filterBlankAttributes, getDynamoClient } from '../util'
 import AttachedImage, {
   AttachedImageStatus,
   IAttachedImage,
-} from "./attachedImage"
+} from './attachedImage'
 
 /**
  * Dynamo DB Model:
@@ -32,7 +32,7 @@ import AttachedImage, {
 
 const client = getDynamoClient()
 
-const SECONDARY_KEY = "PRODUCT_SYMPTOM"
+const SECONDARY_KEY = 'PRODUCT_SYMPTOM'
 
 export interface IProductSymptomInput {
   careTip?: string
@@ -91,7 +91,7 @@ const create = async ({
     TransactItems: [
       {
         Put: {
-          ConditionExpression: "attribute_not_exists(partitionKey)",
+          ConditionExpression: 'attribute_not_exists(partitionKey)',
           Item: {
             ...filterBlankAttributes(item),
             indexSortKey: symptomInput.faultCode,
@@ -122,7 +122,7 @@ const update = async ({
     TransactItems: [
       {
         Put: {
-          ConditionExpression: "attribute_exists(partitionKey)",
+          ConditionExpression: 'attribute_exists(partitionKey)',
           Item: {
             ...filterBlankAttributes(item),
             indexSortKey: symptomInput.faultCode,
@@ -143,10 +143,10 @@ const update = async ({
 const find = async (id: string): Promise<IProductSymptom | null> => {
   const searchParams = {
     ExpressionAttributeValues: {
-      ":pk": id,
-      ":rkey": SECONDARY_KEY,
+      ':pk': id,
+      ':rkey': SECONDARY_KEY,
     },
-    KeyConditionExpression: "partitionKey = :pk and sortKey = :rkey",
+    KeyConditionExpression: 'partitionKey = :pk and sortKey = :rkey',
     Limit: 1,
     TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
   }
@@ -188,11 +188,11 @@ const findByFaultCode = async (
 ): Promise<IProductSymptom | null> => {
   const searchParams = {
     ExpressionAttributeValues: {
-      ":indexSortKey": faultCode,
-      ":rkey": SECONDARY_KEY,
+      ':indexSortKey': faultCode,
+      ':rkey': SECONDARY_KEY,
     },
-    IndexName: "GSI_1",
-    KeyConditionExpression: "sortKey = :rkey and indexSortKey = :indexSortKey",
+    IndexName: 'GSI_1',
+    KeyConditionExpression: 'sortKey = :rkey and indexSortKey = :indexSortKey',
     Limit: 1,
     TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
   }
@@ -206,10 +206,10 @@ const findByFaultCode = async (
 const all = async (): Promise<IProductSymptom[]> => {
   const searchParams = {
     ExpressionAttributeValues: {
-      ":rkey": SECONDARY_KEY,
+      ':rkey': SECONDARY_KEY,
     },
-    IndexName: "GSI_1",
-    KeyConditionExpression: "sortKey = :rkey",
+    IndexName: 'GSI_1',
+    KeyConditionExpression: 'sortKey = :rkey',
     TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
   }
   const result = await client.query(searchParams).promise()

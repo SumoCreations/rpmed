@@ -1,5 +1,5 @@
-import { v4 as uuid } from "uuid"
-import { getDynamoClient } from "../util"
+import { v4 as uuid } from 'uuid'
+import { getDynamoClient } from '../util'
 
 /**
  * Dynamo DB Model:
@@ -30,7 +30,7 @@ import { getDynamoClient } from "../util"
 
 const client = getDynamoClient()
 
-const SECONDARY_KEY = "CUSTOMER"
+const SECONDARY_KEY = 'CUSTOMER'
 
 export interface ICustomerInput {
   name: string
@@ -69,7 +69,7 @@ const create = async ({
     TransactItems: [
       {
         Put: {
-          ConditionExpression: "attribute_not_exists(partitionKey)",
+          ConditionExpression: 'attribute_not_exists(partitionKey)',
           Item: {
             ...item,
             indexSortKey: hsk,
@@ -101,7 +101,7 @@ const update = async ({
     TransactItems: [
       {
         Put: {
-          ConditionExpression: "attribute_exists(partitionKey)",
+          ConditionExpression: 'attribute_exists(partitionKey)',
           Item: {
             ...item,
             indexSortKey: hsk,
@@ -138,11 +138,11 @@ const find = async (id: string): Promise<ICustomer | null> => {
 const findByEmail = async (email: string): Promise<ICustomer | null> => {
   const searchParams = {
     ExpressionAttributeValues: {
-      ":hsk": email,
-      ":rkey": SECONDARY_KEY,
+      ':hsk': email,
+      ':rkey': SECONDARY_KEY,
     },
-    IndexName: "GSI_1",
-    KeyConditionExpression: "sortKey = :rkey AND indexSortKey = :hsk",
+    IndexName: 'GSI_1',
+    KeyConditionExpression: 'sortKey = :rkey AND indexSortKey = :hsk',
     Limit: 1,
     TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
   }
@@ -156,10 +156,10 @@ const findByEmail = async (email: string): Promise<ICustomer | null> => {
 const all = async (): Promise<ICustomer[]> => {
   const searchParams = {
     ExpressionAttributeValues: {
-      ":rkey": SECONDARY_KEY,
+      ':rkey': SECONDARY_KEY,
     },
-    IndexName: "GSI_1",
-    KeyConditionExpression: "sortKey = :rkey",
+    IndexName: 'GSI_1',
+    KeyConditionExpression: 'sortKey = :rkey',
     TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
   }
   const result = await client.query(searchParams).promise()

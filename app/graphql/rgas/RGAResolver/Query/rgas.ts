@@ -1,5 +1,5 @@
-import { Distributor, RGA, RGAGood } from "../../../../models"
-import { IRGAQueryOutput } from "./rgaQueryTypes"
+import { Distributor, RGA, RGAGood } from '../../../../models'
+import { IRGAQueryOutput } from './rgaQueryTypes'
 
 export const rgas = async (): Promise<IRGAQueryOutput> => {
   try {
@@ -17,7 +17,7 @@ export const rgas = async (): Promise<IRGAQueryOutput> => {
   } catch (e) {
     return {
       errors: [
-        { path: "_", message: e.localizedMessage || "Could not find any RGAs" },
+        { path: '_', message: e.localizedMessage || 'Could not find any RGAs' },
       ],
       success: false,
     }

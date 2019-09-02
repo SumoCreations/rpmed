@@ -1,4 +1,4 @@
-import * as Validation from "rpmed-validation-schema"
+import * as Validation from 'rpmed-validation-schema'
 import {
   Customer,
   ICustomer,
@@ -8,9 +8,9 @@ import {
   ProductSymptom,
   RGA,
   RGAGood,
-} from "../../../../models"
-import { generateMutationError } from "../../../../util"
-import { IRGAGoodMutationOutput } from "./rgaMutationTypes"
+} from '../../../../models'
+import { generateMutationError } from '../../../../util'
+import { IRGAGoodMutationOutput } from './rgaMutationTypes'
 
 interface IRGAGoodInputParams {
   rgaGoodInput: {
@@ -36,7 +36,7 @@ type CreateRGAGoodMutation = (
 ) => Promise<IRGAGoodMutationOutput>
 
 const present = (val: string | null) =>
-  typeof val === "string" && val.length > 0
+  typeof val === 'string' && val.length > 0
 /**
  * A GraphQL resolver that handles the 'CreateRGAGood' mutation.
  */
@@ -56,7 +56,7 @@ export const createRGAGood: CreateRGAGoodMutation = async (
   if (!rga) {
     return {
       errors: [
-        { path: "rgaId", message: `RGA ${rgaGoodInput.rgaId} does not exist` },
+        { path: 'rgaId', message: `RGA ${rgaGoodInput.rgaId} does not exist` },
       ],
       success: false,
     }
@@ -67,7 +67,7 @@ export const createRGAGood: CreateRGAGoodMutation = async (
     return {
       errors: [
         {
-          path: "modelNumber",
+          path: 'modelNumber',
           message: `Model number '${rgaGoodInput.modelNumber}' does not exist`,
         },
       ],
@@ -77,7 +77,7 @@ export const createRGAGood: CreateRGAGoodMutation = async (
 
   if (modelNumber.lotted && !present(rgaGoodInput.serial)) {
     return {
-      errors: [{ path: "serial", message: `Serial number cannot be blank` }],
+      errors: [{ path: 'serial', message: `Serial number cannot be blank` }],
       success: false,
     }
   }
@@ -89,7 +89,7 @@ export const createRGAGood: CreateRGAGoodMutation = async (
     return {
       errors: [
         {
-          path: "serial",
+          path: 'serial',
           message: `Product with serial'${
             rgaGoodInput.serial
           }' already assigned to an RGA`,
@@ -115,7 +115,7 @@ export const createRGAGood: CreateRGAGoodMutation = async (
         }))
     } catch (e) {
       // tslint:disable no-console
-      console.log("Could not create customer:")
+      console.log('Could not create customer:')
       console.log(e)
       // tslint:enable no-console
     }
@@ -135,7 +135,7 @@ export const createRGAGood: CreateRGAGoodMutation = async (
     // tslint:disable-next-line
     console.log(e)
     return {
-      errors: [{ path: "_", message: "Could not create good for RGA." }],
+      errors: [{ path: '_', message: 'Could not create good for RGA.' }],
       success: false,
     }
   }
@@ -152,7 +152,7 @@ export const createRGAGood: CreateRGAGoodMutation = async (
       })
     } catch (e) {
       // tslint:disable no-console
-      console.log("Could not register product:")
+      console.log('Could not register product:')
       console.log(e)
       // tslint:enable no-console
     }

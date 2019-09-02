@@ -5,7 +5,7 @@ import {
   modelNumbersForSymptom,
   ProductSymptom,
   productSymptomsForModel,
-} from "../../../../models"
+} from '../../../../models'
 
 export const extendModelOutput = (modelNumber: IModelNumber) => ({
   ...ModelNumber.output(modelNumber),

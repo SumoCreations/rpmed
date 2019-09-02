@@ -1,9 +1,9 @@
-import { ErrorList } from "rpmed-validation-schema"
+import { ErrorList } from 'rpmed-validation-schema'
 import {
   IModelNumberOutput,
   IProductOutput,
   IProductSymptomOutput,
-} from "../../../../models"
+} from '../../../../models'
 
 interface IExtendedModelNumberOutput extends IModelNumberOutput {
   product: () => Promise<IProductOutput | null>

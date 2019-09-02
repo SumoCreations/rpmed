@@ -1,4 +1,4 @@
-import { getDynamoClient } from "./dynamoClient"
+import { getDynamoClient } from './dynamoClient'
 
 /**
  * Uses the dynamo client to iterate and destroy all items in a table.

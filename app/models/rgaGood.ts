@@ -1,5 +1,5 @@
-import { v4 as uuid } from "uuid"
-import { filterBlankAttributes, getDynamoClient } from "../util"
+import { v4 as uuid } from 'uuid'
+import { filterBlankAttributes, getDynamoClient } from '../util'
 
 /**
  * Dynamo DB Model:
@@ -28,7 +28,7 @@ import { filterBlankAttributes, getDynamoClient } from "../util"
  * 5. Look up all RGA goods for an associated model number (HSK matches ProductId#ModelNumber)
  */
 
-const SECONDARY_KEY = "GOOD"
+const SECONDARY_KEY = 'GOOD'
 
 const client = getDynamoClient()
 
@@ -124,7 +124,7 @@ const create = async ({
     TransactItems: [
       {
         Put: {
-          ConditionExpression: "attribute_not_exists(sortKey)",
+          ConditionExpression: 'attribute_not_exists(sortKey)',
           Item: {
             ...filterBlankAttributes(item),
           },
@@ -160,11 +160,11 @@ const find = async (rgaId: string, id: string): Promise<IRGAGood | null> => {
 const forRGA = async (rgaId: string): Promise<IRGAGood[]> => {
   const searchParams = {
     ExpressionAttributeValues: {
-      ":pkey": rgaId,
-      ":rkey": SECONDARY_KEY,
+      ':pkey': rgaId,
+      ':rkey': SECONDARY_KEY,
     },
     KeyConditionExpression:
-      "partitionKey = :pkey and begins_with(sortKey, :rkey)",
+      'partitionKey = :pkey and begins_with(sortKey, :rkey)',
     TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
   }
   const result = await client.query(searchParams).promise()

@@ -1,2 +1,2 @@
-export * from "./DistributorSchema"
-export * from "./DistributorResolver"
+export * from './DistributorSchema'
+export * from './DistributorResolver'

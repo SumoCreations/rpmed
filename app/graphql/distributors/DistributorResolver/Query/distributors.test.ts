@@ -1,9 +1,9 @@
-import { Distributor } from "../../../../models"
-import { distributors } from "./distributors"
+import { Distributor } from '../../../../models'
+import { distributors } from './distributors'
 
-describe("Query", () => {
-  describe("distributors", () => {
-    test("should return all existing distributors", async () => {
+describe('Query', () => {
+  describe('distributors', () => {
+    test('should return all existing distributors', async () => {
       expect.assertions(4)
       const existingDistributors = await Distributor.all()
       await Promise.all(
@@ -12,12 +12,12 @@ describe("Query", () => {
         )
       )
       await Distributor.create({
-        domain: "distributors-query-test-3@rpmed.com",
-        name: "Test User 1",
+        domain: 'distributors-query-test-3@rpmed.com',
+        name: 'Test User 1',
       })
       await Distributor.create({
-        domain: "distributors-query-test-4@rpmed.com",
-        name: "Test User 2",
+        domain: 'distributors-query-test-4@rpmed.com',
+        name: 'Test User 2',
       })
       const output = await distributors()
       expect(output.success).toEqual(true)

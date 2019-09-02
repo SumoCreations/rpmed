@@ -4,8 +4,8 @@ import {
   Product,
   ProductSymptom,
   productSymptomsForModel,
-} from "../../../../models"
-import { IModelNumberQueryOutput } from "./productQueryTypes"
+} from '../../../../models'
+import { IModelNumberQueryOutput } from './productQueryTypes'
 
 /**
  * Retrieves all model numbers or a filtered search of some model numbers.
@@ -41,8 +41,8 @@ export const modelNumbers = async (
     return {
       errors: [
         {
-          path: "_",
-          message: e.localizedMessage || "Could not retrieve model numbers",
+          path: '_',
+          message: e.localizedMessage || 'Could not retrieve model numbers',
         },
       ],
       success: false,

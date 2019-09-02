@@ -3,8 +3,8 @@ import {
   modelNumbersForSymptom,
   ProductSymptom,
   productSymptomsForModel,
-} from "../../../../models"
-import { IProductSymptomQueryOutput } from "./productSymptomQueryTypes"
+} from '../../../../models'
+import { IProductSymptomQueryOutput } from './productSymptomQueryTypes'
 
 export const productSymptoms = async (
   _,
@@ -33,8 +33,8 @@ export const productSymptoms = async (
     return {
       errors: [
         {
-          path: "_",
-          message: e.localizedMessage || "Could not find productSymptoms",
+          path: '_',
+          message: e.localizedMessage || 'Could not find productSymptoms',
         },
       ],
       success: false,

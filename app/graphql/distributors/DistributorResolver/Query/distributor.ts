@@ -1,6 +1,6 @@
-import { Distributor } from "../../../../models"
-import { ErrorDistributorWithIDDoesNotExist } from "../distributorErrors"
-import { IDistributorQueryOutput } from "./distributorQueryTypes"
+import { Distributor } from '../../../../models'
+import { ErrorDistributorWithIDDoesNotExist } from '../distributorErrors'
+import { IDistributorQueryOutput } from './distributorQueryTypes'
 
 export const distributor = async (
   _,
@@ -22,8 +22,8 @@ export const distributor = async (
     return {
       errors: [
         {
-          path: "_",
-          message: e.localizedMessage || "Could not retrieve distributor",
+          path: '_',
+          message: e.localizedMessage || 'Could not retrieve distributor',
         },
       ],
       success: false,

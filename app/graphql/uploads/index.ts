@@ -1,2 +1,2 @@
-export * from "./UploadsResolver"
-export * from "./UploadsSchema"
+export * from './UploadsResolver'
+export * from './UploadsSchema'

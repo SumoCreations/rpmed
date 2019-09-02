@@ -1,5 +1,5 @@
-import { ErrorList } from "rpmed-validation-schema"
-import { IDistributorOutput } from "../../../../models"
+import { ErrorList } from 'rpmed-validation-schema'
+import { IDistributorOutput } from '../../../../models'
 
 export interface IDistributorQueryOutput {
   lastEvaluatedKey?: string

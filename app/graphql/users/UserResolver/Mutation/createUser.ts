@@ -1,10 +1,10 @@
-import * as Validation from "rpmed-validation-schema"
-import { IUserInput, User } from "../../../../models"
+import * as Validation from 'rpmed-validation-schema'
+import { IUserInput, User } from '../../../../models'
 import {
   ErrorUserCredentialsInvalid,
   ErrorUserWithEmailAlreadyExists,
-} from "./userErrors"
-import { IMutationOutput } from "./userMutationTypes"
+} from './userErrors'
+import { IMutationOutput } from './userMutationTypes'
 
 export const createUser = async (
   _: any,

@@ -1,7 +1,7 @@
-import * as Validation from "rpmed-validation-schema"
-import { IUserInput, User } from "../../../../models"
-import { ErrorUserWithEmailAlreadyExists } from "./userErrors"
-import { IMutationOutput } from "./userMutationTypes"
+import * as Validation from 'rpmed-validation-schema'
+import { IUserInput, User } from '../../../../models'
+import { ErrorUserWithEmailAlreadyExists } from './userErrors'
+import { IMutationOutput } from './userMutationTypes'
 
 export const updateUser = async (
   _: any,
@@ -17,7 +17,7 @@ export const updateUser = async (
     return {
       success: false,
       errors: [
-        { message: "The requested user could not be found.", path: "_" },
+        { message: 'The requested user could not be found.', path: '_' },
       ],
     }
   }

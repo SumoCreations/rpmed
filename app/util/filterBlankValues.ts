@@ -4,15 +4,15 @@
  */
 const notBlank = (i: any) => {
   switch (typeof i) {
-    case "undefined":
+    case 'undefined':
       return false
-    case "boolean":
+    case 'boolean':
       return true
-    case "string":
+    case 'string':
       return i.length > 1
-    case "number":
+    case 'number':
       return true
-    case "object":
+    case 'object':
       return i !== null
     default:
       return i
@@ -24,7 +24,7 @@ const notBlank = (i: any) => {
  * @param item The item to test.
  */
 const filterNestedBlankValues = (item: string | string[] | any) =>
-  typeof item === "object" ? item.filter(i => notBlank(i)) : item
+  typeof item === 'object' ? item.filter(i => notBlank(i)) : item
 
 /**
  * Removes any blank attributes from an object.

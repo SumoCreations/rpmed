@@ -2,9 +2,9 @@ import {
   Customer,
   IProductRegistrationInput,
   ProductRegistration,
-} from "../../../../models"
-import { IProductRegistrationMutationOutput } from "./productRegistrationMutationTypes"
-import { validateRegistrationInput } from "./validateRegistrationInput"
+} from '../../../../models'
+import { IProductRegistrationMutationOutput } from './productRegistrationMutationTypes'
+import { validateRegistrationInput } from './validateRegistrationInput'
 
 export const updateProductRegistration = async (
   _: any,
@@ -39,7 +39,7 @@ export const updateProductRegistration = async (
             `Could not update registration with id ${
               productRegistrationInput.id
             }`,
-          path: "_",
+          path: '_',
         },
       ],
       success: false,

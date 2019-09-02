@@ -1,29 +1,29 @@
-import { Distributor, IDistributor, RGA } from "../../../../models"
-import { rgas } from "./rgas"
+import { Distributor, IDistributor, RGA } from '../../../../models'
+import { rgas } from './rgas'
 
-describe("Query", () => {
+describe('Query', () => {
   let existingDistributor: IDistributor
 
   beforeAll(async done => {
     existingDistributor = await Distributor.create({
-      name: "Example Distributor 2",
-      domain: "example-dist.com",
+      name: 'Example Distributor 2',
+      domain: 'example-dist.com',
     })
     await RGA.create({
       distributorId: existingDistributor.partitionKey,
-      submittedBy: "some-one@example-dist.com",
+      submittedBy: 'some-one@example-dist.com',
       submittedOn: new Date().toISOString(),
     })
     await RGA.create({
       distributorId: existingDistributor.partitionKey,
-      submittedBy: "some-one@example-dist.com",
+      submittedBy: 'some-one@example-dist.com',
       submittedOn: new Date().toISOString(),
     })
     done()
   })
 
-  describe("rgas", () => {
-    test("should return a list of rgas if it exists", async () => {
+  describe('rgas', () => {
+    test('should return a list of rgas if it exists', async () => {
       expect.assertions(4)
       const output = await rgas()
       expect(output.success).toEqual(true)

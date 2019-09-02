@@ -2,9 +2,9 @@ import {
   ModelNumber,
   modelNumbersForSymptom,
   ProductSymptom,
-} from "../../../../models"
-import { ErrorProductSymptomWithIDDoesNotExist } from "../productSymptomErrors"
-import { IProductSymptomQueryOutput } from "./productSymptomQueryTypes"
+} from '../../../../models'
+import { ErrorProductSymptomWithIDDoesNotExist } from '../productSymptomErrors'
+import { IProductSymptomQueryOutput } from './productSymptomQueryTypes'
 
 export const productSymptom = async (
   _,
@@ -32,8 +32,8 @@ export const productSymptom = async (
     return {
       errors: [
         {
-          path: "_",
-          message: e.localizedMessage || "Could not retrieve productSymptom",
+          path: '_',
+          message: e.localizedMessage || 'Could not retrieve productSymptom',
         },
       ],
       success: false,

@@ -1,5 +1,5 @@
-import { Customer } from "../../../../models"
-import { ICustomerQueryOutput } from "./customerQueryTypes"
+import { Customer } from '../../../../models'
+import { ICustomerQueryOutput } from './customerQueryTypes'
 
 type CustomersResolver = (
   context: any,
@@ -25,7 +25,7 @@ export const customers: CustomersResolver = async (
     }
   } catch (e) {
     return {
-      errors: [{ path: "_", message: e.localizedMessage }],
+      errors: [{ path: '_', message: e.localizedMessage }],
       success: false,
     }
   }

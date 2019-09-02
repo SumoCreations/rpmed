@@ -3,8 +3,8 @@ export interface ITemplateVariables {
 }
 
 export enum Template {
-  CreateAccountConfirmation = "createAccountConfirmation",
-  ResetPassword = "resetPassword",
+  CreateAccountConfirmation = 'createAccountConfirmation',
+  ResetPassword = 'resetPassword',
 }
 
 export interface IEmailSendParams {

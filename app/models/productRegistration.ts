@@ -1,5 +1,5 @@
-import { v4 as uuid } from "uuid"
-import { filterBlankAttributes, getDynamoClient } from "../util"
+import { v4 as uuid } from 'uuid'
+import { filterBlankAttributes, getDynamoClient } from '../util'
 
 /**
  * Dynamo DB Model:
@@ -33,7 +33,7 @@ import { filterBlankAttributes, getDynamoClient } from "../util"
 
 const client = getDynamoClient()
 
-const SECONDARY_KEY = "PRODUCT_REGISTRATION"
+const SECONDARY_KEY = 'PRODUCT_REGISTRATION'
 
 interface IRegistrationSortKeyInput {
   productId: string
@@ -97,7 +97,7 @@ const create = async ({
     TransactItems: [
       {
         Put: {
-          ConditionExpression: "attribute_not_exists(partitionKey)",
+          ConditionExpression: 'attribute_not_exists(partitionKey)',
           Item: {
             ...filterBlankAttributes(item),
             indexSortKey: hsk,
@@ -131,12 +131,12 @@ const update = async ({
   }
   const hsk = `${existingItem.productId}#${
     existingItem.modelNumber
-    }#${customerId}`
+  }#${customerId}`
   const params = {
     TransactItems: [
       {
         Put: {
-          ConditionExpression: "attribute_exists(partitionKey)",
+          ConditionExpression: 'attribute_exists(partitionKey)',
           Item: {
             ...item,
             indexSortKey: hsk,
@@ -157,10 +157,10 @@ const update = async ({
 const find = async (id: string): Promise<IProductRegistration | null> => {
   const searchParams = {
     ExpressionAttributeValues: {
-      ":pk": id,
-      ":rkey": SECONDARY_KEY,
+      ':pk': id,
+      ':rkey': SECONDARY_KEY,
     },
-    KeyConditionExpression: "partitionKey = :pk and sortKey = :rkey",
+    KeyConditionExpression: 'partitionKey = :pk and sortKey = :rkey',
     Limit: 1,
     TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
   }
@@ -178,12 +178,12 @@ const forModel = async ({
 }: IRegistrationSortKeyInput): Promise<IProductRegistration[] | null> => {
   const searchParams = {
     ExpressionAttributeValues: {
-      ":pk": SECONDARY_KEY,
-      ":rkey": `${productId}#${modelNumber}`,
+      ':pk': SECONDARY_KEY,
+      ':rkey': `${productId}#${modelNumber}`,
     },
-    IndexName: "GSI_1",
+    IndexName: 'GSI_1',
     KeyConditionExpression:
-      "sortKey = :pk and begins_with(indexSortKey, :rkey)",
+      'sortKey = :pk and begins_with(indexSortKey, :rkey)',
     Limit: 500,
     TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
   }
@@ -200,12 +200,12 @@ const forProduct = async (
 ): Promise<IProductRegistration[] | null> => {
   const searchParams = {
     ExpressionAttributeValues: {
-      ":pk": SECONDARY_KEY,
-      ":rkey": productId,
+      ':pk': SECONDARY_KEY,
+      ':rkey': productId,
     },
-    IndexName: "GSI_1",
+    IndexName: 'GSI_1',
     KeyConditionExpression:
-      "sortKey = :pk and begins_with(indexSortKey, :rkey)",
+      'sortKey = :pk and begins_with(indexSortKey, :rkey)',
     Limit: 500,
     TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
   }
@@ -219,10 +219,10 @@ const forProduct = async (
 const all = async (): Promise<IProductRegistration[]> => {
   const searchParams = {
     ExpressionAttributeValues: {
-      ":rkey": SECONDARY_KEY,
+      ':rkey': SECONDARY_KEY,
     },
-    IndexName: "GSI_1",
-    KeyConditionExpression: "sortKey = :rkey",
+    IndexName: 'GSI_1',
+    KeyConditionExpression: 'sortKey = :rkey',
     TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
   }
   const result = await client.query(searchParams).promise()
@@ -269,7 +269,7 @@ const output = ({
   const result = {
     ...productRegistation,
     id: partitionKey,
-    serial: productRegistation.serial || "",
+    serial: productRegistation.serial || '',
   }
   return result
 }

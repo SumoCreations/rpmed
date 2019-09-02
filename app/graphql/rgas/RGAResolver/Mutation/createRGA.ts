@@ -1,7 +1,7 @@
-import * as Validation from "rpmed-validation-schema"
-import { Distributor, RGA } from "../../../../models"
-import { generateMutationError } from "../../../../util"
-import { IRGAMutationOutput } from "./rgaMutationTypes"
+import * as Validation from 'rpmed-validation-schema'
+import { Distributor, RGA } from '../../../../models'
+import { generateMutationError } from '../../../../util'
+import { IRGAMutationOutput } from './rgaMutationTypes'
 
 interface IRGAInputParams {
   rgaInput: {
@@ -25,7 +25,7 @@ export const createRGA: CreateRGAMutation = async (_, { rgaInput }) => {
   }
 
   // Find or generate an associated distributor
-  const emailDomain = rgaInput.submittedBy.split("@")[1]
+  const emailDomain = rgaInput.submittedBy.split('@')[1]
   const distributor = await Distributor.findOrCreateWithDomain(emailDomain)
 
   const rga = await RGA.create({

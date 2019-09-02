@@ -1,29 +1,29 @@
-import { IProductSymptom, ProductSymptom } from "../../../../models"
-import { productSymptom } from "./productSymptom"
+import { IProductSymptom, ProductSymptom } from '../../../../models'
+import { productSymptom } from './productSymptom'
 
 const sampleParams = {
-  careTip: "Improper cleaning can result in damage (see Cleaning Guide)",
-  faultCode: "EHIJ",
+  careTip: 'Improper cleaning can result in damage (see Cleaning Guide)',
+  faultCode: 'EHIJ',
   fee: false,
-  name: "Light randomly turns off (stobes/blinks)",
+  name: 'Light randomly turns off (stobes/blinks)',
   preApproved: true,
   solution:
-    "Replace light housing module because it needs a new wire harness and/or circuit boards.",
+    'Replace light housing module because it needs a new wire harness and/or circuit boards.',
   synopsis:
-    "LED signal interrupted due to a break in the wire or the circuit board(s) are corroded or damaged.",
+    'LED signal interrupted due to a break in the wire or the circuit board(s) are corroded or damaged.',
 }
 
-describe("Query", () => {
+describe('Query', () => {
   let existingProductSymptom: IProductSymptom
   let existingProductSymptom2: IProductSymptom
   beforeAll(async done => {
     existingProductSymptom = await ProductSymptom.create({
       ...sampleParams,
-      faultCode: "SYMPQUERYTST1",
+      faultCode: 'SYMPQUERYTST1',
     })
     existingProductSymptom2 = await ProductSymptom.create({
       ...sampleParams,
-      faultCode: "SYMPQUERYTST1",
+      faultCode: 'SYMPQUERYTST1',
     })
     done()
   })
@@ -34,8 +34,8 @@ describe("Query", () => {
     done()
   })
 
-  describe("productSymptom", () => {
-    test("should return a productSymptom if it exists", async () => {
+  describe('productSymptom', () => {
+    test('should return a productSymptom if it exists', async () => {
       expect.assertions(5)
       const output = await productSymptom(
         {},
@@ -50,9 +50,9 @@ describe("Query", () => {
       )
     })
 
-    test("should return an error if it does not exist", async () => {
+    test('should return an error if it does not exist', async () => {
       expect.assertions(4)
-      const output = await productSymptom({}, { id: "DOES-NOT-EXIST" })
+      const output = await productSymptom({}, { id: 'DOES-NOT-EXIST' })
       expect(output.success).toEqual(false)
       expect(output.productSymptom).toBeUndefined()
       expect(output.productSymptoms).toBeUndefined()

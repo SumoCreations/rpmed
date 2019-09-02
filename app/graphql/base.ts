@@ -1,6 +1,6 @@
-import { gql } from "apollo-server-lambda"
+import { gql } from 'apollo-server-lambda'
 
-const VERSION = "1.0.0.alpha"
+const VERSION = '1.0.0.alpha'
 
 export const typeDefs = gql`
   """

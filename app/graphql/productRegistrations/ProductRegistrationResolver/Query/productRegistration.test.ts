@@ -1,16 +1,16 @@
-import { IProductRegistration, ProductRegistration } from "../../../../models"
+import { IProductRegistration, ProductRegistration } from '../../../../models'
 import {
   generateSampleParams,
   IRegistrationSampleParamOutput,
-} from "../testHelpers"
-import { productRegistration } from "./productRegistration"
+} from '../testHelpers'
+import { productRegistration } from './productRegistration'
 
-describe("Query", () => {
+describe('Query', () => {
   let sample1: IRegistrationSampleParamOutput
   let existingProductRegistration: IProductRegistration
   beforeAll(async done => {
     sample1 = await generateSampleParams({
-      key: "QUERY-TST-1",
+      key: 'QUERY-TST-1',
       lotted: false,
       serial: null,
     })
@@ -20,8 +20,8 @@ describe("Query", () => {
     done()
   })
 
-  describe("productRegistration", () => {
-    test("should return a productRegistration if it exists", async () => {
+  describe('productRegistration', () => {
+    test('should return a productRegistration if it exists', async () => {
       expect.assertions(6)
       const output = await productRegistration(
         {},
@@ -41,9 +41,9 @@ describe("Query", () => {
       )
     })
 
-    test("should return an error if it does not exist", async () => {
+    test('should return an error if it does not exist', async () => {
       expect.assertions(4)
-      const output = await productRegistration({}, { id: "DOES-NOT-EXIST" })
+      const output = await productRegistration({}, { id: 'DOES-NOT-EXIST' })
       expect(output.success).toEqual(false)
       expect(output.productRegistration).toBeUndefined()
       expect(output.productRegistrations).toBeUndefined()

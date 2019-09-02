@@ -1,5 +1,5 @@
-import { Customer, ProductRegistration } from "../../../../models"
-import { IProductRegistrationQueryOutput } from "./productRegistrationQueryTypes"
+import { Customer, ProductRegistration } from '../../../../models'
+import { IProductRegistrationQueryOutput } from './productRegistrationQueryTypes'
 
 export const productRegistrations = async (): Promise<
   IProductRegistrationQueryOutput
@@ -18,8 +18,8 @@ export const productRegistrations = async (): Promise<
     return {
       errors: [
         {
-          path: "_",
-          message: e.localizedMessage || "Could not find productRegistrations",
+          path: '_',
+          message: e.localizedMessage || 'Could not find productRegistrations',
         },
       ],
       success: false,

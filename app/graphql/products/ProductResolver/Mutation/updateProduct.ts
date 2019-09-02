@@ -1,11 +1,11 @@
-import * as Validation from "rpmed-validation-schema"
-import { IProductInput, Product } from "../../../../models"
-import { generateMutationError } from "../../../../util"
+import * as Validation from 'rpmed-validation-schema'
+import { IProductInput, Product } from '../../../../models'
+import { generateMutationError } from '../../../../util'
 import {
   ErrorProductAlreadyExist,
   ErrorProductIDDoesNotExist,
-} from "../productErrors"
-import { IProductMutationOutput } from "./productMutationTypes"
+} from '../productErrors'
+import { IProductMutationOutput } from './productMutationTypes'
 
 type UpdateProductMutation = (
   context: any,

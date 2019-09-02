@@ -1,2 +1,2 @@
-export * from "./rga"
-export * from "./rgas"
+export * from './rga'
+export * from './rgas'

@@ -1,2 +1,2 @@
-export * from "./ProductRegistrationSchema"
-export * from "./ProductRegistrationResolver"
+export * from './ProductRegistrationSchema'
+export * from './ProductRegistrationResolver'

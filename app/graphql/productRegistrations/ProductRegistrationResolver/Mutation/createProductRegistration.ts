@@ -2,9 +2,9 @@ import {
   Customer,
   IProductRegistrationInput,
   ProductRegistration,
-} from "../../../../models"
-import { IProductRegistrationMutationOutput } from "./productRegistrationMutationTypes"
-import { validateRegistrationInput } from "./validateRegistrationInput"
+} from '../../../../models'
+import { IProductRegistrationMutationOutput } from './productRegistrationMutationTypes'
+import { validateRegistrationInput } from './validateRegistrationInput'
 
 export const createProductRegistration = async (
   _: any,
@@ -37,7 +37,7 @@ export const createProductRegistration = async (
       errors: [
         {
           message: e.localizedMessage || `Could not create registration`,
-          path: "_",
+          path: '_',
         },
       ],
       success: false,

@@ -3,9 +3,9 @@ import {
   Product,
   ProductSymptom,
   productSymptomsForModel,
-} from "../../../../models"
-import { ErrorModelNumberIDDoesNotExist } from "../productErrors"
-import { IModelNumberQueryOutput } from "./productQueryTypes"
+} from '../../../../models'
+import { ErrorModelNumberIDDoesNotExist } from '../productErrors'
+import { IModelNumberQueryOutput } from './productQueryTypes'
 
 /**
  * Retrieves a specific model number.
@@ -41,8 +41,8 @@ export const modelNumber = async (
     return {
       errors: [
         {
-          path: "_",
-          message: e.localizedMessage || "Could not retrieve model number",
+          path: '_',
+          message: e.localizedMessage || 'Could not retrieve model number',
         },
       ],
       success: false,

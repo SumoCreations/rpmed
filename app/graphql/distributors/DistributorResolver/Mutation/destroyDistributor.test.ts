@@ -1,9 +1,9 @@
-import { Distributor, IDistributor } from "../../../../models"
-import { destroyDistributor } from "./destroyDistributor"
+import { Distributor, IDistributor } from '../../../../models'
+import { destroyDistributor } from './destroyDistributor'
 
-const sampleParams = { domain: "example30.com", name: "Sumo Creations LLC" }
+const sampleParams = { domain: 'example30.com', name: 'Sumo Creations LLC' }
 
-describe("destroyDistributor", () => {
+describe('destroyDistributor', () => {
   let distributor: IDistributor
   beforeEach(async done => {
     distributor = await Distributor.create({ ...sampleParams })
@@ -15,7 +15,7 @@ describe("destroyDistributor", () => {
     done()
   })
 
-  test("should destroy the distributor", async () => {
+  test('should destroy the distributor', async () => {
     expect.assertions(1)
     const output = await destroyDistributor(null, {
       id: distributor.partitionKey,
@@ -23,10 +23,10 @@ describe("destroyDistributor", () => {
     expect(output.success).toBe(true)
   })
 
-  test("should fail the distributor does not exist", async () => {
+  test('should fail the distributor does not exist', async () => {
     expect.assertions(1)
     const output = await destroyDistributor(null, {
-      id: "some-made-up-id-or-key",
+      id: 'some-made-up-id-or-key',
     })
     expect(output.success).toBe(false)
   })

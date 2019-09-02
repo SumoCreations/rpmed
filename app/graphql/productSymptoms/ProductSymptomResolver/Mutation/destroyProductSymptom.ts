@@ -1,11 +1,11 @@
-import { ProductSymptom } from "../../../../models"
-import { generateMutationError } from "../../../../util"
+import { ProductSymptom } from '../../../../models'
+import { generateMutationError } from '../../../../util'
 import {
   ErrorProductSymptomCouldNotBeDestroyed,
   ErrorProductSymptomWithIDDoesNotExist,
-} from "../productSymptomErrors"
-import { extendSymptomOutput } from "./extendOutput"
-import { IProductSymptomMutationOutput } from "./productSymptomMutationTypes"
+} from '../productSymptomErrors'
+import { extendSymptomOutput } from './extendOutput'
+import { IProductSymptomMutationOutput } from './productSymptomMutationTypes'
 
 export const destroyProductSymptom = async (
   _: any,

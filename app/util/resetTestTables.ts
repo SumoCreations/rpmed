@@ -1,4 +1,4 @@
-import { resetTable } from "./resetTable"
+import { resetTable } from './resetTable'
 
 export const resetTestTables = async () => {
   resetTable(process.env.DYNAMODB_USER_LOOKUP_TABLE, i => ({

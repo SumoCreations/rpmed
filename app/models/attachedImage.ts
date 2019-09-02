@@ -1,11 +1,11 @@
-import { getS3Client, getUploadsBucket } from "../util"
+import { getS3Client, getUploadsBucket } from '../util'
 
 const s3 = getS3Client()
 
 export enum AttachedImageStatus {
-  Available = "AVAILABLE",
-  Pending = "PENDING",
-  Deleted = "DELETED",
+  Available = 'AVAILABLE',
+  Pending = 'PENDING',
+  Deleted = 'DELETED',
 }
 
 export interface IAttachedImage {
@@ -24,10 +24,10 @@ const getDownloadUrl = (key: string): Promise<string> =>
       Bucket: getUploadsBucket(),
       Key: key,
     }
-    s3.getSignedUrl("getObject", params, (err, data) => {
+    s3.getSignedUrl('getObject', params, (err, data) => {
       if (err) {
         // tslint:disable-next-line
-        console.error("Presigning get URL data encountered an error", err)
+        console.error('Presigning get URL data encountered an error', err)
         reject(err)
       } else {
         resolve(data)
@@ -38,7 +38,7 @@ const getDownloadUrl = (key: string): Promise<string> =>
 const output = async (attachedImage: IAttachedImage) => ({
   ...attachedImage,
   url:
-    attachedImage.status === "AVAILABLE"
+    attachedImage.status === 'AVAILABLE'
       ? await getDownloadUrl(attachedImage.id)
       : null,
 })

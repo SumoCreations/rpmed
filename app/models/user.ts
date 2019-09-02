@@ -1,6 +1,6 @@
-import { v4 as uuid } from "uuid"
-import { hashPassword } from "../oauth"
-import { getDynamoClient } from "../util"
+import { v4 as uuid } from 'uuid'
+import { hashPassword } from '../oauth'
+import { getDynamoClient } from '../util'
 
 /**
  * Dynamo DB Model:
@@ -29,7 +29,7 @@ import { getDynamoClient } from "../util"
 
 const client = getDynamoClient()
 
-const SECONDARY_KEY = "USER"
+const SECONDARY_KEY = 'USER'
 
 interface IEmailLookup {
   email: string
@@ -76,17 +76,17 @@ const create = async ({ id, ...userInput }: IUserInput): Promise<IUser> => {
     TransactItems: [
       {
         Put: {
-          ConditionExpression: "attribute_not_exists(email)",
+          ConditionExpression: 'attribute_not_exists(email)',
           Item: { email: item.email, id: item.partitionKey },
           TableName: process.env.DYNAMODB_USER_LOOKUP_TABLE,
         },
       },
       {
         Put: {
-          ConditionExpression: "attribute_not_exists(id)",
+          ConditionExpression: 'attribute_not_exists(id)',
           Item: {
             ...item,
-            indexSortKey: [item.lastName, item.firstName, item.email].join("#"),
+            indexSortKey: [item.lastName, item.firstName, item.email].join('#'),
           },
           TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
         },
@@ -112,7 +112,7 @@ const update = async ({ id, ...userInput }: IUserInput): Promise<IUser> => {
   if (existingUser.email !== userInput.email) {
     transactions.push({
       Put: {
-        ConditionExpression: "attribute_not_exists(email)",
+        ConditionExpression: 'attribute_not_exists(email)',
         Item: { email: userInput.email, id },
         TableName: process.env.DYNAMODB_USER_LOOKUP_TABLE,
       },
@@ -137,22 +137,22 @@ const update = async ({ id, ...userInput }: IUserInput): Promise<IUser> => {
   transactions.push({
     Update: {
       ExpressionAttributeNames: {
-        "#indexSortKey": "indexSortKey",
-        "#password": "password",
-        "#firstName": "firstName",
-        "#lastName": "lastName",
-        "#email": "email",
+        '#email': 'email',
+        '#firstName': 'firstName',
+        '#indexSortKey': 'indexSortKey',
+        '#lastName': 'lastName',
+        '#password': 'password',
       },
       ExpressionAttributeValues: {
-        ":email": userInput.email,
-        ":firstName": userInput.firstName,
-        ":indexSortKey": [
+        ':email': userInput.email,
+        ':firstName': userInput.firstName,
+        ':indexSortKey': [
           userInput.lastName,
           userInput.firstName,
           userInput.email,
-        ].join("#"),
-        ":lastName": userInput.lastName,
-        ":password": hashedPassword,
+        ].join('#'),
+        ':lastName': userInput.lastName,
+        ':password': hashedPassword,
       },
       Key: {
         partitionKey: id,
@@ -160,7 +160,7 @@ const update = async ({ id, ...userInput }: IUserInput): Promise<IUser> => {
       },
       TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
       UpdateExpression:
-        "set #indexSortKey = :indexSortKey, #email = :email, #firstName = :firstName, #lastName = :lastName, #password = :password",
+        'set #indexSortKey = :indexSortKey, #email = :email, #firstName = :firstName, #lastName = :lastName, #password = :password',
     },
   })
   await client
@@ -197,10 +197,10 @@ const find = async (id: string): Promise<IUser | null> => {
 const all = async (): Promise<IUser[]> => {
   const searchParams = {
     ExpressionAttributeValues: {
-      ":rkey": SECONDARY_KEY,
+      ':rkey': SECONDARY_KEY,
     },
-    IndexName: "GSI_1",
-    KeyConditionExpression: "sortKey = :rkey",
+    IndexName: 'GSI_1',
+    KeyConditionExpression: 'sortKey = :rkey',
     TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
   }
   const result = await client.query(searchParams).promise()
@@ -241,10 +241,10 @@ const destroyParamsForAssociatedEmailAddressesForUserId = async (
 > => {
   const params = {
     ExpressionAttributeValues: {
-      ":hkey": userId,
+      ':hkey': userId,
     },
-    IndexName: "UserIdGSI",
-    KeyConditionExpression: "id = :hkey",
+    IndexName: 'UserIdGSI',
+    KeyConditionExpression: 'id = :hkey',
     TableName: process.env.DYNAMODB_USER_LOOKUP_TABLE,
   }
   const results = await client.query(params).promise()
@@ -297,7 +297,7 @@ const destroyByEmail = async (email: string): Promise<boolean> => {
     TableName: process.env.DYNAMODB_USER_LOOKUP_TABLE,
   }
   const result = (await client.get(lookUpParams).promise()).Item
-  return typeof result === "undefined" ? false : await destroy(result.id)
+  return typeof result === 'undefined' ? false : await destroy(result.id)
 }
 
 /**

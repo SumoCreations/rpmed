@@ -1,4 +1,4 @@
-import { filterBlankAttributes, getDynamoClient } from "../util"
+import { filterBlankAttributes, getDynamoClient } from '../util'
 
 /**
  * Dynamo DB Model:
@@ -28,7 +28,7 @@ import { filterBlankAttributes, getDynamoClient } from "../util"
  * 3. Look up all model numbers for a given product (HSK matches ProductId)
  */
 
-const SECONDARY_KEY = "MODEL_NUMBER"
+const SECONDARY_KEY = 'MODEL_NUMBER'
 
 const client = getDynamoClient()
 
@@ -100,7 +100,7 @@ const create = async ({
     TransactItems: [
       {
         Put: {
-          ConditionExpression: "attribute_not_exists(partitionKey)",
+          ConditionExpression: 'attribute_not_exists(partitionKey)',
           Item: {
             ...filterBlankAttributes(item),
           },
@@ -135,7 +135,7 @@ const update = async ({
     TransactItems: [
       {
         Put: {
-          ConditionExpression: "attribute_exists(partitionKey)",
+          ConditionExpression: 'attribute_exists(partitionKey)',
           Item: {
             ...filterBlankAttributes(item),
           },
@@ -170,10 +170,10 @@ const find = async (id: string): Promise<IModelNumber | null> => {
 const all = async (): Promise<IModelNumber[]> => {
   const searchParams = {
     ExpressionAttributeValues: {
-      ":rkey": SECONDARY_KEY,
+      ':rkey': SECONDARY_KEY,
     },
-    IndexName: "GSI_1",
-    KeyConditionExpression: "sortKey = :rkey",
+    IndexName: 'GSI_1',
+    KeyConditionExpression: 'sortKey = :rkey',
     TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
   }
   const result = await client.query(searchParams).promise()
@@ -210,11 +210,11 @@ const findAll = async (ids: string[]): Promise<IModelNumber[]> => {
 const forProduct = async (productId: string): Promise<IModelNumber[]> => {
   const searchParams = {
     ExpressionAttributeValues: {
-      ":productId": productId,
-      ":rkey": SECONDARY_KEY,
+      ':productId': productId,
+      ':rkey': SECONDARY_KEY,
     },
-    IndexName: "GSI_1",
-    KeyConditionExpression: "sortKey = :rkey AND indexSortKey = :productId",
+    IndexName: 'GSI_1',
+    KeyConditionExpression: 'sortKey = :rkey AND indexSortKey = :productId',
     TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
   }
   const result = await client.query(searchParams).promise()
@@ -261,11 +261,11 @@ const output = ({
     ...modelNumber,
     id: partitionKey,
     lotted: modelNumber.lotted || false,
-    privateNotes: modelNumber.privateNotes || "",
+    privateNotes: modelNumber.privateNotes || '',
     productId: indexSortKey,
-    publicNotes: modelNumber.publicNotes || "",
-    resolutionWithWarranty: modelNumber.resolutionWithWarranty || "",
-    resolutionWithoutWarranty: modelNumber.resolutionWithoutWarranty || "",
+    publicNotes: modelNumber.publicNotes || '',
+    resolutionWithWarranty: modelNumber.resolutionWithWarranty || '',
+    resolutionWithoutWarranty: modelNumber.resolutionWithoutWarranty || '',
   }
   return result
 }

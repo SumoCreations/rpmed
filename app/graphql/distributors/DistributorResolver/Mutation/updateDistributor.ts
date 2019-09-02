@@ -1,10 +1,10 @@
-import * as Validation from "rpmed-validation-schema"
-import { Distributor, IDistributorInput } from "../../../../models"
+import * as Validation from 'rpmed-validation-schema'
+import { Distributor, IDistributorInput } from '../../../../models'
 import {
   ErrorDistributorWithDomainAlreadyExists,
   ErrorDistributorWithIDDoesNotExist,
-} from "../distributorErrors"
-import { IDistributorMutationOutput } from "./distributorMutationTypes"
+} from '../distributorErrors'
+import { IDistributorMutationOutput } from './distributorMutationTypes'
 
 export const updateDistributor = async (
   _: any,

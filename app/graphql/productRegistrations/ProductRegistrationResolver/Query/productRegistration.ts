@@ -1,6 +1,6 @@
-import { Customer, ProductRegistration } from "../../../../models"
-import { ErrorProductRegistrationWithIDDoesNotExist } from "../productRegistrationErrors"
-import { IProductRegistrationQueryOutput } from "./productRegistrationQueryTypes"
+import { Customer, ProductRegistration } from '../../../../models'
+import { ErrorProductRegistrationWithIDDoesNotExist } from '../productRegistrationErrors'
+import { IProductRegistrationQueryOutput } from './productRegistrationQueryTypes'
 
 export const productRegistration = async (
   _,
@@ -26,9 +26,9 @@ export const productRegistration = async (
     return {
       errors: [
         {
-          path: "_",
+          path: '_',
           message:
-            e.localizedMessage || "Could not retrieve productRegistration",
+            e.localizedMessage || 'Could not retrieve productRegistration',
         },
       ],
       success: false,

@@ -1,14 +1,14 @@
-import { ApolloServer } from "apollo-server-lambda"
-import { schema } from "./graphql"
+import { ApolloServer } from 'apollo-server-lambda'
+import { schema } from './graphql'
 
-import { localeFromLanguage } from "./locales"
+import { localeFromLanguage } from './locales'
 
 const server = new ApolloServer({
   context: ({ event }) => ({
     authorization: event.headers.Authorization
-      ? event.headers.Authorization.split("Bearer ")[1]
+      ? event.headers.Authorization.split('Bearer ')[1]
       : null,
-    locale: localeFromLanguage(event.headers["Accept-Language"]),
+    locale: localeFromLanguage(event.headers['Accept-Language']),
   }),
   formatError: error => {
     // tslint:disable-next-line
@@ -22,7 +22,7 @@ const server = new ApolloServer({
   },
   playground: {
     settings: {
-      "editor.theme": "light",
+      'editor.theme': 'light',
     },
   },
   schema,

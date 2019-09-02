@@ -1,4 +1,4 @@
-import * as Validation from "rpmed-validation-schema"
+import * as Validation from 'rpmed-validation-schema'
 import {
   Customer,
   ICustomer,
@@ -7,8 +7,8 @@ import {
   IProductRegistrationInput,
   ModelNumber,
   ProductRegistration,
-} from "../../../../models"
-import * as E from "../productRegistrationErrors"
+} from '../../../../models'
+import * as E from '../productRegistrationErrors'
 
 interface IGraphError {
   message: string

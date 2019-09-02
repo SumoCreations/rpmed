@@ -1,2 +1,2 @@
-export * from "./RGAResolver"
-export * from "./RGASchema"
+export * from './RGAResolver'
+export * from './RGASchema'

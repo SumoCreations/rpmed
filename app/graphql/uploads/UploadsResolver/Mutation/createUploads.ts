@@ -1,5 +1,5 @@
-import { ErrorList } from "rpmed-validation-schema"
-import { getS3Client, getUploadsBucket } from "../../../../util"
+import { ErrorList } from 'rpmed-validation-schema'
+import { getS3Client, getUploadsBucket } from '../../../../util'
 
 interface IUploadInput {
   keys: string[]
@@ -25,10 +25,10 @@ const getUploadURL = (key: string): Promise<IUpload> =>
       Bucket: getUploadsBucket(),
       Key: key,
     }
-    s3.getSignedUrl("putObject", params, (err, data) => {
+    s3.getSignedUrl('putObject', params, (err, data) => {
       if (err) {
         // tslint:disable-next-line
-        console.error("Presigning post data encountered an error", err)
+        console.error('Presigning post data encountered an error', err)
         reject(err)
       } else {
         resolve({

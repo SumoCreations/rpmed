@@ -1,21 +1,21 @@
-import { ProductSymptom } from "../../../../models"
-import { productSymptoms } from "./productSymptoms"
+import { ProductSymptom } from '../../../../models'
+import { productSymptoms } from './productSymptoms'
 
 const sampleParams = {
-  careTip: "Improper cleaning can result in damage (see Cleaning Guide)",
-  faultCode: "EHIJ-QUERY-TESTER",
+  careTip: 'Improper cleaning can result in damage (see Cleaning Guide)',
+  faultCode: 'EHIJ-QUERY-TESTER',
   fee: true,
-  name: "Light randomly turns off (stobes/blinks)",
+  name: 'Light randomly turns off (stobes/blinks)',
   preApproved: true,
   solution:
-    "Replace light housing module because it needs a new wire harness and/or circuit boards.",
+    'Replace light housing module because it needs a new wire harness and/or circuit boards.',
   synopsis:
-    "LED signal interrupted due to a break in the wire or the circuit board(s) are corroded or damaged.",
+    'LED signal interrupted due to a break in the wire or the circuit board(s) are corroded or damaged.',
 }
 
-describe("Query", () => {
-  describe("productSymptoms", () => {
-    test("should return all existing productSymptoms", async () => {
+describe('Query', () => {
+  describe('productSymptoms', () => {
+    test('should return all existing productSymptoms', async () => {
       expect.assertions(4)
       const existingProductSymptoms = await ProductSymptom.all()
       await Promise.all(
@@ -25,11 +25,11 @@ describe("Query", () => {
       )
       await ProductSymptom.create({
         ...sampleParams,
-        faultCode: "MULTISYMPTST1",
+        faultCode: 'MULTISYMPTST1',
       })
       await ProductSymptom.create({
         ...sampleParams,
-        faultCode: "MULTISYMPTST2",
+        faultCode: 'MULTISYMPTST2',
       })
       const output = await productSymptoms({}, {})
       expect(output.success).toEqual(true)

@@ -1,6 +1,6 @@
-import { Product } from "../../../../models"
-import { ErrorProductIDDoesNotExist } from "../productErrors"
-import { IProductQueryOutput } from "./productQueryTypes"
+import { Product } from '../../../../models'
+import { ErrorProductIDDoesNotExist } from '../productErrors'
+import { IProductQueryOutput } from './productQueryTypes'
 
 /**
  * Retrieves a specific product.
@@ -27,8 +27,8 @@ export const product = async (
     return {
       errors: [
         {
-          path: "_",
-          message: e.localizedMessage || "Could not retrieve product",
+          path: '_',
+          message: e.localizedMessage || 'Could not retrieve product',
         },
       ],
       success: false,

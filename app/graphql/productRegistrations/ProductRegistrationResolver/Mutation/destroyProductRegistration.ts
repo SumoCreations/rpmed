@@ -1,10 +1,10 @@
-import { Customer, ProductRegistration } from "../../../../models"
-import { generateMutationError } from "../../../../util"
+import { Customer, ProductRegistration } from '../../../../models'
+import { generateMutationError } from '../../../../util'
 import {
   ErrorProductRegistrationCouldNotBeDestroyed,
   ErrorProductRegistrationWithIDDoesNotExist,
-} from "../productRegistrationErrors"
-import { IProductRegistrationMutationOutput } from "./productRegistrationMutationTypes"
+} from '../productRegistrationErrors'
+import { IProductRegistrationMutationOutput } from './productRegistrationMutationTypes'
 
 export const destroyProductRegistration = async (
   _: any,

@@ -1,1 +1,1 @@
-export * from "./parseCredentials"
+export * from './parseCredentials'

@@ -1,5 +1,5 @@
-import { decamelize } from "humps"
-import { ITemplateVariables } from "./types"
+import { decamelize } from 'humps'
+import { ITemplateVariables } from './types'
 
 /**
  * Accepts an HTML template string and maps any supplied variables to the template. For example

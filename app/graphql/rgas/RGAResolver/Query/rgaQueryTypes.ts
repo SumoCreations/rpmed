@@ -1,9 +1,9 @@
-import { ErrorList } from "rpmed-validation-schema"
+import { ErrorList } from 'rpmed-validation-schema'
 import {
   IDistributorOutput,
   IRGAGoodOutput,
   IRGAOutput,
-} from "../../../../models"
+} from '../../../../models'
 
 interface IExtendedRGAOutput extends IRGAOutput {
   distributor: () => Promise<IDistributorOutput | null>

@@ -3,28 +3,28 @@ import {
   IProduct,
   ModelNumber,
   Product,
-} from "../../../../models"
-import { destroyModelNumber } from "./destroyModelNumber"
+} from '../../../../models'
+import { destroyModelNumber } from './destroyModelNumber'
 
 const sampleParams = {
-  description: "MedLED Onyx® Headlight Hospital Kit",
+  description: 'MedLED Onyx® Headlight Hospital Kit',
   feeWithWarranty: 0,
   feeWithoutWarranty: 250,
-  id: "MLOX03-HK",
+  id: 'MLOX03-HK',
   lotted: false,
-  resolutionWithWarranty: "Send in for servicing",
-  resolutionWithoutWarranty: "Send in for servicing",
-  warrantyDescription: "Service after 2 months",
+  resolutionWithWarranty: 'Send in for servicing',
+  resolutionWithoutWarranty: 'Send in for servicing',
+  warrantyDescription: 'Service after 2 months',
   warrantyTerm: 12,
 }
 
-describe("destroyModelNumber", () => {
+describe('destroyModelNumber', () => {
   let modelNumber: IModelNumber
   let existingProduct: IProduct
   beforeEach(async done => {
     existingProduct = await Product.create({
-      description: "MedLED Sapphire Top-Tier",
-      name: "MedLED Sapphire (MLOD01)",
+      description: 'MedLED Sapphire Top-Tier',
+      name: 'MedLED Sapphire (MLOD01)',
     })
     modelNumber = await ModelNumber.create({
       ...sampleParams,
@@ -39,7 +39,7 @@ describe("destroyModelNumber", () => {
     done()
   })
 
-  test("should destroy the ModelNumber", async () => {
+  test('should destroy the ModelNumber', async () => {
     expect.assertions(1)
     const output = await destroyModelNumber(null, {
       id: modelNumber.partitionKey,
@@ -47,10 +47,10 @@ describe("destroyModelNumber", () => {
     expect(output.success).toBe(true)
   })
 
-  test("should fail the ModelNumber does not exist", async () => {
+  test('should fail the ModelNumber does not exist', async () => {
     expect.assertions(1)
     const output = await destroyModelNumber(null, {
-      id: "some-made-up-id-or-key",
+      id: 'some-made-up-id-or-key',
     })
     expect(output.success).toBe(false)
   })

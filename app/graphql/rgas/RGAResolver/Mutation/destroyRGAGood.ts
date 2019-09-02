@@ -1,10 +1,10 @@
-import { RGA, RGAGood } from "../../../../models"
+import { RGA, RGAGood } from '../../../../models'
 import {
   ErrorRGAGoodCouldNotBeDestroyed,
   ErrorRGAGoodWithIDDoesNotExist,
   ErrorRGAWithIDDoesNotExist,
-} from "../rgaErrors"
-import { IRGAGoodMutationOutput } from "./rgaMutationTypes"
+} from '../rgaErrors'
+import { IRGAGoodMutationOutput } from './rgaMutationTypes'
 
 export const destroyRGAGood = async (
   _: any,

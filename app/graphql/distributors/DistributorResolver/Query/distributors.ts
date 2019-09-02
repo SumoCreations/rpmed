@@ -1,5 +1,5 @@
-import { Distributor } from "../../../../models"
-import { IDistributorQueryOutput } from "./distributorQueryTypes"
+import { Distributor } from '../../../../models'
+import { IDistributorQueryOutput } from './distributorQueryTypes'
 
 export const distributors = async (): Promise<IDistributorQueryOutput> => {
   try {
@@ -12,8 +12,8 @@ export const distributors = async (): Promise<IDistributorQueryOutput> => {
     return {
       errors: [
         {
-          path: "_",
-          message: e.localizedMessage || "Could not find distributors",
+          path: '_',
+          message: e.localizedMessage || 'Could not find distributors',
         },
       ],
       success: false,

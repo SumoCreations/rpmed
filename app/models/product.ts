@@ -1,6 +1,6 @@
-import { v4 as uuid } from "uuid"
-import { filterBlankAttributes, getDynamoClient } from "../util"
-import { IModelNumberOutput, ModelNumber } from "./modelNumber"
+import { v4 as uuid } from 'uuid'
+import { filterBlankAttributes, getDynamoClient } from '../util'
+import { IModelNumberOutput, ModelNumber } from './modelNumber'
 
 /**
  * Dynamo DB Model:
@@ -36,7 +36,7 @@ import { IModelNumberOutput, ModelNumber } from "./modelNumber"
 
 const client = getDynamoClient()
 
-const SECONDARY_KEY = "PRODUCT"
+const SECONDARY_KEY = 'PRODUCT'
 
 export interface IProductInput {
   name: string
@@ -76,7 +76,7 @@ const create = async ({
     TransactItems: [
       {
         Put: {
-          ConditionExpression: "attribute_not_exists(partitionKey)",
+          ConditionExpression: 'attribute_not_exists(partitionKey)',
           Item: {
             ...filterBlankAttributes(item),
             indexSortKey: hsk,
@@ -108,7 +108,7 @@ const update = async ({
     TransactItems: [
       {
         Put: {
-          ConditionExpression: "attribute_exists(partitionKey)",
+          ConditionExpression: 'attribute_exists(partitionKey)',
           Item: {
             ...filterBlankAttributes(item),
             indexSortKey: hsk,
@@ -145,11 +145,11 @@ const find = async (id: string): Promise<IProduct | null> => {
 const findByName = async (name: string): Promise<IProduct | null> => {
   const searchParams = {
     ExpressionAttributeValues: {
-      ":hsk": name,
-      ":rkey": SECONDARY_KEY,
+      ':hsk': name,
+      ':rkey': SECONDARY_KEY,
     },
-    IndexName: "GSI_1",
-    KeyConditionExpression: "sortKey = :rkey AND indexSortKey = :hsk",
+    IndexName: 'GSI_1',
+    KeyConditionExpression: 'sortKey = :rkey AND indexSortKey = :hsk',
     Limit: 1,
     TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
   }
@@ -163,10 +163,10 @@ const findByName = async (name: string): Promise<IProduct | null> => {
 const all = async (): Promise<IProduct[]> => {
   const searchParams = {
     ExpressionAttributeValues: {
-      ":rkey": SECONDARY_KEY,
+      ':rkey': SECONDARY_KEY,
     },
-    IndexName: "GSI_1",
-    KeyConditionExpression: "sortKey = :rkey",
+    IndexName: 'GSI_1',
+    KeyConditionExpression: 'sortKey = :rkey',
     TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
   }
   const result = await client.query(searchParams).promise()

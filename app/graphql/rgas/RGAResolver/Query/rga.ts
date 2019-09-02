@@ -1,6 +1,6 @@
-import { Distributor, RGA, RGAGood } from "../../../../models"
-import { ErrorRGAWithIDDoesNotExist } from "../rgaErrors"
-import { IRGAQueryOutput } from "./rgaQueryTypes"
+import { Distributor, RGA, RGAGood } from '../../../../models'
+import { ErrorRGAWithIDDoesNotExist } from '../rgaErrors'
+import { IRGAQueryOutput } from './rgaQueryTypes'
 
 export const rga = async (_, args): Promise<IRGAQueryOutput> => {
   try {
@@ -26,7 +26,7 @@ export const rga = async (_, args): Promise<IRGAQueryOutput> => {
   } catch (e) {
     return {
       errors: [
-        { path: "_", message: e.localizedMessage || "Could not retrieve rga" },
+        { path: '_', message: e.localizedMessage || 'Could not retrieve rga' },
       ],
       success: false,
     }

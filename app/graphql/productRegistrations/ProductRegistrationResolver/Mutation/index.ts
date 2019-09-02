@@ -1,3 +1,3 @@
-export * from "./createProductRegistration"
-export * from "./destroyProductRegistration"
-export * from "./updateProductRegistration"
+export * from './createProductRegistration'
+export * from './destroyProductRegistration'
+export * from './updateProductRegistration'

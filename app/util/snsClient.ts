@@ -1,5 +1,5 @@
-import * as AWS from "aws-sdk"
-import { defaultOfflineConfig } from "./defaultOfflineConfig"
+import * as AWS from 'aws-sdk'
+import { defaultOfflineConfig } from './defaultOfflineConfig'
 
 /**
  * A convenience method to retrieve an SNS client with an offline

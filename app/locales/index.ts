@@ -1,1 +1,1 @@
-export * from "./localeFromLanguage"
+export * from './localeFromLanguage'

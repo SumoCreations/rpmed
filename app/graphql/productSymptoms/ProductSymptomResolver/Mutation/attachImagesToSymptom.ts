@@ -3,18 +3,18 @@ import {
   RequiredNumber,
   RequiredString,
   validation,
-} from "rpmed-validation-schema"
+} from 'rpmed-validation-schema'
 import {
   AttachedImageStatus,
   mergeImages,
   ProductSymptom,
-} from "../../../../models"
+} from '../../../../models'
 import {
   ErrorProductSymptomAndAttachedImageUpdateFailed,
   ErrorProductSymptomWithIDDoesNotExist,
-} from "../productSymptomErrors"
-import { extendSymptomOutput } from "./extendOutput"
-import { IProductSymptomMutationOutput } from "./productSymptomMutationTypes"
+} from '../productSymptomErrors'
+import { extendSymptomOutput } from './extendOutput'
+import { IProductSymptomMutationOutput } from './productSymptomMutationTypes'
 
 interface IAttachedImageInput {
   status: AttachedImageStatus

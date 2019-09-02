@@ -1,6 +1,6 @@
-import { Customer } from "../../../../models"
-import { ErrorCustomerNotFound } from "../customerErrors"
-import { ICustomerQueryOutput } from "./customerQueryTypes"
+import { Customer } from '../../../../models'
+import { ErrorCustomerNotFound } from '../customerErrors'
+import { ICustomerQueryOutput } from './customerQueryTypes'
 
 export const customer = async (_, args): Promise<ICustomerQueryOutput> => {
   try {
@@ -19,8 +19,8 @@ export const customer = async (_, args): Promise<ICustomerQueryOutput> => {
     return {
       errors: [
         {
-          path: "_",
-          message: e.localizedMessage || "Could not retrieve customer",
+          path: '_',
+          message: e.localizedMessage || 'Could not retrieve customer',
         },
       ],
       success: false,

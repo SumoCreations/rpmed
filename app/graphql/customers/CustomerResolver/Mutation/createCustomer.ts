@@ -1,10 +1,10 @@
-import * as Validation from "rpmed-validation-schema"
-import { Customer, ICustomerInput } from "../../../../models"
+import * as Validation from 'rpmed-validation-schema'
+import { Customer, ICustomerInput } from '../../../../models'
 import {
   ErrorCustomerCredentialsInvalid,
   ErrorCustomerWithEmailAlreadyExists,
-} from "../customerErrors"
-import { ICustomerMutationOutput } from "./customerMutationTypes"
+} from '../customerErrors'
+import { ICustomerMutationOutput } from './customerMutationTypes'
 
 export const createCustomer = async (
   _: any,

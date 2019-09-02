@@ -1,5 +1,5 @@
-import { Product } from "../../../../models"
-import { IProductQueryOutput } from "./productQueryTypes"
+import { Product } from '../../../../models'
+import { IProductQueryOutput } from './productQueryTypes'
 
 /**
  * Retrieves all products or a filtered search of some products.
@@ -22,8 +22,8 @@ export const products = async (
     return {
       errors: [
         {
-          path: "_",
-          message: e.localizedMessage || "Could not retrieve products",
+          path: '_',
+          message: e.localizedMessage || 'Could not retrieve products',
         },
       ],
       success: false,

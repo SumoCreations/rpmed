@@ -1,11 +1,11 @@
-import * as Validation from "rpmed-validation-schema"
-import { IModelNumberInput, ModelNumber, Product } from "../../../../models"
-import { generateMutationError } from "../../../../util"
+import * as Validation from 'rpmed-validation-schema'
+import { IModelNumberInput, ModelNumber, Product } from '../../../../models'
+import { generateMutationError } from '../../../../util'
 import {
   ErrorModelNumberIDAlreadyExists,
   ErrorModelNumberRelatedProductDoesNotExist,
-} from "../productErrors"
-import { IModelNumberMutationOutput } from "./productMutationTypes"
+} from '../productErrors'
+import { IModelNumberMutationOutput } from './productMutationTypes'
 
 type CreateModelNumberResolver = (
   context: any,
@@ -39,7 +39,7 @@ export const createModelNumber: CreateModelNumberResolver = async (
     return { modelNumber: ModelNumber.output(modelNumber), success: true }
   } catch {
     return generateMutationError([
-      { path: "_", message: "Could not create model number." },
+      { path: '_', message: 'Could not create model number.' },
     ])
   }
 }

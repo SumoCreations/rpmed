@@ -1,7 +1,7 @@
-import * as jwt from "jsonwebtoken"
-import { User } from "../models"
-import { getDynamoClient } from "../util"
-import { verifyUser } from "./verify"
+import * as jwt from 'jsonwebtoken'
+import { User } from '../models'
+import { getDynamoClient } from '../util'
+import { verifyUser } from './verify'
 
 export interface ITokenInput {
   userId: string
@@ -21,7 +21,7 @@ export interface IRefreshToken {
 }
 
 const client = getDynamoClient()
-export const SUPPORTED_ALGORITHM = "HS512"
+export const SUPPORTED_ALGORITHM = 'HS512'
 
 /**
  * Generates a JWT access and JWT refresh token.
@@ -67,7 +67,7 @@ export const verifyAndDecode = (token: string): IRefreshToken | null => {
     const result = jwt.verify(token, process.env.OAUTH_SIGNATURE, {
       algorithms: [SUPPORTED_ALGORITHM],
     })
-    if (typeof result === "string") {
+    if (typeof result === 'string') {
       return null
     } else {
       return result as IRefreshToken
@@ -100,7 +100,7 @@ export const generateTokenFromPassword = async (
  */
 const blacklistToken = async (token: string) => {
   const params = {
-    ConditionExpression: "attribute_not_exists(id)",
+    ConditionExpression: 'attribute_not_exists(id)',
     Item: { id: token },
     TableName: process.env.DYNAMODB_TOKEN_LOOKUP_TABLE,
   }

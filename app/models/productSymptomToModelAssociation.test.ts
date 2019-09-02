@@ -1,45 +1,45 @@
-import { IModelNumber, ModelNumber } from "./modelNumber"
-import { IProduct, Product } from "./product"
-import { IProductSymptom, ProductSymptom } from "./productSymptom"
+import { IModelNumber, ModelNumber } from './modelNumber'
+import { IProduct, Product } from './product'
+import { IProductSymptom, ProductSymptom } from './productSymptom'
 import {
   addSymptomToModelNumber,
   modelNumbersForSymptom,
   productSymptomsForModel,
   removeSymptomFromModelNumber,
-} from "./productSymptomToModelAssociation"
+} from './productSymptomToModelAssociation'
 
-describe("modelNumber", () => {
-  describe("applySymptomToModelTransactions", () => {
+describe('modelNumber', () => {
+  describe('applySymptomToModelTransactions', () => {
     let productSymptom: IProductSymptom
     let modelNumber: IModelNumber
     let product: IProduct
 
     beforeAll(async done => {
       productSymptom = await ProductSymptom.create({
-        careTip: "Improper cleaning can result in damage (see Cleaning Guide)",
-        faultCode: "EHIJ-SYMPTOM-TEST",
+        careTip: 'Improper cleaning can result in damage (see Cleaning Guide)',
+        faultCode: 'EHIJ-SYMPTOM-TEST',
         fee: true,
-        name: "Light randomly turns off (stobes/blinks)",
+        name: 'Light randomly turns off (stobes/blinks)',
         preApproved: true,
         solution:
-          "Replace light housing module because it needs a new wire harness and/or circuit boards.",
+          'Replace light housing module because it needs a new wire harness and/or circuit boards.',
         synopsis:
-          "LED signal interrupted due to a break in the wire or the circuit board(s) are corroded or damaged.",
+          'LED signal interrupted due to a break in the wire or the circuit board(s) are corroded or damaged.',
       })
       product = await Product.create({
-        name: "Chrome MC7 Pro",
-        description: "The chrome MedLED Pro Headlamp",
+        name: 'Chrome MC7 Pro',
+        description: 'The chrome MedLED Pro Headlamp',
       })
       modelNumber = await ModelNumber.create({
-        description: "MedLED Chrome MC7 PRO Hard Top; Standard Kit",
+        description: 'MedLED Chrome MC7 PRO Hard Top; Standard Kit',
         feeWithWarranty: 0,
         feeWithoutWarranty: 250,
-        id: "MC7-HT-SK-APPLY-SYMPTOM-TEST",
+        id: 'MC7-HT-SK-APPLY-SYMPTOM-TEST',
         lotted: true,
         productId: product.partitionKey,
-        resolutionWithWarranty: "Do something...",
-        resolutionWithoutWarranty: "Do something else..",
-        warrantyDescription: "All headlamps covered for 1 year",
+        resolutionWithWarranty: 'Do something...',
+        resolutionWithoutWarranty: 'Do something else..',
+        warrantyDescription: 'All headlamps covered for 1 year',
         warrantyTerm: 12,
       })
       done()
@@ -63,7 +63,7 @@ describe("modelNumber", () => {
       ).toContain(modelNumber.partitionKey)
     })
 
-    it("should return all associated model numbers for a symptom", async () => {
+    it('should return all associated model numbers for a symptom', async () => {
       expect.assertions(1)
       const models = await modelNumbersForSymptom(productSymptom.partitionKey)
       expect(models.map(m => m.partitionKey)).toContain(
@@ -71,7 +71,7 @@ describe("modelNumber", () => {
       )
     })
 
-    it("should return all associated symptoms for a model number", async () => {
+    it('should return all associated symptoms for a model number', async () => {
       expect.assertions(1)
       const symptoms = await productSymptomsForModel(modelNumber.partitionKey)
       expect(symptoms.map(s => s.partitionKey)).toContain(
