@@ -22,6 +22,14 @@ module.exports = {
   target: "node",
   module: {
     rules: [
+      {
+        test: /\.html$/,
+        use: "raw-loader",
+      },
+      {
+        test: /\.txt$/,
+        use: "raw-loader",
+      },
       // fixes https://github.com/graphql/graphql-js/issues/1272
       {
         test: /\.mjs$/,
