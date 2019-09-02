@@ -97,7 +97,7 @@ const create = async ({
           Item: {
             ...filterBlankAttributes(item),
           },
-          TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+          TableName: process.env.DYNAMODB_RESOURCES_TABLE,
         },
       },
     ],
@@ -116,7 +116,7 @@ const find = async (id: string): Promise<IRGA | null> => {
       partitionKey: id,
       sortKey: SECONDARY_KEY,
     },
-    TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.get(searchParams).promise()
   return result.Item ? (result.Item as IRGA) : null
@@ -133,7 +133,7 @@ const all = async (): Promise<IRGA[]> => {
     IndexName: 'GSI_1',
     KeyConditionExpression: 'sortKey = :rkey',
     ScanIndexForward: false,
-    TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.query(searchParams).promise()
   return result.Items ? (result.Items as IRGA[]) : []
@@ -157,7 +157,7 @@ const submittedOnDate = async (isoString: string): Promise<IRGA[]> => {
     KeyConditionExpression:
       'sortKey = :rkey and indexSortKey BETWEEN :minDate and :maxDate',
     ScanIndexForward: false,
-    TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.query(searchParams).promise()
   return result.Items ? (result.Items as IRGA[]) : []
@@ -177,7 +177,7 @@ const destroy = async (id: string): Promise<boolean> => {
         {
           Delete: {
             Key: { partitionKey: id, sortKey: SECONDARY_KEY },
-            TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+            TableName: process.env.DYNAMODB_RESOURCES_TABLE,
           },
         },
       ],

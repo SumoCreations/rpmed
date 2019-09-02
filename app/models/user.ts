@@ -88,7 +88,7 @@ const create = async ({ id, ...userInput }: IUserInput): Promise<IUser> => {
             ...item,
             indexSortKey: [item.lastName, item.firstName, item.email].join('#'),
           },
-          TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+          TableName: process.env.DYNAMODB_RESOURCES_TABLE,
         },
       },
     ],
@@ -158,7 +158,7 @@ const update = async ({ id, ...userInput }: IUserInput): Promise<IUser> => {
         partitionKey: id,
         sortKey: SECONDARY_KEY,
       },
-      TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+      TableName: process.env.DYNAMODB_RESOURCES_TABLE,
       UpdateExpression:
         'set #indexSortKey = :indexSortKey, #email = :email, #firstName = :firstName, #lastName = :lastName, #password = :password',
     },
@@ -185,7 +185,7 @@ const find = async (id: string): Promise<IUser | null> => {
       partitionKey: id,
       sortKey: SECONDARY_KEY,
     },
-    TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.get(searchParams).promise()
   return result.Item ? (result.Item as IUser) : null
@@ -201,7 +201,7 @@ const all = async (): Promise<IUser[]> => {
     },
     IndexName: 'GSI_1',
     KeyConditionExpression: 'sortKey = :rkey',
-    TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.query(searchParams).promise()
   return result.Items ? (result.Items as IUser[]) : []
@@ -273,7 +273,7 @@ const destroy = async (id: string): Promise<boolean> => {
         {
           Delete: {
             Key: { partitionKey: id, sortKey: SECONDARY_KEY },
-            TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+            TableName: process.env.DYNAMODB_RESOURCES_TABLE,
           },
         },
       ],

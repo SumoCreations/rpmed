@@ -104,7 +104,7 @@ const create = async ({
           Item: {
             ...filterBlankAttributes(item),
           },
-          TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+          TableName: process.env.DYNAMODB_RESOURCES_TABLE,
         },
       },
     ],
@@ -139,7 +139,7 @@ const update = async ({
           Item: {
             ...filterBlankAttributes(item),
           },
-          TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+          TableName: process.env.DYNAMODB_RESOURCES_TABLE,
         },
       },
     ],
@@ -158,7 +158,7 @@ const find = async (id: string): Promise<IModelNumber | null> => {
       partitionKey: id,
       sortKey: SECONDARY_KEY,
     },
-    TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.get(searchParams).promise()
   return result.Item ? (result.Item as IModelNumber) : null
@@ -174,7 +174,7 @@ const all = async (): Promise<IModelNumber[]> => {
     },
     IndexName: 'GSI_1',
     KeyConditionExpression: 'sortKey = :rkey',
-    TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.query(searchParams).promise()
   return result.Items ? (result.Items as IModelNumber[]) : []
@@ -187,7 +187,7 @@ const all = async (): Promise<IModelNumber[]> => {
 const findAll = async (ids: string[]): Promise<IModelNumber[]> => {
   const searchParams = {
     RequestItems: {
-      [process.env.DYNAMODB_ACCOUNTS_TABLE]: {
+      [process.env.DYNAMODB_RESOURCES_TABLE]: {
         Keys: [
           ...ids.map(modelNumberId => ({
             partitionKey: modelNumberId,
@@ -199,7 +199,7 @@ const findAll = async (ids: string[]): Promise<IModelNumber[]> => {
   }
   const result = await client.batchGet(searchParams).promise()
   return (
-    (result.Responses[process.env.DYNAMODB_ACCOUNTS_TABLE] as IModelNumber[]) ||
+    (result.Responses[process.env.DYNAMODB_RESOURCES_TABLE] as IModelNumber[]) ||
     []
   )
 }
@@ -215,7 +215,7 @@ const forProduct = async (productId: string): Promise<IModelNumber[]> => {
     },
     IndexName: 'GSI_1',
     KeyConditionExpression: 'sortKey = :rkey AND indexSortKey = :productId',
-    TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.query(searchParams).promise()
   return result.Items ? (result.Items as IModelNumber[]) : []
@@ -235,7 +235,7 @@ const destroy = async (id: string): Promise<boolean> => {
         {
           Delete: {
             Key: { partitionKey: id, sortKey: SECONDARY_KEY },
-            TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+            TableName: process.env.DYNAMODB_RESOURCES_TABLE,
           },
         },
       ],

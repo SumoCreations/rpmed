@@ -96,7 +96,7 @@ const create = async ({
             ...filterBlankAttributes(item),
             indexSortKey: symptomInput.faultCode,
           },
-          TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+          TableName: process.env.DYNAMODB_RESOURCES_TABLE,
         },
       },
     ],
@@ -127,7 +127,7 @@ const update = async ({
             ...filterBlankAttributes(item),
             indexSortKey: symptomInput.faultCode,
           },
-          TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+          TableName: process.env.DYNAMODB_RESOURCES_TABLE,
         },
       },
     ],
@@ -148,7 +148,7 @@ const find = async (id: string): Promise<IProductSymptom | null> => {
     },
     KeyConditionExpression: 'partitionKey = :pk and sortKey = :rkey',
     Limit: 1,
-    TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.query(searchParams).promise()
   return result.Items[0] ? (result.Items[0] as IProductSymptom) : null
@@ -161,7 +161,7 @@ const find = async (id: string): Promise<IProductSymptom | null> => {
 const findAll = async (ids: string[]): Promise<IProductSymptom[]> => {
   const searchParams = {
     RequestItems: {
-      [process.env.DYNAMODB_ACCOUNTS_TABLE]: {
+      [process.env.DYNAMODB_RESOURCES_TABLE]: {
         Keys: [
           ...ids.map(symptom => ({
             partitionKey: symptom,
@@ -174,7 +174,7 @@ const findAll = async (ids: string[]): Promise<IProductSymptom[]> => {
   const result = await client.batchGet(searchParams).promise()
   return (
     (result.Responses[
-      process.env.DYNAMODB_ACCOUNTS_TABLE
+      process.env.DYNAMODB_RESOURCES_TABLE
     ] as IProductSymptom[]) || []
   )
 }
@@ -194,7 +194,7 @@ const findByFaultCode = async (
     IndexName: 'GSI_1',
     KeyConditionExpression: 'sortKey = :rkey and indexSortKey = :indexSortKey',
     Limit: 1,
-    TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.query(searchParams).promise()
   return result.Items[0] ? (result.Items[0] as IProductSymptom) : null
@@ -210,7 +210,7 @@ const all = async (): Promise<IProductSymptom[]> => {
     },
     IndexName: 'GSI_1',
     KeyConditionExpression: 'sortKey = :rkey',
-    TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.query(searchParams).promise()
   return result.Items ? (result.Items as IProductSymptom[]) : []
@@ -232,7 +232,7 @@ const destroy = async (id: string): Promise<boolean> => {
         {
           Delete: {
             Key: { partitionKey: id, sortKey: symptom.sortKey },
-            TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+            TableName: process.env.DYNAMODB_RESOURCES_TABLE,
           },
         },
       ],

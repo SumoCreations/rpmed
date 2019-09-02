@@ -128,7 +128,7 @@ const create = async ({
           Item: {
             ...filterBlankAttributes(item),
           },
-          TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+          TableName: process.env.DYNAMODB_RESOURCES_TABLE,
         },
       },
     ],
@@ -147,7 +147,7 @@ const find = async (rgaId: string, id: string): Promise<IRGAGood | null> => {
       partitionKey: rgaId,
       sortKey: `${SECONDARY_KEY}_${id}`,
     },
-    TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.get(searchParams).promise()
   return result.Item ? (result.Item as IRGAGood) : null
@@ -165,7 +165,7 @@ const forRGA = async (rgaId: string): Promise<IRGAGood[]> => {
     },
     KeyConditionExpression:
       'partitionKey = :pkey and begins_with(sortKey, :rkey)',
-    TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.query(searchParams).promise()
   return result.Items ? (result.Items as IRGAGood[]) : []
@@ -186,7 +186,7 @@ const destroy = async (rgaId: string, id: string): Promise<boolean> => {
         {
           Delete: {
             Key: { partitionKey: good.partitionKey, sortKey: good.sortKey },
-            TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+            TableName: process.env.DYNAMODB_RESOURCES_TABLE,
           },
         },
       ],

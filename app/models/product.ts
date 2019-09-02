@@ -81,7 +81,7 @@ const create = async ({
             ...filterBlankAttributes(item),
             indexSortKey: hsk,
           },
-          TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+          TableName: process.env.DYNAMODB_RESOURCES_TABLE,
         },
       },
     ],
@@ -113,7 +113,7 @@ const update = async ({
             ...filterBlankAttributes(item),
             indexSortKey: hsk,
           },
-          TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+          TableName: process.env.DYNAMODB_RESOURCES_TABLE,
         },
       },
     ],
@@ -132,7 +132,7 @@ const find = async (id: string): Promise<IProduct | null> => {
       partitionKey: id,
       sortKey: SECONDARY_KEY,
     },
-    TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.get(searchParams).promise()
   return result.Item ? (result.Item as IProduct) : null
@@ -151,7 +151,7 @@ const findByName = async (name: string): Promise<IProduct | null> => {
     IndexName: 'GSI_1',
     KeyConditionExpression: 'sortKey = :rkey AND indexSortKey = :hsk',
     Limit: 1,
-    TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.query(searchParams).promise()
   return result.Items ? (result.Items[0] as IProduct) : null
@@ -167,7 +167,7 @@ const all = async (): Promise<IProduct[]> => {
     },
     IndexName: 'GSI_1',
     KeyConditionExpression: 'sortKey = :rkey',
-    TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.query(searchParams).promise()
   return result.Items ? (result.Items as IProduct[]) : []
@@ -189,13 +189,13 @@ const destroy = async (id: string): Promise<boolean> => {
         ...relatedModelNumbers.map(({ partitionKey, sortKey }) => ({
           Delete: {
             Key: { partitionKey, sortKey },
-            TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+            TableName: process.env.DYNAMODB_RESOURCES_TABLE,
           },
         })),
         {
           Delete: {
             Key: { partitionKey: id, sortKey: SECONDARY_KEY },
-            TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+            TableName: process.env.DYNAMODB_RESOURCES_TABLE,
           },
         },
       ],

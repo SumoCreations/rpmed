@@ -102,7 +102,7 @@ const create = async ({
             ...filterBlankAttributes(item),
             indexSortKey: hsk,
           },
-          TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+          TableName: process.env.DYNAMODB_RESOURCES_TABLE,
         },
       },
     ],
@@ -141,7 +141,7 @@ const update = async ({
             ...item,
             indexSortKey: hsk,
           },
-          TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+          TableName: process.env.DYNAMODB_RESOURCES_TABLE,
         },
       },
     ],
@@ -162,7 +162,7 @@ const find = async (id: string): Promise<IProductRegistration | null> => {
     },
     KeyConditionExpression: 'partitionKey = :pk and sortKey = :rkey',
     Limit: 1,
-    TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.query(searchParams).promise()
   return result.Items[0] ? (result.Items[0] as IProductRegistration) : null
@@ -185,7 +185,7 @@ const forModel = async ({
     KeyConditionExpression:
       'sortKey = :pk and begins_with(indexSortKey, :rkey)',
     Limit: 500,
-    TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.query(searchParams).promise()
   return result.Items ? (result.Items as IProductRegistration[]) : []
@@ -207,7 +207,7 @@ const forProduct = async (
     KeyConditionExpression:
       'sortKey = :pk and begins_with(indexSortKey, :rkey)',
     Limit: 500,
-    TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.query(searchParams).promise()
   return result.Items ? (result.Items as IProductRegistration[]) : []
@@ -223,7 +223,7 @@ const all = async (): Promise<IProductRegistration[]> => {
     },
     IndexName: 'GSI_1',
     KeyConditionExpression: 'sortKey = :rkey',
-    TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.query(searchParams).promise()
   return result.Items ? (result.Items as IProductRegistration[]) : []
@@ -245,7 +245,7 @@ const destroy = async (id: string): Promise<boolean> => {
         {
           Delete: {
             Key: { partitionKey: id, sortKey: registration.sortKey },
-            TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+            TableName: process.env.DYNAMODB_RESOURCES_TABLE,
           },
         },
       ],
