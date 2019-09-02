@@ -50,6 +50,7 @@ provider:
     DYNAMODB_ACCOUNTS_GSI_1: GSI_1,
     DYNAMODB_USER_LOOKUP_TABLE: ${self:service}-${opt:stage, self:provider.stage}-users-lookup
     DYNAMODB_TOKEN_LOOKUP_TABLE: ${self:service}-${opt:stage, self:provider.stage}-tokens-lookup
+    SES_SOURCE_ARN: arn:aws:ses:us-west-2:426380452104:identity/rpmed-apps.com
 
   iamRoleStatements:
     - Effect: Allow
