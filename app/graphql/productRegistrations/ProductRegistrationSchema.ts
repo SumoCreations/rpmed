@@ -2,24 +2,6 @@ import { gql } from "apollo-server-lambda"
 
 export const ProductRegistrationTypeDef = gql`
   """
-  The profile of a customer associated to a registration.
-  """
-  type Customer {
-    """
-    The id of the customer the product has been registered.
-    """
-    id: String!
-    """
-    The full name of the customer.
-    """
-    name: String!
-    """
-    The email address associated to the customer.
-    """
-    email: String!
-  }
-
-  """
   A troubleshooting registration for a product.
   """
   type ProductRegistration {

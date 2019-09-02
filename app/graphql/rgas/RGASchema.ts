@@ -98,35 +98,6 @@ export const typeDefs = gql`
   }
 
   """
-  A distributor of Riverpoint Medical.
-  """
-  type Distributor {
-    """
-    The unique identifier for this distributor
-    """
-    id: ID!
-    """
-    The domain to match email addresses to via this distributor.
-    """
-    domain: String!
-    """
-    The actual name of the distributor.
-    """
-    name: String
-  }
-
-  type ValidationError {
-    """
-    A path indicating the attribute that failed validation.
-    """
-    path: String!
-    """
-    A brief description of why the specified attribute failed validation.
-    """
-    message: String!
-  }
-
-  """
   The result of a query for a RGA or RGAs.
   """
   type RGAQueryOutput {

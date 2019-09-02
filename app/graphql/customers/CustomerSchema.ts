@@ -95,7 +95,7 @@ export const typeDefs = gql`
     name: String
   }
 
-  exted type Mutation {
+  extend type Mutation {
     """
     Creates a new customer.
     """
