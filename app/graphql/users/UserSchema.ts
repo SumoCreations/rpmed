@@ -92,5 +92,10 @@ export const typeDefs = gql`
     Removes an existing user.
     """
     destroyUser(id: String!): UserMutationOutput!
+
+    """
+    Resets the password for the current user dependent on a temporary access token.
+    """
+    resetPassword(password: String!): UserMutationOutput!
   }
 `

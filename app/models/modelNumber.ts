@@ -199,8 +199,9 @@ const findAll = async (ids: string[]): Promise<IModelNumber[]> => {
   }
   const result = await client.batchGet(searchParams).promise()
   return (
-    (result.Responses[process.env.DYNAMODB_RESOURCES_TABLE] as IModelNumber[]) ||
-    []
+    (result.Responses[
+      process.env.DYNAMODB_RESOURCES_TABLE
+    ] as IModelNumber[]) || []
   )
 }
 
