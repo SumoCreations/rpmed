@@ -59,7 +59,13 @@ export const resetPassword = async (
     }
   }
   try {
-    user = await User.update({ ...user, id: user.partitionKey, password })
+    user = await User.update({
+      email: user.email,
+      firstName: user.firstName,
+      id: user.partitionKey,
+      lastName: user.lastName,
+      password,
+    })
   } catch (e) {
     // tslint:disable-next-line
     console.log(e)
