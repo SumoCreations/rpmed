@@ -1,7 +1,7 @@
 import { APIGatewayProxyHandler } from 'aws-lambda'
 import { google } from 'googleapis'
-import { v4 as uuid } from 'uuid'
 import { credentials } from '../json/rpmed-248822-7b3a48ed26ca'
+import { ModelNumber, Product, ProductType } from './models'
 import { response, Status } from './net'
 
 // If modifying these scopes, delete token.json.
@@ -54,7 +54,7 @@ const processModelNumbers = auth =>
     const sheets = google.sheets({ version: 'v4', auth })
     sheets.spreadsheets.values.get(
       {
-        range: 'Model Numbers!A2:G',
+        range: 'Import Sheet!A4:R',
         spreadsheetId: '1LYEaTaROOPzZLIdoGm_mp2XEYnyelFMDUKjbvmEUMZc',
       },
       async (err, res) => {
@@ -65,54 +65,54 @@ const processModelNumbers = auth =>
         const rows = res.data.values
         if (rows.length) {
           console.log('Type, Product, Model Number:')
-          // Print columns A and E, which correspond to indices 0 and 4.
-          await Promise.all(
-            rows.map(async (row, index) => {
+          await rows.reduce(async (previousPromise, row) => {
+            try {
+              await previousPromise
               console.log(`${row[0]}, ${row[2]}, ${row[3]}`)
-              try {
-                if (row[0] !== 'ADD LATER') {
-                  await addUUIDForRow(auth, index + 2, uuid())
-                  console.log('updated row...')
+              const productsForModel = []
+              const val = row as string[]
+
+              await val[0].split(',').reduce(async (previousName, currentName) => {
+                await previousName
+                const existingProduct = await Product.findByName(currentName)
+                if (!existingProduct) {
+                  const newProduct = await Product.create({
+                    description: val[1],
+                    name: currentName,
+                  })
+                  productsForModel.push(newProduct.partitionKey)
+                } else {
+                  productsForModel.push(existingProduct.partitionKey)
                 }
-              } catch (e) {
-                console.log('Could not update row...')
-                console.log(e)
-              }
-            })
-          )
+                return currentName
+              }, Promise.resolve(''))
+
+              await ModelNumber.create({
+                description: val[4],
+                feeWithWarranty: { distributor: val[11], endUser: val[11] },
+                feeWithoutWarranty: { distributor: val[13], endUser: val[14] },
+                id: val[3],
+                lotted: val[8] === "YES",
+                pricing: { cost: val[6], retail: val[7] },
+                productIds: productsForModel,
+                productType: val[2] as ProductType,
+                resolutionWithWarranty: val[12],
+                resolutionWithoutWarranty: val[15],
+                warrantyDescription: val[10],
+                warrantyTerm: parseInt(val[9], 0)
+              })
+
+              return [row[0], row[1], row[2]]
+            } catch (e) {
+              console.log('Could not update row...')
+              console.log(e)
+            }
+          }, Promise.resolve(['', '', '']))
           resolve(JSON.stringify(rows))
           return
         } else {
           console.log('No data found.')
           reject('No data found.')
         }
-      }
-    )
-  })
-
-const addUUIDForRow = (auth, row, uuidString): Promise<boolean> =>
-  new Promise(async (resolve, reject) => {
-    const body = {
-      values: [[uuidString]],
-    }
-    const sheets = google.sheets({ version: 'v4', auth })
-    sheets.spreadsheets.values.update(
-      {
-        range: `Model Numbers!I${row}:I${row}`,
-        requestBody: body,
-        spreadsheetId: '1LYEaTaROOPzZLIdoGm_mp2XEYnyelFMDUKjbvmEUMZc',
-        valueInputOption: 'USER_ENTERED',
-      },
-      (err, res) => {
-        console.log(body)
-        console.log(err)
-        console.log(res)
-        if (err) {
-          reject(err)
-          return console.log('The API returned an error: ' + err)
-        }
-        resolve(true)
-      }
-    )
-    return true
+      })
   })

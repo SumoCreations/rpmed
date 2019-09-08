@@ -11,7 +11,7 @@ describe('createProduct', () => {
   beforeEach(async done => {
     existingProduct = await Product.create({
       description: 'MedLED Onyx 2nd Gen Mid-Tier',
-      name: 'MedLED Onyx (MLOX100)',
+      name: 'MedLED Onyx (MLOX100)'
     })
     done()
   })
@@ -26,7 +26,7 @@ describe('createProduct', () => {
     const output = await createProduct(null, {
       productInput: {
         ...sampleParams,
-        name: 'MedLED MC7 PRO',
+        name: 'MedLED MC7 PRO'
       },
     })
     expect(output.success).toBe(true)
@@ -37,7 +37,7 @@ describe('createProduct', () => {
     const output = await createProduct(null, {
       productInput: {
         ...sampleParams,
-        name: existingProduct.name,
+        name: existingProduct.name
       },
     })
     expect(output.success).toBe(false)

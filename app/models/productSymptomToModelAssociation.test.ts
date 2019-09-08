@@ -1,4 +1,4 @@
-import { IModelNumber, ModelNumber } from './modelNumber'
+import { IModelNumber, ModelNumber, ProductType } from './modelNumber'
 import { IProduct, Product } from './product'
 import { IProductSymptom, ProductSymptom } from './productSymptom'
 import {
@@ -27,16 +27,18 @@ describe('modelNumber', () => {
           'LED signal interrupted due to a break in the wire or the circuit board(s) are corroded or damaged.',
       })
       product = await Product.create({
-        name: 'Chrome MC7 Pro',
         description: 'The chrome MedLED Pro Headlamp',
+        name: 'Chrome MC7 Pro',
       })
       modelNumber = await ModelNumber.create({
         description: 'MedLED Chrome MC7 PRO Hard Top; Standard Kit',
-        feeWithWarranty: 0,
-        feeWithoutWarranty: 250,
+        feeWithWarranty: { endUser: "0", distributor: "0" },
+        feeWithoutWarranty: { endUser: "0", distributor: "0" },
         id: 'MC7-HT-SK-APPLY-SYMPTOM-TEST',
         lotted: true,
-        productId: product.partitionKey,
+        pricing: { cost: "0", retail: "0" },
+        productIds: [product.partitionKey],
+        productType: ProductType.HEADLIGHT,
         resolutionWithWarranty: 'Do something...',
         resolutionWithoutWarranty: 'Do something else..',
         warrantyDescription: 'All headlamps covered for 1 year',

@@ -33,11 +33,13 @@ export const generateSampleParams = async (
   })
   const input = {
     description: 'MedLED Chrome MC7 PRO Hard Top; Standard Kit',
-    feeWithWarranty: 0,
-    feeWithoutWarranty: 250,
+    feeWithWarranty: { distributor: "0", endUser: "10" },
+    feeWithoutWarranty: { distributor: "250", endUser: "300" },
     id: makeId(inputs.key, 'REGISTERED-MODEL'),
     lotted: inputs.lotted,
-    productId: product.partitionKey,
+    pricing: { cost: "1000", retail: "1200" },
+    productIds: [product.partitionKey],
+    productType: M.ProductType.HEADLIGHT,
     resolutionWithWarranty: 'Do something...',
     resolutionWithoutWarranty: 'Do something else..',
     warrantyDescription: 'All headlamps covered for 1 year',

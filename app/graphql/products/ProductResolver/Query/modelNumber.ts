@@ -27,7 +27,7 @@ export const modelNumber = async (
       modelNumber: {
         ...output,
         product: async () =>
-          Product.output(await Product.find(output.productId)),
+          Product.output((await Product.findByIds(output.productIds))[0]),
         symptoms: async () =>
           (await productSymptomsForModel(result.partitionKey)).map(
             ProductSymptom.output
@@ -41,8 +41,8 @@ export const modelNumber = async (
     return {
       errors: [
         {
-          path: '_',
           message: e.localizedMessage || 'Could not retrieve model number',
+          path: '_',
         },
       ],
       success: false,

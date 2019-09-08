@@ -1,17 +1,23 @@
 import { isEmpty } from 'validator'
-import { IModelNumber, ModelNumber } from './modelNumber'
+import { IModelNumber, ModelNumber, ProductType } from './modelNumber'
 import { IProduct, Product } from './product'
 
 const existingModelParams = {
   description: 'MedLED Chrome MC7 PRO Hard Top; Standard Kit',
-  feeWithWarranty: 0,
-  feeWithoutWarranty: 250,
+  feeWithWarranty: { distributor: "100", endUser: "150" },
+  feeWithoutWarranty: { distributor: "150", endUser: "250" },
   id: 'MC7-HT-SK',
   lotted: true,
+  pricing: {
+    cost: "150",
+    retail: "300"
+  },
+  productType: ProductType.HEADLIGHT,
   resolutionWithWarranty: 'Do something...',
   resolutionWithoutWarranty: 'Do something else..',
   warrantyDescription: 'All headlamps covered for 1 year',
   warrantyTerm: 12,
+
 }
 
 describe('modelNumber', () => {
@@ -19,12 +25,12 @@ describe('modelNumber', () => {
   let product: IProduct
   beforeAll(async done => {
     product = await Product.create({
-      name: 'Chrome MC7 Pro',
       description: 'The chrome MedLED Pro Headlamp',
+      name: 'Chrome MC7 Pro'
     })
     modelNumber = await ModelNumber.create({
       ...existingModelParams,
-      productId: product.partitionKey,
+      productIds: [product.partitionKey]
     })
     done()
   })
@@ -45,7 +51,7 @@ describe('modelNumber', () => {
       try {
         await ModelNumber.create({
           ...existingModelParams,
-          productId: product.partitionKey,
+          productIds: [product.partitionKey],
         })
       } catch (e) {
         expect(isEmpty(e.message)).toBe(false)
@@ -80,8 +86,8 @@ describe('modelNumber', () => {
     test('should return a modelNumber if one exists', async () => {
       expect.assertions(2)
       const newProduct = await Product.create({
-        name: 'Chrome MC7 Pro NEW EXAMPLE',
         description: 'The chrome...',
+        name: 'Chrome MC7 Pro NEW EXAMPLE'
       })
       const matchingModels = await ModelNumber.forProduct(
         newProduct.partitionKey
@@ -95,6 +101,20 @@ describe('modelNumber', () => {
       const matchingModels = await ModelNumber.forProduct('DOES-NOT-EXIST!')
       expect(matchingModels).not.toBeNull()
       expect(matchingModels.length).toEqual(0)
+    })
+  })
+
+  describe('findByType', () => {
+    test('should return a product if one exists', async () => {
+      expect.assertions(1)
+      const headlights = await ModelNumber.findByType(ProductType.HEADLIGHT)
+      expect(headlights.length).toEqual(1)
+    })
+
+    test('should return null if a product does not exist', async () => {
+      expect.assertions(1)
+      const accessories = await ModelNumber.findByType(ProductType.ACCESSORY)
+      expect(accessories.length).toEqual(0)
     })
   })
 

@@ -24,7 +24,10 @@ const notBlank = (i: any) => {
  * @param item The item to test.
  */
 const filterNestedBlankValues = (item: string | string[] | any) =>
-  typeof item === 'object' ? item.filter(i => notBlank(i)) : item
+  typeof item === 'object'
+    ? item.filter
+      ? item.filter(i => notBlank(i)) : filterBlankAttributes(item)
+    : item
 
 /**
  * Removes any blank attributes from an object.

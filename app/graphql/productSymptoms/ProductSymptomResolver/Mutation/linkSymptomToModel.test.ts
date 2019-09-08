@@ -5,6 +5,7 @@ import {
   ModelNumber,
   Product,
   ProductSymptom,
+  ProductType
 } from '../../../../models'
 import {
   ErrorModelNumberIDDoesNotExist,
@@ -30,16 +31,18 @@ describe('linkSymptomToModel', () => {
         'LED signal interrupted due to a break in the wire or the circuit board(s) are corroded or damaged.',
     })
     product = await Product.create({
-      name: 'Chrome MC7 Pro',
       description: 'The chrome MedLED Pro Headlamp',
+      name: 'Chrome MC7 Pro'
     })
     modelNumber = await ModelNumber.create({
       description: 'MedLED Chrome MC7 PRO Hard Top; Standard Kit',
-      feeWithWarranty: 0,
-      feeWithoutWarranty: 250,
+      feeWithWarranty: { distributor: "0", endUser: "10" },
+      feeWithoutWarranty: { distributor: "250", endUser: "300" },
       id: 'MC7-HT-SK-APPLY-SYMPTOM-MUTATION-TEST',
       lotted: true,
-      productId: product.partitionKey,
+      pricing: { cost: "1000", retail: "1200" },
+      productIds: [product.partitionKey],
+      productType: ProductType.HEADLIGHT,
       resolutionWithWarranty: 'Do something...',
       resolutionWithoutWarranty: 'Do something else..',
       warrantyDescription: 'All headlamps covered for 1 year',
@@ -68,9 +71,9 @@ describe('linkSymptomToModel', () => {
     const output = await linkSymptomToModel(
       {},
       {
+        linked: true,
         modelNumber: 'does-not-exist',
         symptomId: productSymptom.partitionKey,
-        linked: true,
       }
     )
     expect(output.success).toBe(false)
@@ -82,9 +85,9 @@ describe('linkSymptomToModel', () => {
     const output = await linkSymptomToModel(
       {},
       {
-        modelNumber: modelNumber.partitionKey,
-        symptomId: 'does-not-exist',
         linked: true,
+        modelNumber: modelNumber.partitionKey,
+        symptomId: 'does-not-exist'
       }
     )
     expect(output.success).toBe(false)
@@ -103,9 +106,9 @@ describe('linkSymptomToModel', () => {
       const output = await linkSymptomToModel(
         {},
         {
+          linked: true,
           modelNumber: modelNumber.partitionKey,
           symptomId: productSymptom.partitionKey,
-          linked: true,
         }
       )
       expect(output.success).toBe(true)
@@ -130,9 +133,9 @@ describe('linkSymptomToModel', () => {
       const output = await linkSymptomToModel(
         {},
         {
-          modelNumber: modelNumber.partitionKey,
-          symptomId: productSymptom.partitionKey,
           linked: false,
+          modelNumber: modelNumber.partitionKey,
+          symptomId: productSymptom.partitionKey
         }
       )
       expect(output.success).toBe(true)

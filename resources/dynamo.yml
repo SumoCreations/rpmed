@@ -10,6 +10,8 @@ Resources:
           AttributeType: S
         - AttributeName: indexSortKey
           AttributeType: S
+        - AttributeName: secondaryIndexSortKey
+          AttributeType: S
       KeySchema:
         - AttributeName: partitionKey
           KeyType: HASH
@@ -24,6 +26,17 @@ Resources:
             - AttributeName: sortKey
               KeyType: HASH
             - AttributeName: indexSortKey
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: 10
+            WriteCapacityUnits: 10
+        - IndexName: GSI_2
+          KeySchema:
+            - AttributeName: sortKey
+              KeyType: HASH
+            - AttributeName: secondaryIndexSortKey
               KeyType: RANGE
           Projection:
             ProjectionType: ALL

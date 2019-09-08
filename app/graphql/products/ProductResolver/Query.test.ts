@@ -1,4 +1,4 @@
-import { IModelNumber, IProduct, ModelNumber, Product } from '../../../models'
+import { IModelNumber, IProduct, ModelNumber, Product, ProductType } from '../../../models'
 import * as Query from './Query'
 
 describe('Query', () => {
@@ -7,11 +7,11 @@ describe('Query', () => {
   beforeEach(async done => {
     existingProduct = await Product.create({
       description: 'MedLED Onyx 2nd Bezel',
-      name: 'MLOX100-BZL',
+      name: 'MLOX100-BZL'
     })
     await Product.create({
       description: 'MedLED Onyx 3rd Bezel',
-      name: 'MLOX101-BZL',
+      name: 'MLOX101-BZL'
     })
     done()
   })
@@ -47,15 +47,15 @@ describe('Query', () => {
       )
       await Product.create({
         description: 'MedLED Onyx 3rd Bezel 001',
-        name: 'MLOX101-BZL',
+        name: 'MLOX101-BZL'
       })
       await Product.create({
         description: 'MedLED Onyx 3rd Bezel 002',
-        name: 'MLOX101-BZL',
+        name: 'MLOX101-BZL'
       })
       await Product.create({
         description: 'MedLED Onyx 3rd Bezel 003',
-        name: 'MLOX101-BZL',
+        name: 'MLOX101-BZL'
       })
       const output = await Query.products({}, {})
       expect(output.products.length > 1).toEqual(true)
@@ -68,11 +68,13 @@ describe('Query', () => {
     beforeEach(async done => {
       existingModelNumber = await ModelNumber.create({
         description: 'MedLED Chrome MC7 PRO Hard Top; Standard Kit',
-        feeWithWarranty: 0,
-        feeWithoutWarranty: 250,
+        feeWithWarranty: { distributor: "0", endUser: "10" },
+        feeWithoutWarranty: { distributor: "250", endUser: "300" },
         id: 'MC7-HT-SK-TEST-1',
         lotted: true,
-        productId: existingProduct.partitionKey,
+        pricing: { cost: "0", retail: "0" },
+        productIds: [existingProduct.partitionKey],
+        productType: ProductType.HEADLIGHT,
         resolutionWithWarranty: 'Do something...',
         resolutionWithoutWarranty: 'Do something else..',
         warrantyDescription: 'All headlamps covered for 1 year',
@@ -80,11 +82,13 @@ describe('Query', () => {
       })
       await ModelNumber.create({
         description: 'MedLED Chrome MC7 PRO Hard Top; Standard Kit',
-        feeWithWarranty: 0,
-        feeWithoutWarranty: 250,
+        feeWithWarranty: { distributor: "0", endUser: "10" },
+        feeWithoutWarranty: { distributor: "250", endUser: "300" },
         id: 'MC7-HT-SK-TEST-2',
         lotted: true,
-        productId: existingProduct.partitionKey,
+        pricing: { cost: "0", retail: "0" },
+        productIds: [existingProduct.partitionKey],
+        productType: ProductType.HEADLIGHT,
         resolutionWithWarranty: 'Do something...',
         resolutionWithoutWarranty: 'Do something else..',
         warrantyDescription: 'All headlamps covered for 1 year',
@@ -119,11 +123,13 @@ describe('Query', () => {
 
       await ModelNumber.create({
         description: 'MedLED Chrome MC7 PRO Hard Top; Standard Kit',
-        feeWithWarranty: 0,
-        feeWithoutWarranty: 250,
+        feeWithWarranty: { distributor: "0", endUser: "10" },
+        feeWithoutWarranty: { distributor: "250", endUser: "300" },
         id: 'MC7-HT-SK-TEST-3',
         lotted: true,
-        productId: existingProduct.partitionKey,
+        pricing: { cost: "0", retail: "0" },
+        productIds: [existingProduct.partitionKey],
+        productType: ProductType.HEADLIGHT,
         resolutionWithWarranty: 'Do something...',
         resolutionWithoutWarranty: 'Do something else..',
         warrantyDescription: 'All headlamps covered for 1 year',
@@ -131,11 +137,13 @@ describe('Query', () => {
       })
       await ModelNumber.create({
         description: 'MedLED Chrome MC7 PRO Hard Top; Standard Kit',
-        feeWithWarranty: 0,
-        feeWithoutWarranty: 250,
+        feeWithWarranty: { distributor: "0", endUser: "10" },
+        feeWithoutWarranty: { distributor: "250", endUser: "300" },
         id: 'MC7-HT-SK-TEST-4',
         lotted: true,
-        productId: existingProduct.partitionKey,
+        pricing: { cost: "0", retail: "0" },
+        productIds: [existingProduct.partitionKey],
+        productType: ProductType.HEADLIGHT,
         resolutionWithWarranty: 'Do something...',
         resolutionWithoutWarranty: 'Do something else..',
         warrantyDescription: 'All headlamps covered for 1 year',

@@ -4,6 +4,7 @@ import {
   ModelNumber,
   ProductRegistration,
   ProductSymptom,
+  ProductType,
   RGA,
 } from '../../../../models'
 import { createRGAGood } from './createRGAGood'
@@ -34,11 +35,13 @@ describe('createRGAGood', () => {
   beforeAll(async done => {
     const modelNumber = await ModelNumber.create({
       description: 'test',
-      feeWithWarranty: 0,
-      feeWithoutWarranty: 200,
+      feeWithWarranty: { distributor: "0", endUser: "10" },
+      feeWithoutWarranty: { distributor: "250", endUser: "300" },
       id: 'TEST-MODEL-FOR-RGA-GOOD',
       lotted: true,
-      productId: 'TEST',
+      pricing: { cost: "1000", retail: "1200" },
+      productIds: ['TEST'],
+      productType: ProductType.HEADLIGHT,
       warrantyDescription: 'Covered...',
       warrantyTerm: 5,
     })
@@ -53,8 +56,8 @@ describe('createRGAGood', () => {
       fee: true,
       name: 'Test',
       preApproved: false,
-      synopsis: 'Test',
       solution: 'Test',
+      synopsis: 'Test',
     })
     existingSymptomId = existingSymptom.partitionKey
     existingRGAId = rga.partitionKey

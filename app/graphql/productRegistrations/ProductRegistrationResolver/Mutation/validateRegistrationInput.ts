@@ -77,8 +77,8 @@ export const validateRegistrationInput = async (
     if (!currentRegistration) {
       return {
         errorResponse: {
-          success: false,
           errors: [E.ErrorProductRegistrationWithIDDoesNotExist],
+          success: false,
         },
       }
     }
@@ -103,8 +103,8 @@ export const validateRegistrationInput = async (
       if (existingRegistration) {
         return {
           errorResponse: {
-            success: false,
             errors: [E.ErrorProductRegistrationWithSerialAlreadyExists],
+            success: false,
           },
         }
       }

@@ -18,13 +18,13 @@ import { IModelNumberOutput, ModelNumber } from './modelNumber'
  *
  * The table structure in dynamo DB is as follows:
  *
- * --------------------------------------------------------------
- * |                    | (GS1 Partition Key)    | (GS1 Sort Key)
- * --------------------------------------------------------------
- * | Partition Key      | Sort Key              | HSK
- * --------------------------------------------------------------
- * | UUID               | CONST                 | ProductName
- * --------------------------------------------------------------
+ * ----------------------------------------------------------------------------
+ * |                    | (GS1 Partition Key)   | (GS1 SK)      | (GS2 SK)
+ * ----------------------------------------------------------------------------
+ * | Partition Key      | Sort Key              | HSK           | SHSK
+ * ----------------------------------------------------------------------------
+ * | UUID               | CONST                 | ProductName   | 
+ * ----------------------------------------------------------------------------
  *
  * This allows for the following access patterns:
  *
@@ -173,6 +173,27 @@ const all = async (): Promise<IProduct[]> => {
   return result.Items ? (result.Items as IProduct[]) : []
 }
 
+const findByIds = async (ids: string[]): Promise<IProduct[]> => {
+  const searchParams = {
+    RequestItems: {
+      [process.env.DYNAMODB_RESOURCES_TABLE]: {
+        Keys: [
+          ...ids.map(productId => ({
+            partitionKey: productId,
+            sortKey: SECONDARY_KEY,
+          })),
+        ],
+      },
+    },
+  }
+  const result = await client.batchGet(searchParams).promise()
+  return (
+    (result.Responses[
+      process.env.DYNAMODB_RESOURCES_TABLE
+    ] as IProduct[]) || []
+  )
+}
+
 /**
  * Deletes a product and associated child objects from the
  * database via UUID.
@@ -231,6 +252,7 @@ export const Product = {
   create,
   destroy,
   find,
+  findByIds,
   findByName,
   output,
   update,

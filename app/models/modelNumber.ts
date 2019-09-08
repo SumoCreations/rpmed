@@ -13,13 +13,13 @@ import { filterBlankAttributes, getDynamoClient } from '../util'
  *
  * The table structure in dynamo DB is as follows:
  *
- * --------------------------------------------------------------
- * |                    | (GS1 Partition Key)   | (GS1 Sort Key)
- * --------------------------------------------------------------
- * | Partition Key      | Sort Key              | HSK
- * --------------------------------------------------------------
- * | UUID/ModelNumber   | "MODEL_NUMBER"        | ProductId
- * --------------------------------------------------------------
+ * ---------------------------------------------------------------------------
+ * |                    | (GS1 Partition Key)   | (GS1 SK)      | (GS2 SK)
+ * ---------------------------------------------------------------------------
+ * | Partition Key      | Sort Key              | HSK           | SHSK
+ * ---------------------------------------------------------------------------
+ * | UUID/ModelNumber   | "MODEL_NUMBER"        | ProductId     | ProductType
+ * ---------------------------------------------------------------------------
  *
  * This allows for the following access patterns:
  *
@@ -32,15 +32,32 @@ const SECONDARY_KEY = 'MODEL_NUMBER'
 
 const client = getDynamoClient()
 
+export enum ProductType {
+  ACCESSORY = "ACCESSORY",
+  HEADLIGHT = "HEADLIGHT"
+}
+
+interface IFeeStructure {
+  distributor: string
+  endUser: string
+}
+
+interface IPricing {
+  cost: string
+  retail: string
+}
+
 export interface IModelNumberInput {
   description: string
   id: string // not optional as it is managed by the user not a user generated UUID.
-  productId: string
+  pricing: IPricing
+  productIds: string[]
+  productType: ProductType
   lotted: boolean
   warrantyTerm: number
   warrantyDescription: string
-  feeWithWarranty: number
-  feeWithoutWarranty: number
+  feeWithWarranty: IFeeStructure
+  feeWithoutWarranty: IFeeStructure
   resolutionWithWarranty?: string | null | undefined
   resolutionWithoutWarranty?: string | null | undefined
   publicNotes?: string | null | undefined
@@ -51,13 +68,15 @@ export interface IModelNumber {
   description: string
   partitionKey: string // id
   sortKey: string
+  secondaryIndexSortKey: ProductType
   symptoms: string[]
-  indexSortKey: string // productId
+  pricing: IPricing
+  indexSortKey: string // productIds
   lotted: boolean
   warrantyTerm: number
   warrantyDescription: string
-  feeWithWarranty: number
-  feeWithoutWarranty: number
+  feeWithWarranty: IFeeStructure
+  feeWithoutWarranty: IFeeStructure
   resolutionWithWarranty?: string | null | undefined
   resolutionWithoutWarranty?: string | null | undefined
   publicNotes?: string | null | undefined
@@ -67,12 +86,13 @@ export interface IModelNumber {
 export interface IModelNumberOutput {
   description: string
   id: string // not optional as it is managed by the user not a user generated UUID.
-  productId: string
+  pricing: IPricing
+  productIds: string[]
   lotted: boolean
   warrantyTerm: number
   warrantyDescription: string
-  feeWithWarranty: number
-  feeWithoutWarranty: number
+  feeWithWarranty: IFeeStructure
+  feeWithoutWarranty: IFeeStructure
   resolutionWithWarranty?: string | null | undefined
   resolutionWithoutWarranty?: string | null | undefined
   publicNotes?: string | null | undefined
@@ -85,16 +105,20 @@ export interface IModelNumberOutput {
  */
 const create = async ({
   id,
-  productId,
+  productIds,
+  productType,
   ...modelNumberInput
 }: IModelNumberInput): Promise<IModelNumber> => {
   const item: IModelNumber = {
     ...modelNumberInput,
-    indexSortKey: productId,
+    indexSortKey: typeof productIds === "string" ? productIds : productIds.join("::"),
     partitionKey: id,
+    secondaryIndexSortKey: productType,
     sortKey: SECONDARY_KEY,
     symptoms: [],
   }
+  // tslint:disable-next-line
+  console.log(item)
 
   const params = {
     TransactItems: [
@@ -120,15 +144,17 @@ const create = async ({
  */
 const update = async ({
   id,
-  productId,
+  productIds,
+  productType,
   ...modelNumberInput
 }: IModelNumberInput): Promise<IModelNumber> => {
   const existingModelNumber = await find(id)
   const item: IModelNumber = {
     ...existingModelNumber,
     ...modelNumberInput,
-    indexSortKey: productId,
+    indexSortKey: typeof productIds === "string" ? productIds : productIds.join("::"),
     partitionKey: id,
+    secondaryIndexSortKey: productType,
     sortKey: SECONDARY_KEY,
   }
   const params = {
@@ -223,6 +249,24 @@ const forProduct = async (productId: string): Promise<IModelNumber[]> => {
 }
 
 /**
+ * Retreives a product by it's name.
+ * @param name The name of the product to find.
+ */
+const findByType = async (productType: ProductType): Promise<IModelNumber[] | null> => {
+  const searchParams = {
+    ExpressionAttributeValues: {
+      ':rkey': SECONDARY_KEY,
+      ':shsk': productType
+    },
+    IndexName: 'GSI_2',
+    KeyConditionExpression: 'sortKey = :rkey AND secondaryIndexSortKey = :shsk',
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
+  }
+  const result = await client.query(searchParams).promise()
+  return result.Items ? (result.Items as IModelNumber[]) : null
+}
+
+/**
  * Deletes a model from the database via UUID.
  * @param id The UUID of the user to delete.
  */
@@ -256,6 +300,7 @@ const output = ({
   partitionKey,
   sortKey,
   indexSortKey,
+  secondaryIndexSortKey,
   ...modelNumber
 }: IModelNumber): IModelNumberOutput => {
   const result = {
@@ -263,7 +308,8 @@ const output = ({
     id: partitionKey,
     lotted: modelNumber.lotted || false,
     privateNotes: modelNumber.privateNotes || '',
-    productId: indexSortKey,
+    productIds: [...indexSortKey.split("::")],
+    productType: secondaryIndexSortKey,
     publicNotes: modelNumber.publicNotes || '',
     resolutionWithWarranty: modelNumber.resolutionWithWarranty || '',
     resolutionWithoutWarranty: modelNumber.resolutionWithoutWarranty || '',
@@ -278,6 +324,7 @@ export const ModelNumber = {
   destroy,
   find,
   findAll,
+  findByType,
   forProduct,
   output,
   update,

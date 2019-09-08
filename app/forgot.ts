@@ -25,7 +25,7 @@ export const sendResetPasswordEmail: APIGatewayProxyHandler = async event => {
     await email.send({
       subject: '[RPMed Admin] Reset Your Password',
       template: email.Template.ResetPassword,
-      to: [`${user.firstName} ${user.lastName} <${user.email}s>`],
+      to: [`${user.firstName} ${user.lastName} <${user.email}>`],
       variables: {
         firstName: user.firstName,
         resetLink: `${CLIENT_URL}/token/${token.partitionKey}`,

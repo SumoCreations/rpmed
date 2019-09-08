@@ -75,8 +75,8 @@ export const linkSymptomToModel = async (
     // tslint:disable-next-line
     console.log(e)
     return {
-      success: false,
       errors: [ErrorProductSymptomAndModelNumberAssociationFailed],
+      success: false,
     }
   }
 }

@@ -33,8 +33,8 @@ export const productSymptoms = async (
     return {
       errors: [
         {
-          path: '_',
           message: e.localizedMessage || 'Could not find productSymptoms',
+          path: '_',
         },
       ],
       success: false,

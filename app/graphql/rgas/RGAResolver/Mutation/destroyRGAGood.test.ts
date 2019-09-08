@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon'
-import { ModelNumber, RGA, RGAGood } from '../../../../models'
+import { ModelNumber, ProductType, RGA, RGAGood } from '../../../../models'
 import { destroyRGAGood } from './destroyRGAGood'
 
 const RGA_ID = 'TEST-RGA-ID'
@@ -29,11 +29,13 @@ describe('destroyRGAGood', () => {
   beforeAll(async done => {
     const modelNumber = await ModelNumber.create({
       description: 'test',
-      feeWithWarranty: 0,
-      feeWithoutWarranty: 200,
+      feeWithWarranty: { distributor: "0", endUser: "10" },
+      feeWithoutWarranty: { distributor: "250", endUser: "300" },
       id: 'TEST-MODEL-FOR-RGA-DESTROY-GOOD',
       lotted: true,
-      productId: 'TEST',
+      pricing: { cost: "1000", retail: "1200" },
+      productIds: ['TEST'],
+      productType: ProductType.HEADLIGHT,
       warrantyDescription: 'Covered...',
       warrantyTerm: 5,
     })

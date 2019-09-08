@@ -3,15 +3,18 @@ import {
   IProduct,
   ModelNumber,
   Product,
+  ProductType
 } from '../../../../models'
 import { createModelNumber } from './createModelNumber'
 
 const sampleParams = {
   description: 'MedLED Onyx® Headlight Hospital Kit',
-  feeWithWarranty: 0,
-  feeWithoutWarranty: 250,
+  feeWithWarranty: { distributor: "0", endUser: "10" },
+  feeWithoutWarranty: { distributor: "250", endUser: "300" },
   id: 'MLOX01-HK',
   lotted: false,
+  pricing: { cost: "1000", retail: "1200" },
+  productType: ProductType.HEADLIGHT,
   resolutionWithWarranty: 'Send in for servicing',
   resolutionWithoutWarranty: 'Send in for servicing',
   warrantyDescription: 'Service after 2 months',
@@ -24,15 +27,17 @@ describe('createModelNumber', () => {
   beforeEach(async done => {
     existingProduct = await Product.create({
       description: 'MedLED Onyx Mid-Tier',
-      name: 'MedLED Onyx (MLOX01)',
+      name: 'MedLED Onyx (MLOX01)'
     })
     existingModelNumber = await ModelNumber.create({
       description: 'MedLED Onyx® Headlight Standard Kit',
-      feeWithWarranty: 0,
-      feeWithoutWarranty: 250,
+      feeWithWarranty: { distributor: "0", endUser: "10" },
+      feeWithoutWarranty: { distributor: "250", endUser: "300" },
       id: 'MLOX01-SK',
       lotted: false,
-      productId: existingProduct.partitionKey,
+      pricing: { cost: "1000", retail: "1200" },
+      productIds: [existingProduct.partitionKey],
+      productType: ProductType.HEADLIGHT,
       resolutionWithWarranty: 'Send in for servicing',
       resolutionWithoutWarranty: 'Send in for servicing',
       warrantyDescription: 'Service after 6 mo.',
@@ -52,7 +57,7 @@ describe('createModelNumber', () => {
     const output = await createModelNumber(null, {
       modelNumberInput: {
         ...sampleParams,
-        productId: existingProduct.partitionKey,
+        productIds: [existingProduct.partitionKey],
       },
     })
     expect(output.success).toBe(true)
@@ -64,7 +69,7 @@ describe('createModelNumber', () => {
       modelNumberInput: {
         ...sampleParams,
         id: 'MLOX01-PK',
-        productId: 'SOME-FAKE-KEY',
+        productIds: ['SOME-FAKE-KEY'],
       },
     })
     expect(output.success).toBe(false)
@@ -77,7 +82,7 @@ describe('createModelNumber', () => {
       modelNumberInput: {
         ...sampleParams,
         id: existingModelNumber.partitionKey,
-        productId: existingProduct.partitionKey,
+        productIds: [existingProduct.partitionKey],
       },
     })
     expect(output.success).toBe(false)
@@ -90,7 +95,7 @@ describe('createModelNumber', () => {
       modelNumberInput: {
         ...sampleParams,
         lotted: null,
-        productId: existingProduct.partitionKey,
+        productIds: [existingProduct.partitionKey],
         warrantyTerm: '',
       },
     }

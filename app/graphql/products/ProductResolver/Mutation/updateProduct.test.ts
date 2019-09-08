@@ -7,11 +7,11 @@ describe('updateProduct', () => {
   beforeEach(async done => {
     existingProduct = await Product.create({
       description: 'MedLED Onyx 2nd Gen Mid-Tier',
-      name: 'Updated MedLED Onyx (MLOX100)',
+      name: 'Updated MedLED Onyx (MLOX100)'
     })
     conflictingProduct = await Product.create({
       description: 'An extremely bright magnified LED headlamp',
-      name: 'HyperBeam XS',
+      name: 'HyperBeam XS'
     })
     done()
   })
@@ -27,7 +27,7 @@ describe('updateProduct', () => {
       productInput: {
         description: 'This is an updated description.',
         id: existingProduct.partitionKey,
-        name: 'Something New',
+        name: 'Something New'
       },
     })
     expect(output.success).toBe(true)
@@ -39,7 +39,7 @@ describe('updateProduct', () => {
       productInput: {
         description: 'The name is the same but not the description.',
         id: existingProduct.partitionKey,
-        name: existingProduct.name,
+        name: existingProduct.name
       },
     })
     expect(output.success).toBe(true)
@@ -51,7 +51,7 @@ describe('updateProduct', () => {
       productInput: {
         description: existingProduct.description,
         id: existingProduct.partitionKey,
-        name: conflictingProduct.name,
+        name: conflictingProduct.name
       },
     })
     expect(output.success).toBe(false)
@@ -64,7 +64,7 @@ describe('updateProduct', () => {
       productInput: {
         description: existingProduct.description,
         id: 'SOME-MADE-UP-KEY',
-        name: existingProduct.name,
+        name: existingProduct.name
       },
     })
     expect(output.success).toBe(false)
@@ -77,7 +77,7 @@ describe('updateProduct', () => {
       productInput: {
         description: null,
         id: existingProduct.partitionKey,
-        name: null,
+        name: null
       },
     }
     const output = await updateProduct(null, invalidInput)

@@ -47,7 +47,8 @@ provider:
     OAUTH_SIGNATURE: 'Ph$2\@!Rq<ev_W;:N(2+>Bwxez$3?;9~srf*nxiVJLz:lw7Djgs(Q/UhwmZ@"YLi<'
     ATTACHED_IMAGES_BUCKET: ${self:service}-${opt:stage, self:provider.stage}-attached-images
     DYNAMODB_RESOURCES_TABLE: ${self:service}-${opt:stage, self:provider.stage}-resources
-    DYNAMODB_ACCOUNTS_GSI_1: GSI_1,
+    DYNAMODB_RESOURCES_GSI_1: GSI_1
+    DYNAMODB_RESOURCES_GSI_2: GSI_2
     DYNAMODB_USER_LOOKUP_TABLE: ${self:service}-${opt:stage, self:provider.stage}-users-lookup
     DYNAMODB_TOKEN_LOOKUP_TABLE: ${self:service}-${opt:stage, self:provider.stage}-tokens-lookup
     SES_SOURCE_ARN: arn:aws:ses:us-west-2:426380452104:identity/rpmed-apps.com
@@ -92,7 +93,7 @@ functions:
           path: auth/forgot
           cors: true
   sheets:
-    handler: app/sheets.import
+    handler: app/sheets.importModels
     events:
       - http:
           method: get

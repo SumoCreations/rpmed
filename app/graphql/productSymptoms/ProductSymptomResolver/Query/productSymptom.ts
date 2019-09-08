@@ -32,8 +32,8 @@ export const productSymptom = async (
     return {
       errors: [
         {
-          path: '_',
           message: e.localizedMessage || 'Could not retrieve productSymptom',
+          path: '_',
         },
       ],
       success: false,

@@ -18,8 +18,8 @@ export const modelNumbers = async (
     const results = args.symptom
       ? modelNumbersForSymptom(args.symptom)
       : args.productId
-      ? ModelNumber.forProduct(args.productId)
-      : ModelNumber.all()
+        ? ModelNumber.forProduct(args.productId)
+        : ModelNumber.all()
     const output = (await results)
       .map(ModelNumber.output)
       .filter(p =>
@@ -29,7 +29,7 @@ export const modelNumbers = async (
       )
       .map(o => ({
         ...o,
-        product: async () => Product.output(await Product.find(o.productId)),
+        product: async () => Product.output((await Product.findByIds(o.productIds))[0]),
         symptoms: async () =>
           (await productSymptomsForModel(o.id)).map(ProductSymptom.output),
       }))
@@ -41,8 +41,8 @@ export const modelNumbers = async (
     return {
       errors: [
         {
-          path: '_',
           message: e.localizedMessage || 'Could not retrieve model numbers',
+          path: '_',
         },
       ],
       success: false,

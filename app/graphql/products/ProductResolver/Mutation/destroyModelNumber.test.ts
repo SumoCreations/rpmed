@@ -3,15 +3,18 @@ import {
   IProduct,
   ModelNumber,
   Product,
+  ProductType
 } from '../../../../models'
 import { destroyModelNumber } from './destroyModelNumber'
 
 const sampleParams = {
   description: 'MedLED Onyx® Headlight Hospital Kit',
-  feeWithWarranty: 0,
-  feeWithoutWarranty: 250,
+  feeWithWarranty: { distributor: "0", endUser: "10" },
+  feeWithoutWarranty: { distributor: "250", endUser: "300" },
   id: 'MLOX03-HK',
   lotted: false,
+  pricing: { cost: "1000", retail: "1200" },
+  productType: ProductType.HEADLIGHT,
   resolutionWithWarranty: 'Send in for servicing',
   resolutionWithoutWarranty: 'Send in for servicing',
   warrantyDescription: 'Service after 2 months',
@@ -24,11 +27,11 @@ describe('destroyModelNumber', () => {
   beforeEach(async done => {
     existingProduct = await Product.create({
       description: 'MedLED Sapphire Top-Tier',
-      name: 'MedLED Sapphire (MLOD01)',
+      name: 'MedLED Sapphire (MLOD01)'
     })
     modelNumber = await ModelNumber.create({
       ...sampleParams,
-      productId: existingProduct.partitionKey,
+      productIds: [existingProduct.partitionKey],
     })
     done()
   })

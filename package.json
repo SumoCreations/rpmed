@@ -6,12 +6,12 @@
   "scripts": {
     "jestInline": "jest --runInBand --config jestconfig.json",
     "test": "sls offline start --exec \"npm run jestInline\"",
-    "testLocal": "npm run resetDynamo; sls offline start --exec \"npm run jestInline\"",
+    "testLocal": "npm run dynamo; sls offline start --exec \"npm run jestInline\"",
     "start": "sls offline start",
     "lint": "tslint -p tsconfig.json",
     "startDynamo": "docker run --name dynamoLocal -d -p 8000:8000 amazon/dynamodb-local",
     "stopDynamo": "docker stop dynamoLocal; docker rm dynamoLocal",
-    "resetDynamo": "npm run stopDynamo; npm run startDynamo",
+    "dynamo": "npm run stopDynamo; npm run startDynamo",
     "prettier": "prettier --config ./.prettierrc 'app/**/*.{ts,tsx}' --write"
   },
   "files": [
