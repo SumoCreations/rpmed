@@ -1,25 +1,40 @@
 import {
+  IModelNumber,
   ModelNumber,
   modelNumbersForSymptom,
   Product,
   ProductSymptom,
   productSymptomsForModel,
 } from '../../../../models'
-import { IModelNumberQueryOutput } from './productQueryTypes'
+import {
+  ModelNumber as ModelNumberType,
+  ModelNumberQueryOutput,
+  QueryModelNumbersArgs,
+} from '../../../../schema'
 
 /**
  * Retrieves all model numbers or a filtered search of some model numbers.
  */
 export const modelNumbers = async (
-  _,
-  args: { search?: string; productId?: string; symptom?: string }
-): Promise<IModelNumberQueryOutput> => {
+  _: any,
+  args: QueryModelNumbersArgs
+): Promise<ModelNumberQueryOutput> => {
   try {
-    const results = args.symptom
-      ? modelNumbersForSymptom(args.symptom)
-      : args.productId
-      ? ModelNumber.forProduct(args.productId)
-      : ModelNumber.all()
+    let results: Promise<IModelNumber[]>
+    if (args.symptom) {
+      results = modelNumbersForSymptom(args.symptom)
+    } else if (args.productId && args.productType) {
+      results = ModelNumber.forTypeAndProductID(
+        args.productType,
+        args.productId
+      )
+    } else if (args.productId) {
+      results = ModelNumber.forProduct(args.productId)
+    } else if (args.productType) {
+      results = ModelNumber.forType(args.productType)
+    } else {
+      results = ModelNumber.all()
+    }
     const output = (await results)
       .map(ModelNumber.output)
       .filter(p =>
@@ -35,7 +50,8 @@ export const modelNumbers = async (
           (await productSymptomsForModel(o.id)).map(ProductSymptom.output),
       }))
     return {
-      modelNumbers: output,
+      modelNumbers: (output as any) as ModelNumberType[],
+      pageSize: output.length,
       success: true,
     }
   } catch (e) {

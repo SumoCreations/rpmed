@@ -309,6 +309,7 @@ export const typeDefs = gql`
     modelNumbers(
       search: String
       productId: String
+      productType: ProductType
       symptom: String
     ): ModelNumberQueryOutput
     """

@@ -1,8 +1,9 @@
 import { APIGatewayProxyHandler } from 'aws-lambda'
 import { google } from 'googleapis'
 import { credentials } from '../json/rpmed-248822-7b3a48ed26ca'
-import { ModelNumber, Product, ProductType } from './models'
+import { ModelNumber, Product } from './models'
 import { response, Status } from './net'
+import { ProductType } from './schema'
 
 // If modifying these scopes, delete token.json.
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets']

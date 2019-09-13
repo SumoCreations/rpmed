@@ -1,7 +1,8 @@
 import { v4 as uuid } from 'uuid'
 import { isEmpty } from 'validator'
+import { ProductType } from '../schema'
 import { Customer, ICustomer } from './customer'
-import { IModelNumber, ModelNumber, ProductType } from './modelNumber'
+import { IModelNumber, ModelNumber } from './modelNumber'
 import { IProduct, Product } from './product'
 import {
   IProductRegistration,
@@ -32,7 +33,7 @@ describe('product registration', () => {
       lotted: true,
       pricing: { cost: '1000', retail: '1200' },
       productIds: [product.partitionKey],
-      productType: ProductType.HEADLIGHT,
+      productType: ProductType.Headlight,
       resolutionWithWarranty: 'Do something...',
       resolutionWithoutWarranty: 'Do something else..',
       warrantyDescription: 'All headlamps covered for 1 year',
@@ -62,7 +63,7 @@ describe('product registration', () => {
       lotted: true,
       pricing: { cost: '0', retail: '100' },
       productIds: [product.partitionKey],
-      productType: ProductType.HEADLIGHT,
+      productType: ProductType.Headlight,
       resolutionWithWarranty: 'Do something...',
       resolutionWithoutWarranty: 'Do something else..',
       warrantyDescription: 'All headlamps covered for 1 year',

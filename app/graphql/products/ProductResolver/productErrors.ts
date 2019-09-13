@@ -20,7 +20,7 @@ export const ErrorModelNumberIDAlreadyExists = {
 
 export const ErrorModelNumberRelatedProductDoesNotExist = {
   message: 'The associated product does not exist.',
-  path: 'productId',
+  path: 'productIds',
 }
 
 export const ErrorProductAlreadyExist = {

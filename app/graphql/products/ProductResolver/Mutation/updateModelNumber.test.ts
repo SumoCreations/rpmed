@@ -4,8 +4,8 @@ import {
   IProduct,
   ModelNumber,
   Product,
-  ProductType,
 } from '../../../../models'
+import { ProductType } from '../../../../schema'
 import { updateModelNumber } from './updateModelNumber'
 
 describe('updateModelNumber', () => {
@@ -25,7 +25,7 @@ describe('updateModelNumber', () => {
       lotted: false,
       pricing: { cost: '1000', retail: '1200' },
       productIds: [existingProduct.partitionKey],
-      productType: ProductType.HEADLIGHT,
+      productType: ProductType.Headlight,
       resolutionWithWarranty: 'Send in for servicing',
       resolutionWithoutWarranty: 'Send in for servicing',
       warrantyDescription: 'Service after 2 months',
@@ -51,6 +51,8 @@ describe('updateModelNumber', () => {
         warrantyTerm: 6,
       },
     })
+    // tslint:disable
+    console.log(output)
     expect(output.success).toBe(true)
     const updatedModel = await ModelNumber.find(sampleParams.id)
     expect(updatedModel.lotted).toBe(true)
@@ -67,7 +69,7 @@ describe('updateModelNumber', () => {
       },
     })
     expect(output.success).toBe(false)
-    expect(output.errors.map(e => e.path)).toContain('productId')
+    expect(output.errors.map(e => e.path)).toContain('productIds')
   })
 
   test('should fail if the model number does not exists', async () => {

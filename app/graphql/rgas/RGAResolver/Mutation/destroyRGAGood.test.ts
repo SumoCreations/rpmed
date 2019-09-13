@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon'
-import { ModelNumber, ProductType, RGA, RGAGood } from '../../../../models'
+import { ModelNumber, RGA, RGAGood } from '../../../../models'
+import { ProductType } from '../../../../schema'
 import { destroyRGAGood } from './destroyRGAGood'
 
 const RGA_ID = 'TEST-RGA-ID'
@@ -35,7 +36,7 @@ describe('destroyRGAGood', () => {
       lotted: true,
       pricing: { cost: '1000', retail: '1200' },
       productIds: ['TEST'],
-      productType: ProductType.HEADLIGHT,
+      productType: ProductType.Headlight,
       warrantyDescription: 'Covered...',
       warrantyTerm: 5,
     })

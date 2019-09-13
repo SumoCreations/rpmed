@@ -1,4 +1,5 @@
-import { IProduct, ModelNumber, Product, ProductType } from '../../../../models'
+import { IProduct, ModelNumber, Product } from '../../../../models'
+import { ProductType } from '../../../../schema'
 import { destroyProduct } from './destroyProduct'
 
 const sampleParams = {
@@ -13,7 +14,7 @@ const modelNameParams = {
   id: 'MLOD01-HK',
   lotted: false,
   pricing: { cost: '1000', retail: '1200' },
-  productType: ProductType.HEADLIGHT,
+  productType: ProductType.Headlight,
   resolutionWithWarranty: 'Send in for servicing',
   resolutionWithoutWarranty: 'Send in for servicing',
   warrantyDescription: 'Service after 2 months',

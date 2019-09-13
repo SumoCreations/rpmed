@@ -1,4 +1,5 @@
-import { IModelNumber, ModelNumber, ProductType } from './modelNumber'
+import { ProductType } from '../schema'
+import { IModelNumber, ModelNumber } from './modelNumber'
 import { IProduct, Product } from './product'
 import { IProductSymptom, ProductSymptom } from './productSymptom'
 import {
@@ -38,7 +39,7 @@ describe('modelNumber', () => {
         lotted: true,
         pricing: { cost: '0', retail: '0' },
         productIds: [product.partitionKey],
-        productType: ProductType.HEADLIGHT,
+        productType: ProductType.Headlight,
         resolutionWithWarranty: 'Do something...',
         resolutionWithoutWarranty: 'Do something else..',
         warrantyDescription: 'All headlamps covered for 1 year',

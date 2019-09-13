@@ -810,6 +810,7 @@ export type QueryProductsArgs = {
 export type QueryModelNumbersArgs = {
   search?: Maybe<Scalars['String']>
   productId?: Maybe<Scalars['String']>
+  productType?: Maybe<ProductType>
   symptom?: Maybe<Scalars['String']>
 }
 

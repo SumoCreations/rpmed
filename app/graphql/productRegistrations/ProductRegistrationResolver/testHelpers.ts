@@ -1,5 +1,6 @@
 import { v4 as uuid } from 'uuid'
 import * as M from '../../../models'
+import { ProductType } from '../../../schema'
 
 let idIncrement = 1000
 const makeId = (key: string, model: string) => {
@@ -39,7 +40,7 @@ export const generateSampleParams = async (
     lotted: inputs.lotted,
     pricing: { cost: '1000', retail: '1200' },
     productIds: [product.partitionKey],
-    productType: M.ProductType.HEADLIGHT,
+    productType: ProductType.Headlight,
     resolutionWithWarranty: 'Do something...',
     resolutionWithoutWarranty: 'Do something else..',
     warrantyDescription: 'All headlamps covered for 1 year',

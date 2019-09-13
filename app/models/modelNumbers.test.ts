@@ -1,5 +1,6 @@
 import { isEmpty } from 'validator'
-import { IModelNumber, ModelNumber, ProductType } from './modelNumber'
+import { ProductType } from '../schema'
+import { IModelNumber, ModelNumber } from './modelNumber'
 import { IProduct, Product } from './product'
 
 const existingModelParams = {
@@ -12,7 +13,7 @@ const existingModelParams = {
     cost: '150',
     retail: '300',
   },
-  productType: ProductType.HEADLIGHT,
+  productType: ProductType.Headlight,
   resolutionWithWarranty: 'Do something...',
   resolutionWithoutWarranty: 'Do something else..',
   warrantyDescription: 'All headlamps covered for 1 year',
@@ -106,13 +107,13 @@ describe('modelNumber', () => {
   describe('findByType', () => {
     test('should return a product if one exists', async () => {
       expect.assertions(1)
-      const headlights = await ModelNumber.findByType(ProductType.HEADLIGHT)
+      const headlights = await ModelNumber.findByType(ProductType.Headlight)
       expect(headlights.length).toEqual(1)
     })
 
     test('should return null if a product does not exist', async () => {
       expect.assertions(1)
-      const accessories = await ModelNumber.findByType(ProductType.ACCESSORY)
+      const accessories = await ModelNumber.findByType(ProductType.Accessory)
       expect(accessories.length).toEqual(0)
     })
   })

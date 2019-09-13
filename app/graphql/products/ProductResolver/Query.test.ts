@@ -1,10 +1,5 @@
-import {
-  IModelNumber,
-  IProduct,
-  ModelNumber,
-  Product,
-  ProductType,
-} from '../../../models'
+import { IModelNumber, IProduct, ModelNumber, Product } from '../../../models'
+import { ProductType } from '../../../schema'
 import * as Query from './Query'
 
 describe('Query', () => {
@@ -80,7 +75,7 @@ describe('Query', () => {
         lotted: true,
         pricing: { cost: '0', retail: '0' },
         productIds: [existingProduct.partitionKey],
-        productType: ProductType.HEADLIGHT,
+        productType: ProductType.Headlight,
         resolutionWithWarranty: 'Do something...',
         resolutionWithoutWarranty: 'Do something else..',
         warrantyDescription: 'All headlamps covered for 1 year',
@@ -94,7 +89,7 @@ describe('Query', () => {
         lotted: true,
         pricing: { cost: '0', retail: '0' },
         productIds: [existingProduct.partitionKey],
-        productType: ProductType.HEADLIGHT,
+        productType: ProductType.Headlight,
         resolutionWithWarranty: 'Do something...',
         resolutionWithoutWarranty: 'Do something else..',
         warrantyDescription: 'All headlamps covered for 1 year',
@@ -135,7 +130,7 @@ describe('Query', () => {
         lotted: true,
         pricing: { cost: '0', retail: '0' },
         productIds: [existingProduct.partitionKey],
-        productType: ProductType.HEADLIGHT,
+        productType: ProductType.Headlight,
         resolutionWithWarranty: 'Do something...',
         resolutionWithoutWarranty: 'Do something else..',
         warrantyDescription: 'All headlamps covered for 1 year',
@@ -149,7 +144,7 @@ describe('Query', () => {
         lotted: true,
         pricing: { cost: '0', retail: '0' },
         productIds: [existingProduct.partitionKey],
-        productType: ProductType.HEADLIGHT,
+        productType: ProductType.Headlight,
         resolutionWithWarranty: 'Do something...',
         resolutionWithoutWarranty: 'Do something else..',
         warrantyDescription: 'All headlamps covered for 1 year',

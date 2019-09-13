@@ -5,8 +5,8 @@ import {
   ModelNumber,
   Product,
   ProductSymptom,
-  ProductType,
 } from '../../../../models'
+import { ProductType } from '../../../../schema'
 import {
   ErrorModelNumberIDDoesNotExist,
   ErrorProductSymptomWithIDDoesNotExist,
@@ -42,7 +42,7 @@ describe('linkSymptomToModel', () => {
       lotted: true,
       pricing: { cost: '1000', retail: '1200' },
       productIds: [product.partitionKey],
-      productType: ProductType.HEADLIGHT,
+      productType: ProductType.Headlight,
       resolutionWithWarranty: 'Do something...',
       resolutionWithoutWarranty: 'Do something else..',
       warrantyDescription: 'All headlamps covered for 1 year',

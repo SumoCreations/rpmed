@@ -31,8 +31,8 @@ export const createModelNumber: CreateModelNumberResolver = async (
     if (existingModel) {
       return generateMutationError([ErrorModelNumberIDAlreadyExists])
     }
-    const relatedProduct = await Product.findByIds(modelNumberInput.productIds)
-    if (!relatedProduct) {
+    const relatedProducts = await Product.findByIds(modelNumberInput.productIds)
+    if (relatedProducts.length < modelNumberInput.productIds.length) {
       return generateMutationError([ErrorModelNumberRelatedProductDoesNotExist])
     }
     const modelNumber = await ModelNumber.create(modelNumberInput)

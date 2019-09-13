@@ -4,9 +4,9 @@ import {
   ModelNumber,
   ProductRegistration,
   ProductSymptom,
-  ProductType,
   RGA,
 } from '../../../../models'
+import { ProductType } from '../../../../schema'
 import { createRGAGood } from './createRGAGood'
 
 const RGA_ID = 'TEST-RGA-ID'
@@ -41,7 +41,7 @@ describe('createRGAGood', () => {
       lotted: true,
       pricing: { cost: '1000', retail: '1200' },
       productIds: ['TEST'],
-      productType: ProductType.HEADLIGHT,
+      productType: ProductType.Headlight,
       warrantyDescription: 'Covered...',
       warrantyTerm: 5,
     })

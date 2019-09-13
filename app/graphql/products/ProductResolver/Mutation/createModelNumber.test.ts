@@ -3,8 +3,8 @@ import {
   IProduct,
   ModelNumber,
   Product,
-  ProductType,
 } from '../../../../models'
+import { ProductType } from '../../../../schema'
 import { createModelNumber } from './createModelNumber'
 
 const sampleParams = {
@@ -14,7 +14,7 @@ const sampleParams = {
   id: 'MLOX01-HK',
   lotted: false,
   pricing: { cost: '1000', retail: '1200' },
-  productType: ProductType.HEADLIGHT,
+  productType: ProductType.Headlight,
   resolutionWithWarranty: 'Send in for servicing',
   resolutionWithoutWarranty: 'Send in for servicing',
   warrantyDescription: 'Service after 2 months',
@@ -37,7 +37,7 @@ describe('createModelNumber', () => {
       lotted: false,
       pricing: { cost: '1000', retail: '1200' },
       productIds: [existingProduct.partitionKey],
-      productType: ProductType.HEADLIGHT,
+      productType: ProductType.Headlight,
       resolutionWithWarranty: 'Send in for servicing',
       resolutionWithoutWarranty: 'Send in for servicing',
       warrantyDescription: 'Service after 6 mo.',
@@ -73,7 +73,7 @@ describe('createModelNumber', () => {
       },
     })
     expect(output.success).toBe(false)
-    expect(output.errors.map(e => e.path)).toContain('productId')
+    expect(output.errors.map(e => e.path)).toContain('productIds')
   })
 
   test('should fail if the model number already exists', async () => {
