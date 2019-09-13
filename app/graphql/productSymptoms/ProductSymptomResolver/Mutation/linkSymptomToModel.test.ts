@@ -5,7 +5,7 @@ import {
   ModelNumber,
   Product,
   ProductSymptom,
-  ProductType
+  ProductType,
 } from '../../../../models'
 import {
   ErrorModelNumberIDDoesNotExist,
@@ -32,15 +32,15 @@ describe('linkSymptomToModel', () => {
     })
     product = await Product.create({
       description: 'The chrome MedLED Pro Headlamp',
-      name: 'Chrome MC7 Pro'
+      name: 'Chrome MC7 Pro',
     })
     modelNumber = await ModelNumber.create({
       description: 'MedLED Chrome MC7 PRO Hard Top; Standard Kit',
-      feeWithWarranty: { distributor: "0", endUser: "10" },
-      feeWithoutWarranty: { distributor: "250", endUser: "300" },
+      feeWithWarranty: { distributor: '0', endUser: '10' },
+      feeWithoutWarranty: { distributor: '250', endUser: '300' },
       id: 'MC7-HT-SK-APPLY-SYMPTOM-MUTATION-TEST',
       lotted: true,
-      pricing: { cost: "1000", retail: "1200" },
+      pricing: { cost: '1000', retail: '1200' },
       productIds: [product.partitionKey],
       productType: ProductType.HEADLIGHT,
       resolutionWithWarranty: 'Do something...',
@@ -87,7 +87,7 @@ describe('linkSymptomToModel', () => {
       {
         linked: true,
         modelNumber: modelNumber.partitionKey,
-        symptomId: 'does-not-exist'
+        symptomId: 'does-not-exist',
       }
     )
     expect(output.success).toBe(false)
@@ -135,7 +135,7 @@ describe('linkSymptomToModel', () => {
         {
           linked: false,
           modelNumber: modelNumber.partitionKey,
-          symptomId: productSymptom.partitionKey
+          symptomId: productSymptom.partitionKey,
         }
       )
       expect(output.success).toBe(true)

@@ -1,5 +1,5 @@
-import { ErrorList } from 'rpmed-validation-schema'
 import { IRGAGoodOutput, IRGAOutput } from '../../../../models'
+import { ErrorList } from '../../../../validations'
 
 export interface IRGAMutationOutput {
   rga?: IRGAOutput

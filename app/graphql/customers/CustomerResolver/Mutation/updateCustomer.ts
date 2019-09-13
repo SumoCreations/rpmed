@@ -1,5 +1,5 @@
-import * as Validation from 'rpmed-validation-schema'
 import { Customer, ICustomerInput } from '../../../../models'
+import * as Validation from '../../../../validations'
 import {
   ErrorCustomerNotFound,
   ErrorCustomerWithEmailAlreadyExists,

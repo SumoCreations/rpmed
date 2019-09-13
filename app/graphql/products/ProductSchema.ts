@@ -1,7 +1,6 @@
 import { gql } from 'apollo-server-lambda'
 
 export const typeDefs = gql`
-
   """
   Pricing for a product model variant.
   """

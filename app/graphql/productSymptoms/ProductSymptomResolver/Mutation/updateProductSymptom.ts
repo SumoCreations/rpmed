@@ -1,5 +1,5 @@
-import * as Validation from 'rpmed-validation-schema'
 import { IProductSymptomInput, ProductSymptom } from '../../../../models'
+import * as Validation from '../../../../validations'
 import { ErrorProductSymptomWithIDDoesNotExist } from '../productSymptomErrors'
 import { extendSymptomOutput } from './extendOutput'
 import { IProductSymptomMutationOutput } from './productSymptomMutationTypes'

@@ -15,15 +15,15 @@ describe('updateModelNumber', () => {
   beforeEach(async done => {
     existingProduct = await Product.create({
       description: 'MedLED Sapphire Top-Tier',
-      name: 'MedLED Sapphire (MLOD01)'
+      name: 'MedLED Sapphire (MLOD01)',
     })
     sampleParams = {
       description: 'MedLED Onyx® Headlight Hospital Kit',
-      feeWithWarranty: { distributor: "0", endUser: "10" },
-      feeWithoutWarranty: { distributor: "250", endUser: "300" },
+      feeWithWarranty: { distributor: '0', endUser: '10' },
+      feeWithoutWarranty: { distributor: '250', endUser: '300' },
       id: 'MLOD01-HK',
       lotted: false,
-      pricing: { cost: "1000", retail: "1200" },
+      pricing: { cost: '1000', retail: '1200' },
       productIds: [existingProduct.partitionKey],
       productType: ProductType.HEADLIGHT,
       resolutionWithWarranty: 'Send in for servicing',

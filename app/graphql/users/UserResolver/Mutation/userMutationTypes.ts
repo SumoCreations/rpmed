@@ -1,4 +1,4 @@
-import { ErrorList } from 'rpmed-validation-schema'
+import { ErrorList } from '../../../../validations'
 import { IUserOutput } from '../../../../models'
 
 export interface IMutationOutput {

@@ -22,15 +22,15 @@ describe('product registration', () => {
   beforeAll(async done => {
     product = await Product.create({
       description: 'MedLED Chrome MC7 PRO',
-      name: 'Chrome Registration Tester 1'
+      name: 'Chrome Registration Tester 1',
     })
     modelNumber = await ModelNumber.create({
       description: 'MedLED Chrome MC7 PRO Hard Top; Standard Kit',
-      feeWithWarranty: { distributor: "0", endUser: "10" },
-      feeWithoutWarranty: { distributor: "250", endUser: "300" },
+      feeWithWarranty: { distributor: '0', endUser: '10' },
+      feeWithoutWarranty: { distributor: '250', endUser: '300' },
       id: 'MC7-HT-SK-REGISTER-TESTS',
       lotted: true,
-      pricing: { cost: "1000", retail: "1200" },
+      pricing: { cost: '1000', retail: '1200' },
       productIds: [product.partitionKey],
       productType: ProductType.HEADLIGHT,
       resolutionWithWarranty: 'Do something...',
@@ -56,11 +56,11 @@ describe('product registration', () => {
     })
     unrelatedModel = await ModelNumber.create({
       description: 'MedLED Chrome MC7 PRO Hard Top; Standard Kit',
-      feeWithWarranty: { distributor: "0", endUser: "10" },
-      feeWithoutWarranty: { distributor: "250", endUser: "300" },
+      feeWithWarranty: { distributor: '0', endUser: '10' },
+      feeWithoutWarranty: { distributor: '250', endUser: '300' },
       id: uuid(),
       lotted: true,
-      pricing: { cost: "0", retail: "100" },
+      pricing: { cost: '0', retail: '100' },
       productIds: [product.partitionKey],
       productType: ProductType.HEADLIGHT,
       resolutionWithWarranty: 'Do something...',

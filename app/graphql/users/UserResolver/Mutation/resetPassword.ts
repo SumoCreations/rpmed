@@ -1,7 +1,7 @@
-import * as Validation from 'rpmed-validation-schema'
 import { isEmpty } from 'validator'
 import * as Yup from 'yup'
 import { TemporaryAccessToken, User } from '../../../../models'
+import * as Validation from '../../../../validations'
 import { IMutationOutput } from './userMutationTypes'
 
 const validation = Yup.object().shape({

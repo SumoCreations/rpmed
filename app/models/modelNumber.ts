@@ -33,8 +33,8 @@ const SECONDARY_KEY = 'MODEL_NUMBER'
 const client = getDynamoClient()
 
 export enum ProductType {
-  ACCESSORY = "ACCESSORY",
-  HEADLIGHT = "HEADLIGHT"
+  ACCESSORY = 'ACCESSORY',
+  HEADLIGHT = 'HEADLIGHT',
 }
 
 interface IFeeStructure {
@@ -111,7 +111,8 @@ const create = async ({
 }: IModelNumberInput): Promise<IModelNumber> => {
   const item: IModelNumber = {
     ...modelNumberInput,
-    indexSortKey: typeof productIds === "string" ? productIds : productIds.join("::"),
+    indexSortKey:
+      typeof productIds === 'string' ? productIds : productIds.join('::'),
     partitionKey: id,
     secondaryIndexSortKey: productType,
     sortKey: SECONDARY_KEY,
@@ -152,7 +153,8 @@ const update = async ({
   const item: IModelNumber = {
     ...existingModelNumber,
     ...modelNumberInput,
-    indexSortKey: typeof productIds === "string" ? productIds : productIds.join("::"),
+    indexSortKey:
+      typeof productIds === 'string' ? productIds : productIds.join('::'),
     partitionKey: id,
     secondaryIndexSortKey: productType,
     sortKey: SECONDARY_KEY,
@@ -232,7 +234,16 @@ const findAll = async (ids: string[]): Promise<IModelNumber[]> => {
 }
 
 /**
- * Retreives a list of all model number configurations for a specified product ID.
+ * Retreives a list of all model number configurations for a
+ * specified product ID.
+ *
+ * NOTE: This queries all model numbers and uses a filter to
+ * wither down the results to a specific product. This method
+ * will ultimately become inconsistent once our database
+ * extends beyond 1000 model number variations. At which point
+ * a product / model number lookup table may be required.
+ * Alternatively, this query will could eventually be performed
+ * via elastic search.
  */
 const forProduct = async (productId: string): Promise<IModelNumber[]> => {
   const searchParams = {
@@ -240,8 +251,9 @@ const forProduct = async (productId: string): Promise<IModelNumber[]> => {
       ':productId': productId,
       ':rkey': SECONDARY_KEY,
     },
-    IndexName: 'GSI_1',
-    KeyConditionExpression: 'sortKey = :rkey AND indexSortKey = :productId',
+    FilterExpression: 'contains(indexSortKey, :productId)',
+    IndexName: 'GSI_2',
+    KeyConditionExpression: 'sortKey = :rkey',
     TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.query(searchParams).promise()
@@ -252,11 +264,13 @@ const forProduct = async (productId: string): Promise<IModelNumber[]> => {
  * Retreives a product by it's name.
  * @param name The name of the product to find.
  */
-const findByType = async (productType: ProductType): Promise<IModelNumber[] | null> => {
+const findByType = async (
+  productType: ProductType
+): Promise<IModelNumber[] | null> => {
   const searchParams = {
     ExpressionAttributeValues: {
       ':rkey': SECONDARY_KEY,
-      ':shsk': productType
+      ':shsk': productType,
     },
     IndexName: 'GSI_2',
     KeyConditionExpression: 'sortKey = :rkey AND secondaryIndexSortKey = :shsk',
@@ -308,7 +322,7 @@ const output = ({
     id: partitionKey,
     lotted: modelNumber.lotted || false,
     privateNotes: modelNumber.privateNotes || '',
-    productIds: [...indexSortKey.split("::")],
+    productIds: [...indexSortKey.split('::')],
     productType: secondaryIndexSortKey,
     publicNotes: modelNumber.publicNotes || '',
     resolutionWithWarranty: modelNumber.resolutionWithWarranty || '',

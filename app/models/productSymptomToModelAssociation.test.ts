@@ -32,11 +32,11 @@ describe('modelNumber', () => {
       })
       modelNumber = await ModelNumber.create({
         description: 'MedLED Chrome MC7 PRO Hard Top; Standard Kit',
-        feeWithWarranty: { endUser: "0", distributor: "0" },
-        feeWithoutWarranty: { endUser: "0", distributor: "0" },
+        feeWithWarranty: { endUser: '0', distributor: '0' },
+        feeWithoutWarranty: { endUser: '0', distributor: '0' },
         id: 'MC7-HT-SK-APPLY-SYMPTOM-TEST',
         lotted: true,
-        pricing: { cost: "0", retail: "0" },
+        pricing: { cost: '0', retail: '0' },
         productIds: [product.partitionKey],
         productType: ProductType.HEADLIGHT,
         resolutionWithWarranty: 'Do something...',

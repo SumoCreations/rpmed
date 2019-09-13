@@ -4,20 +4,19 @@ import { IProduct, Product } from './product'
 
 const existingModelParams = {
   description: 'MedLED Chrome MC7 PRO Hard Top; Standard Kit',
-  feeWithWarranty: { distributor: "100", endUser: "150" },
-  feeWithoutWarranty: { distributor: "150", endUser: "250" },
+  feeWithWarranty: { distributor: '100', endUser: '150' },
+  feeWithoutWarranty: { distributor: '150', endUser: '250' },
   id: 'MC7-HT-SK',
   lotted: true,
   pricing: {
-    cost: "150",
-    retail: "300"
+    cost: '150',
+    retail: '300',
   },
   productType: ProductType.HEADLIGHT,
   resolutionWithWarranty: 'Do something...',
   resolutionWithoutWarranty: 'Do something else..',
   warrantyDescription: 'All headlamps covered for 1 year',
   warrantyTerm: 12,
-
 }
 
 describe('modelNumber', () => {
@@ -26,11 +25,11 @@ describe('modelNumber', () => {
   beforeAll(async done => {
     product = await Product.create({
       description: 'The chrome MedLED Pro Headlamp',
-      name: 'Chrome MC7 Pro'
+      name: 'Chrome MC7 Pro',
     })
     modelNumber = await ModelNumber.create({
       ...existingModelParams,
-      productIds: [product.partitionKey]
+      productIds: [product.partitionKey],
     })
     done()
   })
@@ -87,7 +86,7 @@ describe('modelNumber', () => {
       expect.assertions(2)
       const newProduct = await Product.create({
         description: 'The chrome...',
-        name: 'Chrome MC7 Pro NEW EXAMPLE'
+        name: 'Chrome MC7 Pro NEW EXAMPLE',
       })
       const matchingModels = await ModelNumber.forProduct(
         newProduct.partitionKey

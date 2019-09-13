@@ -1,6 +1,6 @@
-import * as Validation from 'rpmed-validation-schema'
 import { IModelNumberInput, ModelNumber, Product } from '../../../../models'
 import { generateMutationError } from '../../../../util'
+import * as Validation from '../../../../validations'
 import {
   ErrorModelNumberIDAlreadyExists,
   ErrorModelNumberRelatedProductDoesNotExist,

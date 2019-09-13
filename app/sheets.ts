@@ -72,34 +72,36 @@ const processModelNumbers = auth =>
               const productsForModel = []
               const val = row as string[]
 
-              await val[0].split(',').reduce(async (previousName, currentName) => {
-                await previousName
-                const existingProduct = await Product.findByName(currentName)
-                if (!existingProduct) {
-                  const newProduct = await Product.create({
-                    description: val[1],
-                    name: currentName,
-                  })
-                  productsForModel.push(newProduct.partitionKey)
-                } else {
-                  productsForModel.push(existingProduct.partitionKey)
-                }
-                return currentName
-              }, Promise.resolve(''))
+              await val[0]
+                .split(',')
+                .reduce(async (previousName, currentName) => {
+                  await previousName
+                  const existingProduct = await Product.findByName(currentName)
+                  if (!existingProduct) {
+                    const newProduct = await Product.create({
+                      description: val[1],
+                      name: currentName,
+                    })
+                    productsForModel.push(newProduct.partitionKey)
+                  } else {
+                    productsForModel.push(existingProduct.partitionKey)
+                  }
+                  return currentName
+                }, Promise.resolve(''))
 
               await ModelNumber.create({
                 description: val[4],
                 feeWithWarranty: { distributor: val[11], endUser: val[11] },
                 feeWithoutWarranty: { distributor: val[13], endUser: val[14] },
                 id: val[3],
-                lotted: val[8] === "YES",
+                lotted: val[8] === 'YES',
                 pricing: { cost: val[6], retail: val[7] },
                 productIds: productsForModel,
                 productType: val[2] as ProductType,
                 resolutionWithWarranty: val[12],
                 resolutionWithoutWarranty: val[15],
                 warrantyDescription: val[10],
-                warrantyTerm: parseInt(val[9], 0)
+                warrantyTerm: parseInt(val[9], 0),
               })
 
               return [row[0], row[1], row[2]]
@@ -114,5 +116,6 @@ const processModelNumbers = auth =>
           console.log('No data found.')
           reject('No data found.')
         }
-      })
+      }
+    )
   })

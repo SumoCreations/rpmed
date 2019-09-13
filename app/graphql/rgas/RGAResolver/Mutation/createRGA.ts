@@ -1,6 +1,6 @@
-import * as Validation from 'rpmed-validation-schema'
 import { Distributor, RGA } from '../../../../models'
 import { generateMutationError } from '../../../../util'
+import * as Validation from '../../../../validations'
 import { IRGAMutationOutput } from './rgaMutationTypes'
 
 interface IRGAInputParams {

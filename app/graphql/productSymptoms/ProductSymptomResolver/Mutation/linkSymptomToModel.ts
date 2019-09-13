@@ -1,15 +1,15 @@
 import {
-  formatError,
-  RequiredBoolean,
-  RequiredString,
-  validation,
-} from 'rpmed-validation-schema'
-import {
   addSymptomToModelNumber,
   ModelNumber,
   ProductSymptom,
   removeSymptomFromModelNumber,
 } from '../../../../models'
+import {
+  formatError,
+  RequiredBoolean,
+  RequiredString,
+  validation,
+} from '../../../../validations'
 import {
   ErrorModelNumberIDDoesNotExist,
   ErrorProductSymptomAndModelNumberAssociationFailed,

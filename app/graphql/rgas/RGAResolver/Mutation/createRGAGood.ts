@@ -1,4 +1,3 @@
-import * as Validation from 'rpmed-validation-schema'
 import {
   Customer,
   ICustomer,
@@ -10,6 +9,7 @@ import {
   RGAGood,
 } from '../../../../models'
 import { generateMutationError } from '../../../../util'
+import * as Validation from '../../../../validations'
 import { IRGAGoodMutationOutput } from './rgaMutationTypes'
 
 interface IRGAGoodInputParams {
@@ -67,8 +67,8 @@ export const createRGAGood: CreateRGAGoodMutation = async (
     return {
       errors: [
         {
-          path: 'modelNumber',
           message: `Model number '${rgaGoodInput.modelNumber}' does not exist`,
+          path: 'modelNumber',
         },
       ],
       success: false,
@@ -89,10 +89,10 @@ export const createRGAGood: CreateRGAGoodMutation = async (
     return {
       errors: [
         {
-          path: 'serial',
           message: `Product with serial'${
             rgaGoodInput.serial
           }' already assigned to an RGA`,
+          path: 'serial',
         },
       ],
       success: false,
@@ -159,8 +159,8 @@ export const createRGAGood: CreateRGAGoodMutation = async (
   }
 
   return {
-    rgaId: rgaGood.rgaId,
     rgaGood: RGAGood.output(rgaGood),
+    rgaId: rgaGood.rgaId,
     success: true,
   }
 }

@@ -35,11 +35,11 @@ describe('createRGAGood', () => {
   beforeAll(async done => {
     const modelNumber = await ModelNumber.create({
       description: 'test',
-      feeWithWarranty: { distributor: "0", endUser: "10" },
-      feeWithoutWarranty: { distributor: "250", endUser: "300" },
+      feeWithWarranty: { distributor: '0', endUser: '10' },
+      feeWithoutWarranty: { distributor: '250', endUser: '300' },
       id: 'TEST-MODEL-FOR-RGA-GOOD',
       lotted: true,
-      pricing: { cost: "1000", retail: "1200" },
+      pricing: { cost: '1000', retail: '1200' },
       productIds: ['TEST'],
       productType: ProductType.HEADLIGHT,
       warrantyDescription: 'Covered...',

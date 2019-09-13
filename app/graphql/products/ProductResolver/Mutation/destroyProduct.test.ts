@@ -3,16 +3,16 @@ import { destroyProduct } from './destroyProduct'
 
 const sampleParams = {
   description: 'It had a good life...',
-  name: 'A Product To Destroy'
+  name: 'A Product To Destroy',
 }
 
 const modelNameParams = {
   description: 'MedLED Onyx® Headlight Hospital Kit',
-  feeWithWarranty: { distributor: "0", endUser: "10" },
-  feeWithoutWarranty: { distributor: "250", endUser: "300" },
+  feeWithWarranty: { distributor: '0', endUser: '10' },
+  feeWithoutWarranty: { distributor: '250', endUser: '300' },
   id: 'MLOD01-HK',
   lotted: false,
-  pricing: { cost: "1000", retail: "1200" },
+  pricing: { cost: '1000', retail: '1200' },
   productType: ProductType.HEADLIGHT,
   resolutionWithWarranty: 'Send in for servicing',
   resolutionWithoutWarranty: 'Send in for servicing',

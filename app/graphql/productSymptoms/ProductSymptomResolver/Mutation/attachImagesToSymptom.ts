@@ -1,14 +1,14 @@
 import {
-  formatError,
-  RequiredNumber,
-  RequiredString,
-  validation,
-} from 'rpmed-validation-schema'
-import {
   AttachedImageStatus,
   mergeImages,
   ProductSymptom,
 } from '../../../../models'
+import {
+  formatError,
+  RequiredNumber,
+  RequiredString,
+  validation,
+} from '../../../../validations'
 import {
   ErrorProductSymptomAndAttachedImageUpdateFailed,
   ErrorProductSymptomWithIDDoesNotExist,
@@ -65,8 +65,8 @@ export const attachImagesToSymptom = async (
     // tslint:disable-next-line
     console.log(e)
     return {
-      success: false,
       errors: [ErrorProductSymptomAndAttachedImageUpdateFailed],
+      success: false,
     }
   }
 }

@@ -1,5 +1,6 @@
-import * as Validation from 'rpmed-validation-schema'
 import { IUserInput, User } from '../../../../models'
+import * as Validation from '../../../../validations'
+
 import {
   ErrorUserCredentialsInvalid,
   ErrorUserWithEmailAlreadyExists,

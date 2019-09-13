@@ -26,7 +26,8 @@ const notBlank = (i: any) => {
 const filterNestedBlankValues = (item: string | string[] | any) =>
   typeof item === 'object'
     ? item.filter
-      ? item.filter(i => notBlank(i)) : filterBlankAttributes(item)
+      ? item.filter(i => notBlank(i))
+      : filterBlankAttributes(item)
     : item
 
 /**

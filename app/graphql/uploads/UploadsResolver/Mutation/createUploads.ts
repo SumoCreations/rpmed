@@ -1,5 +1,5 @@
-import { ErrorList } from 'rpmed-validation-schema'
 import { getS3Client, getUploadsBucket } from '../../../../util'
+import { ErrorList } from '../../../../validations'
 
 interface IUploadInput {
   keys: string[]

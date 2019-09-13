@@ -3,7 +3,7 @@ import { IProduct, Product } from './product'
 
 const existingProductParams = {
   description: 'MedLED Chrome MC7 PRO Hard Top; Standard Kit',
-  name: 'Chrome MC7 Test'
+  name: 'Chrome MC7 Test',
 }
 
 describe('product', () => {

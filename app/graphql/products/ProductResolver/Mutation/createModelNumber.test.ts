@@ -3,17 +3,17 @@ import {
   IProduct,
   ModelNumber,
   Product,
-  ProductType
+  ProductType,
 } from '../../../../models'
 import { createModelNumber } from './createModelNumber'
 
 const sampleParams = {
   description: 'MedLED Onyx® Headlight Hospital Kit',
-  feeWithWarranty: { distributor: "0", endUser: "10" },
-  feeWithoutWarranty: { distributor: "250", endUser: "300" },
+  feeWithWarranty: { distributor: '0', endUser: '10' },
+  feeWithoutWarranty: { distributor: '250', endUser: '300' },
   id: 'MLOX01-HK',
   lotted: false,
-  pricing: { cost: "1000", retail: "1200" },
+  pricing: { cost: '1000', retail: '1200' },
   productType: ProductType.HEADLIGHT,
   resolutionWithWarranty: 'Send in for servicing',
   resolutionWithoutWarranty: 'Send in for servicing',
@@ -27,15 +27,15 @@ describe('createModelNumber', () => {
   beforeEach(async done => {
     existingProduct = await Product.create({
       description: 'MedLED Onyx Mid-Tier',
-      name: 'MedLED Onyx (MLOX01)'
+      name: 'MedLED Onyx (MLOX01)',
     })
     existingModelNumber = await ModelNumber.create({
       description: 'MedLED Onyx® Headlight Standard Kit',
-      feeWithWarranty: { distributor: "0", endUser: "10" },
-      feeWithoutWarranty: { distributor: "250", endUser: "300" },
+      feeWithWarranty: { distributor: '0', endUser: '10' },
+      feeWithoutWarranty: { distributor: '250', endUser: '300' },
       id: 'MLOX01-SK',
       lotted: false,
-      pricing: { cost: "1000", retail: "1200" },
+      pricing: { cost: '1000', retail: '1200' },
       productIds: [existingProduct.partitionKey],
       productType: ProductType.HEADLIGHT,
       resolutionWithWarranty: 'Send in for servicing',

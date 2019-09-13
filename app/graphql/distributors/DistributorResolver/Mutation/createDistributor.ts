@@ -1,5 +1,5 @@
-import * as Validation from 'rpmed-validation-schema'
 import { Distributor, IDistributorInput } from '../../../../models'
+import * as Validation from '../../../../validations'
 import {
   ErrorDistributorCredentialsInvalid,
   ErrorDistributorWithDomainAlreadyExists,

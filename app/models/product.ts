@@ -23,7 +23,7 @@ import { IModelNumberOutput, ModelNumber } from './modelNumber'
  * ----------------------------------------------------------------------------
  * | Partition Key      | Sort Key              | HSK           | SHSK
  * ----------------------------------------------------------------------------
- * | UUID               | CONST                 | ProductName   | 
+ * | UUID               | CONST                 | ProductName   |
  * ----------------------------------------------------------------------------
  *
  * This allows for the following access patterns:
@@ -188,9 +188,7 @@ const findByIds = async (ids: string[]): Promise<IProduct[]> => {
   }
   const result = await client.batchGet(searchParams).promise()
   return (
-    (result.Responses[
-      process.env.DYNAMODB_RESOURCES_TABLE
-    ] as IProduct[]) || []
+    (result.Responses[process.env.DYNAMODB_RESOURCES_TABLE] as IProduct[]) || []
   )
 }
 

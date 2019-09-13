@@ -1,4 +1,3 @@
-import * as Validation from 'rpmed-validation-schema'
 import {
   Customer,
   ICustomer,
@@ -8,6 +7,7 @@ import {
   ModelNumber,
   ProductRegistration,
 } from '../../../../models'
+import * as Validation from '../../../../validations'
 import * as E from '../productRegistrationErrors'
 
 interface IGraphError {
