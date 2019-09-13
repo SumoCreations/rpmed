@@ -1,4 +1,4 @@
-import { gql } from "apollo-server-lambda"
+import { gql } from 'apollo-server-lambda'
 
 export const typeDefs = gql`
   """
@@ -17,17 +17,6 @@ export const typeDefs = gql`
     The actual name of the customer.
     """
     name: String
-  }
-
-  type ValidationError {
-    """
-    A path indicating the attribute that failed validation.
-    """
-    path: String!, 
-    """
-    A brief description of why the specified attribute failed validation.
-    """
-    message: String!
   }
 
   """
@@ -59,7 +48,7 @@ export const typeDefs = gql`
     """
     success: Boolean!
   }
-  
+
   """
   The result of a mutation applied to a customer.
   """
@@ -78,7 +67,7 @@ export const typeDefs = gql`
     success: Boolean!
   }
 
-  type Query {
+  extend type Query {
     """
     All customers in the system
     """
@@ -106,13 +95,11 @@ export const typeDefs = gql`
     name: String
   }
 
-  type Mutation {
+  extend type Mutation {
     """
     Creates a new customer.
     """
-    createCustomer(
-      customerInput: NewCustomerInput!
-    ): CustomerMutationOutput!
+    createCustomer(customerInput: NewCustomerInput!): CustomerMutationOutput!
 
     """
     Updates an existing customer.
@@ -124,13 +111,6 @@ export const typeDefs = gql`
     """
     Removes an existing customer.
     """
-    destroyCustomer(
-      id: String!
-    ): CustomerMutationOutput!
-  }
-
-  schema {
-    query: Query
-    mutation: Mutation
+    destroyCustomer(id: String!): CustomerMutationOutput!
   }
 `

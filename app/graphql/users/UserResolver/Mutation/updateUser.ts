@@ -1,7 +1,7 @@
-import * as Validation from "rpmed-validation-schema"
-import { IUserInput, User } from "../../../../models"
-import { ErrorUserWithEmailAlreadyExists } from "./userErrors"
-import { IMutationOutput } from "./userMutationTypes"
+import { IUserInput, User } from '../../../../models'
+import * as Validation from '../../../../validations'
+import { ErrorUserWithEmailAlreadyExists } from './userErrors'
+import { IMutationOutput } from './userMutationTypes'
 
 export const updateUser = async (
   _: any,
@@ -14,7 +14,12 @@ export const updateUser = async (
   }
   let user = await User.find(userInput.id)
   if (!user) {
-    return { success: false, errors: [{ message: "The requested user could not be found.", path: "_" }] }
+    return {
+      errors: [
+        { message: 'The requested user could not be found.', path: '_' },
+      ],
+      success: false,
+    }
   }
   const userWithEmail = await User.findByEmail(userInput.email)
   if (userWithEmail && userWithEmail.partitionKey !== user.partitionKey) {

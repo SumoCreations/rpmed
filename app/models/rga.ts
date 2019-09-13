@@ -1,17 +1,17 @@
-import { padStart } from "lodash"
-import { DateTime } from "luxon"
-import { filterBlankAttributes, getClient } from "../util"
+import { padStart } from 'lodash'
+import { DateTime } from 'luxon'
+import { filterBlankAttributes, getDynamoClient } from '../util'
 
 /**
  * Dynamo DB Model:
  * RGA
  * ==========================================================
- * 
+ *
  * This model represents an RGA request submitted by a partner
  * or distributor.
- * 
+ *
  * The table structure in dynamo DB is as follows:
- * 
+ *
  * --------------------------------------------------------------
  * |                    | (GS1 Partition Key)   | (GS1 Sort Key)
  * --------------------------------------------------------------
@@ -19,24 +19,24 @@ import { filterBlankAttributes, getClient } from "../util"
  * --------------------------------------------------------------
  * | RGA-ID             | "RGA"                 | Status#SubmittedOn
  * --------------------------------------------------------------
- * 
+ *
  * This allows for the following access patterns:
- * 
+ *
  * 1. Fetch any RGA by unique ID.
  * 2. Fetch all RGAs (SK matches 'RGA')
  * 3. Fetch all RGAs for a given status (SK matches 'RGA' and HSK begins with Status)
  * 3. Look up all RGAs for a given status and date or date range (HSK matches Status#SubmittedOn)
- * 
+ *
  * The RGA-ID is a special type of UUID key utilizing the date, time, and some randomness:
  * 06212019MR-565583319
  * 06212019MR-293346429
  * 06212019MR-284397710
- * 
+ *
  */
 
-const SECONDARY_KEY = "RGA"
+const SECONDARY_KEY = 'RGA'
 
-const client = getClient()
+const client = getDynamoClient()
 
 export interface IRGAInput {
   id?: string
@@ -63,9 +63,14 @@ export interface IRGAOutput {
 
 const DATE_FORMAT = "MMddyyyy'MR'-mmssSSS"
 
-const generateDate = (isoString?: string) => (isoString ? DateTime.fromISO(isoString) : DateTime.utc()).toFormat(DATE_FORMAT)
-const randomPaddedTwoDigit = () => padStart(`${Math.round(Math.random() * 99)}`, 2, '0')
-const generateId = (dateString: string) => `${generateDate(dateString)}${randomPaddedTwoDigit()}`
+const generateDate = (isoString?: string) =>
+  (isoString ? DateTime.fromISO(isoString) : DateTime.utc()).toFormat(
+    DATE_FORMAT
+  )
+const randomPaddedTwoDigit = () =>
+  padStart(`${Math.round(Math.random() * 99)}`, 2, '0')
+const generateId = (dateString: string) =>
+  `${generateDate(dateString)}${randomPaddedTwoDigit()}`
 
 /**
  * Generates a new RGA model in the database provided the supplied credentials are valid.
@@ -82,17 +87,17 @@ const create = async ({
     indexSortKey: submittedOn,
     partitionKey,
     sortKey: SECONDARY_KEY,
-    submittedOn
+    submittedOn,
   }
   const params = {
     TransactItems: [
       {
         Put: {
-          ConditionExpression: "attribute_not_exists(partitionKey)",
+          ConditionExpression: 'attribute_not_exists(partitionKey)',
           Item: {
             ...filterBlankAttributes(item),
           },
-          TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+          TableName: process.env.DYNAMODB_RESOURCES_TABLE,
         },
       },
     ],
@@ -111,7 +116,7 @@ const find = async (id: string): Promise<IRGA | null> => {
       partitionKey: id,
       sortKey: SECONDARY_KEY,
     },
-    TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.get(searchParams).promise()
   return result.Item ? (result.Item as IRGA) : null
@@ -123,12 +128,12 @@ const find = async (id: string): Promise<IRGA | null> => {
 const all = async (): Promise<IRGA[]> => {
   const searchParams = {
     ExpressionAttributeValues: {
-      ":rkey": SECONDARY_KEY,
+      ':rkey': SECONDARY_KEY,
     },
-    IndexName: "GSI_1",
-    KeyConditionExpression: "sortKey = :rkey",
+    IndexName: 'GSI_1',
+    KeyConditionExpression: 'sortKey = :rkey',
     ScanIndexForward: false,
-    TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.query(searchParams).promise()
   return result.Items ? (result.Items as IRGA[]) : []
@@ -140,14 +145,19 @@ const all = async (): Promise<IRGA[]> => {
 const submittedOnDate = async (isoString: string): Promise<IRGA[]> => {
   const searchParams = {
     ExpressionAttributeValues: {
-      ":maxDate": DateTime.fromISO(isoString).endOf("day").toISO(),
-      ":minDate": DateTime.fromISO(isoString).startOf("day").toISO(),
-      ":rkey": SECONDARY_KEY,
+      ':maxDate': DateTime.fromISO(isoString)
+        .endOf('day')
+        .toISO(),
+      ':minDate': DateTime.fromISO(isoString)
+        .startOf('day')
+        .toISO(),
+      ':rkey': SECONDARY_KEY,
     },
-    IndexName: "GSI_1",
-    KeyConditionExpression: "sortKey = :rkey and indexSortKey BETWEEN :minDate and :maxDate",
+    IndexName: 'GSI_1',
+    KeyConditionExpression:
+      'sortKey = :rkey and indexSortKey BETWEEN :minDate and :maxDate',
     ScanIndexForward: false,
-    TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.query(searchParams).promise()
   return result.Items ? (result.Items as IRGA[]) : []
@@ -167,7 +177,7 @@ const destroy = async (id: string): Promise<boolean> => {
         {
           Delete: {
             Key: { partitionKey: id, sortKey: SECONDARY_KEY },
-            TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+            TableName: process.env.DYNAMODB_RESOURCES_TABLE,
           },
         },
       ],

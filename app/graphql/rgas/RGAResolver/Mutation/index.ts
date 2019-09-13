@@ -1,3 +1,3 @@
-export * from "./createRGA"
-export * from "./createRGAGood"
-export * from "./destroyRGAGood"
+export * from './createRGA'
+export * from './createRGAGood'
+export * from './destroyRGAGood'

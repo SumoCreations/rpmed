@@ -1,4 +1,4 @@
-import { gql } from "apollo-server-lambda"
+import { gql } from 'apollo-server-lambda'
 
 export const typeDefs = gql`
   """
@@ -23,17 +23,6 @@ export const typeDefs = gql`
     lastName: String
   }
 
-  type ValidationError {
-    """
-    A path indicating the attribute that failed validation.
-    """
-    path: String!, 
-    """
-    A brief description of why the specified attribute failed validation.
-    """
-    message: String!
-  }
-  
   """
   The result of a mutation applied to a user.
   """
@@ -52,7 +41,7 @@ export const typeDefs = gql`
     success: Boolean!
   }
 
-  type Query {
+  extend type Query {
     """
     All users in the system
     """
@@ -88,31 +77,25 @@ export const typeDefs = gql`
     lastName: String!
   }
 
-  type Mutation {
+  extend type Mutation {
     """
     Creates a new authenticatable user.
     """
-    createUser(
-      userInput: NewUserInput!
-    ): UserMutationOutput!
+    createUser(userInput: NewUserInput!): UserMutationOutput!
 
     """
     Updates an existing user.
     """
-    updateUser(
-      userInput: ExistingUserInput!
-    ): UserMutationOutput!
+    updateUser(userInput: ExistingUserInput!): UserMutationOutput!
 
     """
     Removes an existing user.
     """
-    destroyUser(
-      id: String!
-    ): UserMutationOutput!
-  }
+    destroyUser(id: String!): UserMutationOutput!
 
-  schema {
-    query: Query
-    mutation: Mutation
+    """
+    Resets the password for the current user dependent on a temporary access token.
+    """
+    resetPassword(password: String!): UserMutationOutput!
   }
 `

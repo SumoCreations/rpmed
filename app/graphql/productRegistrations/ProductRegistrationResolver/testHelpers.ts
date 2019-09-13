@@ -1,6 +1,6 @@
-import { v4 as uuid } from "uuid"
-import * as M from "../../../models"
-
+import { v4 as uuid } from 'uuid'
+import * as M from '../../../models'
+import { ProductType } from '../../../schema'
 
 let idIncrement = 1000
 const makeId = (key: string, model: string) => {
@@ -21,25 +21,29 @@ export interface IRegistrationSampleParamOutput {
   sampleParams: M.IProductRegistrationInput
 }
 
-export const generateSampleParams = async (inputs: IRegistrationTestHelperInput): Promise<IRegistrationSampleParamOutput> => {
+export const generateSampleParams = async (
+  inputs: IRegistrationTestHelperInput
+): Promise<IRegistrationSampleParamOutput> => {
   const customer = await M.Customer.create({
-    email: `${makeId(inputs.key, "customerEmail")}@rpmed.com`,
-    name: makeId(inputs.key, "Customer-Name"),
+    email: `${makeId(inputs.key, 'customerEmail')}@rpmed.com`,
+    name: makeId(inputs.key, 'Customer-Name'),
   })
   const product = await M.Product.create({
-    description: makeId(inputs.key, "This is a description "),
-    name: makeId(inputs.key, "Product-Name")
+    description: makeId(inputs.key, 'This is a description '),
+    name: makeId(inputs.key, 'Product-Name'),
   })
   const input = {
-    description: "MedLED Chrome MC7 PRO Hard Top; Standard Kit",
-    feeWithWarranty: 0,
-    feeWithoutWarranty: 250,
-    id: makeId(inputs.key, "REGISTERED-MODEL"),
+    description: 'MedLED Chrome MC7 PRO Hard Top; Standard Kit',
+    feeWithWarranty: { distributor: '0', endUser: '10' },
+    feeWithoutWarranty: { distributor: '250', endUser: '300' },
+    id: makeId(inputs.key, 'REGISTERED-MODEL'),
     lotted: inputs.lotted,
-    productId: product.partitionKey,
-    resolutionWithWarranty: "Do something...",
-    resolutionWithoutWarranty: "Do something else..",
-    warrantyDescription: "All headlamps covered for 1 year",
+    pricing: { cost: '1000', retail: '1200' },
+    productIds: [product.partitionKey],
+    productType: ProductType.Headlight,
+    resolutionWithWarranty: 'Do something...',
+    resolutionWithoutWarranty: 'Do something else..',
+    warrantyDescription: 'All headlamps covered for 1 year',
     warrantyTerm: 12,
   }
   const modelNumber = await M.ModelNumber.create(input)
@@ -54,6 +58,6 @@ export const generateSampleParams = async (inputs: IRegistrationTestHelperInput)
       productId: product.partitionKey,
       registeredOn: new Date().toISOString(),
       serial: inputs.lotted ? inputs.serial || uuid() : null,
-    }
+    },
   }
 }

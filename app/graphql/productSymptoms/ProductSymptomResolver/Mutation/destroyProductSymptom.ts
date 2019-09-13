@@ -1,9 +1,11 @@
-
-import { ProductSymptom } from "../../../../models"
-import { generateMutationError } from "../../../../util"
-import { ErrorProductSymptomCouldNotBeDestroyed, ErrorProductSymptomWithIDDoesNotExist } from "../productSymptomErrors"
-import { extendSymptomOutput } from "./extendOutput"
-import { IProductSymptomMutationOutput } from "./productSymptomMutationTypes"
+import { ProductSymptom } from '../../../../models'
+import { generateMutationError } from '../../../../util'
+import {
+  ErrorProductSymptomCouldNotBeDestroyed,
+  ErrorProductSymptomWithIDDoesNotExist,
+} from '../productSymptomErrors'
+import { extendSymptomOutput } from './extendOutput'
+import { IProductSymptomMutationOutput } from './productSymptomMutationTypes'
 
 export const destroyProductSymptom = async (
   _: any,
@@ -20,6 +22,6 @@ export const destroyProductSymptom = async (
   }
   return {
     productSymptom: async () => extendSymptomOutput(productSymptom),
-    success: true
+    success: true,
   }
 }

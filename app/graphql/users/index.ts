@@ -1,2 +1,2 @@
-export * from "./UserSchema"
-export * from "./UserResolver"
+export * from './UserSchema'
+export * from './UserResolver'

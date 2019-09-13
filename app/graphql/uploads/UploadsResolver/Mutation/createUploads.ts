@@ -1,5 +1,5 @@
-import { ErrorList } from "rpmed-validation-schema"
-import { getS3, getS3Bucket } from "../../../../util"
+import { getS3Client, getUploadsBucket } from '../../../../util'
+import { ErrorList } from '../../../../validations'
 
 interface IUploadInput {
   keys: string[]
@@ -17,27 +17,28 @@ export interface IUploadMutationOutput {
   success: boolean
 }
 
-const s3 = getS3()
+const s3 = getS3Client()
 
-const getUploadURL = (key: string): Promise<IUpload> => new Promise((resolve, reject) => {
-  const params = {
-    Bucket: getS3Bucket(),
-    Key: key
-  }
-  s3.getSignedUrl('putObject', params, (err, data) => {
-    if (err) {
-      // tslint:disable-next-line
-      console.error('Presigning post data encountered an error', err)
-      reject(err)
-    } else {
-      resolve({
-        bucket: params.Bucket,
-        id: params.Key,
-        url: data,
-      })
+const getUploadURL = (key: string): Promise<IUpload> =>
+  new Promise((resolve, reject) => {
+    const params = {
+      Bucket: getUploadsBucket(),
+      Key: key,
     }
+    s3.getSignedUrl('putObject', params, (err, data) => {
+      if (err) {
+        // tslint:disable-next-line
+        console.error('Presigning post data encountered an error', err)
+        reject(err)
+      } else {
+        resolve({
+          bucket: params.Bucket,
+          id: params.Key,
+          url: data,
+        })
+      }
+    })
   })
-})
 
 export const createUploads = async (
   _: any,
@@ -45,7 +46,9 @@ export const createUploads = async (
 ): Promise<IUploadMutationOutput> => {
   try {
     const { keys } = uploadInput
-    const uploads = await Promise.all(keys.map(async (key) => await getUploadURL(key)))
+    const uploads = await Promise.all(
+      keys.map(async key => await getUploadURL(key))
+    )
     return { uploads, success: true }
   } catch (e) {
     return { success: false, errors: [] }

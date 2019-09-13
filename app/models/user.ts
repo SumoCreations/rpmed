@@ -1,17 +1,17 @@
-import { v4 as uuid } from "uuid"
-import { hashPassword } from "../oauth"
-import { getClient } from "../util"
+import { v4 as uuid } from 'uuid'
+import { hashPassword } from '../oauth'
+import { getDynamoClient } from '../util'
 
 /**
  * Dynamo DB Model:
  * USER
  * ==========================================================
- * 
+ *
  * This model represents an authenticatable user in the admin
  * or other related RPMed client applications.
- * 
+ *
  * The table structure in dynamo DB is as follows:
- * 
+ *
  * --------------------------------------------------------------
  * |                  | (GS1 Partition Key)   | (GS1 Sort Key)
  * --------------------------------------------------------------
@@ -19,19 +19,22 @@ import { getClient } from "../util"
  * --------------------------------------------------------------
  * | UUID             | CONST                 | Email
  * --------------------------------------------------------------
- * 
+ *
  * This allows for the following access patterns:
- * 
+ *
  * 1. Fetch customer by unique id. (PK is generated uuid)
  * 2. Fetch all customers (SK matches 'CONST')
  * 3. Look up a customer via email (HSK matches Email)
  */
 
-const client = getClient()
+const client = getDynamoClient()
 
-const SECONDARY_KEY = "USER"
+const SECONDARY_KEY = 'USER'
 
-interface IEmailLookup { email: string, id: string }
+interface IEmailLookup {
+  email: string
+  id: string
+}
 
 export interface IUserInput {
   email: string
@@ -73,19 +76,19 @@ const create = async ({ id, ...userInput }: IUserInput): Promise<IUser> => {
     TransactItems: [
       {
         Put: {
-          ConditionExpression: "attribute_not_exists(email)",
+          ConditionExpression: 'attribute_not_exists(email)',
           Item: { email: item.email, id: item.partitionKey },
           TableName: process.env.DYNAMODB_USER_LOOKUP_TABLE,
         },
       },
       {
         Put: {
-          ConditionExpression: "attribute_not_exists(id)",
+          ConditionExpression: 'attribute_not_exists(id)',
           Item: {
             ...item,
-            indexSortKey: [item.lastName, item.firstName, item.email].join("#"),
+            indexSortKey: [item.lastName, item.firstName, item.email].join('#'),
           },
-          TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+          TableName: process.env.DYNAMODB_RESOURCES_TABLE,
         },
       },
     ],
@@ -95,7 +98,7 @@ const create = async ({ id, ...userInput }: IUserInput): Promise<IUser> => {
 }
 
 /**
- * Updates an existing user model in the database provided the supplied 
+ * Updates an existing user model in the database provided the supplied
  * credentials are valid.
  * @param credentials The identifying credentials to assign to the account.
  */
@@ -103,13 +106,13 @@ const update = async ({ id, ...userInput }: IUserInput): Promise<IUser> => {
   const existingUser = await find(id)
   const transactions = []
   /**
-   * Delete the previous email address associated with the user if it 
+   * Delete the previous email address associated with the user if it
    * has been changed.
    */
   if (existingUser.email !== userInput.email) {
     transactions.push({
       Put: {
-        ConditionExpression: "attribute_not_exists(email)",
+        ConditionExpression: 'attribute_not_exists(email)',
         Item: { email: userInput.email, id },
         TableName: process.env.DYNAMODB_USER_LOOKUP_TABLE,
       },
@@ -120,22 +123,34 @@ const update = async ({ id, ...userInput }: IUserInput): Promise<IUser> => {
         DELETE: {
           Key: {
             email: userInput.email,
-            userId: id
+            userId: id,
           },
           TableName: process.env.DYNAMODB_USER_LOOKUP_TABLE,
-        }
+        },
       })
     }
   }
   const passwordExists = userInput.password && userInput.password.length > 0
-  const hashedPassword = passwordExists ? await hashPassword(userInput.password) : existingUser.password
+  const hashedPassword = passwordExists
+    ? await hashPassword(userInput.password)
+    : existingUser.password
   transactions.push({
     Update: {
-      ExpressionAttributeNames: { '#indexSortKey': 'indexSortKey', '#password': 'password', '#firstName': 'firstName', '#lastName': 'lastName', '#email': 'email' },
+      ExpressionAttributeNames: {
+        '#email': 'email',
+        '#firstName': 'firstName',
+        '#indexSortKey': 'indexSortKey',
+        '#lastName': 'lastName',
+        '#password': 'password',
+      },
       ExpressionAttributeValues: {
         ':email': userInput.email,
         ':firstName': userInput.firstName,
-        ':indexSortKey': [userInput.lastName, userInput.firstName, userInput.email].join("#"),
+        ':indexSortKey': [
+          userInput.lastName,
+          userInput.firstName,
+          userInput.email,
+        ].join('#'),
         ':lastName': userInput.lastName,
         ':password': hashedPassword,
       },
@@ -143,13 +158,16 @@ const update = async ({ id, ...userInput }: IUserInput): Promise<IUser> => {
         partitionKey: id,
         sortKey: SECONDARY_KEY,
       },
-      TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
-      UpdateExpression: 'set #indexSortKey = :indexSortKey, #email = :email, #firstName = :firstName, #lastName = :lastName, #password = :password',
-    }
+      TableName: process.env.DYNAMODB_RESOURCES_TABLE,
+      UpdateExpression:
+        'set #indexSortKey = :indexSortKey, #email = :email, #firstName = :firstName, #lastName = :lastName, #password = :password',
+    },
   })
-  await client.transactWrite({
-    TransactItems: transactions,
-  }).promise()
+  await client
+    .transactWrite({
+      TransactItems: transactions,
+    })
+    .promise()
   return {
     ...existingUser,
     ...userInput,
@@ -167,7 +185,7 @@ const find = async (id: string): Promise<IUser | null> => {
       partitionKey: id,
       sortKey: SECONDARY_KEY,
     },
-    TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.get(searchParams).promise()
   return result.Item ? (result.Item as IUser) : null
@@ -179,11 +197,11 @@ const find = async (id: string): Promise<IUser | null> => {
 const all = async (): Promise<IUser[]> => {
   const searchParams = {
     ExpressionAttributeValues: {
-      ":rkey": SECONDARY_KEY,
+      ':rkey': SECONDARY_KEY,
     },
-    IndexName: "GSI_1",
-    KeyConditionExpression: "sortKey = :rkey",
-    TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+    IndexName: 'GSI_1',
+    KeyConditionExpression: 'sortKey = :rkey',
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.query(searchParams).promise()
   return result.Items ? (result.Items as IUser[]) : []
@@ -219,14 +237,14 @@ const findByEmail = async (email: string): Promise<IUser | null> => {
 const destroyParamsForAssociatedEmailAddressesForUserId = async (
   userId: string
 ): Promise<
-Array<{ [key: string]: { Key: { email: string }; TableName: string } }>
+  Array<{ [key: string]: { Key: { email: string }; TableName: string } }>
 > => {
   const params = {
     ExpressionAttributeValues: {
-      ":hkey": userId,
+      ':hkey': userId,
     },
-    IndexName: "UserIdGSI",
-    KeyConditionExpression: "id = :hkey",
+    IndexName: 'UserIdGSI',
+    KeyConditionExpression: 'id = :hkey',
     TableName: process.env.DYNAMODB_USER_LOOKUP_TABLE,
   }
   const results = await client.query(params).promise()
@@ -255,7 +273,7 @@ const destroy = async (id: string): Promise<boolean> => {
         {
           Delete: {
             Key: { partitionKey: id, sortKey: SECONDARY_KEY },
-            TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+            TableName: process.env.DYNAMODB_RESOURCES_TABLE,
           },
         },
       ],
@@ -279,7 +297,7 @@ const destroyByEmail = async (email: string): Promise<boolean> => {
     TableName: process.env.DYNAMODB_USER_LOOKUP_TABLE,
   }
   const result = (await client.get(lookUpParams).promise()).Item
-  return typeof result === "undefined" ? false : await destroy(result.id)
+  return typeof result === 'undefined' ? false : await destroy(result.id)
 }
 
 /**

@@ -1,5 +1,5 @@
-import { ErrorList } from "rpmed-validation-schema"
-import { IModelNumberOutput, IProductOutput } from "../../../../models"
+import { IModelNumberOutput, IProductOutput } from '../../../../models'
+import { ErrorList } from '../../../../validations'
 
 export interface IProductMutationOutput {
   product?: IProductOutput

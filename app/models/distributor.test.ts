@@ -1,69 +1,77 @@
-import { isEmpty } from "validator"
-import { Distributor, IDistributor } from "./distributor"
+import { isEmpty } from 'validator'
+import { Distributor, IDistributor } from './distributor'
 
 const existingDistributorParams = {
-  domain: "klsmartin.com",
-  name: "KLS Martin"
+  domain: 'klsmartin.com',
+  name: 'KLS Martin',
 }
 
-describe("distributor", () => {
+describe('distributor', () => {
   let distributor: IDistributor
-  beforeEach(async (done) => {
+  beforeEach(async done => {
     distributor = await Distributor.create({ ...existingDistributorParams })
     done()
   })
 
-  afterEach(async (done) => {
+  afterEach(async done => {
     await Distributor.destroy(distributor.partitionKey)
     done()
   })
 
-  describe("create", () => {
-    test("should generate a new distributor", () => {
+  describe('create', () => {
+    test('should generate a new distributor', () => {
       expect(isEmpty(distributor.partitionKey)).toBe(false)
       expect(distributor.sortKey).toBe(Distributor.SECONDARY_KEY)
     })
   })
 
-  describe("find", () => {
-    test("should return a distributor if one exists", async () => {
+  describe('find', () => {
+    test('should return a distributor if one exists', async () => {
       expect.assertions(1)
-      const existingDistributor = await Distributor.find(distributor.partitionKey)
+      const existingDistributor = await Distributor.find(
+        distributor.partitionKey
+      )
       expect(existingDistributor).not.toBeNull()
     })
 
-    test("should return null if a distributor does not exist", async () => {
+    test('should return null if a distributor does not exist', async () => {
       expect.assertions(1)
-      const existingDistributor = await Distributor.find("Some-Made-Up-Id")
+      const existingDistributor = await Distributor.find('Some-Made-Up-Id')
       expect(existingDistributor).toBeNull()
     })
   })
 
-  describe("findByDomain", () => {
-    test("should return a distributor if one exists", async () => {
+  describe('findByDomain', () => {
+    test('should return a distributor if one exists', async () => {
       expect.assertions(1)
-      const existingDistributor = await Distributor.findByDomain(distributor.domain)
+      const existingDistributor = await Distributor.findByDomain(
+        distributor.domain
+      )
       expect(existingDistributor).not.toBeNull()
     })
 
-    test("should return null if a distributor does not exist", async () => {
+    test('should return null if a distributor does not exist', async () => {
       expect.assertions(1)
-      const existingDistributor = await Distributor.findByDomain("SomeOtherDomainId.co")
+      const existingDistributor = await Distributor.findByDomain(
+        'SomeOtherDomainId.co'
+      )
       expect(existingDistributor).toBeUndefined()
     })
   })
 
-  describe("destroy", () => {
-    test("should delete a distributor and return true if one exists", async () => {
+  describe('destroy', () => {
+    test('should delete a distributor and return true if one exists', async () => {
       expect.assertions(2)
       expect(await Distributor.destroy(distributor.partitionKey)).toBeTruthy()
-      const existingDistributor = await Distributor.find(distributor.partitionKey)
+      const existingDistributor = await Distributor.find(
+        distributor.partitionKey
+      )
       expect(existingDistributor).toBeNull()
     })
 
-    test("should return false if a distributor does not exist", async () => {
+    test('should return false if a distributor does not exist', async () => {
       expect.assertions(1)
-      expect(await Distributor.destroy("Some-Made-Up-Id")).toBeFalsy()
+      expect(await Distributor.destroy('Some-Made-Up-Id')).toBeFalsy()
     })
   })
 })

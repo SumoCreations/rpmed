@@ -1,2 +1,2 @@
-export * from "./productSymptom"
-export * from "./productSymptoms"
+export * from './productSymptom'
+export * from './productSymptoms'

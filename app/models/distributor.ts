@@ -1,19 +1,19 @@
-import { v4 as uuid } from "uuid"
-import { getClient } from "../util"
+import { v4 as uuid } from 'uuid'
+import { getDynamoClient } from '../util'
 
 /**
  * Dynamo DB Model:
  * DISTRIBUTOR
  * ==========================================================
- * 
- * This model represents a distributor or partner of Riverpoint Medical. 
+ *
+ * This model represents a distributor or partner of Riverpoint Medical.
  * Distributors are tracked in order to track RGA requests. It also
  * allows us to manage any special terms that may overwrite default warranties
  * or other specific agreements that are made on a partner by partner
  * basis.
- * 
+ *
  * The table structure in dynamo DB is as follows:
- * 
+ *
  * --------------------------------------------------------------
  * |                  | (GS1 Partition Key)   | (GS1 Sort Key)
  * --------------------------------------------------------------
@@ -21,17 +21,17 @@ import { getClient } from "../util"
  * --------------------------------------------------------------
  * | UUID             | CONST                 | Domain
  * --------------------------------------------------------------
- * 
+ *
  * This allows for the following access patterns:
- * 
+ *
  * 1. Fetch distributor by unique id. (PK is generated uuid)
  * 2. Fetch all distributors (SK matches 'CONST')
  * 3. Look up a distributor via email address domain (HSK matches Domain)
  */
 
-const client = getClient()
+const client = getDynamoClient()
 
-const SECONDARY_KEY = "DISTRIBUTOR"
+const SECONDARY_KEY = 'DISTRIBUTOR'
 
 export interface IDistributorInput {
   name: string
@@ -70,12 +70,12 @@ const create = async ({
     TransactItems: [
       {
         Put: {
-          ConditionExpression: "attribute_not_exists(partitionKey)",
+          ConditionExpression: 'attribute_not_exists(partitionKey)',
           Item: {
             ...item,
             indexSortKey: hsk,
           },
-          TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+          TableName: process.env.DYNAMODB_RESOURCES_TABLE,
         },
       },
     ],
@@ -89,24 +89,25 @@ const create = async ({
  * @param input An object representing the input to replace the supplied object.
  */
 const update = async ({
-  id, ...distributorInput
+  id,
+  ...distributorInput
 }: IDistributorInput): Promise<IDistributor> => {
   const existingItem = await find(id)
   const item: IDistributor = {
     ...existingItem,
-    ...distributorInput
+    ...distributorInput,
   }
   const hsk = distributorInput.domain
   const params = {
     TransactItems: [
       {
         Put: {
-          ConditionExpression: "attribute_exists(partitionKey)",
+          ConditionExpression: 'attribute_exists(partitionKey)',
           Item: {
             ...item,
             indexSortKey: hsk,
           },
-          TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+          TableName: process.env.DYNAMODB_RESOURCES_TABLE,
         },
       },
     ],
@@ -119,14 +120,16 @@ const update = async ({
  * Retreives a distributor by unique ID.
  * @param id The UUID of the distributor to find.
  */
-const findOrCreateWithDomain = async (domain: string): Promise<IDistributor> => {
+const findOrCreateWithDomain = async (
+  domain: string
+): Promise<IDistributor> => {
   const existing = await findByDomain(domain)
   if (existing) {
     return existing
   }
   return await create({
     domain,
-    name: domain
+    name: domain,
   })
 }
 
@@ -140,7 +143,7 @@ const find = async (id: string): Promise<IDistributor | null> => {
       partitionKey: id,
       sortKey: SECONDARY_KEY,
     },
-    TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.get(searchParams).promise()
   return result.Item ? (result.Item as IDistributor) : null
@@ -153,13 +156,13 @@ const find = async (id: string): Promise<IDistributor | null> => {
 const findByDomain = async (domain: string): Promise<IDistributor | null> => {
   const searchParams = {
     ExpressionAttributeValues: {
-      ":hsk": domain,
-      ":rkey": SECONDARY_KEY,
+      ':hsk': domain,
+      ':rkey': SECONDARY_KEY,
     },
-    IndexName: "GSI_1",
-    KeyConditionExpression: "sortKey = :rkey AND indexSortKey = :hsk",
+    IndexName: 'GSI_1',
+    KeyConditionExpression: 'sortKey = :rkey AND indexSortKey = :hsk',
     Limit: 1,
-    TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.query(searchParams).promise()
   return result.Items ? (result.Items[0] as IDistributor) : null
@@ -171,18 +174,18 @@ const findByDomain = async (domain: string): Promise<IDistributor | null> => {
 const all = async (): Promise<IDistributor[]> => {
   const searchParams = {
     ExpressionAttributeValues: {
-      ":rkey": SECONDARY_KEY,
+      ':rkey': SECONDARY_KEY,
     },
-    IndexName: "GSI_1",
-    KeyConditionExpression: "sortKey = :rkey",
-    TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+    IndexName: 'GSI_1',
+    KeyConditionExpression: 'sortKey = :rkey',
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.query(searchParams).promise()
   return result.Items ? (result.Items as IDistributor[]) : []
 }
 
 /**
- * Deletes a distributor and associated child objects from the 
+ * Deletes a distributor and associated child objects from the
  * database via UUID.
  * @param id The UUID of the distributor to delete.
  */
@@ -196,7 +199,7 @@ const destroy = async (id: string): Promise<boolean> => {
         {
           Delete: {
             Key: { partitionKey: id, sortKey: SECONDARY_KEY },
-            TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+            TableName: process.env.DYNAMODB_RESOURCES_TABLE,
           },
         },
       ],
@@ -219,7 +222,7 @@ const output = ({
 }: IDistributor): IDistributorOutput => {
   const result = {
     ...distributor,
-    id: partitionKey
+    id: partitionKey,
   }
   return result
 }
@@ -233,5 +236,5 @@ export const Distributor = {
   findByDomain,
   findOrCreateWithDomain,
   output,
-  update
+  update,
 }

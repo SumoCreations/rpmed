@@ -1,23 +1,25 @@
-import { Distributor, IDistributor, IRGA, RGA } from "../../../../models"
-import { rga } from "./rga"
+import { Distributor, IDistributor, IRGA, RGA } from '../../../../models'
+import { rga } from './rga'
 
-describe("Query", () => {
-
+describe('Query', () => {
   let existingRGA: IRGA
   let existingDistributor: IDistributor
 
-  beforeAll(async (done) => {
-    existingDistributor = await Distributor.create({ name: "Example Distributor", domain: "example-dist.com" })
+  beforeAll(async done => {
+    existingDistributor = await Distributor.create({
+      name: 'Example Distributor',
+      domain: 'example-dist.com',
+    })
     existingRGA = await RGA.create({
       distributorId: existingDistributor.partitionKey,
-      submittedBy: "some-one@example-dist.com",
-      submittedOn: new Date().toISOString()
+      submittedBy: 'some-one@example-dist.com',
+      submittedOn: new Date().toISOString(),
     })
     done()
   })
 
-  describe("rga", () => {
-    test("should return a rga if it exists", async () => {
+  describe('rga', () => {
+    test('should return a rga if it exists', async () => {
       expect.assertions(6)
       const output = await rga({}, { id: existingRGA.partitionKey })
       expect(output.success).toEqual(true)
@@ -28,14 +30,13 @@ describe("Query", () => {
       expect(output.rga.submittedOn).toEqual(existingRGA.submittedOn)
     })
 
-    test("should return an error if it does not exist", async () => {
+    test('should return an error if it does not exist', async () => {
       expect.assertions(4)
-      const output = await rga({}, { id: "DOES-NOT-EXIST" })
+      const output = await rga({}, { id: 'DOES-NOT-EXIST' })
       expect(output.success).toEqual(false)
       expect(output.rga).toBeUndefined()
       expect(output.rgas).toBeUndefined()
       expect(output.errors).toBeDefined()
     })
   })
-
 })

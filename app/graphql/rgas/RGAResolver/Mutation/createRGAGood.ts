@@ -1,7 +1,16 @@
-import * as Validation from "rpmed-validation-schema"
-import { Customer, ICustomer, IRGAGood, ModelNumber, ProductRegistration, ProductSymptom, RGA, RGAGood } from "../../../../models"
-import { generateMutationError } from "../../../../util"
-import { IRGAGoodMutationOutput } from "./rgaMutationTypes"
+import {
+  Customer,
+  ICustomer,
+  IRGAGood,
+  ModelNumber,
+  ProductRegistration,
+  ProductSymptom,
+  RGA,
+  RGAGood,
+} from '../../../../models'
+import { generateMutationError } from '../../../../util'
+import * as Validation from '../../../../validations'
+import { IRGAGoodMutationOutput } from './rgaMutationTypes'
 
 interface IRGAGoodInputParams {
   rgaGoodInput: {
@@ -26,51 +35,87 @@ type CreateRGAGoodMutation = (
   rgaGoodInput: IRGAGoodInputParams
 ) => Promise<IRGAGoodMutationOutput>
 
-const present = (val: string | null) => typeof val === "string" && val.length > 0
+const present = (val: string | null) =>
+  typeof val === 'string' && val.length > 0
 /**
  * A GraphQL resolver that handles the 'CreateRGAGood' mutation.
  */
-export const createRGAGood: CreateRGAGoodMutation = async (_, { rgaGoodInput }) => {
+export const createRGAGood: CreateRGAGoodMutation = async (
+  _,
+  { rgaGoodInput }
+) => {
   try {
-    await Validation.RGAGood.Default.validate(rgaGoodInput, { abortEarly: false })
+    await Validation.RGAGood.Default.validate(rgaGoodInput, {
+      abortEarly: false,
+    })
   } catch (e) {
     return generateMutationError(Validation.formatError(e))
   }
 
   const rga = await RGA.find(rgaGoodInput.rgaId)
   if (!rga) {
-    return { errors: [{ path: "rgaId", message: `RGA ${rgaGoodInput.rgaId} does not exist` }], success: false }
+    return {
+      errors: [
+        { path: 'rgaId', message: `RGA ${rgaGoodInput.rgaId} does not exist` },
+      ],
+      success: false,
+    }
   }
 
   const modelNumber = await ModelNumber.find(rgaGoodInput.modelNumber)
   if (!modelNumber) {
-    return { errors: [{ path: "modelNumber", message: `Model number '${rgaGoodInput.modelNumber}' does not exist` }], success: false }
+    return {
+      errors: [
+        {
+          message: `Model number '${rgaGoodInput.modelNumber}' does not exist`,
+          path: 'modelNumber',
+        },
+      ],
+      success: false,
+    }
   }
 
   if (modelNumber.lotted && !present(rgaGoodInput.serial)) {
-    return { errors: [{ path: "serial", message: `Serial number cannot be blank` }], success: false }
+    return {
+      errors: [{ path: 'serial', message: `Serial number cannot be blank` }],
+      success: false,
+    }
   }
 
-  const existingGood = modelNumber.lotted ? (await RGAGood.find(rga.partitionKey, rgaGoodInput.serial)) : null
+  const existingGood = modelNumber.lotted
+    ? await RGAGood.find(rga.partitionKey, rgaGoodInput.serial)
+    : null
   if (existingGood) {
-    return { errors: [{ path: "serial", message: `Product with serial'${rgaGoodInput.serial}' already assigned to an RGA` }], success: false }
+    return {
+      errors: [
+        {
+          message: `Product with serial'${
+            rgaGoodInput.serial
+          }' already assigned to an RGA`,
+          path: 'serial',
+        },
+      ],
+      success: false,
+    }
   }
 
   const existingSymptom = await ProductSymptom.find(rgaGoodInput.symptomId)
 
   let customer: ICustomer | null
-  if (present(rgaGoodInput.customerEmail) &&
-    present(rgaGoodInput.customerName)) {
+  if (
+    present(rgaGoodInput.customerEmail) &&
+    present(rgaGoodInput.customerName)
+  ) {
     try {
       customer =
         (await Customer.findByEmail(rgaGoodInput.customerEmail)) ||
         (await Customer.create({
           email: rgaGoodInput.customerEmail,
-          name: rgaGoodInput.customerName
+          name: rgaGoodInput.customerName,
         }))
     } catch (e) {
       // tslint:disable no-console
-      console.log("Could not create customer:")
+      console.log('Could not create customer:')
       console.log(e)
       // tslint:enable no-console
     }
@@ -84,18 +129,18 @@ export const createRGAGood: CreateRGAGoodMutation = async (_, { rgaGoodInput }) 
       faultCode: existingSymptom.faultCode,
       submittedBy: rgaGoodInput.submittedBy || rga.submittedBy,
       submittedOn: rgaGoodInput.submittedOn || rga.submittedOn,
-      symptomDescription: existingSymptom.name
+      symptomDescription: existingSymptom.name,
     })
   } catch (e) {
     // tslint:disable-next-line
     console.log(e)
-    return { errors: [{ path: "_", message: "Could not create good for RGA." }], success: false }
+    return {
+      errors: [{ path: '_', message: 'Could not create good for RGA.' }],
+      success: false,
+    }
   }
 
-  if (
-    customer &&
-    !(await ProductRegistration.find(rgaGood.id))
-  ) {
+  if (customer && !(await ProductRegistration.find(rgaGood.id))) {
     try {
       await ProductRegistration.create({
         customerId: customer.partitionKey,
@@ -103,15 +148,19 @@ export const createRGAGood: CreateRGAGoodMutation = async (_, { rgaGoodInput }) 
         modelNumber: modelNumber.partitionKey,
         productId: modelNumber.indexSortKey,
         registeredOn: new Date().toISOString(),
-        serial: rgaGood.id
+        serial: rgaGood.id,
       })
     } catch (e) {
       // tslint:disable no-console
-      console.log("Could not register product:")
+      console.log('Could not register product:')
       console.log(e)
       // tslint:enable no-console
     }
   }
 
-  return { rgaId: rgaGood.rgaId, rgaGood: RGAGood.output(rgaGood), success: true }
+  return {
+    rgaGood: RGAGood.output(rgaGood),
+    rgaId: rgaGood.rgaId,
+    success: true,
+  }
 }

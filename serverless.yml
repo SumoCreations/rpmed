@@ -1,6 +1,9 @@
 service:
   name: rpmed-service-api
 
+package:
+  individually: true
+
 plugins:
   - serverless-webpack
   - serverless-dynamodb-local
@@ -11,9 +14,12 @@ custom:
   serverless-offline:
     port: 4000
   dynamodb:
+    stages:
+      - dev
     start:
       migrate: true
       seed: true
+      noStart: true
     seed:
       dev:
         sources:
@@ -27,7 +33,7 @@ custom:
     prod: prod.rpmed-apps.com
   customDomain:
     domainName: ${self:custom.domain.${opt:stage, self:provider.stage}}
-    basePath: ""
+    basePath: ''
     stage: ${opt:stage, self:provider.stage}
     createRoute53Record: true
 
@@ -37,23 +43,25 @@ provider:
   profile: rpmed-serverless
   region: us-west-2
   environment:
-    ACCESS_TOKEN_LIFESPAN: 300
-    REFRESH_TOKEN_LIFESPAN: 172800
+    ACCESS_TOKEN_LIFESPAN: 5m
+    REFRESH_TOKEN_LIFESPAN: 7d
     SALT_ROUNDS: 10
     RECAPTCHA_KEY: 6LdOqZoUAAAAAJ79IuWa4mU57Urnd-N6oxP4XhiR
     OAUTH_SIGNATURE: 'Ph$2\@!Rq<ev_W;:N(2+>Bwxez$3?;9~srf*nxiVJLz:lw7Djgs(Q/UhwmZ@"YLi<'
     ATTACHED_IMAGES_BUCKET: ${self:service}-${opt:stage, self:provider.stage}-attached-images
-    DYNAMODB_ACCOUNTS_TABLE: ${self:service}-${opt:stage, self:provider.stage}-resources
-    DYNAMODB_ACCOUNTS_GSI_1: GSI_1,
+    DYNAMODB_RESOURCES_TABLE: ${self:service}-${opt:stage, self:provider.stage}-resources
+    DYNAMODB_RESOURCES_GSI_1: GSI_1
+    DYNAMODB_RESOURCES_GSI_2: GSI_2
     DYNAMODB_USER_LOOKUP_TABLE: ${self:service}-${opt:stage, self:provider.stage}-users-lookup
     DYNAMODB_TOKEN_LOOKUP_TABLE: ${self:service}-${opt:stage, self:provider.stage}-tokens-lookup
+    SES_SOURCE_ARN: arn:aws:ses:us-west-2:426380452104:identity/rpmed-apps.com
 
   iamRoleStatements:
     - Effect: Allow
       Action:
         - s3:PutObject
         - s3:GetObject
-      Resource: "arn:aws:s3:::${self:provider.environment.ATTACHED_IMAGES_BUCKET}/*"
+      Resource: 'arn:aws:s3:::${self:provider.environment.ATTACHED_IMAGES_BUCKET}/*'
     - Effect: Allow
       Action:
         - dynamodb:Query
@@ -63,7 +71,7 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
         - dynamodb:BatchGetItem
-      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:service}-${opt:stage, self:provider.stage}-*"
+      Resource: 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:service}-${opt:stage, self:provider.stage}-*'
 
 functions:
   graphql:
@@ -79,6 +87,20 @@ functions:
       - http:
           method: post
           path: auth/token
+          cors: true
+  forgotPassword:
+    handler: app/forgot.sendResetPasswordEmail
+    events:
+      - http:
+          method: post
+          path: auth/forgot
+          cors: true
+  sheets:
+    handler: app/sheets.importModels
+    events:
+      - http:
+          method: get
+          path: sheets
           cors: true
 resources:
   # S3

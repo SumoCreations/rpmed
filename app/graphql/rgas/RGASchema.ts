@@ -1,4 +1,4 @@
-import { gql } from "apollo-server-lambda"
+import { gql } from 'apollo-server-lambda'
 
 export const typeDefs = gql`
   """
@@ -43,7 +43,7 @@ export const typeDefs = gql`
     The symptom / reason this product is being returned.
     """
     symptomId: String!
-        """
+    """
     The current description of the symptom.
     """
     symptomDescription: String!
@@ -98,35 +98,6 @@ export const typeDefs = gql`
   }
 
   """
-  A distributor of Riverpoint Medical.
-  """
-  type Distributor {
-    """
-    The unique identifier for this distributor
-    """
-    id: ID!
-    """
-    The domain to match email addresses to via this distributor.
-    """
-    domain: String!
-    """
-    The actual name of the distributor.
-    """
-    name: String
-  }
-
-  type ValidationError {
-    """
-    A path indicating the attribute that failed validation.
-    """
-    path: String!, 
-    """
-    A brief description of why the specified attribute failed validation.
-    """
-    message: String!
-  }
-
-  """
   The result of a query for a RGA or RGAs.
   """
   type RGAQueryOutput {
@@ -155,7 +126,7 @@ export const typeDefs = gql`
     """
     success: Boolean!
   }
-  
+
   """
   The result of a mutation applied to a RGA.
   """
@@ -196,7 +167,7 @@ export const typeDefs = gql`
     success: Boolean!
   }
 
-  type Query {
+  extend type Query {
     """
     All RGAs in the system
     """
@@ -267,27 +238,18 @@ export const typeDefs = gql`
     customerEmail: String
   }
 
-  type Mutation {
+  extend type Mutation {
     """
     Creates a new RGA.
     """
-    createRGA(
-      rgaInput: NewRGAInput!
-    ): RGAMutationOutput!
+    createRGA(rgaInput: NewRGAInput!): RGAMutationOutput!
     """
     Creates a new good for an existing RGA.
     """
-    createRGAGood(
-      rgaGoodInput: NewRGAGoodInput!
-    ): RGAGoodMutationOutput!
+    createRGAGood(rgaGoodInput: NewRGAGoodInput!): RGAGoodMutationOutput!
     """
     Removes an existing RGA good.
     """
     destroyRGAGood(id: ID!, rgaId: String!): RGAGoodMutationOutput!
-  }
-
-  schema {
-    query: Query
-    mutation: Mutation
   }
 `

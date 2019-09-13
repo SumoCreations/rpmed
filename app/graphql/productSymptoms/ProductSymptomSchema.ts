@@ -1,7 +1,6 @@
-import { gql } from "apollo-server-lambda"
+import { gql } from 'apollo-server-lambda'
 
 export const typeDefs = gql`
-
   """
   A subset of the model number type
   """
@@ -20,14 +19,14 @@ export const typeDefs = gql`
     symptoms: [ProductSymptom]!
   }
 
-"""
-Indicates whether or not an image is currently transferring, available, or even deleted.
-"""
-enum UploadStatus {
-  PENDING
-  AVAILABLE
-  DELETED
-}
+  """
+  Indicates whether or not an image is currently transferring, available, or even deleted.
+  """
+  enum UploadStatus {
+    PENDING
+    AVAILABLE
+    DELETED
+  }
 
   """
   An image that can be associated to any another type.
@@ -101,17 +100,6 @@ enum UploadStatus {
     attachedImages: [AttachedImage]
   }
 
-  type ValidationError {
-    """
-    A path indicating the attribute that failed validation.
-    """
-    path: String!, 
-    """
-    A brief description of why the specified attribute failed validation.
-    """
-    message: String!
-  }
-
   """
   The result of a query for a symptom or symptoms.
   """
@@ -141,7 +129,7 @@ enum UploadStatus {
     """
     success: Boolean!
   }
-  
+
   """
   The result of a mutation applied to a symptom.
   """
@@ -164,11 +152,14 @@ enum UploadStatus {
     success: Boolean!
   }
 
-  type Query {
+  extend type Query {
     """
     All symptoms in the system
     """
-    productSymptoms(search: String, modelNumber: String): ProductSymptomQueryOutput!
+    productSymptoms(
+      search: String
+      modelNumber: String
+    ): ProductSymptomQueryOutput!
     """
     A specific symptom in the system via ID.
     """
@@ -208,7 +199,7 @@ enum UploadStatus {
     position: Int!
   }
 
-  type Mutation {
+  extend type Mutation {
     """
     Creates a new symptom.
     """
@@ -226,9 +217,7 @@ enum UploadStatus {
     """
     Removes an existing symptom.
     """
-    destroyProductSymptom(
-      id: String!
-    ): ProductSymptomMutationOutput!
+    destroyProductSymptom(id: String!): ProductSymptomMutationOutput!
 
     """
     Links an existing model number to an existing symptom.
@@ -246,10 +235,5 @@ enum UploadStatus {
       symptomId: String!
       attachedImages: [AttachedImageInput]!
     ): ProductSymptomMutationOutput!
-  }
-
-  schema {
-    query: Query
-    mutation: Mutation
   }
 `

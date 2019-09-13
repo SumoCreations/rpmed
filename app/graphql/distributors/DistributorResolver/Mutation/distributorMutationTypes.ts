@@ -1,5 +1,5 @@
-import { ErrorList } from "rpmed-validation-schema"
-import { IDistributorOutput } from "../../../../models"
+import { IDistributorOutput } from '../../../../models'
+import { ErrorList } from '../../../../validations'
 
 export interface IDistributorMutationOutput {
   distributor?: IDistributorOutput

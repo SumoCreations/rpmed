@@ -1,7 +1,8 @@
-import { ErrorList } from "rpmed-validation-schema"
-import { ICustomerOutput, IProductRegistrationOutput } from "../../../../models"
+import { ICustomerOutput, IProductRegistrationOutput } from '../../../../models'
+import { ErrorList } from '../../../../validations'
 
-interface IExtendedProductRegistrationOutput extends IProductRegistrationOutput {
+interface IExtendedProductRegistrationOutput
+  extends IProductRegistrationOutput {
   customer: () => Promise<ICustomerOutput | null>
 }
 
