@@ -34,12 +34,18 @@ export const updateModelNumber: UpdateModelNumberResolver = async (
       console.log('No model shouold exist!!!')
       return generateMutationError([ErrorModelNumberIDDoesNotExist])
     }
-    const relatedProduct = await Product.findByIds(modelNumberInput.productIds)
-    if (relatedProduct.length < modelNumberInput.productIds.length) {
+    const products = await Product.findByIds(modelNumberInput.productIds)
+    if (products.length < modelNumberInput.productIds.length) {
       return generateMutationError([ErrorModelNumberRelatedProductDoesNotExist])
     }
     const modelNumber = await ModelNumber.update(modelNumberInput)
-    return { modelNumber: ModelNumber.output(modelNumber), success: true }
+    return {
+      modelNumber: {
+        ...ModelNumber.output(modelNumber),
+        products: products ? products.map(Product.output) : [],
+      },
+      success: true,
+    }
   } catch (e) {
     return generateMutationError([
       { path: '_', message: 'Could not update model number.' },

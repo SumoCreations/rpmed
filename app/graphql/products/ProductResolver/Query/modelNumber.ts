@@ -26,8 +26,9 @@ export const modelNumber = async (
     return {
       modelNumber: {
         ...output,
-        product: async () =>
-          Product.output((await Product.findByIds(output.productIds))[0]),
+        products: async () =>
+          (await Product.findByIds(output.productIds)).map(Product.output) ||
+          [],
         symptoms: async () =>
           (await productSymptomsForModel(result.partitionKey)).map(
             ProductSymptom.output

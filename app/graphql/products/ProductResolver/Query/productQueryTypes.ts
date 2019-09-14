@@ -6,7 +6,7 @@ import {
 import { ErrorList } from '../../../../validations'
 
 interface IExtendedModelNumberOutput extends IModelNumberOutput {
-  product: () => Promise<IProductOutput | null>
+  products: () => Promise<IProductOutput[] | null>
   symptoms: () => Promise<IProductSymptomOutput[]>
 }
 

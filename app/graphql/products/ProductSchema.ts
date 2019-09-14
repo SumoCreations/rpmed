@@ -97,13 +97,13 @@ export const typeDefs = gql`
     """
     pricing: Pricing!
     """
-    The ids of the products this variant belongs to.
+    The ids of the product(s) this variant can be associated with.
     """
     productIds: [String]!
     """
-    The product family this variant belongs to.
+    The product(s) this variant can be associated with.
     """
-    product: Product
+    products: [Product]!
     """
     The high level category for this model number.
     """

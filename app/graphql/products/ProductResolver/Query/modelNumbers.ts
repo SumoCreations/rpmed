@@ -44,8 +44,8 @@ export const modelNumbers = async (
       )
       .map(o => ({
         ...o,
-        product: async () =>
-          Product.output((await Product.findByIds(o.productIds))[0]),
+        products: async () =>
+          (await Product.findByIds(o.productIds)).map(Product.output),
         symptoms: async () =>
           (await productSymptomsForModel(o.id)).map(ProductSymptom.output),
       }))
