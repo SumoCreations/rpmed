@@ -176,10 +176,10 @@ export type ModelNumber = {
   id: Scalars['ID']
   /** Pricing for this specific model. */
   pricing: Pricing
-  /** The ids of the products this variant belongs to. */
+  /** The ids of the product(s) this variant can be associated with. */
   productIds: Array<Maybe<Scalars['String']>>
-  /** The product family this variant belongs to. */
-  product?: Maybe<Product>
+  /** The product(s) this variant can be associated with. */
+  products: Array<Maybe<Product>>
   /** The high level category for this model number. */
   productType: ProductType
   /** A brief description of this product variant. */
