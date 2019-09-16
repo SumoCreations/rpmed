@@ -15,19 +15,19 @@ import AttachedImage, {
  *
  * The table structure in dynamo DB is as follows:
  *
- * ----------------------------------------------------------------------
- * |                    | (GS1 Partition Key) | (GS1 Sort Key)
- * ----------------------------------------------------------------------
- * | Partition Key      | Sort Key            | HSK
- * ----------------------------------------------------------------------
- * | UUID               | "PRODUCT_SYMPTOM"   | faultCode
- * ----------------------------------------------------------------------
+ * ---------------------------------------------------------------------------------
+ * |                    | (GS1 Partition Key) | (GS1 Sort Key)    | (GS2 Sort Key)
+ * ---------------------------------------------------------------------------------
+ * | Partition Key      | Sort Key            | HSK               | SHSK
+ * ---------------------------------------------------------------------------------
+ * | UUID               | "PRODUCT_SYMPTOM"   | preApproved       | fee
+ * ---------------------------------------------------------------------------------
  *
  * This allows for the following access patterns:
  *
  * 1. Fetch a symptom via serial number (PK matches UUID Number)
  * 2. Fetch all product symptoms (Sort Key matches 'PRODUCT_SYMPTOM')
- * 3. Fetch all product symptoms for a given product (HSK matchs faultCode)
+ * 3. Fetch all product symptoms for a given product (HSK matchs name)
  */
 
 const client = getDynamoClient()
@@ -54,6 +54,8 @@ export interface IProductSymptom {
   synopsis: string
   solution: string
   partitionKey: string
+  indexSortKey: string
+  secondaryIndexSortKey: string
   preApproved: boolean
   sortKey: string
   modelNumbers: string[]
@@ -83,8 +85,10 @@ const create = async ({
   const item: IProductSymptom = {
     ...symptomInput,
     attachedImages: [],
+    indexSortKey: symptomInput.preApproved ? 'YES' : 'NO',
     modelNumbers: [],
     partitionKey: uuid(),
+    secondaryIndexSortKey: symptomInput.fee ? 'YES' : 'NO',
     sortKey: SECONDARY_KEY,
   }
   const params = {
@@ -94,7 +98,6 @@ const create = async ({
           ConditionExpression: 'attribute_not_exists(partitionKey)',
           Item: {
             ...filterBlankAttributes(item),
-            indexSortKey: symptomInput.faultCode,
           },
           TableName: process.env.DYNAMODB_RESOURCES_TABLE,
         },
@@ -125,7 +128,8 @@ const update = async ({
           ConditionExpression: 'attribute_exists(partitionKey)',
           Item: {
             ...filterBlankAttributes(item),
-            indexSortKey: symptomInput.faultCode,
+            indexSortKey: symptomInput.preApproved ? 'YES' : 'NO',
+            secondaryIndexSortKey: symptomInput.fee ? 'YES' : 'NO',
           },
           TableName: process.env.DYNAMODB_RESOURCES_TABLE,
         },
