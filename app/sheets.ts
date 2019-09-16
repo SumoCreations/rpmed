@@ -1,7 +1,12 @@
 import { APIGatewayProxyHandler } from 'aws-lambda'
 import { google } from 'googleapis'
 import { credentials } from '../json/rpmed-248822-7b3a48ed26ca'
-import { ModelNumber, Product } from './models'
+import {
+  addSymptomToModelNumber,
+  ModelNumber,
+  Product,
+  ProductSymptom,
+} from './models'
 import { response, Status } from './net'
 import { ProductType } from './schema'
 
@@ -12,6 +17,15 @@ const SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 export const importModels: APIGatewayProxyHandler = async () => {
   const jwtClient = await authorize()
   const rows = (await processModelNumbers(jwtClient)) as object
+
+  return response(Status.OK, {
+    ...rows,
+  })
+}
+
+export const importSymptoms: APIGatewayProxyHandler = async () => {
+  const jwtClient = await authorize()
+  const rows = (await processSymptoms(jwtClient)) as object
 
   return response(Status.OK, {
     ...rows,
@@ -75,6 +89,7 @@ const processModelNumbers = auth =>
 
               await val[0]
                 .split(',')
+                .map(n => n.trim())
                 .reduce(async (previousName, currentName) => {
                   await previousName
                   const existingProduct = await Product.findByName(currentName)
@@ -107,11 +122,113 @@ const processModelNumbers = auth =>
 
               return [row[0], row[1], row[2]]
             } catch (e) {
-              console.log('Could not update row...')
+              console.log(`Could not update row... ${row[0]}`)
               console.log(e)
             }
           }, Promise.resolve(['', '', '']))
           resolve(JSON.stringify(rows))
+          return
+        } else {
+          console.log('No data found.')
+          reject('No data found.')
+        }
+      }
+    )
+  })
+
+/**
+ * Prints the names and majors of students in a sample spreadsheet:
+ * @see https://docs.google.com/spreadsheets/d/1LYEaTaROOPzZLIdoGm_mp2XEYnyelFMDUKjbvmEUMZc/edit
+ * @param {google.auth.OAuth2} auth The authenticated Google OAuth client.
+ */
+const processSymptoms = auth =>
+  new Promise(async (resolve, reject) => {
+    const sheets = google.sheets({ version: 'v4', auth })
+    sheets.spreadsheets.values.get(
+      {
+        range: 'Symptoms Import!C2:H',
+        spreadsheetId: '1LYEaTaROOPzZLIdoGm_mp2XEYnyelFMDUKjbvmEUMZc',
+      },
+      async (err, res) => {
+        if (err) {
+          reject(err)
+          return console.log('The API returned an error: ' + err)
+        }
+        /**
+         * Rows are in the following index format:
+         * [0]Prefix List | [1]Description | [2]Synopsis | [3]Solution | [4]Care Tip | [5]Fault Codes
+         */
+        const rows = res.data.values
+        if (rows.length) {
+          console.log(
+            'Prefix List, Description, Synopsis, Solution, Care Tip, Fault Codes:'
+          )
+          await rows.reduce(async (previousPromise, row, index) => {
+            try {
+              await previousPromise
+              console.log(
+                `${row[0]}, ${row[1]}, ${row[2]}, ${row[3]}, ${row[4]}, ${
+                  row[5]
+                }`
+              )
+
+              const symptom = await ProductSymptom.create({
+                careTip: row[4],
+                faultCode: row[5],
+                fee: false,
+                name: row[1],
+                preApproved: false,
+                solution: row[3],
+                synopsis: row[2],
+              })
+
+              console.log(`Created symptom with id: ${symptom.partitionKey}`)
+
+              const modelNumbersForSymptom = []
+              const val = row as string[]
+
+              await val[0]
+                .split(',')
+                .reduce(async (previousPrefix, currentPrefix) => {
+                  await previousPrefix
+                  const models = await ModelNumber.findModelNumbersStartingWith(
+                    currentPrefix
+                  )
+                  models.forEach(m =>
+                    modelNumbersForSymptom.push(m.partitionKey)
+                  )
+                  return currentPrefix
+                }, Promise.resolve(''))
+
+              console.log(
+                `Found ${
+                  modelNumbersForSymptom.length
+                } that match symptom at index ${index}`
+              )
+              console.log(modelNumbersForSymptom.join(', '))
+              console.log('Joining...')
+
+              await Promise.all(
+                modelNumbersForSymptom.map(async m => {
+                  await addSymptomToModelNumber(symptom.partitionKey, m)
+                  console.log(
+                    `Added model number: ${m} to symptom ${
+                      symptom.partitionKey
+                    }`
+                  )
+                })
+              )
+
+              console.log(
+                '---------------------------------------------------------------------'
+              )
+              return [row[0], row[1], row[2], row[3], row[4], row[5]]
+            } catch (e) {
+              console.log('Could not update row...')
+              console.log(e)
+            }
+          }, Promise.resolve(['', '', '']))
+          resolve(JSON.stringify({ rows: rows.length }))
           return
         } else {
           console.log('No data found.')

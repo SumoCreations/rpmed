@@ -95,12 +95,19 @@ functions:
           method: post
           path: auth/forgot
           cors: true
-  sheets:
+  modelsFromSheet:
     handler: app/sheets.importModels
     events:
       - http:
           method: get
-          path: sheets
+          path: sheets/models
+          cors: true
+  symptomsFromSheet:
+    handler: app/sheets.importSymptoms
+    events:
+      - http:
+          method: get
+          path: sheets/symptoms
           cors: true
 resources:
   # S3
