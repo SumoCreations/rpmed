@@ -69,11 +69,11 @@ export const typeDefs = gql`
     """
     A description of the symptom and/or it's cause in detail.
     """
-    synopsis: String!
+    synopsis: String
     """
     A solution to resolve the symptom.
     """
-    solution: String!
+    solution: String
     """
     Indicates if there is an associated fee for servicing this issue.
     """
@@ -85,7 +85,7 @@ export const typeDefs = gql`
     """
     An official code used to identify this symptom.
     """
-    faultCode: String!
+    faultCode: String
     """
     A list of all associated model numbers related to this symptom.
     """
