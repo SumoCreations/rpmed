@@ -1,9 +1,6 @@
 service:
   name: rpmed-service-api
 
-package:
-  individually: true
-
 plugins:
   - serverless-webpack
   - serverless-dynamodb-local
