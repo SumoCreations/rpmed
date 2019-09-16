@@ -309,7 +309,7 @@ const forTypeAndProductID = async (
 
 /**
  * Retreives a product by it's name.
- * @param name The name of the product to find.
+ * @param productType The type of product to find.
  */
 const findByType = async (
   productType: ProductType
@@ -324,6 +324,28 @@ const findByType = async (
     TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.query(searchParams).promise()
+  return result.Items ? (result.Items as IModelNumber[]) : null
+}
+
+/**
+ * Retreives a product by it's name.
+ * @param match The name of the product to find.
+ */
+const findModelNumbersStartingWith = async (
+  match: string
+): Promise<IModelNumber[] | null> => {
+  if (match.length < 1) {
+    return []
+  }
+  const searchParams = {
+    ExpressionAttributeValues: {
+      ':hkey': match,
+      ':rkey': SECONDARY_KEY,
+    },
+    FilterExpression: 'begins_with(partitionKey, :hkey) AND sortKey = :rkey',
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
+  }
+  const result = await client.scan(searchParams).promise()
   return result.Items ? (result.Items as IModelNumber[]) : null
 }
 
@@ -386,6 +408,7 @@ export const ModelNumber = {
   find,
   findAll,
   findByType,
+  findModelNumbersStartingWith,
   forProduct,
   forType,
   forTypeAndProductID,
