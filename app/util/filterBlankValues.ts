@@ -9,7 +9,7 @@ const notBlank = (i: any) => {
     case 'boolean':
       return true
     case 'string':
-      return i.length > 1
+      return i.length > 0
     case 'number':
       return true
     case 'object':
