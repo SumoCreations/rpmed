@@ -53,9 +53,9 @@ jobs:
           command: |
             sudo npm i -g serverless
       - type: deploy
-        name: "Deploy via Serverless"
+        name: 'Deploy via Serverless'
         command: |
-          serverless config credentials --provider aws --key $AWS_ACCESS_KEY_ID --secret $AWS_SECRET_ACCESS_KEY --profile azdeq-serverless
+          serverless config credentials --provider aws --key $AWS_ACCESS_KEY_ID --secret $AWS_SECRET_ACCESS_KEY --profile rpmed-serverless
 
           if [ "${CIRCLE_BRANCH}" == "master" ]; then
             serverless deploy --stage prod --conceal
