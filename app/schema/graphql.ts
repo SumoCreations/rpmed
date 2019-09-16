@@ -203,7 +203,7 @@ export type ModelNumber = {
   /** Any internal notes for employess when servicing this model variation. */
   privateNotes?: Maybe<Scalars['String']>
   /** A list of all associated symptoms related to this model number. */
-  symptoms: Array<Maybe<SimplifiedProductSymptom>>
+  symptoms: Array<Maybe<ProductSymptom>>
 }
 
 /** Describes a model number to be created or updated. */
@@ -685,15 +685,15 @@ export type ProductSymptom = {
   /** A hint or maintenance tip to prevent the symptom. */
   careTip?: Maybe<Scalars['String']>
   /** A description of the symptom and/or it's cause in detail. */
-  synopsis: Scalars['String']
+  synopsis?: Maybe<Scalars['String']>
   /** A solution to resolve the symptom. */
-  solution: Scalars['String']
+  solution?: Maybe<Scalars['String']>
   /** Indicates if there is an associated fee for servicing this issue. */
   fee: Scalars['Boolean']
   /** Indicates whether or not this is a pre-approved repair regardless of warranty. */
   preApproved: Scalars['Boolean']
   /** An official code used to identify this symptom. */
-  faultCode: Scalars['String']
+  faultCode?: Maybe<Scalars['String']>
   /** A list of all associated model numbers related to this symptom. */
   associatedModelNumbers: Array<Maybe<Scalars['String']>>
   /** The resulting symptoms if the operation was successful and multiple results were returned. */
@@ -946,19 +946,6 @@ export type RgaQueryOutput = {
   errors?: Maybe<Array<Maybe<ValidationError>>>
   /** A simple boolean indicating whether or not the operation was successful. */
   success: Scalars['Boolean']
-}
-
-/** A troubleshooting symptom for a product. */
-export type SimplifiedProductSymptom = {
-  __typename?: 'SimplifiedProductSymptom'
-  /** The unique identifier for this symptom. */
-  id: Scalars['ID']
-  /** The actual name of the symptom. */
-  name: Scalars['String']
-  /** An associated fee for servicing this issue. */
-  fee: Scalars['Boolean']
-  /** An official code used to identify this symptom. */
-  faultCode: Scalars['String']
 }
 
 /** A set of file keys to generate S3 endpoint URLS for. */
