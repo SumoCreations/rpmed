@@ -14,19 +14,21 @@ export const productSymptoms = async (
     const results = await (args.modelNumber
       ? productSymptomsForModel(args.modelNumber)
       : ProductSymptom.all())
+    const filteredResults = results
+      .map(ProductSymptom.output)
+      .filter(s =>
+        args.search
+          ? s.name.toLowerCase().indexOf(args.search.toLowerCase()) >= 0
+          : true
+      )
+      .map(s => ({
+        ...s,
+        modelNumbers: async () =>
+          (await modelNumbersForSymptom(s.id)).map(ModelNumber.output),
+      }))
     return {
-      productSymptoms: results
-        .map(ProductSymptom.output)
-        .filter(s =>
-          args.search
-            ? s.name.toLowerCase().indexOf(args.search.toLowerCase()) >= 0
-            : true
-        )
-        .map(s => ({
-          ...s,
-          modelNumbers: async () =>
-            (await modelNumbersForSymptom(s.id)).map(ModelNumber.output),
-        })),
+      pageSize: filteredResults.length,
+      productSymptoms: filteredResults,
       success: true,
     }
   } catch (e) {
