@@ -108,7 +108,7 @@ describe('modelNumber', () => {
     test('should return a product if one exists', async () => {
       expect.assertions(1)
       const headlights = await ModelNumber.findByType(ProductType.Headlight)
-      expect(headlights.length).toEqual(1)
+      expect(headlights.length).not.toEqual(0)
     })
 
     test('should return null if a product does not exist', async () => {
