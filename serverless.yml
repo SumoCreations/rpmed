@@ -28,6 +28,10 @@ custom:
     dev: dev.rpmed-apps.com
     staging: staging.rpmed-apps.com
     prod: prod.rpmed-apps.com
+  clientDomain:
+    dev: dev-admin.medled.com
+    staging: staging-admin.medled.com
+    prod: admin.medled.com
   customDomain:
     domainName: ${self:custom.domain.${opt:stage, self:provider.stage}}
     basePath: ''
@@ -43,6 +47,7 @@ provider:
     ACCESS_TOKEN_LIFESPAN: 5m
     REFRESH_TOKEN_LIFESPAN: 7d
     SALT_ROUNDS: 10
+    CLIENT_DOMAIN: ${self:custom.clientDomain.${opt:stage, self:provider.stage}}
     RECAPTCHA_KEY: 6LdOqZoUAAAAAJ79IuWa4mU57Urnd-N6oxP4XhiR
     OAUTH_SIGNATURE: 'Ph$2\@!Rq<ev_W;:N(2+>Bwxez$3?;9~srf*nxiVJLz:lw7Djgs(Q/UhwmZ@"YLi<'
     ATTACHED_IMAGES_BUCKET: ${self:service}-${opt:stage, self:provider.stage}-attached-images
@@ -54,6 +59,10 @@ provider:
     SES_SOURCE_ARN: arn:aws:ses:us-west-2:426380452104:identity/rpmed-apps.com
 
   iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - ses:SendEmail
+      Resource: 'arn:aws:ses:us-west-2:426380452104:identity/rpmed-apps.com'
     - Effect: Allow
       Action:
         - s3:PutObject
@@ -92,20 +101,19 @@ functions:
           method: post
           path: auth/forgot
           cors: true
+  importSheets:
+    handler: app/sheets.importSheets
+    events:
+      - http:
+          method: get
+          path: import/data
+          cors: true
   modelsFromSheet:
     handler: app/sheets.importModels
-    events:
-      - http:
-          method: get
-          path: sheets/models
-          cors: true
+    timeout: 60
   symptomsFromSheet:
     handler: app/sheets.importSymptoms
-    events:
-      - http:
-          method: get
-          path: sheets/symptoms
-          cors: true
+    timeout: 60
 resources:
   # S3
   - ${file(resources/s3-bucket.yml)}
