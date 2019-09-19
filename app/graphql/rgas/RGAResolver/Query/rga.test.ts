@@ -1,4 +1,5 @@
 import { Distributor, IDistributor, IRGA, RGA } from '../../../../models'
+import { RgaStatus } from '../../../../schema'
 import { rga } from './rga'
 
 describe('Query', () => {
@@ -7,11 +8,12 @@ describe('Query', () => {
 
   beforeAll(async done => {
     existingDistributor = await Distributor.create({
-      name: 'Example Distributor',
       domain: 'example-dist.com',
+      name: 'Example Distributor',
     })
     existingRGA = await RGA.create({
       distributorId: existingDistributor.partitionKey,
+      status: RgaStatus.Issued,
       submittedBy: 'some-one@example-dist.com',
       submittedOn: new Date().toISOString(),
     })

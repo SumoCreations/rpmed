@@ -1,9 +1,11 @@
 import { Distributor, RGA, RGAGood } from '../../../../models'
 import { IRGAQueryOutput } from './rgaQueryTypes'
 
-export const rgas = async (): Promise<IRGAQueryOutput> => {
+export const rgas = async (_, args): Promise<IRGAQueryOutput> => {
   try {
-    const results = await RGA.all()
+    const results = args.status
+      ? await RGA.findWithStatus(args.status)
+      : await RGA.all()
     return {
       rgas: results.map(RGA.output).map(o => ({
         ...o,
