@@ -10,10 +10,21 @@ import {
 import { response, Status } from './net'
 import { ProductType } from './schema'
 
+// tslint:disable no-console
+
 // If modifying these scopes, delete token.json.
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
-// tslint:disable no-console
+export const importSheets: APIGatewayProxyHandler = async () => {
+  const jwtClient = await authorize()
+  const models = (await processModelNumbers(jwtClient)) as object
+  const symptoms = (await processSymptoms(jwtClient)) as object
+  return response(Status.OK, {
+    models,
+    symptoms,
+  })
+}
+
 export const importModels: APIGatewayProxyHandler = async () => {
   const jwtClient = await authorize()
   const rows = (await processModelNumbers(jwtClient)) as object
@@ -126,7 +137,7 @@ const processModelNumbers = auth =>
               console.log(e)
             }
           }, Promise.resolve(['', '', '']))
-          resolve(JSON.stringify(rows))
+          resolve(rows.map(r => r[3]))
           return
         } else {
           console.log('No data found.')
@@ -146,7 +157,7 @@ const processSymptoms = auth =>
     const sheets = google.sheets({ version: 'v4', auth })
     sheets.spreadsheets.values.get(
       {
-        range: 'Symptoms Import!C2:H',
+        range: 'Symptoms Import!B2:I',
         spreadsheetId: '1LYEaTaROOPzZLIdoGm_mp2XEYnyelFMDUKjbvmEUMZc',
       },
       async (err, res) => {
@@ -156,7 +167,7 @@ const processSymptoms = auth =>
         }
         /**
          * Rows are in the following index format:
-         * [0]Prefix List | [1]Description | [2]Synopsis | [3]Solution | [4]Care Tip | [5]Fault Codes
+         * [0]Prefix List | [1]Description | [2]Synopsis | [3]Solution | [4]Care Tip | [5]Fault Codes | [6] Pre Approved | [7] Fee
          */
         const rows = res.data.values
         if (rows.length) {
@@ -175,9 +186,9 @@ const processSymptoms = auth =>
               const symptom = await ProductSymptom.create({
                 careTip: row[4],
                 faultCode: row[5],
-                fee: false,
+                fee: row[7] === 'YES',
                 name: row[1],
-                preApproved: false,
+                preApproved: row[6] === 'YES',
                 solution: row[3],
                 synopsis: row[2],
               })
@@ -191,8 +202,12 @@ const processSymptoms = auth =>
                 .split(',')
                 .reduce(async (previousPrefix, currentPrefix) => {
                   await previousPrefix
+                  console.log(`Fetching models that match '${currentPrefix}'.`)
                   const models = await ModelNumber.findModelNumbersStartingWith(
                     currentPrefix
+                  )
+                  console.log(
+                    `Found ${models.length} that match '${currentPrefix}'.`
                   )
                   models.forEach(m =>
                     modelNumbersForSymptom.push(m.partitionKey)
@@ -201,9 +216,9 @@ const processSymptoms = auth =>
                 }, Promise.resolve(''))
 
               console.log(
-                `Found ${
-                  modelNumbersForSymptom.length
-                } that match symptom at index ${index}`
+                `Found ${modelNumbersForSymptom.length} that match '${
+                  symptom.partitionKey
+                }' at index ${index}`
               )
               console.log(modelNumbersForSymptom.join(', '))
               console.log('Joining...')
@@ -228,7 +243,7 @@ const processSymptoms = auth =>
               console.log(e)
             }
           }, Promise.resolve(['', '', '']))
-          resolve(JSON.stringify({ rows: rows.length }))
+          resolve(rows.map(r => r[1]))
           return
         } else {
           console.log('No data found.')
