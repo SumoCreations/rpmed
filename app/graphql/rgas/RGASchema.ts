@@ -2,13 +2,58 @@ import { gql } from 'apollo-server-lambda'
 
 export const typeDefs = gql`
   """
+  Defines a state a given RGA could be in.
+  """
+  enum RGAStatus {
+    """
+    An RGA number has been issued to the distributor but the customer
+    has not completed or shipped the package.
+    """
+    ISSUED
+    """
+    The customer has confirmed the goods associated to the request and
+    RPMED is awaiting the delivery of the customer's package.
+    """
+    AWAITING_ARRIVAL
+    """
+    RPMED has received the package / goods associated to this RGA.
+    """
+    RECEIVED
+    """
+    RPMED team is assessing the contents of the package.
+    """
+    ASSESSING
+    """
+    RPMED team is making any necessary repairs.
+    """
+    REPAIRING
+    """
+    RPMED team has shipped the package back to the customer.
+    """
+    SHIPPING
+    """
+    The request is complete and no further notes / changes can be made.
+    """
+    CLOSED
+    """
+    The request was canceled at any point during the process. Notes may
+    may be added for further explanation.
+    """
+    CANCELED
+  }
+
+  """
   A Request Goods Authorization.
   """
   type RGA {
     """
-    The unique identifier for this RGA
+    The unique identifier for this RGA.
     """
     id: ID!
+    """
+    The current state of the request.
+    """
+    status: RGAStatus!
     """
     The date the RGA was submitted.
     """
@@ -28,6 +73,20 @@ export const typeDefs = gql`
   }
 
   """
+  The current status of a given good belonging to an RGA.
+  """
+  enum RGAGoodStatus {
+    """
+    The good is considered valid and part of the request.
+    """
+    VALID
+    """
+    The good was removed from the request at some point.
+    """
+    ARCHIVED
+  }
+
+  """
   A good associated to a particular RGA.
   """
   type RGAGood {
@@ -35,22 +94,6 @@ export const typeDefs = gql`
     The unique serial number or uuid associated to the good.
     """
     id: ID!
-    """
-    Indicates whether or not this product is currently under warranty.
-    """
-    warrantied: Boolean!
-    """
-    The symptom / reason this product is being returned.
-    """
-    symptomId: String!
-    """
-    The current description of the symptom.
-    """
-    symptomDescription: String!
-    """
-    The fault code associated to the prescribed symptom.
-    """
-    faultCode: String!
     """
     The RGA this good is assigned to.
     """
@@ -60,9 +103,73 @@ export const typeDefs = gql`
     """
     modelNumber: String!
     """
+    Indicates whether or not the model was considered to be lotted.
+    """
+    lotted: Boolean!
+    """
+    The current status of the good.
+    """
+    status: RGAGoodStatus!
+    """
+    Indicates whether or not this product is currently under warranty.
+    """
+    warrantied: Boolean!
+    """
+    Indicates the details of the associated products warranty.
+    """
+    warrantyDescription: String!
+    """
+    Indicates the number of months the associated product was warrantied for.
+    """
+    warrantyTerm: Int!
+    """
+    The symptom / reason this product is being returned.
+    """
+    symptomId: String!
+    """
+    The current description of the symptom.
+    """
+    symptomDescription: String!
+    """
+    Indicates whether or not the resolution for the symptom was a pre-approved repair.
+    """
+    preApproved: Boolean!
+    """
+    The fault code associated to the prescribed symptom.
+    """
+    faultCode: String!
+    """
     The serial number unique to this good if lotted. If left blank and not lotted a uuid will be generated.
     """
     serial: String
+    """
+    Indicates the product type for this good.
+    """
+    productType: ProductType!
+    """
+    Indicates the name of product family this good.
+    """
+    productName: String!
+    """
+    Indicates the product family this good.
+    """
+    productId: String!
+    """
+    The proposed resolution the issue affecting this good.
+    """
+    resolution: String
+    """
+    The fee involved for resolving this issue.
+    """
+    resolutionFee: String
+    """
+    The synopsis of the associated symptom.
+    """
+    symptomSynopsis: String
+    """
+    The solution for associated symptom.
+    """
+    symptomSolution: String!
     """
     The associated RMA from our distributor / partner's records.
     """
@@ -167,11 +274,63 @@ export const typeDefs = gql`
     success: Boolean!
   }
 
+  """
+  A list of totals for any given rga status.
+  """
+  type RGAStatusCountOutput {
+    """
+    Count of all issued RGAs that may not have been shipped.
+    """
+    issued: Int
+    """
+    Count of all RGAs awaiting arrival.
+    """
+    awaitingArrival: Int
+    """
+    Count of all received RGAs that have not yet been assessed.
+    """
+    received: Int
+    """
+    Count of all RGAs currently being assessed.
+    """
+    assessing: Int
+    """
+    Count of all RGAs currently being repaired.
+    """
+    repairing: Int
+    """
+    Count of all RGAs being shipped back to customers.
+    """
+    shipping: Int
+    """
+    Count of all closed RGAs.
+    """
+    closed: Int
+    """
+    Count of all canceled RGAs.
+    """
+    canceled: Int
+    """
+    A simple boolean indicating whether or not the operation was successful.
+    """
+    success: Boolean!
+    """
+    Any validation errors encountered while running the mutation.
+    """
+    errors: [ValidationError]
+  }
+
   extend type Query {
     """
     All RGAs in the system
     """
-    rgas: RGAQueryOutput!
+    rgas(status: RGAStatus): RGAQueryOutput!
+
+    """
+    Query the total for any filtered output.
+    """
+    rgaCount: RGAStatusCountOutput!
+
     """
     A specific RGA in the system via ID.
     """
@@ -204,6 +363,18 @@ export const typeDefs = gql`
     The symptom / reason this product is being returned.
     """
     symptomId: String!
+    """
+    Indicates the id of product family this good was associated with.
+    """
+    productId: String!
+    """
+    Indicates the product type for this good.
+    """
+    productType: ProductType!
+    """
+    Indicates the name of product family this good.
+    """
+    productName: String!
     """
     The RGA this good is assigned to.
     """
