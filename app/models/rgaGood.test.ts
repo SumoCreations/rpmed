@@ -15,7 +15,7 @@ describe('rga', () => {
     try {
       existingGood = await RGAGood.create({
         faultCode: 'EHIJ',
-        lotted: false,
+        lotted: true,
         modelNumber: 'MLD-X01',
         preApproved: true,
         productId: PRODUCT_ID,
@@ -51,7 +51,7 @@ describe('rga', () => {
     test('should generate a new rga', () => {
       expect(isEmpty(existingGood.partitionKey)).toBe(false)
       expect(existingGood.sortKey).toBe(
-        `${RGAGood.SECONDARY_KEY}_${existingGood.id}`
+        `${RGAGood.SECONDARY_KEY}#${existingGood.id}`
       )
     })
 

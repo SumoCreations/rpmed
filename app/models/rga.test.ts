@@ -1,9 +1,11 @@
 import { DateTime } from 'luxon'
 import { isEmpty } from 'validator'
+import { RgaStatus } from '../schema'
 import { Distributor, IDistributor } from './distributor'
 import { IRGA, RGA } from './rga'
 
 const existingRGAParams = {
+  status: RgaStatus.Issued,
   submittedBy: 'example-user@klsmartin.com',
   submittedOn: DateTime.utc(2019, 5, 7, 7, 30, 1, 1).toISO(),
 }

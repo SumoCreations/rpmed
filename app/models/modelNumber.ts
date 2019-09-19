@@ -115,9 +115,6 @@ const create = async ({
     sortKey: SECONDARY_KEY,
     symptoms: [],
   }
-  // tslint:disable-next-line
-  console.log(item)
-
   const params = {
     TransactItems: [
       {

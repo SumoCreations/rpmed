@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon'
-import { ModelNumber, RGA, RGAGood } from '../../../../models'
-import { ProductType } from '../../../../schema'
+import { RGA, RGAGood } from '../../../../models'
+import { ProductType, RgaGoodStatus, RgaStatus } from '../../../../schema'
 import { destroyRGAGood } from './destroyRGAGood'
 
 const RGA_ID = 'TEST-RGA-ID'
@@ -13,7 +13,7 @@ const CUSTOMER_EMAIL = 'rga-good-test-customer@example.com'
 const sampleParams = {
   customerEmail: CUSTOMER_EMAIL,
   customerName: 'Jane RGAGOODTester',
-  lotted: false,
+  lotted: true,
   modelNumber: 'MLD-X01',
   productId: PRODUCT_ID,
   rgaId: RGA_ID,
@@ -28,31 +28,36 @@ describe('destroyRGAGood', () => {
   let existingRGAId: string
   let existingRGAGoodId: string
   beforeAll(async done => {
-    const modelNumber = await ModelNumber.create({
-      description: 'test',
-      feeWithWarranty: { distributor: '0', endUser: '10' },
-      feeWithoutWarranty: { distributor: '250', endUser: '300' },
-      id: 'TEST-MODEL-FOR-RGA-DESTROY-GOOD',
-      lotted: true,
-      pricing: { cost: '1000', retail: '1200' },
-      productIds: ['TEST'],
-      productType: ProductType.Headlight,
-      warrantyDescription: 'Covered...',
-      warrantyTerm: 5,
-    })
     const rga = await RGA.create({
       distributorId: 'something-made-up',
+      status: RgaStatus.Issued,
       submittedBy: 'someone-ex1@partner.com',
       submittedOn: DateTime.utc(2019, 5, 8, 1, 12, 11, 12).toISO(),
     })
+    existingRGAId = rga.partitionKey
     const good = await RGAGood.create({
       ...sampleParams,
-      faultCode: 'EHIJ',
-      modelNumber: modelNumber.partitionKey,
-      rgaId: rga.partitionKey,
-      symptomDescription: 'Test',
+      customerEmail: CUSTOMER_EMAIL,
+      customerName: 'Jane RGAGOODTester',
+      faultCode: "D",
+      lotted: false,
+      modelNumber: 'MLD-X01',
+      preApproved: true,
+      productId: PRODUCT_ID,
+      productName: "MLX Series",
+      productType: ProductType.Headlight,
+      rgaId: existingRGAId,
+      status: RgaGoodStatus.Valid,
+      submittedBy: 'test@klsmartin.com',
+      submittedOn: DATE,
+      symptomDescription: 'test',
+      symptomId: '123',
+      symptomSolution: 'Test',
+      symptomSynopsis: 'The synopsis..',
+      warrantied: true,
+      warrantyDescription: 'Test',
+      warrantyTerm: 2
     })
-    existingRGAId = rga.partitionKey
     existingRGAGoodId = good.id
     done()
   })

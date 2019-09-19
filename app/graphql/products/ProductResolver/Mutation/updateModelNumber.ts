@@ -28,10 +28,7 @@ export const updateModelNumber: UpdateModelNumberResolver = async (
   }
   try {
     const existingModel = await ModelNumber.find(modelNumberInput.id)
-    // tslint:disable
-    console.log(existingModel)
     if (!existingModel) {
-      console.log('No model shouold exist!!!')
       return generateMutationError([ErrorModelNumberIDDoesNotExist])
     }
     const products = await Product.findByIds(modelNumberInput.productIds)

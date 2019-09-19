@@ -1,12 +1,13 @@
 import { DateTime } from 'luxon'
 import {
   Customer,
+  IRGAGoodInput,
   ModelNumber,
   ProductRegistration,
   ProductSymptom,
   RGA,
 } from '../../../../models'
-import { ProductType } from '../../../../schema'
+import { ProductType, RgaGoodStatus, RgaStatus } from '../../../../schema'
 import { createRGAGood } from './createRGAGood'
 
 const RGA_ID = 'TEST-RGA-ID'
@@ -15,17 +16,27 @@ const SERIAL = 'TEST-SERIAL-NUMBER'
 const DATE = DateTime.utc(2019, 5, 7, 1, 12, 11, 10).toISO()
 const CUSTOMER_EMAIL = 'rga-good-test-customer@example.com'
 
-const sampleParams = {
+const sampleParams: IRGAGoodInput = {
   customerEmail: CUSTOMER_EMAIL,
   customerName: 'Jane RGAGOODTester',
+  faultCode: "D",
   lotted: false,
   modelNumber: 'MLD-X01',
+  preApproved: true,
   productId: PRODUCT_ID,
+  productName: "MLX Series",
+  productType: ProductType.Headlight,
   rgaId: RGA_ID,
-  serial: SERIAL,
+  status: RgaGoodStatus.Valid,
   submittedBy: 'test@klsmartin.com',
   submittedOn: DATE,
+  symptomDescription: 'test',
+  symptomId: '123',
+  symptomSolution: 'Test',
+  symptomSynopsis: 'The synopsis..',
   warrantied: true,
+  warrantyDescription: 'Test',
+  warrantyTerm: 2
 }
 
 describe('createRGAGood', () => {
@@ -48,6 +59,7 @@ describe('createRGAGood', () => {
     modelNumberId = modelNumber.partitionKey
     const rga = await RGA.create({
       distributorId: 'something-made-up',
+      status: RgaStatus.Issued,
       submittedBy: 'someone-ex1@partner.com',
       submittedOn: DateTime.utc(2019, 5, 7, 1, 12, 11, 10).toISO(),
     })
@@ -75,7 +87,9 @@ describe('createRGAGood', () => {
       rgaGoodInput: {
         ...sampleParams,
         modelNumber: modelNumberId,
+        productType: ProductType.Headlight,
         rgaId: existingRGAId,
+        serial: 'TEST-123',
         symptomId: existingSymptomId,
       },
     })
@@ -88,6 +102,7 @@ describe('createRGAGood', () => {
       rgaGoodInput: {
         ...sampleParams,
         modelNumber: modelNumberId,
+        productType: ProductType.Headlight,
         rgaId: existingRGAId,
         serial: `${SERIAL}-2`,
         symptomId: existingSymptomId,
@@ -117,6 +132,7 @@ describe('createRGAGood', () => {
       rgaGoodInput: {
         ...sampleParams,
         modelNumber: modelNumberId,
+        productType: ProductType.Headlight,
         rgaId: existingRGAId,
         serial: `${SERIAL}-3`,
         symptomId: existingSymptomId,
@@ -137,6 +153,7 @@ describe('createRGAGood', () => {
       rgaGoodInput: {
         ...remainingParams,
         modelNumber: modelNumberId,
+        productType: ProductType.Headlight,
         rgaId: existingRGAId,
         serial: `${SERIAL}-4`,
         symptomId: existingSymptomId,
@@ -152,6 +169,7 @@ describe('createRGAGood', () => {
     const output = await createRGAGood(null, {
       rgaGoodInput: {
         ...sampleParams,
+        productType: ProductType.Headlight,
         symptomId: existingSymptomId,
       },
     })
@@ -164,6 +182,7 @@ describe('createRGAGood', () => {
     const output = await createRGAGood(null, {
       rgaGoodInput: {
         ...sampleParams,
+        productType: ProductType.Headlight,
         rgaId: existingRGAId,
         symptomId: existingSymptomId,
       },
@@ -178,6 +197,7 @@ describe('createRGAGood', () => {
       rgaGoodInput: {
         ...sampleParams,
         modelNumber: modelNumberId,
+        productType: ProductType.Headlight,
         rgaId: existingRGAId,
         symptomId: existingSymptomId,
       },
