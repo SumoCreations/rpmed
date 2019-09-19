@@ -8,6 +8,7 @@ import {
   RGA,
   RGAGood,
 } from '../../../../models'
+import { ProductType, RgaGoodStatus } from '../../../../schema'
 import { generateMutationError } from '../../../../util'
 import * as Validation from '../../../../validations'
 import { IRGAGoodMutationOutput } from './rgaMutationTypes'
@@ -18,6 +19,8 @@ interface IRGAGoodInputParams {
     symptomId: string
     rgaId: string
     productId: string
+    productName: string
+    productType: ProductType
     lotted: boolean
     modelNumber: string
     serial?: string
@@ -121,15 +124,33 @@ export const createRGAGood: CreateRGAGoodMutation = async (
     }
   }
 
+  const warrantied = rgaGoodInput.warrantied || existingSymptom.preApproved
+  const resolution = warrantied
+    ? modelNumber.resolutionWithWarranty
+    : modelNumber.resolutionWithoutWarranty
+  const resolutionFee = warrantied
+    ? modelNumber.feeWithWarranty.distributor
+    : modelNumber.feeWithoutWarranty.distributor
   let rgaGood: IRGAGood
+
   try {
     rgaGood = await RGAGood.create({
       ...rgaGoodInput,
       customerId: customer ? customer.partitionKey : null,
       faultCode: existingSymptom.faultCode,
+      lotted: modelNumber.lotted,
+      preApproved: existingSymptom.preApproved,
+      resolution,
+      resolutionFee,
+      status: RgaGoodStatus.Valid,
       submittedBy: rgaGoodInput.submittedBy || rga.submittedBy,
       submittedOn: rgaGoodInput.submittedOn || rga.submittedOn,
       symptomDescription: existingSymptom.name,
+      symptomSolution: existingSymptom.solution,
+      symptomSynopsis: existingSymptom.synopsis,
+      warrantied,
+      warrantyDescription: modelNumber.warrantyDescription,
+      warrantyTerm: modelNumber.warrantyTerm,
     })
   } catch (e) {
     // tslint:disable-next-line
