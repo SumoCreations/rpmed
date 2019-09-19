@@ -23,5 +23,5 @@ export const destroyRGAGood = async (
   } catch (e) {
     return { success: false, errors: [ErrorRGAGoodCouldNotBeDestroyed] }
   }
-  return { rgaGood, success: true }
+  return { rgaGood, rgaId, success: true }
 }
