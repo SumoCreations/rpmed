@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon'
 import { Distributor, IRGA, RGA } from '../../../../models'
+import { RgaStatus } from '../../../../schema'
 import { createRGA } from './createRGA'
 
 const sampleParams = {
@@ -12,6 +13,7 @@ describe('createRGA', () => {
   beforeAll(async done => {
     existingRGA = await RGA.create({
       distributorId: 'something-made-up',
+      status: RgaStatus.Issued,
       submittedBy: 'someone-ex1@partner.com',
       submittedOn: DateTime.utc(2019, 5, 7, 1, 12, 11, 10).toISO(),
     })

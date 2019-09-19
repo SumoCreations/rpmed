@@ -1,4 +1,5 @@
 import { Distributor, RGA } from '../../../../models'
+import { RgaStatus } from '../../../../schema'
 import { generateMutationError } from '../../../../util'
 import * as Validation from '../../../../validations'
 import { IRGAMutationOutput } from './rgaMutationTypes'
@@ -31,6 +32,7 @@ export const createRGA: CreateRGAMutation = async (_, { rgaInput }) => {
   const rga = await RGA.create({
     ...rgaInput,
     distributorId: distributor.partitionKey,
+    status: RgaStatus.Issued,
   })
   return { rga: RGA.output(rga), success: true }
 }
