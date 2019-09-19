@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon'
 import { isEmpty } from 'validator'
+import { ProductType, RgaGoodStatus } from '../schema'
 import { IRGAGood, RGAGood } from './rgaGood'
 
 const RGA_ID = 'TEST-RGA-ID'
@@ -16,14 +17,24 @@ describe('rga', () => {
         faultCode: 'EHIJ',
         lotted: false,
         modelNumber: 'MLD-X01',
+        preApproved: true,
         productId: PRODUCT_ID,
+        productName: 'MLD',
+        productType: ProductType.Headlight,
+        resolution: '',
+        resolutionFee: 'tbd',
         rgaId: RGA_ID,
         serial: SERIAL,
+        status: RgaGoodStatus.Valid,
         submittedBy: 'test@klsmartin.com',
         submittedOn: DATE,
         symptomDescription: 'This is a sympyom',
         symptomId: SYMPTOM_ID,
+        symptomSolution: 'somehow',
+        symptomSynopsis: 'tbd',
         warrantied: true,
+        warrantyDescription: 'test',
+        warrantyTerm: 6,
       })
     } catch (e) {
       done()
@@ -51,14 +62,24 @@ describe('rga', () => {
           faultCode: 'EHIJ',
           lotted: false,
           modelNumber: 'MLD-X01',
+          preApproved: true,
           productId: PRODUCT_ID,
+          productName: 'MLD',
+          productType: ProductType.Headlight,
+          resolution: 'Test',
+          resolutionFee: 'TBD',
           rgaId: RGA_ID,
           serial: SERIAL,
+          status: RgaGoodStatus.Valid,
           submittedBy: 'test@klsmartin.com',
           submittedOn: DATE,
           symptomDescription: 'Testing',
           symptomId: SYMPTOM_ID,
+          symptomSolution: 'Somehow',
+          symptomSynopsis: 'Why?',
           warrantied: true,
+          warrantyDescription: 'test',
+          warrantyTerm: 6,
         })
       } catch (e) {
         expect(e).toBeDefined()
@@ -87,14 +108,23 @@ describe('rga', () => {
         faultCode: 'Test',
         lotted: false,
         modelNumber: 'MLD-X01',
+        preApproved: false,
         productId: PRODUCT_ID,
+        productName: 'MLX',
+        productType: ProductType.Headlight,
+        resolutionFee: 'TBD',
         rgaId: RGA_ID,
         serial: 'SERIAL-B',
+        status: RgaGoodStatus.Valid,
         submittedBy: 'test@klsmartin.com',
         submittedOn: DATE,
         symptomDescription: 'Another test',
         symptomId: SYMPTOM_ID,
+        symptomSolution: 'Somehow',
+        symptomSynopsis: 'Why?',
         warrantied: true,
+        warrantyDescription: 'test',
+        warrantyTerm: 6,
       })
       const existingGoods = await RGAGood.forRGA(RGA_ID)
       expect(existingGoods.map(g => g.id)).toContain(SERIAL)
