@@ -19,7 +19,7 @@ import { filterBlankAttributes, getDynamoClient } from '../util'
  * ---------------------------------------------------------------------------
  * | Partition Key      | Sort Key              | HSK           | SHSK
  * ---------------------------------------------------------------------------
- * | UUID/ModelNumber   | "MODEL_NUMBER"        | ProductId     | ProductType
+ * | UUID/ModelNumber   | "MODEL_NUMBER"        | ModelNumber   | ProductType
  * ---------------------------------------------------------------------------
  *
  * This allows for the following access patterns:
@@ -67,6 +67,7 @@ export interface IModelNumber {
   secondaryIndexSortKey: ProductType
   symptoms: string[]
   pricing: IPricing
+  productIdHash: string
   indexSortKey: string // productIds
   lotted: boolean
   warrantyTerm: number
@@ -107,9 +108,9 @@ const create = async ({
 }: IModelNumberInput): Promise<IModelNumber> => {
   const item: IModelNumber = {
     ...modelNumberInput,
-    indexSortKey:
-      typeof productIds === 'string' ? productIds : productIds.join('::'),
+    indexSortKey: id,
     partitionKey: id,
+    productIdHash: productIds.join('::'),
     secondaryIndexSortKey: productType,
     sortKey: SECONDARY_KEY,
     symptoms: [],
@@ -149,9 +150,9 @@ const update = async ({
   const item: IModelNumber = {
     ...existingModelNumber,
     ...modelNumberInput,
-    indexSortKey:
-      typeof productIds === 'string' ? productIds : productIds.join('::'),
+    indexSortKey: id,
     partitionKey: id,
+    productIdHash: productIds.join('::'),
     secondaryIndexSortKey: productType,
     sortKey: SECONDARY_KEY,
   }
@@ -244,12 +245,12 @@ const findAll = async (ids: string[]): Promise<IModelNumber[]> => {
 const forProduct = async (productId: string): Promise<IModelNumber[]> => {
   const searchParams = {
     ExpressionAttributeValues: {
+      ':hkey': SECONDARY_KEY,
       ':productId': productId,
-      ':rkey': SECONDARY_KEY,
     },
-    FilterExpression: 'contains(indexSortKey, :productId)',
-    IndexName: 'GSI_2',
-    KeyConditionExpression: 'sortKey = :rkey',
+    FilterExpression: 'contains(productIdHash, :productId)',
+    IndexName: 'GSI_1',
+    KeyConditionExpression: 'sortKey = :hkey',
     TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.query(searchParams).promise()
@@ -297,7 +298,7 @@ const forTypeAndProductID = async (
       ':productId': productId,
       ':productType': productType,
     },
-    FilterExpression: 'contains(indexSortKey, :productId)',
+    FilterExpression: 'contains(productIdHash, :productId)',
     IndexName: 'GSI_2',
     KeyConditionExpression:
       'sortKey = :hkey AND begins_with(secondaryIndexSortKey, :productType)',
@@ -382,7 +383,7 @@ const destroy = async (id: string): Promise<boolean> => {
 const output = ({
   partitionKey,
   sortKey,
-  indexSortKey,
+  productIdHash,
   secondaryIndexSortKey,
   ...modelNumber
 }: IModelNumber): IModelNumberOutput => {
@@ -391,7 +392,7 @@ const output = ({
     id: partitionKey,
     lotted: modelNumber.lotted || false,
     privateNotes: modelNumber.privateNotes || '',
-    productIds: [...indexSortKey.split('::')],
+    productIds: [...productIdHash.split('::')],
     productType: secondaryIndexSortKey,
     publicNotes: modelNumber.publicNotes || '',
     resolutionWithWarranty: modelNumber.resolutionWithWarranty || '',
