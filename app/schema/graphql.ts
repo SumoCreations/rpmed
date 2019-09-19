@@ -524,6 +524,12 @@ export type NewRgaGoodInput = {
   warrantied: Scalars['Boolean']
   /** The symptom / reason this product is being returned. */
   symptomId: Scalars['String']
+  /** Indicates the id of product family this good was associated with. */
+  productId: Scalars['String']
+  /** Indicates the product type for this good. */
+  productType: ProductType
+  /** Indicates the name of product family this good. */
+  productName: Scalars['String']
   /** The RGA this good is assigned to. */
   rgaId: Scalars['String']
   /** The model number for representing the specific product configuration for this good. */
@@ -782,6 +788,8 @@ export type Query = {
   info?: Maybe<Scalars['String']>
   /** All RGAs in the system */
   rgas: RgaQueryOutput
+  /** Query the total for any filtered output. */
+  rgaCount: RgaStatusCountOutput
   /** A specific RGA in the system via ID. */
   rga: RgaQueryOutput
 }
@@ -851,6 +859,11 @@ export type QueryUserWithEmailArgs = {
 }
 
 /** The root query for the schema. */
+export type QueryRgasArgs = {
+  status?: Maybe<RgaStatus>
+}
+
+/** The root query for the schema. */
 export type QueryRgaArgs = {
   id: Scalars['String']
 }
@@ -858,8 +871,10 @@ export type QueryRgaArgs = {
 /** A Request Goods Authorization. */
 export type Rga = {
   __typename?: 'RGA'
-  /** The unique identifier for this RGA */
+  /** The unique identifier for this RGA. */
   id: Scalars['ID']
+  /** The current state of the request. */
+  status: RgaStatus
   /** The date the RGA was submitted. */
   submittedOn: Scalars['String']
   /** The email address of the user whom submitted the RGA. */
@@ -875,20 +890,40 @@ export type RgaGood = {
   __typename?: 'RGAGood'
   /** The unique serial number or uuid associated to the good. */
   id: Scalars['ID']
+  /** The RGA this good is assigned to. */
+  rgaId: Scalars['String']
+  /** The model number for representing the specific product configuration for this good. */
+  modelNumber: Scalars['String']
+  /** Indicates whether or not the model was considered to be lotted. */
+  lotted: Scalars['Boolean']
+  /** The current status of the good. */
+  status: RgaGoodStatus
   /** Indicates whether or not this product is currently under warranty. */
   warrantied: Scalars['Boolean']
   /** The symptom / reason this product is being returned. */
   symptomId: Scalars['String']
   /** The current description of the symptom. */
   symptomDescription: Scalars['String']
+  /** Indicates whether or not the resolution for the symptom was a pre-approved repair. */
+  preApproved: Scalars['Boolean']
   /** The fault code associated to the prescribed symptom. */
   faultCode: Scalars['String']
-  /** The RGA this good is assigned to. */
-  rgaId: Scalars['String']
-  /** The model number for representing the specific product configuration for this good. */
-  modelNumber: Scalars['String']
   /** The serial number unique to this good if lotted. If left blank and not lotted a uuid will be generated. */
   serial?: Maybe<Scalars['String']>
+  /** Indicates the product type for this good. */
+  productType: ProductType
+  /** Indicates the name of product family this good. */
+  productName: Scalars['String']
+  /** Indicates the product family this good. */
+  productId: Scalars['String']
+  /** The proposed resolution the issue affecting this good. */
+  resolution?: Maybe<Scalars['String']>
+  /** The fee involved for resolving this issue. */
+  resolutionFee?: Maybe<Scalars['String']>
+  /** The synopsis of the associated symptom. */
+  symptomSynopsis?: Maybe<Scalars['String']>
+  /** The solution for associated symptom. */
+  symptomSolution: Scalars['String']
   /** The associated RMA from our distributor / partner's records. */
   rma?: Maybe<Scalars['String']>
   /** The associated PO from our distributor / partner's records. */
@@ -920,6 +955,14 @@ export type RgaGoodMutationOutput = {
   success: Scalars['Boolean']
 }
 
+/** The current status of a given good belonging to an RGA. */
+export enum RgaGoodStatus {
+  /** The good is considered valid and part of the request. */
+  Valid = 'VALID',
+  /** The good was removed from the request at some point. */
+  Archived = 'ARCHIVED',
+}
+
 /** The result of a mutation applied to a RGA. */
 export type RgaMutationOutput = {
   __typename?: 'RGAMutationOutput'
@@ -946,6 +989,60 @@ export type RgaQueryOutput = {
   errors?: Maybe<Array<Maybe<ValidationError>>>
   /** A simple boolean indicating whether or not the operation was successful. */
   success: Scalars['Boolean']
+}
+
+/** Defines a state a given RGA could be in. */
+export enum RgaStatus {
+  /**
+   * An RGA number has been issued to the distributor but the customer
+   * has not completed or shipped the package.
+   **/
+  Issued = 'ISSUED',
+  /**
+   * The customer has confirmed the goods associated to the request and
+   * RPMED is awaiting the delivery of the customer's package.
+   **/
+  AwaitingArrival = 'AWAITING_ARRIVAL',
+  /** RPMED has received the package / goods associated to this RGA. */
+  Received = 'RECEIVED',
+  /** RPMED team is assessing the contents of the package. */
+  Assessing = 'ASSESSING',
+  /** RPMED team is making any necessary repairs. */
+  Repairing = 'REPAIRING',
+  /** RPMED team has shipped the package back to the customer. */
+  Shipping = 'SHIPPING',
+  /** The request is complete and no further notes / changes can be made. */
+  Closed = 'CLOSED',
+  /**
+   * The request was canceled at any point during the process. Notes may
+   * may be added for further explanation.
+   **/
+  Canceled = 'CANCELED',
+}
+
+/** A list of totals for any given rga status. */
+export type RgaStatusCountOutput = {
+  __typename?: 'RGAStatusCountOutput'
+  /** Count of all issued RGAs that may not have been shipped. */
+  issued?: Maybe<Scalars['Int']>
+  /** Count of all RGAs awaiting arrival. */
+  awaitingArrival?: Maybe<Scalars['Int']>
+  /** Count of all received RGAs that have not yet been assessed. */
+  received?: Maybe<Scalars['Int']>
+  /** Count of all RGAs currently being assessed. */
+  assessing?: Maybe<Scalars['Int']>
+  /** Count of all RGAs currently being repaired. */
+  repairing?: Maybe<Scalars['Int']>
+  /** Count of all RGAs being shipped back to customers. */
+  shipping?: Maybe<Scalars['Int']>
+  /** Count of all closed RGAs. */
+  closed?: Maybe<Scalars['Int']>
+  /** Count of all canceled RGAs. */
+  canceled?: Maybe<Scalars['Int']>
+  /** A simple boolean indicating whether or not the operation was successful. */
+  success: Scalars['Boolean']
+  /** Any validation errors encountered while running the mutation. */
+  errors?: Maybe<Array<Maybe<ValidationError>>>
 }
 
 /** A set of file keys to generate S3 endpoint URLS for. */
