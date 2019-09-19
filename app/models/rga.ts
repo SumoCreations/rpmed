@@ -1,5 +1,6 @@
 import { padStart } from 'lodash'
 import { DateTime } from 'luxon'
+import { RgaStatus } from '../schema'
 import { filterBlankAttributes, getDynamoClient } from '../util'
 
 /**
@@ -12,13 +13,13 @@ import { filterBlankAttributes, getDynamoClient } from '../util'
  *
  * The table structure in dynamo DB is as follows:
  *
- * --------------------------------------------------------------
- * |                    | (GS1 Partition Key)   | (GS1 Sort Key)
- * --------------------------------------------------------------
- * | Partition Key      | Sort Key              | HSK
- * --------------------------------------------------------------
- * | RGA-ID             | "RGA"                 | Status#SubmittedOn
- * --------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
+ * |                    | (GS1 Partition Key)   | (GS1 Sort Key)      | (GS2 Sort Key)
+ * ------------------------------------------------------------------------------------------------
+ * | Partition Key      | Sort Key              | HSK                 | SHSK
+ * ------------------------------------------------------------------------------------------------
+ * | RGA-ID             | "RGA"                 | Status#SubmittedOn  | distributorId#SubmittedOn
+ * ------------------------------------------------------------------------------------------------
  *
  * This allows for the following access patterns:
  *
@@ -40,6 +41,7 @@ const client = getDynamoClient()
 
 export interface IRGAInput {
   id?: string
+  status: RgaStatus
   distributorId: string
   submittedBy: string
   submittedOn: string
@@ -48,7 +50,9 @@ export interface IRGAInput {
 export interface IRGA {
   partitionKey: string // id
   sortKey: string
-  indexSortKey: string // distributorId#submittedBy
+  indexSortKey: string // status#submittedBy
+  secondaryIndexSortKey: string // distributorId#submittedBy
+  status: RgaStatus
   distributorId: string
   submittedBy: string
   submittedOn: string
@@ -57,6 +61,7 @@ export interface IRGA {
 export interface IRGAOutput {
   id: string
   distributorId: string
+  status: RgaStatus
   submittedBy: string
   submittedOn: string
 }
@@ -74,7 +79,7 @@ const generateId = (dateString: string) =>
 
 /**
  * Generates a new RGA model in the database provided the supplied credentials are valid.
- * @param credentials The identifying credentials to assign to the RGA.
+ * @param credentials The identifying inputs to assign to the RGA.
  */
 const create = async ({
   id,
@@ -84,8 +89,9 @@ const create = async ({
   const partitionKey = await generateId(submittedOn)
   const item: IRGA = {
     ...rgaInput,
-    indexSortKey: submittedOn,
+    indexSortKey: [RgaStatus.Issued, submittedOn].join('#'),
     partitionKey,
+    secondaryIndexSortKey: [rgaInput.distributorId, submittedOn].join('#'),
     sortKey: SECONDARY_KEY,
     submittedOn,
   }
@@ -107,8 +113,42 @@ const create = async ({
 }
 
 /**
- * Retreives a model number configuration by its ID.
- * @param id The ID of the model number to find.
+ * Updates an existing RGA model in the database provided the supplied credentials are valid.
+ * @param input The identifying inputs to assign to the RGA.
+ */
+const update = async ({
+  id,
+  submittedOn,
+  ...rgaInput
+}: IRGAInput): Promise<IRGA> => {
+  const existing = await find(id)
+  const item: IRGA = {
+    ...existing,
+    ...rgaInput,
+    indexSortKey: [rgaInput.status, existing.submittedOn].join('#'),
+    sortKey: SECONDARY_KEY,
+    submittedBy: existing.submittedBy,
+    submittedOn: existing.submittedOn,
+  }
+  const params = {
+    TransactItems: [
+      {
+        Put: {
+          Item: {
+            ...filterBlankAttributes(item),
+          },
+          TableName: process.env.DYNAMODB_RESOURCES_TABLE,
+        },
+      },
+    ],
+  }
+  await client.transactWrite(params).promise()
+  return item
+}
+
+/**
+ * Retreives a RGAs configuration by its ID.
+ * @param id The ID of the RGAs to find.
  */
 const find = async (id: string): Promise<IRGA | null> => {
   const searchParams = {
@@ -123,7 +163,7 @@ const find = async (id: string): Promise<IRGA | null> => {
 }
 
 /**
- * Retreives a list of all model number configurations.
+ * Retreives a list of all RGAs.
  */
 const all = async (): Promise<IRGA[]> => {
   const searchParams = {
@@ -137,6 +177,46 @@ const all = async (): Promise<IRGA[]> => {
   }
   const result = await client.query(searchParams).promise()
   return result.Items ? (result.Items as IRGA[]) : []
+}
+
+/**
+ * Retreives a list of all RGAs for a given status.
+ * @param status The status to filter by.
+ */
+const findWithStatus = async (status: RgaStatus): Promise<IRGA[]> => {
+  const searchParams = {
+    ExpressionAttributeValues: {
+      ':hkey': SECONDARY_KEY,
+      ':rkey': status,
+    },
+    IndexName: 'GSI_1',
+    KeyConditionExpression:
+      'sortKey = :hkey AND begins_with(indexSortKey, :rkey)',
+    ScanIndexForward: false,
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
+  }
+  const result = await client.query(searchParams).promise()
+  return result.Items ? (result.Items as IRGA[]) : []
+}
+
+/**
+ * Retreives the count of all RGAs for a given status.
+ * @param status The status to filter by.
+ */
+const countWithStatus = async (status: RgaStatus): Promise<number> => {
+  const searchParams = {
+    ExpressionAttributeValues: {
+      ':hkey': SECONDARY_KEY,
+      ':rkey': status,
+    },
+    IndexName: 'GSI_1',
+    KeyConditionExpression:
+      'sortKey = :hkey AND begins_with(indexSortKey, :rkey)',
+    ScanIndexForward: false,
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
+  }
+  const result = await client.query(searchParams).promise()
+  return result.Count
 }
 
 /**
@@ -202,6 +282,7 @@ const output = ({
   const result = {
     ...rga,
     id: partitionKey,
+    status: rga.status || RgaStatus.Issued,
   }
   return result
 }
@@ -209,9 +290,12 @@ const output = ({
 export const RGA = {
   SECONDARY_KEY,
   all,
+  countWithStatus,
   create,
   destroy,
   find,
+  findWithStatus,
   output,
   submittedOnDate,
+  update,
 }
