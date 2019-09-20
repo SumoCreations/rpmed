@@ -19,12 +19,12 @@ const CUSTOMER_EMAIL = 'rga-good-test-customer@example.com'
 const sampleParams: IRGAGoodInput = {
   customerEmail: CUSTOMER_EMAIL,
   customerName: 'Jane RGAGOODTester',
-  faultCode: "D",
+  faultCode: 'D',
   lotted: false,
   modelNumber: 'MLD-X01',
   preApproved: true,
   productId: PRODUCT_ID,
-  productName: "MLX Series",
+  productName: 'MLX Series',
   productType: ProductType.Headlight,
   rgaId: RGA_ID,
   status: RgaGoodStatus.Valid,
@@ -36,7 +36,7 @@ const sampleParams: IRGAGoodInput = {
   symptomSynopsis: 'The synopsis..',
   warrantied: true,
   warrantyDescription: 'Test',
-  warrantyTerm: 2
+  warrantyTerm: 2,
 }
 
 describe('createRGAGood', () => {

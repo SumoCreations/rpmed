@@ -194,14 +194,6 @@ export const typeDefs = gql`
     The name of the customer this good belongs to - it will be automatically registered if it hasn't already been.
     """
     customerEmail: String
-    """
-    The email address of the contact who created the RGA.
-    """
-    submittedBy: String!
-    """
-    The date the RGA was submitted.
-    """
-    submittedOn: String!
   }
 
   """
@@ -409,6 +401,108 @@ export const typeDefs = gql`
     customerEmail: String
   }
 
+  """
+  The input to make changes to an existing RGA Good.
+  """
+  input ExistingRGAGoodInput {
+    """
+    The model number for representing the specific product configuration for this good.
+    """
+    modelNumber: String
+    """
+    Indicates whether or not the model was considered to be lotted.
+    """
+    lotted: Boolean
+    """
+    The current status of the good.
+    """
+    status: RGAGoodStatus
+    """
+    Indicates whether or not this product is currently under warranty.
+    """
+    warrantied: Boolean
+    """
+    Indicates the details of the associated products warranty.
+    """
+    warrantyDescription: String
+    """
+    Indicates the number of months the associated product was warrantied for.
+    """
+    warrantyTerm: Int
+    """
+    The symptom / reason this product is being returned.
+    """
+    symptomId: String
+    """
+    The current description of the symptom.
+    """
+    symptomDescription: String
+    """
+    Indicates whether or not the resolution for the symptom was a pre-approved repair.
+    """
+    preApproved: Boolean
+    """
+    The fault code associated to the prescribed symptom.
+    """
+    faultCode: String
+    """
+    The serial number unique to this good if lotted. If left blank and not lotted a uuid will be generated.
+    """
+    serial: String
+    """
+    Indicates the product type for this good.
+    """
+    productType: ProductType
+    """
+    Indicates the name of product family this good.
+    """
+    productName: String
+    """
+    Indicates the product family this good.
+    """
+    productId: String
+    """
+    The proposed resolution the issue affecting this good.
+    """
+    resolution: String
+    """
+    The fee involved for resolving this issue.
+    """
+    resolutionFee: String
+    """
+    The synopsis of the associated symptom.
+    """
+    symptomSynopsis: String
+    """
+    The solution for associated symptom.
+    """
+    symptomSolution: String
+    """
+    The associated RMA from our distributor / partner's records.
+    """
+    rma: String
+    """
+    The associated PO from our distributor / partner's records.
+    """
+    po: String
+    """
+    Any additional notes about this good specifically..
+    """
+    notes: String
+    """
+    The id of the customer if the product has been registered to a user.
+    """
+    customerId: String
+    """
+    The name of the customer this good belongs to - it will be automatically registered if it hasn't already been.
+    """
+    customerName: String
+    """
+    The name of the customer this good belongs to - it will be automatically registered if it hasn't already been.
+    """
+    customerEmail: String
+  }
+
   extend type Mutation {
     """
     Creates a new RGA.
@@ -418,6 +512,14 @@ export const typeDefs = gql`
     Creates a new good for an existing RGA.
     """
     createRGAGood(rgaGoodInput: NewRGAGoodInput!): RGAGoodMutationOutput!
+    """
+    Updates an existing good for an existing RGA.
+    """
+    updateRGAGood(
+      id: ID!
+      rgaId: String!
+      rgaGoodInput: ExistingRGAGoodInput!
+    ): RGAGoodMutationOutput!
     """
     Removes an existing RGA good.
     """

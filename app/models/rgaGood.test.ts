@@ -8,33 +8,35 @@ const PRODUCT_ID = 'TEST-PRODUCT-ID'
 const SYMPTOM_ID = 'TEST-SYMPTOM-ID'
 const SERIAL = 'TEST-SERIAL-NUMBER'
 const DATE = DateTime.utc(2019, 5, 7, 1, 12, 11, 10).toISO()
-
+const goodParams = {
+  faultCode: 'EHIJ',
+  lotted: true,
+  modelNumber: 'MLD-X01',
+  preApproved: true,
+  productId: PRODUCT_ID,
+  productName: 'MLD',
+  productType: ProductType.Headlight,
+  resolution: '',
+  resolutionFee: 'tbd',
+  rgaId: RGA_ID,
+  serial: SERIAL,
+  status: RgaGoodStatus.Valid,
+  submittedBy: 'test@klsmartin.com',
+  submittedOn: DATE,
+  symptomDescription: 'This is a sympyom',
+  symptomId: SYMPTOM_ID,
+  symptomSolution: 'somehow',
+  symptomSynopsis: 'tbd',
+  warrantied: true,
+  warrantyDescription: 'test',
+  warrantyTerm: 6,
+}
 describe('rga', () => {
   let existingGood: IRGAGood
   beforeAll(async done => {
     try {
       existingGood = await RGAGood.create({
-        faultCode: 'EHIJ',
-        lotted: true,
-        modelNumber: 'MLD-X01',
-        preApproved: true,
-        productId: PRODUCT_ID,
-        productName: 'MLD',
-        productType: ProductType.Headlight,
-        resolution: '',
-        resolutionFee: 'tbd',
-        rgaId: RGA_ID,
-        serial: SERIAL,
-        status: RgaGoodStatus.Valid,
-        submittedBy: 'test@klsmartin.com',
-        submittedOn: DATE,
-        symptomDescription: 'This is a sympyom',
-        symptomId: SYMPTOM_ID,
-        symptomSolution: 'somehow',
-        symptomSynopsis: 'tbd',
-        warrantied: true,
-        warrantyDescription: 'test',
-        warrantyTerm: 6,
+        ...goodParams,
       })
     } catch (e) {
       done()
@@ -59,31 +61,29 @@ describe('rga', () => {
       expect.assertions(1)
       try {
         await RGAGood.create({
-          faultCode: 'EHIJ',
-          lotted: false,
-          modelNumber: 'MLD-X01',
-          preApproved: true,
-          productId: PRODUCT_ID,
-          productName: 'MLD',
-          productType: ProductType.Headlight,
-          resolution: 'Test',
-          resolutionFee: 'TBD',
-          rgaId: RGA_ID,
-          serial: SERIAL,
-          status: RgaGoodStatus.Valid,
-          submittedBy: 'test@klsmartin.com',
-          submittedOn: DATE,
-          symptomDescription: 'Testing',
-          symptomId: SYMPTOM_ID,
-          symptomSolution: 'Somehow',
-          symptomSynopsis: 'Why?',
-          warrantied: true,
-          warrantyDescription: 'test',
-          warrantyTerm: 6,
+          ...goodParams,
         })
       } catch (e) {
         expect(e).toBeDefined()
       }
+    })
+  })
+
+  describe('update', () => {
+    test('should update an existing good', async () => {
+      expect.assertions(3)
+      await RGAGood.update({
+        ...existingGood,
+        warrantied: false,
+        warrantyDescription: 'updated',
+        warrantyTerm: 3,
+      })
+      const updated = await RGAGood.find(existingGood.rgaId, existingGood.id)
+      expect(updated.warrantyTerm).not.toEqual(existingGood.warrantyTerm)
+      expect(updated.warrantied).not.toEqual(existingGood.warrantied)
+      expect(updated.warrantyDescription).not.toEqual(
+        existingGood.warrantyDescription
+      )
     })
   })
 
@@ -106,7 +106,7 @@ describe('rga', () => {
       expect.assertions(2)
       await RGAGood.create({
         faultCode: 'Test',
-        lotted: false,
+        lotted: true,
         modelNumber: 'MLD-X01',
         preApproved: false,
         productId: PRODUCT_ID,

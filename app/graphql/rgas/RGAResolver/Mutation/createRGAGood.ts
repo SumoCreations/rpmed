@@ -33,6 +33,7 @@ interface IRGAGoodInputParams {
     submittedOn?: string
   }
 }
+
 type CreateRGAGoodMutation = (
   context: any,
   rgaGoodInput: IRGAGoodInputParams

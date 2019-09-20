@@ -39,12 +39,12 @@ describe('destroyRGAGood', () => {
       ...sampleParams,
       customerEmail: CUSTOMER_EMAIL,
       customerName: 'Jane RGAGOODTester',
-      faultCode: "D",
+      faultCode: 'D',
       lotted: false,
       modelNumber: 'MLD-X01',
       preApproved: true,
       productId: PRODUCT_ID,
-      productName: "MLX Series",
+      productName: 'MLX Series',
       productType: ProductType.Headlight,
       rgaId: existingRGAId,
       status: RgaGoodStatus.Valid,
@@ -56,7 +56,7 @@ describe('destroyRGAGood', () => {
       symptomSynopsis: 'The synopsis..',
       warrantied: true,
       warrantyDescription: 'Test',
-      warrantyTerm: 2
+      warrantyTerm: 2,
     })
     existingRGAGoodId = good.id
     done()

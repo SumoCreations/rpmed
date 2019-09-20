@@ -34,6 +34,7 @@ const SECONDARY_KEY = 'GOOD'
 const client = getDynamoClient()
 
 export interface IRGAGoodInput {
+  id?: string
   faultCode: string
   rgaId: string
   lotted: boolean
@@ -133,18 +134,20 @@ export interface IRGAGoodOutput {
  * @param input The identifying input to assign to the RGAGood.
  */
 const create = async ({
+  lotted,
   serial,
   rgaId,
   submittedOn,
   ...good
 }: IRGAGoodInput): Promise<IRGAGood> => {
   const partitionKey = rgaId
-  const id = serial || uuid()
+  const id = lotted ? serial : uuid()
   const indexSortKey = `${good.productId}#${good.modelNumber}`
   const item: IRGAGood = {
     ...good,
     id,
     indexSortKey,
+    lotted,
     partitionKey,
     rgaId,
     serial: id,
@@ -157,6 +160,45 @@ const create = async ({
       {
         Put: {
           ConditionExpression: 'attribute_not_exists(sortKey)',
+          Item: {
+            ...filterBlankAttributes(item),
+          },
+          TableName: process.env.DYNAMODB_RESOURCES_TABLE,
+        },
+      },
+    ],
+  }
+  await client.transactWrite(params).promise()
+  return item
+}
+
+/**
+ * Updates an existing RGAGood model in the database provided the supplied input is valid.
+ * @param input The identifying input to assign to the RGAGood.
+ */
+const update = async ({
+  id,
+  lotted,
+  serial,
+  rgaId,
+  submittedOn,
+  ...good
+}: IRGAGoodInput): Promise<IRGAGood> => {
+  const existing = await find(rgaId, id)
+  const partitionKey = rgaId
+  const item: IRGAGood = {
+    ...existing,
+    ...good,
+    indexSortKey: `${good.productId}#${good.modelNumber}`,
+    partitionKey,
+    rgaId,
+    status: RgaGoodStatus.Valid,
+    submittedOn: submittedOn || new Date().toISOString(),
+  }
+  const params = {
+    TransactItems: [
+      {
+        Put: {
           Item: {
             ...filterBlankAttributes(item),
           },
@@ -257,4 +299,5 @@ export const RGAGood = {
   find,
   forRGA,
   output,
+  update,
 }
