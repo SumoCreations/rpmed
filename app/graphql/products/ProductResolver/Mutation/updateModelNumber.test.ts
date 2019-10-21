@@ -51,8 +51,6 @@ describe('updateModelNumber', () => {
         warrantyTerm: 6,
       },
     })
-    // tslint:disable
-    console.log(output)
     expect(output.success).toBe(true)
     const updatedModel = await ModelNumber.find(sampleParams.id)
     expect(updatedModel.lotted).toBe(true)
