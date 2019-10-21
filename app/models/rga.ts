@@ -47,15 +47,37 @@ export interface IRGAInput {
   submittedOn: string
 }
 
+interface IUserUpdate {
+  id: string
+  name: string
+  email: string
+}
+
+export interface IRGAStatusInput {
+  id: string
+  status: RgaStatus
+  notes?: string
+  updatedBy: IUserUpdate
+}
+
+interface IRGAStatusLogEntry {
+  notes?: string
+  updatedBy: IUserUpdate
+  updatedOn: string
+}
+
+type IRGAStatusLog = { [key in RgaStatus]: IRGAStatusLogEntry }
+
 export interface IRGA {
   partitionKey: string // id
   sortKey: string
-  indexSortKey: string // status#submittedBy
-  secondaryIndexSortKey: string // distributorId#submittedBy
+  indexSortKey: string // status#submittedOn
+  secondaryIndexSortKey: string // distributorId#submittedOn
   status: RgaStatus
   distributorId: string
   submittedBy: string
   submittedOn: string
+  statusLog?: IRGAStatusLog
 }
 
 export interface IRGAOutput {
@@ -129,6 +151,49 @@ const update = async ({
     sortKey: SECONDARY_KEY,
     submittedBy: existing.submittedBy,
     submittedOn: existing.submittedOn,
+  }
+  const params = {
+    TransactItems: [
+      {
+        Put: {
+          Item: {
+            ...filterBlankAttributes(item),
+          },
+          TableName: process.env.DYNAMODB_RESOURCES_TABLE,
+        },
+      },
+    ],
+  }
+  await client.transactWrite(params).promise()
+  return item
+}
+
+/**
+ * Updates the status of an existing RGA model in the database provided the supplied ID is valid.
+ * @param input The identifying inputs to assign to the RGA.
+ */
+const updateStatus = async ({
+  id,
+  status,
+  notes,
+  updatedBy,
+}: IRGAStatusInput): Promise<IRGA> => {
+  const existing = await find(id)
+  const statusLog = existing.statusLog || ({} as IRGAStatusLog)
+  const updatedOn = new Date().toISOString
+  const item: IRGA = {
+    ...existing,
+    indexSortKey: [status, existing.submittedOn].join('#'),
+    sortKey: SECONDARY_KEY,
+    status,
+    statusLog: {
+      ...statusLog,
+      [status]: {
+        notes: notes || 'N/A',
+        updatedBy,
+        updatedOn,
+      },
+    },
   }
   const params = {
     TransactItems: [
@@ -298,4 +363,5 @@ export const RGA = {
   output,
   submittedOnDate,
   update,
+  updateStatus,
 }

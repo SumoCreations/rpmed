@@ -102,4 +102,27 @@ describe('rga', () => {
       expect(await RGA.destroy('Some-Made-Up-Id')).toBeFalsy()
     })
   })
+
+  describe('updateStatus', () => {
+    test('should update an RGA and return the entire object if successful', async () => {
+      const existing = (rga = await RGA.create({
+        ...existingRGAParams,
+        distributorId: distributor.partitionKey,
+      }))
+      expect.assertions(2)
+      const madeUpUser = {
+        email: 'some@email.com',
+        id: 'some-user-id',
+        name: 'Test User',
+      }
+      const update = await RGA.updateStatus({
+        id: existing.partitionKey,
+        status: RgaStatus.Shipping,
+        updatedBy: madeUpUser,
+      })
+      expect(update.status).toEqual(RgaStatus.Shipping)
+      expect(Object.keys(update.statusLog)).toContain(RgaStatus.Shipping)
+      await RGA.destroy(existing.partitionKey)
+    })
+  })
 })
