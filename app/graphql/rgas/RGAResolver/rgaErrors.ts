@@ -1,3 +1,8 @@
+export const ErrorUserProfileNotFound = {
+  message: `Could not identify the user performing this update.`,
+  path: '_',
+}
+
 export const ErrorRGAWithIDDoesNotExist = {
   message: `No RGA exists with the supplied ID.`,
   path: '_',
