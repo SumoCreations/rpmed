@@ -144,6 +144,58 @@ export type ExistingProductSymptomInput = {
   name?: Maybe<Scalars['String']>
 }
 
+/** The input to make changes to an existing RGA Good. */
+export type ExistingRgaGoodInput = {
+  /** The model number for representing the specific product configuration for this good. */
+  modelNumber?: Maybe<Scalars['String']>
+  /** Indicates whether or not the model was considered to be lotted. */
+  lotted?: Maybe<Scalars['Boolean']>
+  /** The current status of the good. */
+  status?: Maybe<RgaGoodStatus>
+  /** Indicates whether or not this product is currently under warranty. */
+  warrantied?: Maybe<Scalars['Boolean']>
+  /** Indicates the details of the associated products warranty. */
+  warrantyDescription?: Maybe<Scalars['String']>
+  /** Indicates the number of months the associated product was warrantied for. */
+  warrantyTerm?: Maybe<Scalars['Int']>
+  /** The symptom / reason this product is being returned. */
+  symptomId?: Maybe<Scalars['String']>
+  /** The current description of the symptom. */
+  symptomDescription?: Maybe<Scalars['String']>
+  /** Indicates whether or not the resolution for the symptom was a pre-approved repair. */
+  preApproved?: Maybe<Scalars['Boolean']>
+  /** The fault code associated to the prescribed symptom. */
+  faultCode?: Maybe<Scalars['String']>
+  /** The serial number unique to this good if lotted. If left blank and not lotted a uuid will be generated. */
+  serial?: Maybe<Scalars['String']>
+  /** Indicates the product type for this good. */
+  productType?: Maybe<ProductType>
+  /** Indicates the name of product family this good. */
+  productName?: Maybe<Scalars['String']>
+  /** Indicates the product family this good. */
+  productId?: Maybe<Scalars['String']>
+  /** The proposed resolution the issue affecting this good. */
+  resolution?: Maybe<Scalars['String']>
+  /** The fee involved for resolving this issue. */
+  resolutionFee?: Maybe<Scalars['String']>
+  /** The synopsis of the associated symptom. */
+  symptomSynopsis?: Maybe<Scalars['String']>
+  /** The solution for associated symptom. */
+  symptomSolution?: Maybe<Scalars['String']>
+  /** The associated RMA from our distributor / partner's records. */
+  rma?: Maybe<Scalars['String']>
+  /** The associated PO from our distributor / partner's records. */
+  po?: Maybe<Scalars['String']>
+  /** Any additional notes about this good specifically.. */
+  notes?: Maybe<Scalars['String']>
+  /** The id of the customer if the product has been registered to a user. */
+  customerId?: Maybe<Scalars['String']>
+  /** The name of the customer this good belongs to - it will be automatically registered if it hasn't already been. */
+  customerName?: Maybe<Scalars['String']>
+  /** The name of the customer this good belongs to - it will be automatically registered if it hasn't already been. */
+  customerEmail?: Maybe<Scalars['String']>
+}
+
 /** A set of fields used to create or update a user. */
 export type ExistingUserInput = {
   id: Scalars['ID']
@@ -335,8 +387,12 @@ export type Mutation = {
   createRGA: RgaMutationOutput
   /** Creates a new good for an existing RGA. */
   createRGAGood: RgaGoodMutationOutput
+  /** Updates an existing good for an existing RGA. */
+  updateRGAGood: RgaGoodMutationOutput
   /** Removes an existing RGA good. */
   destroyRGAGood: RgaGoodMutationOutput
+  /** Updates the status of a specific RGA. */
+  updateRGAStatus: RgaGoodMutationOutput
 }
 
 /** The root mutation for the schema. */
@@ -478,9 +534,23 @@ export type MutationCreateRgaGoodArgs = {
 }
 
 /** The root mutation for the schema. */
+export type MutationUpdateRgaGoodArgs = {
+  id: Scalars['ID']
+  rgaId: Scalars['String']
+  rgaGoodInput: ExistingRgaGoodInput
+}
+
+/** The root mutation for the schema. */
 export type MutationDestroyRgaGoodArgs = {
   id: Scalars['ID']
   rgaId: Scalars['String']
+}
+
+/** The root mutation for the schema. */
+export type MutationUpdateRgaStatusArgs = {
+  id: Scalars['ID']
+  status: RgaStatus
+  notes?: Maybe<Scalars['String']>
 }
 
 /** A set of fields used to create or update a customer. */
@@ -900,6 +970,10 @@ export type RgaGood = {
   status: RgaGoodStatus
   /** Indicates whether or not this product is currently under warranty. */
   warrantied: Scalars['Boolean']
+  /** Indicates the details of the associated products warranty. */
+  warrantyDescription: Scalars['String']
+  /** Indicates the number of months the associated product was warrantied for. */
+  warrantyTerm: Scalars['Int']
   /** The symptom / reason this product is being returned. */
   symptomId: Scalars['String']
   /** The current description of the symptom. */
@@ -936,10 +1010,6 @@ export type RgaGood = {
   customerName?: Maybe<Scalars['String']>
   /** The name of the customer this good belongs to - it will be automatically registered if it hasn't already been. */
   customerEmail?: Maybe<Scalars['String']>
-  /** The email address of the contact who created the RGA. */
-  submittedBy: Scalars['String']
-  /** The date the RGA was submitted. */
-  submittedOn: Scalars['String']
 }
 
 /** The result of a mutation applied to a RGA. */

@@ -524,5 +524,22 @@ export const typeDefs = gql`
     Removes an existing RGA good.
     """
     destroyRGAGood(id: ID!, rgaId: String!): RGAGoodMutationOutput!
+    """
+    Updates the status of a specific RGA.
+    """
+    updateRGAStatus(
+      """
+      The ID of the RGA to update.
+      """
+      id: ID!
+      """
+      The new status to apply.
+      """
+      status: RGAStatus!
+      """
+      Any additional notes about the update.
+      """
+      notes: String
+    ): RGAGoodMutationOutput!
   }
 `
