@@ -953,6 +953,8 @@ export type Rga = {
   distributor: Distributor
   /** The goods associated to the the RGA. */
   goods: Array<Maybe<RgaGood>>
+  /** A log of all updates to this RGAs status. */
+  statusLog?: Maybe<Array<Maybe<RgaStatusUpdate>>>
 }
 
 /** A good associated to a particular RGA. */
@@ -1113,6 +1115,27 @@ export type RgaStatusCountOutput = {
   success: Scalars['Boolean']
   /** Any validation errors encountered while running the mutation. */
   errors?: Maybe<Array<Maybe<ValidationError>>>
+}
+
+/** A description of a status update for a given RGA. */
+export type RgaStatusUpdate = {
+  __typename?: 'RGAStatusUpdate'
+  /** The new status the request was assigned. */
+  status?: Maybe<RgaStatus>
+  /** Any notes describing what happened to the request during this update. */
+  notes?: Maybe<Scalars['String']>
+  /** Details about who made this update. */
+  updatedBy?: Maybe<UpdateProfile>
+}
+
+export type UpdateProfile = {
+  __typename?: 'UpdateProfile'
+  /** The id of the user who made the update. */
+  id?: Maybe<Scalars['String']>
+  /** The name of the user who made the update. */
+  name?: Maybe<Scalars['String']>
+  /** The email address of the user who made the update. */
+  email?: Maybe<Scalars['String']>
 }
 
 /** A set of file keys to generate S3 endpoint URLS for. */

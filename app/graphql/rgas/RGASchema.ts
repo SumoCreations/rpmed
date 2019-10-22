@@ -42,6 +42,39 @@ export const typeDefs = gql`
     CANCELED
   }
 
+  type UpdateProfile {
+    """
+    The id of the user who made the update.
+    """
+    id: String
+    """
+    The name of the user who made the update.
+    """
+    name: String
+    """
+    The email address of the user who made the update.
+    """
+    email: String
+  }
+
+  """
+  A description of a status update for a given RGA.
+  """
+  type RGAStatusUpdate {
+    """
+    The new status the request was assigned.
+    """
+    status: RGAStatus
+    """
+    Any notes describing what happened to the request during this update.
+    """
+    notes: String
+    """
+    Details about who made this update.
+    """
+    updatedBy: UpdateProfile
+  }
+
   """
   A Request Goods Authorization.
   """
@@ -70,6 +103,10 @@ export const typeDefs = gql`
     The goods associated to the the RGA.
     """
     goods: [RGAGood]!
+    """
+    A log of all updates to this RGAs status.
+    """
+    statusLog: [RGAStatusUpdate]
   }
 
   """

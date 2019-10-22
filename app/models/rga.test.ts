@@ -121,7 +121,7 @@ describe('rga', () => {
         updatedBy: madeUpUser,
       })
       expect(update.status).toEqual(RgaStatus.Shipping)
-      expect(Object.keys(update.statusLog)).toContain(RgaStatus.Shipping)
+      expect(update.statusLog[0].status).toEqual(RgaStatus.Shipping)
       await RGA.destroy(existing.partitionKey)
     })
   })

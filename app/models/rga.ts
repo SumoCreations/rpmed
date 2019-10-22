@@ -61,12 +61,11 @@ export interface IRGAStatusInput {
 }
 
 interface IRGAStatusLogEntry {
+  status: RgaStatus
   notes?: string
   updatedBy: IUserUpdate
   updatedOn: string
 }
-
-type IRGAStatusLog = { [key in RgaStatus]: IRGAStatusLogEntry }
 
 export interface IRGA {
   partitionKey: string // id
@@ -77,7 +76,7 @@ export interface IRGA {
   distributorId: string
   submittedBy: string
   submittedOn: string
-  statusLog?: IRGAStatusLog
+  statusLog?: IRGAStatusLogEntry[]
 }
 
 export interface IRGAOutput {
@@ -179,21 +178,22 @@ const updateStatus = async ({
   updatedBy,
 }: IRGAStatusInput): Promise<IRGA> => {
   const existing = await find(id)
-  const statusLog = existing.statusLog || ({} as IRGAStatusLog)
-  const updatedOn = new Date().toISOString
+  const statusLog: IRGAStatusLogEntry[] = existing.statusLog || []
+  const updatedOn = new Date().toISOString()
   const item: IRGA = {
     ...existing,
     indexSortKey: [status, existing.submittedOn].join('#'),
     sortKey: SECONDARY_KEY,
     status,
-    statusLog: {
+    statusLog: [
       ...statusLog,
-      [status]: {
+      {
         notes: notes || 'N/A',
+        status,
         updatedBy,
         updatedOn,
       },
-    },
+    ],
   }
   const params = {
     TransactItems: [
