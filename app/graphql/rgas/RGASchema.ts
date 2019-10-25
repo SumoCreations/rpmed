@@ -73,6 +73,10 @@ export const typeDefs = gql`
     Details about who made this update.
     """
     updatedBy: UpdateProfile
+    """
+    An ISO string representing when this update occurred.
+    """
+    updatedOn: String
   }
 
   """
@@ -546,22 +550,6 @@ export const typeDefs = gql`
     """
     createRGA(rgaInput: NewRGAInput!): RGAMutationOutput!
     """
-    Creates a new good for an existing RGA.
-    """
-    createRGAGood(rgaGoodInput: NewRGAGoodInput!): RGAGoodMutationOutput!
-    """
-    Updates an existing good for an existing RGA.
-    """
-    updateRGAGood(
-      id: ID!
-      rgaId: String!
-      rgaGoodInput: ExistingRGAGoodInput!
-    ): RGAGoodMutationOutput!
-    """
-    Removes an existing RGA good.
-    """
-    destroyRGAGood(id: ID!, rgaId: String!): RGAGoodMutationOutput!
-    """
     Updates the status of a specific RGA.
     """
     updateRGAStatus(
@@ -577,6 +565,22 @@ export const typeDefs = gql`
       Any additional notes about the update.
       """
       notes: String
+    ): RGAMutationOutput!
+    """
+    Creates a new good for an existing RGA.
+    """
+    createRGAGood(rgaGoodInput: NewRGAGoodInput!): RGAGoodMutationOutput!
+    """
+    Updates an existing good for an existing RGA.
+    """
+    updateRGAGood(
+      id: ID!
+      rgaId: String!
+      rgaGoodInput: ExistingRGAGoodInput!
     ): RGAGoodMutationOutput!
+    """
+    Removes an existing RGA good.
+    """
+    destroyRGAGood(id: ID!, rgaId: String!): RGAGoodMutationOutput!
   }
 `
