@@ -1,18 +1,18 @@
-import { v4 as uuid } from "uuid"
-import { getClient } from "../util"
+import { v4 as uuid } from 'uuid'
+import { getDynamoClient } from '../util'
 
 /**
  * Dynamo DB Model:
  * CUSTOMER
  * ==========================================================
- * 
- * This model represents a customer of Riverpoint Medical. 
+ *
+ * This model represents a customer of Riverpoint Medical.
  * Customers are tracked in order to track product registrations
- * and warranties. It also helps us maintain a centralized 
+ * and warranties. It also helps us maintain a centralized
  * database of all service interactions with a direct customer.
- * 
+ *
  * The table structure in dynamo DB is as follows:
- * 
+ *
  * --------------------------------------------------------------
  * |                  | (GS1 Partition Key)    | (GS1 Sort Key)
  * --------------------------------------------------------------
@@ -20,17 +20,17 @@ import { getClient } from "../util"
  * --------------------------------------------------------------
  * | UUID             | CONST                  | Email
  * --------------------------------------------------------------
- * 
+ *
  * This allows for the following access patterns:
- * 
+ *
  * 1. Fetch customer by unique id. (PK is generated uuid)
  * 2. Fetch all customers (SK matches 'CONST')
  * 3. Look up a customer via email (HSK matches Email)
  */
 
-const client = getClient()
+const client = getDynamoClient()
 
-const SECONDARY_KEY = "CUSTOMER"
+const SECONDARY_KEY = 'CUSTOMER'
 
 export interface ICustomerInput {
   name: string
@@ -69,12 +69,12 @@ const create = async ({
     TransactItems: [
       {
         Put: {
-          ConditionExpression: "attribute_not_exists(partitionKey)",
+          ConditionExpression: 'attribute_not_exists(partitionKey)',
           Item: {
             ...item,
             indexSortKey: hsk,
           },
-          TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+          TableName: process.env.DYNAMODB_RESOURCES_TABLE,
         },
       },
     ],
@@ -88,24 +88,25 @@ const create = async ({
  * @param input An object representing the input to replace the supplied object.
  */
 const update = async ({
-  id, ...customerInput
+  id,
+  ...customerInput
 }: ICustomerInput): Promise<ICustomer> => {
   const existingItem = await find(id)
   const item: ICustomer = {
     ...existingItem,
-    ...customerInput
+    ...customerInput,
   }
   const hsk = customerInput.email
   const params = {
     TransactItems: [
       {
         Put: {
-          ConditionExpression: "attribute_exists(partitionKey)",
+          ConditionExpression: 'attribute_exists(partitionKey)',
           Item: {
             ...item,
             indexSortKey: hsk,
           },
-          TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+          TableName: process.env.DYNAMODB_RESOURCES_TABLE,
         },
       },
     ],
@@ -124,7 +125,7 @@ const find = async (id: string): Promise<ICustomer | null> => {
       partitionKey: id,
       sortKey: SECONDARY_KEY,
     },
-    TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.get(searchParams).promise()
   return result.Item ? (result.Item as ICustomer) : null
@@ -137,13 +138,13 @@ const find = async (id: string): Promise<ICustomer | null> => {
 const findByEmail = async (email: string): Promise<ICustomer | null> => {
   const searchParams = {
     ExpressionAttributeValues: {
-      ":hsk": email,
-      ":rkey": SECONDARY_KEY,
+      ':hsk': email,
+      ':rkey': SECONDARY_KEY,
     },
-    IndexName: "GSI_1",
-    KeyConditionExpression: "sortKey = :rkey AND indexSortKey = :hsk",
+    IndexName: 'GSI_1',
+    KeyConditionExpression: 'sortKey = :rkey AND indexSortKey = :hsk',
     Limit: 1,
-    TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.query(searchParams).promise()
   return result.Items ? (result.Items[0] as ICustomer) : null
@@ -155,18 +156,18 @@ const findByEmail = async (email: string): Promise<ICustomer | null> => {
 const all = async (): Promise<ICustomer[]> => {
   const searchParams = {
     ExpressionAttributeValues: {
-      ":rkey": SECONDARY_KEY,
+      ':rkey': SECONDARY_KEY,
     },
-    IndexName: "GSI_1",
-    KeyConditionExpression: "sortKey = :rkey",
-    TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+    IndexName: 'GSI_1',
+    KeyConditionExpression: 'sortKey = :rkey',
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.query(searchParams).promise()
   return result.Items ? (result.Items as ICustomer[]) : []
 }
 
 /**
- * Deletes a customer and associated child objects from the 
+ * Deletes a customer and associated child objects from the
  * database via UUID.
  * @param id The UUID of the customer to delete.
  */
@@ -180,7 +181,7 @@ const destroy = async (id: string): Promise<boolean> => {
         {
           Delete: {
             Key: { partitionKey: id, sortKey: SECONDARY_KEY },
-            TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+            TableName: process.env.DYNAMODB_RESOURCES_TABLE,
           },
         },
       ],
@@ -203,7 +204,7 @@ const output = ({
 }: ICustomer): ICustomerOutput => {
   const result = {
     ...customer,
-    id: partitionKey
+    id: partitionKey,
   }
   return result
 }
@@ -216,5 +217,5 @@ export const Customer = {
   find,
   findByEmail,
   output,
-  update
+  update,
 }

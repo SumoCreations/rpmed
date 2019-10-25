@@ -1,6 +1,6 @@
-import { Distributor, RGA, RGAGood } from "../../../../models"
-import { ErrorRGAWithIDDoesNotExist } from "../rgaErrors"
-import { IRGAQueryOutput } from "./rgaQueryTypes"
+import { Distributor, RGA, RGAGood } from '../../../../models'
+import { ErrorRGAWithIDDoesNotExist } from '../rgaErrors'
+import { IRGAQueryOutput } from './rgaQueryTypes'
 
 export const rga = async (_, args): Promise<IRGAQueryOutput> => {
   try {
@@ -8,21 +8,27 @@ export const rga = async (_, args): Promise<IRGAQueryOutput> => {
     if (!result) {
       return {
         errors: [ErrorRGAWithIDDoesNotExist],
-        success: false
+        success: false,
       }
     }
     return {
       rga: {
         ...RGA.output(result),
-        distributor: async () => Distributor.output(await Distributor.find(result.distributorId)),
-        goods: async () => ((await RGAGood.forRGA(result.partitionKey)) || []).map(RGAGood.output)
+        distributor: async () =>
+          Distributor.output(await Distributor.find(result.distributorId)),
+        goods: async () =>
+          ((await RGAGood.forRGA(result.partitionKey)) || []).map(
+            RGAGood.output
+          ),
       },
-      success: true
+      success: true,
     }
   } catch (e) {
     return {
-      errors: [{ path: "_", message: e.localizedMessage || "Could not retrieve rga" }],
-      success: false
+      errors: [
+        { path: '_', message: e.localizedMessage || 'Could not retrieve rga' },
+      ],
+      success: false,
     }
   }
 }

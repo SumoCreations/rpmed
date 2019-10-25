@@ -1,39 +1,48 @@
-import { gql } from "apollo-server-lambda"
+import { gql } from 'apollo-server-lambda'
 
 export const typeDefs = gql`
-  type ValidationError {
+  """
+  Pricing for a product model variant.
+  """
+  type Pricing {
     """
-    A path indicating the attribute that failed validation.
+    Internal cost pricing for distributors.
     """
-    path: String!, 
+    cost: String
     """
-    A brief description of why the specified attribute failed validation.
+    Public pricing for end users.
     """
-    message: String!
+    retail: String
   }
 
   """
-  A troubleshooting symptom for a product.
+  Pricing for fees associated to a repair.
   """
-  type SimplifiedProductSymptom {
+  type FeeStructure {
     """
-    The unique identifier for this symptom
+    Internal cost pricing for distributors.
     """
-    id: ID!
+    distributor: String
     """
-    The actual name of the symptom.
+    Public pricing for end users.
     """
-    name: String!
-    """
-    An associated fee for servicing this issue.
-    """
-    fee: Boolean!
-    """
-    An official code used to identify this symptom.
-    """
-    faultCode: String!
+    endUser: String
   }
-  
+
+  """
+  Denotes the high level category for this product.
+  """
+  enum ProductType {
+    """
+    A dedicated family of headlight.
+    """
+    HEADLIGHT
+    """
+    An accessory to a headlight.
+    """
+    ACCESSORY
+  }
+
   """
   A registered user object from API. Could be a customer, admin, or partner account.
   """
@@ -62,13 +71,21 @@ export const typeDefs = gql`
     """
     id: ID!
     """
-    The id of the product this variant belongs to.
+    Pricing for this specific model.
     """
-    productId: String!
+    pricing: Pricing!
     """
-    The product this variant belongs to.
+    The ids of the product(s) this variant can be associated with.
     """
-    product: Product
+    productIds: [String]!
+    """
+    The product(s) this variant can be associated with.
+    """
+    products: [Product]!
+    """
+    The high level category for this model number.
+    """
+    productType: ProductType!
     """
     A brief description of this product variant.
     """
@@ -84,7 +101,7 @@ export const typeDefs = gql`
     """
     A description of the warranty that applies to this model.
     """
-    warrantyDescription: String!
+    warrantyDescription: String
     """
     How issues will be resolved if this item is covered by a warranty.
     """
@@ -96,11 +113,11 @@ export const typeDefs = gql`
     """
     How much will it cost to service this item if it is covered by a warranty.
     """
-    feeWithWarranty: Float!
+    feeWithWarranty: FeeStructure!
     """
     How much will it cost to service this item if it is not covered by a warranty.
     """
-    feeWithoutWarranty: Float!
+    feeWithoutWarranty: FeeStructure!
     """
     Any public notes related to servicing this model variation.
     """
@@ -112,8 +129,7 @@ export const typeDefs = gql`
     """
     A list of all associated symptoms related to this model number.
     """
-    symptoms: [SimplifiedProductSymptom]!
-
+    symptoms: [ProductSymptom]!
   }
 
   """
@@ -135,6 +151,34 @@ export const typeDefs = gql`
   }
 
   """
+  Pricing for a product model variant.
+  """
+  input PricingInput {
+    """
+    Internal cost pricing for distributors.
+    """
+    cost: String
+    """
+    Public pricing for end users.
+    """
+    retail: String
+  }
+
+  """
+  Pricing for fees associated to a repair.
+  """
+  input FeeStructureInput {
+    """
+    Internal cost pricing for distributors.
+    """
+    distributor: String
+    """
+    Public pricing for end users.
+    """
+    endUser: String
+  }
+
+  """
   Describes a model number to be created or updated.
   """
   input ModelNumberInput {
@@ -143,9 +187,17 @@ export const typeDefs = gql`
     """
     id: ID!
     """
-    The id of the product this variant belongs to.
+    The ids of the products this variant belongs to.
     """
-    productId: String!
+    productIds: [String]!
+    """
+    The high level category type this product belongs to.
+    """
+    productType: ProductType!
+    """
+    Pricing for this specific model.
+    """
+    pricing: PricingInput!
     """
     A brief description of this product variant.
     """
@@ -161,15 +213,15 @@ export const typeDefs = gql`
     """
     A description of the warranty that applies to this model.
     """
-    warrantyDescription: String!
+    warrantyDescription: String
     """
     How much will it cost to service this item if it is covered by a warranty.
     """
-    feeWithWarranty: Float!
+    feeWithWarranty: FeeStructureInput!
     """
     How much will it cost to service this item if it is not covered by a warranty.
     """
-    feeWithoutWarranty: Float!
+    feeWithoutWarranty: FeeStructureInput!
     """
     How issues will be resolved if this item is covered by a warranty.
     """
@@ -224,7 +276,7 @@ export const typeDefs = gql`
     success: Boolean!
   }
 
-  type Query {
+  extend type Query {
     """
     All products in the system.
     """
@@ -232,7 +284,12 @@ export const typeDefs = gql`
     """
     All product variants in the system.
     """
-    modelNumbers(search: String, productId: String, symptom: String): ModelNumberQueryOutput
+    modelNumbers(
+      search: String
+      productId: String
+      productType: ProductType
+      symptom: String
+    ): ModelNumberQueryOutput
     """
     A specific product in the system via ID.
     """
@@ -273,7 +330,7 @@ export const typeDefs = gql`
     success: Boolean!
   }
 
-    """
+  """
   The result of a query for a modelNumber or modelNumbers.
   """
   type ModelNumberQueryOutput {
@@ -303,7 +360,7 @@ export const typeDefs = gql`
     success: Boolean!
   }
 
-  type Mutation {
+  extend type Mutation {
     """
     Adds a new product.
     """
@@ -319,19 +376,18 @@ export const typeDefs = gql`
     """
     Adds a new product variant.
     """
-    createModelNumber(modelNumberInput: ModelNumberInput!): ModelNumberMutationOutput!
+    createModelNumber(
+      modelNumberInput: ModelNumberInput!
+    ): ModelNumberMutationOutput!
     """
     Updates an existing product variant.
     """
-    updateModelNumber(modelNumberInput: ModelNumberInput!): ModelNumberMutationOutput!
+    updateModelNumber(
+      modelNumberInput: ModelNumberInput!
+    ): ModelNumberMutationOutput!
     """
     Removes an existing product variant.
     """
     destroyModelNumber(id: ID!): ModelNumberMutationOutput!
-  }
-
-  schema {
-    query: Query
-    mutation: Mutation
   }
 `

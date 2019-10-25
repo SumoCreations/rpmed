@@ -1,5 +1,9 @@
-import { ErrorList } from "rpmed-validation-schema"
-import { IDistributorOutput, IRGAGoodOutput, IRGAOutput } from "../../../../models"
+import {
+  IDistributorOutput,
+  IRGAGoodOutput,
+  IRGAOutput,
+} from '../../../../models'
+import { ErrorList } from '../../../../validations'
 
 interface IExtendedRGAOutput extends IRGAOutput {
   distributor: () => Promise<IDistributorOutput | null>
@@ -12,6 +16,19 @@ export interface IRGAQueryOutput {
   rgas?: IExtendedRGAOutput[]
   rga?: IExtendedRGAOutput
   rgaGood?: IRGAGoodOutput
+  errors?: ErrorList
+  success: boolean
+}
+
+export interface IRGACountQueryOutput {
+  issued?: () => Promise<number> | number | null
+  awaitingArrival?: () => Promise<number> | number | null
+  received?: () => Promise<number> | number | null
+  assessing?: () => Promise<number> | number | null
+  repairing?: () => Promise<number> | number | null
+  shipping?: () => Promise<number> | number | null
+  closed?: () => Promise<number> | number | null
+  canceled?: () => Promise<number> | number | null
   errors?: ErrorList
   success: boolean
 }

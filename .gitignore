@@ -10,3 +10,4 @@ jspm_packages
 /.dynamodb
 /.vscode
 .DS_Store
+report.*.json

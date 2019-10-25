@@ -1,5 +1,5 @@
-import { ErrorList } from "rpmed-validation-schema"
-import { ICustomerOutput } from "../../../../models"
+import { ICustomerOutput } from '../../../../models'
+import { ErrorList } from '../../../../validations'
 
 export interface ICustomerMutationOutput {
   customer?: ICustomerOutput

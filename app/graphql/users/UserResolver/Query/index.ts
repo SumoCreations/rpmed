@@ -1,4 +1,4 @@
-import { User } from "../../../../models"
+import { User } from '../../../../models'
 
 export const user = async (_, args) => User.output(await User.find(args.id))
 

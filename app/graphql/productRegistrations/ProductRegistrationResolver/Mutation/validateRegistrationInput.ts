@@ -1,6 +1,14 @@
-import * as Validation from "rpmed-validation-schema"
-import { Customer, ICustomer, IModelNumber, IProductRegistration, IProductRegistrationInput, ModelNumber, ProductRegistration } from "../../../../models"
-import * as E from "../productRegistrationErrors"
+import {
+  Customer,
+  ICustomer,
+  IModelNumber,
+  IProductRegistration,
+  IProductRegistrationInput,
+  ModelNumber,
+  ProductRegistration,
+} from '../../../../models'
+import * as Validation from '../../../../validations'
+import * as E from '../productRegistrationErrors'
 
 interface IGraphError {
   message: string
@@ -8,22 +16,28 @@ interface IGraphError {
 }
 
 interface IRegistrationValidationOutput {
-  customer?: ICustomer,
+  customer?: ICustomer
   errorResponse?: {
-    errors: IGraphError[],
+    errors: IGraphError[]
     success: boolean
   }
   input?: IProductRegistrationInput
   modelNumber?: IModelNumber
 }
 
-export const validateRegistrationInput = async (input: IProductRegistrationInput): Promise<IRegistrationValidationOutput> => {
+export const validateRegistrationInput = async (
+  input: IProductRegistrationInput
+): Promise<IRegistrationValidationOutput> => {
   // Ensure the general format of the response is correct before
   // attempting any database dependent validations.
   try {
-    await Validation.ProductRegistration.Default.validate(input, { abortEarly: false })
+    await Validation.ProductRegistration.Default.validate(input, {
+      abortEarly: false,
+    })
   } catch (e) {
-    return { errorResponse: { errors: Validation.formatError(e), success: false } }
+    return {
+      errorResponse: { errors: Validation.formatError(e), success: false },
+    }
   }
 
   // Ensure the model number is associated to an actual model.
@@ -32,25 +46,27 @@ export const validateRegistrationInput = async (input: IProductRegistrationInput
     return {
       errorResponse: {
         errors: [E.ErrorProductRegistrationModelNumberDoesNotExist],
-        success: false
-      }
+        success: false,
+      },
     }
   }
 
   const hasSerial = input.serial && input.serial.length > 0
-  if (relatedModel.lotted && !hasSerial) { // Verify a serial is present for a lotted product.
+  if (relatedModel.lotted && !hasSerial) {
+    // Verify a serial is present for a lotted product.
     return {
       errorResponse: {
         errors: [E.ErrorProductRegistrationWithSerialCannotBeBlank],
-        success: false
-      }
+        success: false,
+      },
     }
-  } else if (!relatedModel.lotted && hasSerial) { // Verify there is no serial present for a non lotted product.
+  } else if (!relatedModel.lotted && hasSerial) {
+    // Verify there is no serial present for a non lotted product.
     return {
       errorResponse: {
         errors: [E.ErrorProductRegistrationWithSerialMustBeBlank],
-        success: false
-      }
+        success: false,
+      },
     }
   }
 
@@ -59,7 +75,12 @@ export const validateRegistrationInput = async (input: IProductRegistrationInput
   if (input.id) {
     currentRegistration = await ProductRegistration.find(input.id)
     if (!currentRegistration) {
-      return { errorResponse: { success: false, errors: [E.ErrorProductRegistrationWithIDDoesNotExist] } }
+      return {
+        errorResponse: {
+          errors: [E.ErrorProductRegistrationWithIDDoesNotExist],
+          success: false,
+        },
+      }
     }
   }
 
@@ -69,18 +90,23 @@ export const validateRegistrationInput = async (input: IProductRegistrationInput
     return {
       errorResponse: {
         errors: [E.ErrorProductRegistrationCustomerDoesNotExist],
-        success: false
-      }
+        success: false,
+      },
     }
   }
 
   const serial = hasSerial ? input.serial : null
   // Ensure the serial number is not already being used by another registration
   if (hasSerial) {
-    if ((!currentRegistration || serial !== currentRegistration.partitionKey)) {
+    if (!currentRegistration || serial !== currentRegistration.partitionKey) {
       const existingRegistration = await ProductRegistration.find(input.serial)
       if (existingRegistration) {
-        return { errorResponse: { success: false, errors: [E.ErrorProductRegistrationWithSerialAlreadyExists] } }
+        return {
+          errorResponse: {
+            errors: [E.ErrorProductRegistrationWithSerialAlreadyExists],
+            success: false,
+          },
+        }
       }
     }
   }
@@ -93,6 +119,6 @@ export const validateRegistrationInput = async (input: IProductRegistrationInput
       lotted: relatedModel.lotted,
       productId: relatedModel.indexSortKey,
     },
-    modelNumber: relatedModel
+    modelNumber: relatedModel,
   }
 }

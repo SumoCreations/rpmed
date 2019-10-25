@@ -1,2 +1,2 @@
-export * from "./ProductSymptomSchema"
-export * from "./ProductSymptomResolver"
+export * from './ProductSymptomSchema'
+export * from './ProductSymptomResolver'

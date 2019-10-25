@@ -1,14 +1,96 @@
-import { gql } from "apollo-server-lambda"
+import { gql } from 'apollo-server-lambda'
 
 export const typeDefs = gql`
+  """
+  Defines a state a given RGA could be in.
+  """
+  enum RGAStatus {
+    """
+    An RGA number has been issued to the distributor but the customer
+    has not completed or shipped the package.
+    """
+    ISSUED
+    """
+    The customer has confirmed the goods associated to the request and
+    RPMED is awaiting the delivery of the customer's package.
+    """
+    AWAITING_ARRIVAL
+    """
+    RPMED has received the package / goods associated to this RGA.
+    """
+    RECEIVED
+    """
+    RPMED team is assessing the contents of the package.
+    """
+    ASSESSING
+    """
+    RPMED team is making any necessary repairs.
+    """
+    REPAIRING
+    """
+    RPMED team has shipped the package back to the customer.
+    """
+    SHIPPING
+    """
+    The request is complete and no further notes / changes can be made.
+    """
+    CLOSED
+    """
+    The request was canceled at any point during the process. Notes may
+    may be added for further explanation.
+    """
+    CANCELED
+  }
+
+  type UpdateProfile {
+    """
+    The id of the user who made the update.
+    """
+    id: String
+    """
+    The name of the user who made the update.
+    """
+    name: String
+    """
+    The email address of the user who made the update.
+    """
+    email: String
+  }
+
+  """
+  A description of a status update for a given RGA.
+  """
+  type RGAStatusUpdate {
+    """
+    The new status the request was assigned.
+    """
+    status: RGAStatus
+    """
+    Any notes describing what happened to the request during this update.
+    """
+    notes: String
+    """
+    Details about who made this update.
+    """
+    updatedBy: UpdateProfile
+    """
+    An ISO string representing when this update occurred.
+    """
+    updatedOn: String
+  }
+
   """
   A Request Goods Authorization.
   """
   type RGA {
     """
-    The unique identifier for this RGA
+    The unique identifier for this RGA.
     """
     id: ID!
+    """
+    The current state of the request.
+    """
+    status: RGAStatus!
     """
     The date the RGA was submitted.
     """
@@ -25,6 +107,24 @@ export const typeDefs = gql`
     The goods associated to the the RGA.
     """
     goods: [RGAGood]!
+    """
+    A log of all updates to this RGAs status.
+    """
+    statusLog: [RGAStatusUpdate]
+  }
+
+  """
+  The current status of a given good belonging to an RGA.
+  """
+  enum RGAGoodStatus {
+    """
+    The good is considered valid and part of the request.
+    """
+    VALID
+    """
+    The good was removed from the request at some point.
+    """
+    ARCHIVED
   }
 
   """
@@ -36,22 +136,6 @@ export const typeDefs = gql`
     """
     id: ID!
     """
-    Indicates whether or not this product is currently under warranty.
-    """
-    warrantied: Boolean!
-    """
-    The symptom / reason this product is being returned.
-    """
-    symptomId: String!
-        """
-    The current description of the symptom.
-    """
-    symptomDescription: String!
-    """
-    The fault code associated to the prescribed symptom.
-    """
-    faultCode: String!
-    """
     The RGA this good is assigned to.
     """
     rgaId: String!
@@ -60,9 +144,73 @@ export const typeDefs = gql`
     """
     modelNumber: String!
     """
+    Indicates whether or not the model was considered to be lotted.
+    """
+    lotted: Boolean!
+    """
+    The current status of the good.
+    """
+    status: RGAGoodStatus!
+    """
+    Indicates whether or not this product is currently under warranty.
+    """
+    warrantied: Boolean!
+    """
+    Indicates the details of the associated products warranty.
+    """
+    warrantyDescription: String!
+    """
+    Indicates the number of months the associated product was warrantied for.
+    """
+    warrantyTerm: Int!
+    """
+    The symptom / reason this product is being returned.
+    """
+    symptomId: String!
+    """
+    The current description of the symptom.
+    """
+    symptomDescription: String!
+    """
+    Indicates whether or not the resolution for the symptom was a pre-approved repair.
+    """
+    preApproved: Boolean!
+    """
+    The fault code associated to the prescribed symptom.
+    """
+    faultCode: String!
+    """
     The serial number unique to this good if lotted. If left blank and not lotted a uuid will be generated.
     """
     serial: String
+    """
+    Indicates the product type for this good.
+    """
+    productType: ProductType!
+    """
+    Indicates the name of product family this good.
+    """
+    productName: String!
+    """
+    Indicates the product family this good.
+    """
+    productId: String!
+    """
+    The proposed resolution the issue affecting this good.
+    """
+    resolution: String
+    """
+    The fee involved for resolving this issue.
+    """
+    resolutionFee: String
+    """
+    The synopsis of the associated symptom.
+    """
+    symptomSynopsis: String
+    """
+    The solution for associated symptom.
+    """
+    symptomSolution: String!
     """
     The associated RMA from our distributor / partner's records.
     """
@@ -87,43 +235,6 @@ export const typeDefs = gql`
     The name of the customer this good belongs to - it will be automatically registered if it hasn't already been.
     """
     customerEmail: String
-    """
-    The email address of the contact who created the RGA.
-    """
-    submittedBy: String!
-    """
-    The date the RGA was submitted.
-    """
-    submittedOn: String!
-  }
-
-  """
-  A distributor of Riverpoint Medical.
-  """
-  type Distributor {
-    """
-    The unique identifier for this distributor
-    """
-    id: ID!
-    """
-    The domain to match email addresses to via this distributor.
-    """
-    domain: String!
-    """
-    The actual name of the distributor.
-    """
-    name: String
-  }
-
-  type ValidationError {
-    """
-    A path indicating the attribute that failed validation.
-    """
-    path: String!, 
-    """
-    A brief description of why the specified attribute failed validation.
-    """
-    message: String!
   }
 
   """
@@ -155,7 +266,7 @@ export const typeDefs = gql`
     """
     success: Boolean!
   }
-  
+
   """
   The result of a mutation applied to a RGA.
   """
@@ -196,11 +307,63 @@ export const typeDefs = gql`
     success: Boolean!
   }
 
-  type Query {
+  """
+  A list of totals for any given rga status.
+  """
+  type RGAStatusCountOutput {
+    """
+    Count of all issued RGAs that may not have been shipped.
+    """
+    issued: Int
+    """
+    Count of all RGAs awaiting arrival.
+    """
+    awaitingArrival: Int
+    """
+    Count of all received RGAs that have not yet been assessed.
+    """
+    received: Int
+    """
+    Count of all RGAs currently being assessed.
+    """
+    assessing: Int
+    """
+    Count of all RGAs currently being repaired.
+    """
+    repairing: Int
+    """
+    Count of all RGAs being shipped back to customers.
+    """
+    shipping: Int
+    """
+    Count of all closed RGAs.
+    """
+    closed: Int
+    """
+    Count of all canceled RGAs.
+    """
+    canceled: Int
+    """
+    A simple boolean indicating whether or not the operation was successful.
+    """
+    success: Boolean!
+    """
+    Any validation errors encountered while running the mutation.
+    """
+    errors: [ValidationError]
+  }
+
+  extend type Query {
     """
     All RGAs in the system
     """
-    rgas: RGAQueryOutput!
+    rgas(status: RGAStatus): RGAQueryOutput!
+
+    """
+    Query the total for any filtered output.
+    """
+    rgaCount: RGAStatusCountOutput!
+
     """
     A specific RGA in the system via ID.
     """
@@ -233,6 +396,18 @@ export const typeDefs = gql`
     The symptom / reason this product is being returned.
     """
     symptomId: String!
+    """
+    Indicates the id of product family this good was associated with.
+    """
+    productId: String!
+    """
+    Indicates the product type for this good.
+    """
+    productType: ProductType!
+    """
+    Indicates the name of product family this good.
+    """
+    productName: String!
     """
     The RGA this good is assigned to.
     """
@@ -267,27 +442,145 @@ export const typeDefs = gql`
     customerEmail: String
   }
 
-  type Mutation {
+  """
+  The input to make changes to an existing RGA Good.
+  """
+  input ExistingRGAGoodInput {
+    """
+    The model number for representing the specific product configuration for this good.
+    """
+    modelNumber: String
+    """
+    Indicates whether or not the model was considered to be lotted.
+    """
+    lotted: Boolean
+    """
+    The current status of the good.
+    """
+    status: RGAGoodStatus
+    """
+    Indicates whether or not this product is currently under warranty.
+    """
+    warrantied: Boolean
+    """
+    Indicates the details of the associated products warranty.
+    """
+    warrantyDescription: String
+    """
+    Indicates the number of months the associated product was warrantied for.
+    """
+    warrantyTerm: Int
+    """
+    The symptom / reason this product is being returned.
+    """
+    symptomId: String
+    """
+    The current description of the symptom.
+    """
+    symptomDescription: String
+    """
+    Indicates whether or not the resolution for the symptom was a pre-approved repair.
+    """
+    preApproved: Boolean
+    """
+    The fault code associated to the prescribed symptom.
+    """
+    faultCode: String
+    """
+    The serial number unique to this good if lotted. If left blank and not lotted a uuid will be generated.
+    """
+    serial: String
+    """
+    Indicates the product type for this good.
+    """
+    productType: ProductType
+    """
+    Indicates the name of product family this good.
+    """
+    productName: String
+    """
+    Indicates the product family this good.
+    """
+    productId: String
+    """
+    The proposed resolution the issue affecting this good.
+    """
+    resolution: String
+    """
+    The fee involved for resolving this issue.
+    """
+    resolutionFee: String
+    """
+    The synopsis of the associated symptom.
+    """
+    symptomSynopsis: String
+    """
+    The solution for associated symptom.
+    """
+    symptomSolution: String
+    """
+    The associated RMA from our distributor / partner's records.
+    """
+    rma: String
+    """
+    The associated PO from our distributor / partner's records.
+    """
+    po: String
+    """
+    Any additional notes about this good specifically..
+    """
+    notes: String
+    """
+    The id of the customer if the product has been registered to a user.
+    """
+    customerId: String
+    """
+    The name of the customer this good belongs to - it will be automatically registered if it hasn't already been.
+    """
+    customerName: String
+    """
+    The name of the customer this good belongs to - it will be automatically registered if it hasn't already been.
+    """
+    customerEmail: String
+  }
+
+  extend type Mutation {
     """
     Creates a new RGA.
     """
-    createRGA(
-      rgaInput: NewRGAInput!
+    createRGA(rgaInput: NewRGAInput!): RGAMutationOutput!
+    """
+    Updates the status of a specific RGA.
+    """
+    updateRGAStatus(
+      """
+      The ID of the RGA to update.
+      """
+      id: ID!
+      """
+      The new status to apply.
+      """
+      status: RGAStatus!
+      """
+      Any additional notes about the update.
+      """
+      notes: String
     ): RGAMutationOutput!
     """
     Creates a new good for an existing RGA.
     """
-    createRGAGood(
-      rgaGoodInput: NewRGAGoodInput!
+    createRGAGood(rgaGoodInput: NewRGAGoodInput!): RGAGoodMutationOutput!
+    """
+    Updates an existing good for an existing RGA.
+    """
+    updateRGAGood(
+      id: ID!
+      rgaId: String!
+      rgaGoodInput: ExistingRGAGoodInput!
     ): RGAGoodMutationOutput!
     """
     Removes an existing RGA good.
     """
     destroyRGAGood(id: ID!, rgaId: String!): RGAGoodMutationOutput!
-  }
-
-  schema {
-    query: Query
-    mutation: Mutation
   }
 `

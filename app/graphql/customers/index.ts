@@ -1,2 +1,2 @@
-export * from "./CustomerSchema"
-export * from "./CustomerResolver"
+export * from './CustomerSchema'
+export * from './CustomerResolver'

@@ -20,8 +20,8 @@ export const response = (
 ): IResponse => ({
   body: JSON.stringify({ data, errors: errors || {} }),
   headers: {
-    "Access-Control-Allow-Credentials": true,
-    "Access-Control-Allow-Origin": "*",
+    'Access-Control-Allow-Credentials': true,
+    'Access-Control-Allow-Origin': '*',
   },
   statusCode: status,
 })

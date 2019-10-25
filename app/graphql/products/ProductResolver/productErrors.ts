@@ -1,34 +1,34 @@
 export const ErrorProductIDDoesNotExist = {
-  message: "Product does not exist.",
-  path: "id"
+  message: 'Product does not exist.',
+  path: 'id',
 }
 
 export const ErrorProductCouldNotBeDestroyed = {
-  message: "Product could not be destroyed",
-  path: "_"
+  message: 'Product could not be destroyed',
+  path: '_',
 }
 
 export const ErrorModelNumberIDDoesNotExist = {
-  message: "Model number does not exist.",
-  path: "id"
+  message: 'Model number does not exist.',
+  path: 'id',
 }
 
 export const ErrorModelNumberIDAlreadyExists = {
-  message: "A product is already using this model number.",
-  path: "id"
+  message: 'A product is already using this model number.',
+  path: 'id',
 }
 
 export const ErrorModelNumberRelatedProductDoesNotExist = {
-  message: "The associated product does not exist.",
-  path: "productId"
+  message: 'The associated product does not exist.',
+  path: 'productIds',
 }
 
 export const ErrorProductAlreadyExist = {
-  message: "A product with this name already exists.",
-  path: "name"
+  message: 'A product with this name already exists.',
+  path: 'name',
 }
 
 export const ErrorModelNumberCouldNotBeDestroyed = {
-  message: "Model number could not be destroyed",
-  path: "_"
+  message: 'Model number could not be destroyed',
+  path: '_',
 }

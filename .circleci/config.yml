@@ -3,17 +3,11 @@
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
 #
 version: 2
-resource_class: large
 jobs:
   build:
     docker:
-      # specify the version you desire here
-      - image: circleci/node:chakracore-8-browsers
-
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/mongo:3.4.4
+      - image: circleci/node:8.10
+      - image: circleci/dynamodb
 
     working_directory: ~/repo
 
@@ -28,14 +22,8 @@ jobs:
             - v1-dependencies-
 
       - run:
-          name: Install java
+          name: Installing Dependencies
           command: |
-            sudo apt-get update; sudo apt-get install default-jre default-jdk
-
-      - run:
-          name: Install Serverless CLI and dependencies
-          command: |
-            sudo npm i -g serverless
             npm install
 
       - save_cache:
@@ -44,33 +32,41 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
 
       - run:
-          name: Install serverless
+          name: Install Serverless CLI
           command: |
-            sls dynamodb install
+            sudo npm i -g serverless
 
-      - run:
-          name: Run the test suite in our serverless environment
-          command: |
-            ./_runTests.sh
+      # run tests!
+      - run: npm run test
 
   deploy:
-    machine:
-      enabled: true
+    docker:
+      - image: circleci/node:8.10
     working_directory: ~/repo
     steps:
       - checkout
       - type: add-ssh-keys
       - restore_cache:
           key: v1-dependencies-{{ checksum "package.json" }}
+      - run:
+          name: Install Serverless CLI
+          command: |
+            sudo npm i -g serverless
       - type: deploy
-        name: "Deploy via Serverless"
+        name: 'Deploy via Serverless'
         command: |
+          serverless config credentials --provider aws --key $AWS_ACCESS_KEY_ID --secret $AWS_SECRET_ACCESS_KEY --profile rpmed-serverless
+
           if [ "${CIRCLE_BRANCH}" == "master" ]; then
-            serverless deploy --stage production
+            serverless deploy --stage prod --conceal
+          fi
+
+          if [ "${CIRCLE_BRANCH}" == "staging" ]; then
+            serverless deploy --stage staging --conceal
           fi
 
           if [ "${CIRCLE_BRANCH}" == "develop" ]; then
-            serverless deploy --stage dev
+            serverless deploy --stage dev --conceal
           fi
 
 workflows:
@@ -78,11 +74,12 @@ workflows:
   build-deploy:
     jobs:
       - build
-      # - deploy:
-      #     requires:
-      #       - build
-      #     filters:
-      #       branches:
-      #         only:
-      #           - master
-      #           - develop
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - master
+                - staging
+                - develop

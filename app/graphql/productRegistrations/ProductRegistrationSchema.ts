@@ -1,25 +1,6 @@
-import { gql } from "apollo-server-lambda"
+import { gql } from 'apollo-server-lambda'
 
 export const ProductRegistrationTypeDef = gql`
-
-  """
-  The profile of a customer associated to a registration.
-  """
-  type Customer {
-    """
-    The id of the customer the product has been registered.
-    """
-    id: String!
-    """
-    The full name of the customer.
-    """
-    name: String!
-    """
-    The email address associated to the customer.
-    """
-    email: String!
-  }
-
   """
   A troubleshooting registration for a product.
   """
@@ -62,17 +43,6 @@ export const ProductRegistrationTypeDef = gql`
 export const typeDefs = gql`
   ${ProductRegistrationTypeDef}
 
-  type ValidationError {
-    """
-    A path indicating the attribute that failed validation.
-    """
-    path: String!, 
-    """
-    A brief description of why the specified attribute failed validation.
-    """
-    message: String!
-  }
-
   """
   The result of a query for a registration or registrations.
   """
@@ -102,7 +72,7 @@ export const typeDefs = gql`
     """
     success: Boolean!
   }
-  
+
   """
   The result of a mutation applied to a registration.
   """
@@ -121,7 +91,7 @@ export const typeDefs = gql`
     success: Boolean!
   }
 
-  type Query {
+  extend type Query {
     """
     All registrations in the system
     """
@@ -177,7 +147,7 @@ export const typeDefs = gql`
     registeredOn: String!
   }
 
-  type Mutation {
+  extend type Mutation {
     """
     Creates a new registration.
     """
@@ -195,13 +165,6 @@ export const typeDefs = gql`
     """
     Removes an existing registration.
     """
-    destroyProductRegistration(
-      id: String!
-    ): ProductRegistrationMutationOutput!
-  }
-
-  schema {
-    query: Query
-    mutation: Mutation
+    destroyProductRegistration(id: String!): ProductRegistrationMutationOutput!
   }
 `

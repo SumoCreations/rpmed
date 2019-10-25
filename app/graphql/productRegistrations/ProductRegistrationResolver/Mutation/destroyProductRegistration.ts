@@ -1,8 +1,10 @@
-
-import { Customer, ProductRegistration } from "../../../../models"
-import { generateMutationError } from "../../../../util";
-import { ErrorProductRegistrationCouldNotBeDestroyed, ErrorProductRegistrationWithIDDoesNotExist } from "../productRegistrationErrors"
-import { IProductRegistrationMutationOutput } from "./productRegistrationMutationTypes"
+import { Customer, ProductRegistration } from '../../../../models'
+import { generateMutationError } from '../../../../util'
+import {
+  ErrorProductRegistrationCouldNotBeDestroyed,
+  ErrorProductRegistrationWithIDDoesNotExist,
+} from '../productRegistrationErrors'
+import { IProductRegistrationMutationOutput } from './productRegistrationMutationTypes'
 
 export const destroyProductRegistration = async (
   _: any,
@@ -20,7 +22,9 @@ export const destroyProductRegistration = async (
   return {
     productRegistration: {
       ...ProductRegistration.output(productRegistration),
-      customer: async () => Customer.output(await Customer.find(productRegistration.customerId))
-    }, success: true
+      customer: async () =>
+        Customer.output(await Customer.find(productRegistration.customerId)),
+    },
+    success: true,
   }
 }

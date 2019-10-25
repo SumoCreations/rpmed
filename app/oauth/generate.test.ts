@@ -1,19 +1,19 @@
-import * as jwt from "jsonwebtoken"
-import { v4 as uuid } from "uuid"
-import { isEmpty } from "validator"
-import { User } from "../models"
+import * as jwt from 'jsonwebtoken'
+import { v4 as uuid } from 'uuid'
+import { isEmpty } from 'validator'
+import { User } from '../models'
 import {
   generate,
   generateTokenFromPassword,
   generateTokenFromRefreshToken,
   SUPPORTED_ALGORITHM,
-} from "./generate"
+} from './generate'
 
 const userId = uuid()
-const email = "generate-user-test@example.com"
-const password = "thisisjustatest"
+const email = 'generate-user-test@example.com'
+const password = 'thisisjustatest'
 
-describe("generate", () => {
+describe('generate', () => {
   test("should generate an access token with the associated user's ID", () => {
     const { token } = generate({ userId })
     const decoded = jwt.decode(token) as any
@@ -26,19 +26,19 @@ describe("generate", () => {
     expect(decoded.userId).toBe(userId)
   })
 
-  test("should generate a refresh attribute", () => {
+  test('should generate a refresh attribute', () => {
     const { refresh } = generate({ userId })
     const decoded = jwt.decode(refresh) as any
     expect(decoded.refresh).toBe(true)
   })
 })
 
-describe("generate from credentials", () => {
+describe('generate from credentials', () => {
   beforeAll(async () => {
     return await User.create({
       email,
-      firstName: "Jim",
-      lastName: "Jeffers",
+      firstName: 'Jim',
+      lastName: 'Jeffers',
       password,
     })
   })
@@ -47,8 +47,8 @@ describe("generate from credentials", () => {
     return await User.destroyByEmail(email)
   })
 
-  describe("generateTokenFromPassword", () => {
-    test("should generate tokens given valid credentials", async () => {
+  describe('generateTokenFromPassword', () => {
+    test('should generate tokens given valid credentials', async () => {
       expect.assertions(3)
       const tokens = await generateTokenFromPassword(email, password)
       expect(tokens).not.toBeNull()
@@ -56,23 +56,23 @@ describe("generate from credentials", () => {
       expect(isEmpty(tokens.refresh)).toBe(false)
     })
 
-    test("should not generate tokens if given invalid email", async () => {
+    test('should not generate tokens if given invalid email', async () => {
       expect.assertions(1)
       const tokens = await generateTokenFromPassword(
-        "email@doesnotexist.com",
+        'email@doesnotexist.com',
         password
       )
       expect(tokens).toBeNull()
     })
 
-    test("should not generate tokens if given invalid credentials", async () => {
+    test('should not generate tokens if given invalid credentials', async () => {
       expect.assertions(1)
-      const tokens = await generateTokenFromPassword(email, "att3mpt3dh4x0rs")
+      const tokens = await generateTokenFromPassword(email, 'att3mpt3dh4x0rs')
       expect(tokens).toBeNull()
     })
   })
 
-  describe("generateTokenFromRefreshToken", () => {
+  describe('generateTokenFromRefreshToken', () => {
     const generateValidRefreshToken = async (): Promise<string> => {
       const user = await User.findByEmail(email)
       return jwt.sign(
@@ -88,7 +88,7 @@ describe("generate from credentials", () => {
       )
     }
 
-    test("should generate new credentials from a valid refresh token", async () => {
+    test('should generate new credentials from a valid refresh token', async () => {
       expect.assertions(3)
       const tokens = await generateTokenFromRefreshToken(
         await generateValidRefreshToken()
@@ -98,7 +98,7 @@ describe("generate from credentials", () => {
       expect(tokens.refresh).not.toBeNull()
     })
 
-    test("should prevent replay attacks", async () => {
+    test('should prevent replay attacks', async () => {
       expect.assertions(1)
       await generateTokenFromRefreshToken(await generateValidRefreshToken()) // First request
       expect(
@@ -106,12 +106,12 @@ describe("generate from credentials", () => {
       ).toBeNull()
     })
 
-    test("should not generate new credentials for a non existent user", async () => {
+    test('should not generate new credentials for a non existent user', async () => {
       expect.assertions(1)
       const refresh = jwt.sign(
         {
           refresh: true,
-          userId: "1234-NOT-REAL",
+          userId: '1234-NOT-REAL',
         },
         process.env.OAUTH_SIGNATURE,
         {
@@ -123,7 +123,7 @@ describe("generate from credentials", () => {
       expect(tokens).toBeNull()
     })
 
-    test("should not generate new credentials for a standard access token", async () => {
+    test('should not generate new credentials for a standard access token', async () => {
       expect.assertions(1)
       const refresh = jwt.sign(
         {
@@ -139,7 +139,7 @@ describe("generate from credentials", () => {
       expect(tokens).toBeNull()
     })
 
-    test("should not generate new credentials if the token is not signed with the supported algorithm", async () => {
+    test('should not generate new credentials if the token is not signed with the supported algorithm', async () => {
       expect.assertions(1)
       const refresh = jwt.sign(
         {
@@ -148,7 +148,7 @@ describe("generate from credentials", () => {
         },
         process.env.OAUTH_SIGNATURE,
         {
-          algorithm: "HS256",
+          algorithm: 'HS256',
           expiresIn: process.env.REFRESH_TOKEN_LIFESPAN,
         }
       )

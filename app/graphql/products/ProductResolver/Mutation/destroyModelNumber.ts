@@ -1,9 +1,10 @@
-
-import { ModelNumber } from "../../../../models"
-import { generateMutationError } from "../../../../util";
-import { ErrorModelNumberCouldNotBeDestroyed, ErrorModelNumberIDDoesNotExist } from "../productErrors"
-import { IModelNumberMutationOutput } from "./productMutationTypes"
-
+import { ModelNumber } from '../../../../models'
+import { generateMutationError } from '../../../../util'
+import {
+  ErrorModelNumberCouldNotBeDestroyed,
+  ErrorModelNumberIDDoesNotExist,
+} from '../productErrors'
+import { IModelNumberMutationOutput } from './productMutationTypes'
 
 export const destroyModelNumber = async (
   _: any,

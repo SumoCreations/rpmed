@@ -1,3 +1,3 @@
-export * from "./createCustomer"
-export * from "./destroyCustomer"
-export * from "./updateCustomer"
+export * from './createCustomer'
+export * from './destroyCustomer'
+export * from './updateCustomer'

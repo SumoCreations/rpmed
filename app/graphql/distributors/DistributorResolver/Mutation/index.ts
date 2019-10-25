@@ -1,3 +1,3 @@
-export * from "./createDistributor"
-export * from "./destroyDistributor"
-export * from "./updateDistributor"
+export * from './createDistributor'
+export * from './destroyDistributor'
+export * from './updateDistributor'

@@ -1,8 +1,10 @@
-
-import { Customer } from "../../../../models"
-import { generateMutationError } from "../../../../util";
-import { ErrorCustomerCouldNotBeDestroyed, ErrorCustomerWithIDDoesNotExist } from "../customerErrors"
-import { ICustomerMutationOutput } from "./customerMutationTypes"
+import { Customer } from '../../../../models'
+import { generateMutationError } from '../../../../util'
+import {
+  ErrorCustomerCouldNotBeDestroyed,
+  ErrorCustomerWithIDDoesNotExist,
+} from '../customerErrors'
+import { ICustomerMutationOutput } from './customerMutationTypes'
 
 export const destroyCustomer = async (
   _: any,

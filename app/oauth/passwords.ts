@@ -1,4 +1,4 @@
-import * as bcrypt from "bcryptjs"
+import * as bcrypt from 'bcryptjs'
 
 /**
  * Creates a bcrypt hash for a supplied plain text string.

@@ -1,12 +1,12 @@
-import { v4 as uuid } from "uuid"
-import { filterBlankAttributes, getClient } from "../util"
-import { IModelNumberOutput, ModelNumber } from "./modelNumber"
+import { v4 as uuid } from 'uuid'
+import { filterBlankAttributes, getDynamoClient } from '../util'
+import { IModelNumberOutput, ModelNumber } from './modelNumber'
 
 /**
  * Dynamo DB Model:
  * PRODUCT
  * ==========================================================
- * 
+ *
  * This model represents a product of RiverPoint medical. Products
  * are key to nearly all of the interactions in the system whether
  * it be for managing a troubleshooting request, an item in a specific
@@ -15,28 +15,28 @@ import { IModelNumberOutput, ModelNumber } from "./modelNumber"
  * a family of configurations. The configuration is refferred to as
  * the ModelNumber. Review that model for more detailed associations
  * to other entities in the system.
- * 
+ *
  * The table structure in dynamo DB is as follows:
- * 
- * --------------------------------------------------------------
- * |                    | (GS1 Partition Key)    | (GS1 Sort Key)
- * --------------------------------------------------------------
- * | Partition Key      | Sort Key              | HSK
- * --------------------------------------------------------------
- * | UUID               | CONST                 | ProductName
- * --------------------------------------------------------------
- * 
+ *
+ * ----------------------------------------------------------------------------
+ * |                    | (GS1 Partition Key)   | (GS1 SK)      | (GS2 SK)
+ * ----------------------------------------------------------------------------
+ * | Partition Key      | Sort Key              | HSK           | SHSK
+ * ----------------------------------------------------------------------------
+ * | UUID               | CONST                 | ProductName   |
+ * ----------------------------------------------------------------------------
+ *
  * This allows for the following access patterns:
- * 
+ *
  * 1. Fetch product by unique id. (PK is generated uuid)
  * 2. Fetch all products (SK matches 'CONST')
  * 3. Look up a product via name (HSK matches Product)
  * 4. Find all products beginning with string (HSK begins with search string)
  */
 
-const client = getClient()
+const client = getDynamoClient()
 
-const SECONDARY_KEY = "PRODUCT"
+const SECONDARY_KEY = 'PRODUCT'
 
 export interface IProductInput {
   name: string
@@ -76,12 +76,12 @@ const create = async ({
     TransactItems: [
       {
         Put: {
-          ConditionExpression: "attribute_not_exists(partitionKey)",
+          ConditionExpression: 'attribute_not_exists(partitionKey)',
           Item: {
             ...filterBlankAttributes(item),
             indexSortKey: hsk,
           },
-          TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+          TableName: process.env.DYNAMODB_RESOURCES_TABLE,
         },
       },
     ],
@@ -95,24 +95,25 @@ const create = async ({
  * @param input An object representing the input to replace the supplied object.
  */
 const update = async ({
-  id, ...productInput
+  id,
+  ...productInput
 }: IProductInput): Promise<IProduct> => {
   const existingItem = await find(id)
   const item: IProduct = {
     ...existingItem,
-    ...productInput
+    ...productInput,
   }
   const hsk = productInput.name
   const params = {
     TransactItems: [
       {
         Put: {
-          ConditionExpression: "attribute_exists(partitionKey)",
+          ConditionExpression: 'attribute_exists(partitionKey)',
           Item: {
             ...filterBlankAttributes(item),
             indexSortKey: hsk,
           },
-          TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+          TableName: process.env.DYNAMODB_RESOURCES_TABLE,
         },
       },
     ],
@@ -131,7 +132,7 @@ const find = async (id: string): Promise<IProduct | null> => {
       partitionKey: id,
       sortKey: SECONDARY_KEY,
     },
-    TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.get(searchParams).promise()
   return result.Item ? (result.Item as IProduct) : null
@@ -144,13 +145,13 @@ const find = async (id: string): Promise<IProduct | null> => {
 const findByName = async (name: string): Promise<IProduct | null> => {
   const searchParams = {
     ExpressionAttributeValues: {
-      ":hsk": name,
-      ":rkey": SECONDARY_KEY,
+      ':hsk': name,
+      ':rkey': SECONDARY_KEY,
     },
-    IndexName: "GSI_1",
-    KeyConditionExpression: "sortKey = :rkey AND indexSortKey = :hsk",
+    IndexName: 'GSI_1',
+    KeyConditionExpression: 'sortKey = :rkey AND indexSortKey = :hsk',
     Limit: 1,
-    TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.query(searchParams).promise()
   return result.Items ? (result.Items[0] as IProduct) : null
@@ -162,18 +163,37 @@ const findByName = async (name: string): Promise<IProduct | null> => {
 const all = async (): Promise<IProduct[]> => {
   const searchParams = {
     ExpressionAttributeValues: {
-      ":rkey": SECONDARY_KEY,
+      ':rkey': SECONDARY_KEY,
     },
-    IndexName: "GSI_1",
-    KeyConditionExpression: "sortKey = :rkey",
-    TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+    IndexName: 'GSI_1',
+    KeyConditionExpression: 'sortKey = :rkey',
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.query(searchParams).promise()
   return result.Items ? (result.Items as IProduct[]) : []
 }
 
+const findByIds = async (ids: string[]): Promise<IProduct[]> => {
+  const searchParams = {
+    RequestItems: {
+      [process.env.DYNAMODB_RESOURCES_TABLE]: {
+        Keys: [
+          ...ids.map(productId => ({
+            partitionKey: productId,
+            sortKey: SECONDARY_KEY,
+          })),
+        ],
+      },
+    },
+  }
+  const result = await client.batchGet(searchParams).promise()
+  return (
+    (result.Responses[process.env.DYNAMODB_RESOURCES_TABLE] as IProduct[]) || []
+  )
+}
+
 /**
- * Deletes a product and associated child objects from the 
+ * Deletes a product and associated child objects from the
  * database via UUID.
  * @param id The UUID of the product to delete.
  */
@@ -188,13 +208,13 @@ const destroy = async (id: string): Promise<boolean> => {
         ...relatedModelNumbers.map(({ partitionKey, sortKey }) => ({
           Delete: {
             Key: { partitionKey, sortKey },
-            TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
-          }
+            TableName: process.env.DYNAMODB_RESOURCES_TABLE,
+          },
         })),
         {
           Delete: {
             Key: { partitionKey: id, sortKey: SECONDARY_KEY },
-            TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+            TableName: process.env.DYNAMODB_RESOURCES_TABLE,
           },
         },
       ],
@@ -230,7 +250,8 @@ export const Product = {
   create,
   destroy,
   find,
+  findByIds,
   findByName,
   output,
-  update
+  update,
 }

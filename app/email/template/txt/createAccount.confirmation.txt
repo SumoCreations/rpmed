@@ -1,0 +1,10 @@
+Hey ${FIRST_NAME}! An account has been approved allowing you to use
+the RPMed Service Portal. You may use the link below to confirm and
+setup your account:
+
+${CONFIRMATION_LINK}
+
+The above link will expire in ${EXPIRES_IN}. If the link no longer
+works you can request a new access link here:
+
+${RESET_LINK}

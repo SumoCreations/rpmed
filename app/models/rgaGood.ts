@@ -1,100 +1,132 @@
-import { v4 as uuid } from "uuid"
-import { filterBlankAttributes, getClient } from "../util"
+import { v4 as uuid } from 'uuid'
+import { RgaGoodStatus } from '../schema'
+import { filterBlankAttributes, getDynamoClient } from '../util'
 
 /**
  * Dynamo DB Model:
  * RGA Good
  * ==========================================================
- * 
- * This model represents a specific good attached to an RGA 
+ *
+ * This model represents a specific good attached to an RGA
  * request.
- * 
+ *
  * The table structure in dynamo DB is as follows:
- * 
- * --------------------------------------------------------------
+ *
+ * ----------------------------------------------------------------------
  * |                    | (GS1 Partition Key)   | (GS1 Sort Key)
- * --------------------------------------------------------------
+ * ----------------------------------------------------------------------
  * | Partition Key      | Sort Key              | HSK
- * --------------------------------------------------------------
- * | RGA-ID             | GOOD_Serial           | ProductId#ModelNumber
- * --------------------------------------------------------------
- * 
+ * ----------------------------------------------------------------------
+ * | RGA-ID             | GOOD#Serial           | ProductId#ModelNumber
+ * ----------------------------------------------------------------------
+ *
  * This allows for the following access patterns:
- * 
+ *
  * 1. Fetch any RGA by unique composite ID (PK + SK).
- * 2. Fetch all RGAs (PK matches RGA-ID and SK begins with 'GOOD_')
- * 3. Look up all RGA goods for an associated serial number (SK matches GOOD_Serial)
+ * 2. Fetch all RGAs (PK matches RGA-ID and SK begins with 'GOOD#')
+ * 3. Look up all RGA goods for an associated serial number (SK matches GOOD#Serial)
  * 4. Look up all RGA goods for an associated product (HSK beginsWith ProductId)
  * 5. Look up all RGA goods for an associated model number (HSK matches ProductId#ModelNumber)
  */
 
-const SECONDARY_KEY = "GOOD"
+const SECONDARY_KEY = 'GOOD'
 
-const client = getClient()
+const client = getDynamoClient()
 
 export interface IRGAGoodInput {
-  warrantied: boolean
-  symptomId: string
-  symptomDescription: string
+  id?: string
   faultCode: string
   rgaId: string
-  productId: string
   lotted: boolean
+  preApproved: boolean
   modelNumber: string
+  status: RgaGoodStatus
   serial?: string
   rma?: string
   po?: string
   notes?: string
+  productType: string
+  productId: string
+  productName: string
   customerId?: string
   customerName?: string
   customerEmail?: string
+  resolution?: string
+  resolutionFee?: string
+  symptomId: string
+  symptomDescription: string
+  symptomSynopsis: string
+  symptomSolution: string
   submittedBy: string
-  submittedOn?: string
+  submittedOn: string
+  warrantied: boolean
+  warrantyTerm: number
+  warrantyDescription: string
 }
 
 export interface IRGAGood {
-  partitionKey: string // id
-  sortKey: string
+  partitionKey: string // rgaId
+  sortKey: string // good#serial
   indexSortKey: string // productId#modelNumber
   id: string
-  warrantied: boolean
-  symptomId: string
-  symptomDescription: string
   faultCode: string
   rgaId: string
-  productId: string
   lotted: boolean
+  preApproved: boolean
   modelNumber: string
+  status: RgaGoodStatus
   serial?: string
   rma?: string
   po?: string
   notes?: string
+  productType: string
+  productId: string
+  productName: string
   customerId?: string
   customerName?: string
   customerEmail?: string
+  resolution?: string
+  resolutionFee?: string
+  symptomId: string
+  symptomDescription: string
+  symptomSynopsis: string
+  symptomSolution: string
   submittedBy: string
   submittedOn: string
+  warrantied: boolean
+  warrantyTerm: number
+  warrantyDescription: string
 }
 
 export interface IRGAGoodOutput {
   id: string
-  warrantied: boolean
-  symptomId: string
-  symptomDescription: string
   faultCode: string
   rgaId: string
-  productId: string
   lotted: boolean
+  preApproved: boolean
   modelNumber: string
+  status: RgaGoodStatus
   serial?: string
   rma?: string
   po?: string
   notes?: string
+  productType: string
+  productId: string
+  productName: string
   customerId?: string
   customerName?: string
   customerEmail?: string
+  resolution?: string
+  resolutionFee?: string
+  symptomId: string
+  symptomDescription: string
+  symptomSynopsis: string
+  symptomSolution: string
   submittedBy: string
   submittedOn: string
+  warrantied: boolean
+  warrantyTerm: number
+  warrantyDescription: string
 }
 
 /**
@@ -102,33 +134,75 @@ export interface IRGAGoodOutput {
  * @param input The identifying input to assign to the RGAGood.
  */
 const create = async ({
+  lotted,
   serial,
   rgaId,
   submittedOn,
   ...good
 }: IRGAGoodInput): Promise<IRGAGood> => {
   const partitionKey = rgaId
-  const id = serial || uuid()
+  const id = lotted ? serial : uuid()
   const indexSortKey = `${good.productId}#${good.modelNumber}`
   const item: IRGAGood = {
     ...good,
     id,
     indexSortKey,
+    lotted,
     partitionKey,
     rgaId,
     serial: id,
-    sortKey: `${SECONDARY_KEY}_${id}`,
-    submittedOn: submittedOn || new Date().toISOString()
+    sortKey: `${SECONDARY_KEY}#${id}`,
+    status: RgaGoodStatus.Valid,
+    submittedOn: submittedOn || new Date().toISOString(),
   }
   const params = {
     TransactItems: [
       {
         Put: {
-          ConditionExpression: "attribute_not_exists(sortKey)",
+          ConditionExpression: 'attribute_not_exists(sortKey)',
           Item: {
             ...filterBlankAttributes(item),
           },
-          TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+          TableName: process.env.DYNAMODB_RESOURCES_TABLE,
+        },
+      },
+    ],
+  }
+  await client.transactWrite(params).promise()
+  return item
+}
+
+/**
+ * Updates an existing RGAGood model in the database provided the supplied input is valid.
+ * @param input The identifying input to assign to the RGAGood.
+ */
+const update = async ({
+  id,
+  lotted,
+  serial,
+  rgaId,
+  submittedOn,
+  ...good
+}: IRGAGoodInput): Promise<IRGAGood> => {
+  const existing = await find(rgaId, id)
+  const partitionKey = rgaId
+  const item: IRGAGood = {
+    ...existing,
+    ...good,
+    indexSortKey: `${good.productId}#${good.modelNumber}`,
+    partitionKey,
+    rgaId,
+    status: RgaGoodStatus.Valid,
+    submittedOn: submittedOn || new Date().toISOString(),
+  }
+  const params = {
+    TransactItems: [
+      {
+        Put: {
+          Item: {
+            ...filterBlankAttributes(item),
+          },
+          TableName: process.env.DYNAMODB_RESOURCES_TABLE,
         },
       },
     ],
@@ -145,9 +219,9 @@ const find = async (rgaId: string, id: string): Promise<IRGAGood | null> => {
   const searchParams = {
     Key: {
       partitionKey: rgaId,
-      sortKey: `${SECONDARY_KEY}_${id}`,
+      sortKey: `${SECONDARY_KEY}#${id}`,
     },
-    TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.get(searchParams).promise()
   return result.Item ? (result.Item as IRGAGood) : null
@@ -160,16 +234,16 @@ const find = async (rgaId: string, id: string): Promise<IRGAGood | null> => {
 const forRGA = async (rgaId: string): Promise<IRGAGood[]> => {
   const searchParams = {
     ExpressionAttributeValues: {
-      ":pkey": rgaId,
-      ":rkey": SECONDARY_KEY,
+      ':pkey': rgaId,
+      ':rkey': SECONDARY_KEY,
     },
-    KeyConditionExpression: "partitionKey = :pkey and begins_with(sortKey, :rkey)",
-    TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+    KeyConditionExpression:
+      'partitionKey = :pkey and begins_with(sortKey, :rkey)',
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.query(searchParams).promise()
   return result.Items ? (result.Items as IRGAGood[]) : []
 }
-
 
 /**
  * Deletes an RGA good for a given request.
@@ -186,7 +260,7 @@ const destroy = async (rgaId: string, id: string): Promise<boolean> => {
         {
           Delete: {
             Key: { partitionKey: good.partitionKey, sortKey: good.sortKey },
-            TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+            TableName: process.env.DYNAMODB_RESOURCES_TABLE,
           },
         },
       ],
@@ -207,13 +281,16 @@ const output = ({
   sortKey,
   indexSortKey,
   ...rgaGood
-}: IRGAGood): IRGAGoodOutput => {
-  const result = {
-    ...rgaGood,
-    id: rgaGood.id,
-  }
-  return result
-}
+}: IRGAGood): IRGAGoodOutput => ({
+  ...rgaGood,
+  id: rgaGood.id,
+  lotted:
+    typeof rgaGood.lotted === 'boolean'
+      ? rgaGood.lotted
+      : (rgaGood.serial && rgaGood.serial.length > 0) || false,
+  status: rgaGood.status || RgaGoodStatus.Valid,
+  warrantyDescription: rgaGood.warrantyDescription || 'n/a',
+})
 
 export const RGAGood = {
   SECONDARY_KEY,
@@ -222,4 +299,5 @@ export const RGAGood = {
   find,
   forRGA,
   output,
+  update,
 }

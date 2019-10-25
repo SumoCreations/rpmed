@@ -1,35 +1,38 @@
-import { v4 as uuid } from "uuid"
-import { filterBlankAttributes, getClient } from "../util"
-import AttachedImage, { AttachedImageStatus, IAttachedImage } from "./attachedImage"
+import { v4 as uuid } from 'uuid'
+import { filterBlankAttributes, getDynamoClient } from '../util'
+import AttachedImage, {
+  AttachedImageStatus,
+  IAttachedImage,
+} from './attachedImage'
 
 /**
  * Dynamo DB Model:
  * PRODUCT SYMPTOM
  * ==========================================================
- * 
+ *
  * This model represents a product troubleshooting symptom applicable
  * to a product or set of products.
- * 
+ *
  * The table structure in dynamo DB is as follows:
- * 
- * ----------------------------------------------------------------------
- * |                    | (GS1 Partition Key) | (GS1 Sort Key)
- * ----------------------------------------------------------------------
- * | Partition Key      | Sort Key            | HSK
- * ----------------------------------------------------------------------
- * | UUID               | "PRODUCT_SYMPTOM"   | faultCode
- * ----------------------------------------------------------------------
- * 
+ *
+ * ---------------------------------------------------------------------------------
+ * |                    | (GS1 Partition Key) | (GS1 Sort Key)    | (GS2 Sort Key)
+ * ---------------------------------------------------------------------------------
+ * | Partition Key      | Sort Key            | HSK               | SHSK
+ * ---------------------------------------------------------------------------------
+ * | UUID               | "PRODUCT_SYMPTOM"   | preApproved       | fee
+ * ---------------------------------------------------------------------------------
+ *
  * This allows for the following access patterns:
- * 
+ *
  * 1. Fetch a symptom via serial number (PK matches UUID Number)
  * 2. Fetch all product symptoms (Sort Key matches 'PRODUCT_SYMPTOM')
- * 3. Fetch all product symptoms for a given product (HSK matchs faultCode)
+ * 3. Fetch all product symptoms for a given product (HSK matchs name)
  */
 
-const client = getClient()
+const client = getDynamoClient()
 
-const SECONDARY_KEY = "PRODUCT_SYMPTOM"
+const SECONDARY_KEY = 'PRODUCT_SYMPTOM'
 
 export interface IProductSymptomInput {
   careTip?: string
@@ -51,6 +54,8 @@ export interface IProductSymptom {
   synopsis: string
   solution: string
   partitionKey: string
+  indexSortKey: string
+  secondaryIndexSortKey: string
   preApproved: boolean
   sortKey: string
   modelNumbers: string[]
@@ -74,25 +79,27 @@ export interface IProductSymptomOutput {
  * @param symptomInput The identifying symptomInput to assign to the account.
  */
 const create = async ({
-  id, ...symptomInput
+  id,
+  ...symptomInput
 }: IProductSymptomInput): Promise<IProductSymptom> => {
   const item: IProductSymptom = {
     ...symptomInput,
     attachedImages: [],
+    indexSortKey: symptomInput.preApproved ? 'YES' : 'NO',
     modelNumbers: [],
     partitionKey: uuid(),
+    secondaryIndexSortKey: symptomInput.fee ? 'YES' : 'NO',
     sortKey: SECONDARY_KEY,
   }
   const params = {
     TransactItems: [
       {
         Put: {
-          ConditionExpression: "attribute_not_exists(partitionKey)",
+          ConditionExpression: 'attribute_not_exists(partitionKey)',
           Item: {
             ...filterBlankAttributes(item),
-            indexSortKey: symptomInput.faultCode,
           },
-          TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+          TableName: process.env.DYNAMODB_RESOURCES_TABLE,
         },
       },
     ],
@@ -105,22 +112,26 @@ const create = async ({
  * Generates a new symptom model in the database provided the supplied credentials are valid.
  * @param symptomInput An object representing the symptomInput to replace the supplied object.
  */
-const update = async ({ id, ...symptomInput }: IProductSymptomInput): Promise<IProductSymptom> => {
+const update = async ({
+  id,
+  ...symptomInput
+}: IProductSymptomInput): Promise<IProductSymptom> => {
   const existingItem = await find(id)
   const item: IProductSymptom = {
     ...existingItem,
-    ...symptomInput
+    ...symptomInput,
   }
   const params = {
     TransactItems: [
       {
         Put: {
-          ConditionExpression: "attribute_exists(partitionKey)",
+          ConditionExpression: 'attribute_exists(partitionKey)',
           Item: {
             ...filterBlankAttributes(item),
-            indexSortKey: symptomInput.faultCode,
+            indexSortKey: symptomInput.preApproved ? 'YES' : 'NO',
+            secondaryIndexSortKey: symptomInput.fee ? 'YES' : 'NO',
           },
-          TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+          TableName: process.env.DYNAMODB_RESOURCES_TABLE,
         },
       },
     ],
@@ -136,12 +147,12 @@ const update = async ({ id, ...symptomInput }: IProductSymptomInput): Promise<IP
 const find = async (id: string): Promise<IProductSymptom | null> => {
   const searchParams = {
     ExpressionAttributeValues: {
-      ":pk": id,
-      ":rkey": SECONDARY_KEY,
+      ':pk': id,
+      ':rkey': SECONDARY_KEY,
     },
-    KeyConditionExpression: "partitionKey = :pk and sortKey = :rkey",
+    KeyConditionExpression: 'partitionKey = :pk and sortKey = :rkey',
     Limit: 1,
-    TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.query(searchParams).promise()
   return result.Items[0] ? (result.Items[0] as IProductSymptom) : null
@@ -154,34 +165,40 @@ const find = async (id: string): Promise<IProductSymptom | null> => {
 const findAll = async (ids: string[]): Promise<IProductSymptom[]> => {
   const searchParams = {
     RequestItems: {
-      [process.env.DYNAMODB_ACCOUNTS_TABLE]: {
+      [process.env.DYNAMODB_RESOURCES_TABLE]: {
         Keys: [
           ...ids.map(symptom => ({
             partitionKey: symptom,
-            sortKey: SECONDARY_KEY
-          }))
-        ]
-      }
-    }
+            sortKey: SECONDARY_KEY,
+          })),
+        ],
+      },
+    },
   }
   const result = await client.batchGet(searchParams).promise()
-  return (result.Responses[process.env.DYNAMODB_ACCOUNTS_TABLE] as IProductSymptom[]) || []
+  return (
+    (result.Responses[
+      process.env.DYNAMODB_RESOURCES_TABLE
+    ] as IProductSymptom[]) || []
+  )
 }
 
 /**
  * Retreive a symptom by faultCode.
  * @param faultCode The faultCode of the product to find.
  */
-const findByFaultCode = async (faultCode: string): Promise<IProductSymptom | null> => {
+const findByFaultCode = async (
+  faultCode: string
+): Promise<IProductSymptom | null> => {
   const searchParams = {
     ExpressionAttributeValues: {
-      ":indexSortKey": faultCode,
-      ":rkey": SECONDARY_KEY,
+      ':indexSortKey': faultCode,
+      ':rkey': SECONDARY_KEY,
     },
-    IndexName: "GSI_1",
-    KeyConditionExpression: "sortKey = :rkey and indexSortKey = :indexSortKey",
+    IndexName: 'GSI_1',
+    KeyConditionExpression: 'sortKey = :rkey and indexSortKey = :indexSortKey',
     Limit: 1,
-    TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.query(searchParams).promise()
   return result.Items[0] ? (result.Items[0] as IProductSymptom) : null
@@ -193,25 +210,25 @@ const findByFaultCode = async (faultCode: string): Promise<IProductSymptom | nul
 const all = async (): Promise<IProductSymptom[]> => {
   const searchParams = {
     ExpressionAttributeValues: {
-      ":rkey": SECONDARY_KEY,
+      ':rkey': SECONDARY_KEY,
     },
-    IndexName: "GSI_1",
-    KeyConditionExpression: "sortKey = :rkey",
-    TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+    IndexName: 'GSI_1',
+    KeyConditionExpression: 'sortKey = :rkey',
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.query(searchParams).promise()
   return result.Items ? (result.Items as IProductSymptom[]) : []
 }
 
 /**
- * Deletes a symptom and associated child objects from the 
+ * Deletes a symptom and associated child objects from the
  * database via UUID.
  * @param id The UUID of the product to delete.
  */
 const destroy = async (id: string): Promise<boolean> => {
   const symptom = await find(id)
   try {
-    if (!(symptom)) {
+    if (!symptom) {
       return false
     }
     const params = {
@@ -219,7 +236,7 @@ const destroy = async (id: string): Promise<boolean> => {
         {
           Delete: {
             Key: { partitionKey: id, sortKey: symptom.sortKey },
-            TableName: process.env.DYNAMODB_ACCOUNTS_TABLE,
+            TableName: process.env.DYNAMODB_RESOURCES_TABLE,
           },
         },
       ],
@@ -231,13 +248,17 @@ const destroy = async (id: string): Promise<boolean> => {
   }
 }
 
-
 /**
  * Merges an attached image to a product symptom.
  */
-export const mergeImages = async (symptom: IProductSymptom, newImages: IAttachedImage[]): Promise<IProductSymptom> => {
+export const mergeImages = async (
+  symptom: IProductSymptom,
+  newImages: IAttachedImage[]
+): Promise<IProductSymptom> => {
   const newIds = (newImages || []).map(i => i.id)
-  const existingImages = (symptom.attachedImages || []).filter(i => !newIds.includes(i.id))
+  const existingImages = (symptom.attachedImages || []).filter(
+    i => !newIds.includes(i.id)
+  )
   const attachedImages = [...existingImages, ...newImages]
   return await update({ ...output(symptom), attachedImages })
 }
@@ -274,5 +295,5 @@ export const ProductSymptom = {
   findAll,
   findByFaultCode,
   output,
-  update
+  update,
 }
