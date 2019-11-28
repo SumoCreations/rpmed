@@ -220,6 +220,10 @@ export const typeDefs = gql`
     """
     po: String
     """
+    A URL to download a generated PDF of the associated service form and letter.
+    """
+    serviceFormUrl: String
+    """
     Any additional notes about this good specifically..
     """
     notes: String
