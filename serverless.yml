@@ -57,8 +57,14 @@ provider:
     DYNAMODB_USER_LOOKUP_TABLE: ${self:service}-${opt:stage, self:provider.stage}-users-lookup
     DYNAMODB_TOKEN_LOOKUP_TABLE: ${self:service}-${opt:stage, self:provider.stage}-tokens-lookup
     SES_SOURCE_ARN: arn:aws:ses:us-west-2:426380452104:identity/rpmed-apps.com
+    PDF_RENDER_TOPIC_ARN: ${cf:serverless-puppeteer-service-${opt:stage, self:provider.stage}.RenderTopicExport}
+    PDF_RENDER_BUCKET: ${cf:serverless-puppeteer-service-${opt:stage, self:provider.stage}.CachedFilesBucketName}
 
   iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - sns:Publish
+      Resource: ${cf:serverless-puppeteer-service-${opt:stage, self:provider.stage}.RenderTopicExport}
     - Effect: Allow
       Action:
         - ses:SendEmail
@@ -70,12 +76,16 @@ provider:
       Resource: 'arn:aws:s3:::${self:provider.environment.ATTACHED_IMAGES_BUCKET}/*'
     - Effect: Allow
       Action:
+        - s3:GetObject
+      Resource: 'arn:aws:s3:::${self:provider.environment.PDF_RENDER_BUCKET}/*'
+    - Effect: Allow
+      Action:
         - dynamodb:Query
         - dynamodb:Scan
         - dynamodb:GetItem
         - dynamodb:PutItem
         - dynamodb:UpdateItem
-        - dynamodb:DeleteItem
+        - dynamodb:DeleteItem`
         - dynamodb:BatchGetItem
       Resource: 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:service}-${opt:stage, self:provider.stage}-*'
 
