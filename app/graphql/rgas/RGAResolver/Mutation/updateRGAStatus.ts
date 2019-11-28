@@ -1,9 +1,10 @@
-import { IUser, RGA, User } from '../../../../models'
+import { IUser, RGA, RGAGood, User } from '../../../../models'
 import * as oauth from '../../../../oauth'
 import {
   MutationUpdateRgaStatusArgs,
   Rga,
   RgaMutationOutput,
+  RgaStatus,
 } from '../../../../schema'
 import {
   ErrorRGAWithIDDoesNotExist,
@@ -59,6 +60,16 @@ export const updateRGAStatus: UpdateRgaStatusResolver = async (
       name: `${user.firstName} ${user.lastName}`,
     },
   })
+  if (status === RgaStatus.Assessing) {
+    const goods = await RGAGood.forRGA(id)
+    const { token } = oauth.generate({ userId: user.partitionKey })
+    await Promise.all(
+      goods.map(async good => {
+        await RGAGood.generateServiceLetter(good, rga.status, token)
+      })
+    )
+  }
+
   return {
     rga: {
       ...RGA.output(rga),
