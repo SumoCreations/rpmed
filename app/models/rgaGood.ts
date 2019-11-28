@@ -1,6 +1,11 @@
 import { v4 as uuid } from 'uuid'
-import { RgaGoodStatus } from '../schema'
-import { filterBlankAttributes, getDynamoClient } from '../util'
+import { RgaGoodStatus, RgaStatus } from '../schema'
+import {
+  filterBlankAttributes,
+  getDynamoClient,
+  getS3Client,
+  getSNSClient,
+} from '../util'
 
 /**
  * Dynamo DB Model:
@@ -32,6 +37,8 @@ import { filterBlankAttributes, getDynamoClient } from '../util'
 const SECONDARY_KEY = 'GOOD'
 
 const client = getDynamoClient()
+const sns = getSNSClient()
+const s3 = getS3Client()
 
 export interface IRGAGoodInput {
   id?: string
@@ -245,6 +252,63 @@ const forRGA = async (rgaId: string): Promise<IRGAGood[]> => {
   return result.Items ? (result.Items as IRGAGood[]) : []
 }
 
+const generateServiceLetter = async (
+  rgaGood: IRGAGood,
+  rgaStatus: RgaStatus,
+  token: string
+) => {
+  try {
+    const clientUrl = `https://${
+      process.env.CLIENT_DOMAIN
+    }/admin/rga/${rgaStatus}/${rgaGood.rgaId}/service-form/${rgaGood.id}`
+    // tslint:disable-next-line no-console
+    console.log(`publishing to SNS ${clientUrl}`)
+    await sns
+      .publish({
+        Message: JSON.stringify({
+          clientUrl,
+          cookies: [
+            {
+              name: 'ACCESS_TOKEN',
+              value: `Bearer ${token}`,
+            },
+          ],
+          key: `${rgaGood.rgaId}-${rgaGood.id}.pdf`,
+          pageRanges: '1-2',
+          type: 'pdf',
+        }),
+        TopicArn: process.env.PDF_RENDER_TOPIC_ARN,
+      })
+      .promise()
+  } catch (e) {
+    // tslint:disable-next-line no-console
+    console.log('error publishing')
+    // tslint:disable-next-line no-console
+    console.log(e)
+  }
+}
+
+const generateServiceLetterUrl = async (
+  rgaGood: IRGAGood,
+  rgaStatus: RgaStatus,
+  token: string
+) => {
+  const params = {
+    Bucket: process.env.PDF_RENDER_BUCKET,
+    Key: `${rgaGood.rgaId}-${rgaGood.id}.pdf`,
+  }
+  try {
+    await s3.headObject(params).promise()
+  } catch (err) {
+    // tslint:disable-next-line
+    console.log(err)
+    // tslint:disable-next-line
+    console.log(err.code)
+    await generateServiceLetter(rgaGood, rgaStatus, token)
+  }
+  return s3.getSignedUrl('getObject', params)
+}
+
 /**
  * Deletes an RGA good for a given request.
  * @param id The UUID of the product to delete.
@@ -298,6 +362,8 @@ export const RGAGood = {
   destroy,
   find,
   forRGA,
+  generateServiceLetter,
+  generateServiceLetterUrl,
   output,
   update,
 }
