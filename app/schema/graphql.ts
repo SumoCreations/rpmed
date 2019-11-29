@@ -1,4 +1,9 @@
+import { GraphQLResolveInfo } from 'graphql'
 export type Maybe<T> = T | null
+export type RequireFields<T, K extends keyof T> = {
+  [X in Exclude<keyof T, K>]?: T[X]
+} &
+  { [P in K]-?: NonNullable<T[P]> }
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string
@@ -385,14 +390,14 @@ export type Mutation = {
   createUploads: UploadMutationOutput
   /** Creates a new RGA. */
   createRGA: RgaMutationOutput
+  /** Updates the status of a specific RGA. */
+  updateRGAStatus: RgaMutationOutput
   /** Creates a new good for an existing RGA. */
   createRGAGood: RgaGoodMutationOutput
   /** Updates an existing good for an existing RGA. */
   updateRGAGood: RgaGoodMutationOutput
   /** Removes an existing RGA good. */
   destroyRGAGood: RgaGoodMutationOutput
-  /** Updates the status of a specific RGA. */
-  updateRGAStatus: RgaGoodMutationOutput
 }
 
 /** The root mutation for the schema. */
@@ -529,6 +534,13 @@ export type MutationCreateRgaArgs = {
 }
 
 /** The root mutation for the schema. */
+export type MutationUpdateRgaStatusArgs = {
+  id: Scalars['ID']
+  status: RgaStatus
+  notes?: Maybe<Scalars['String']>
+}
+
+/** The root mutation for the schema. */
 export type MutationCreateRgaGoodArgs = {
   rgaGoodInput: NewRgaGoodInput
 }
@@ -544,13 +556,6 @@ export type MutationUpdateRgaGoodArgs = {
 export type MutationDestroyRgaGoodArgs = {
   id: Scalars['ID']
   rgaId: Scalars['String']
-}
-
-/** The root mutation for the schema. */
-export type MutationUpdateRgaStatusArgs = {
-  id: Scalars['ID']
-  status: RgaStatus
-  notes?: Maybe<Scalars['String']>
 }
 
 /** A set of fields used to create or update a customer. */
@@ -1004,6 +1009,8 @@ export type RgaGood = {
   rma?: Maybe<Scalars['String']>
   /** The associated PO from our distributor / partner's records. */
   po?: Maybe<Scalars['String']>
+  /** A URL to download a generated PDF of the associated service form and letter. */
+  serviceFormUrl?: Maybe<Scalars['String']>
   /** Any additional notes about this good specifically.. */
   notes?: Maybe<Scalars['String']>
   /** The id of the customer if the product has been registered to a user. */
@@ -1126,6 +1133,8 @@ export type RgaStatusUpdate = {
   notes?: Maybe<Scalars['String']>
   /** Details about who made this update. */
   updatedBy?: Maybe<UpdateProfile>
+  /** An ISO string representing when this update occurred. */
+  updatedOn?: Maybe<Scalars['String']>
 }
 
 export type UpdateProfile = {
@@ -1221,3 +1230,1301 @@ const result: IntrospectionResultData = {
 }
 
 export default result
+
+export type ResolverTypeWrapper<T> = Promise<T> | T
+
+export type ResolverFn<TResult, TParent, TContext, TArgs> = (
+  parent: TParent,
+  args: TArgs,
+  context: TContext,
+  info: GraphQLResolveInfo
+) => Promise<TResult> | TResult
+
+export type StitchingResolver<TResult, TParent, TContext, TArgs> = {
+  fragment: string
+  resolve: ResolverFn<TResult, TParent, TContext, TArgs>
+}
+
+export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
+  | ResolverFn<TResult, TParent, TContext, TArgs>
+  | StitchingResolver<TResult, TParent, TContext, TArgs>
+
+export type SubscriptionSubscribeFn<TResult, TParent, TContext, TArgs> = (
+  parent: TParent,
+  args: TArgs,
+  context: TContext,
+  info: GraphQLResolveInfo
+) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>
+
+export type SubscriptionResolveFn<TResult, TParent, TContext, TArgs> = (
+  parent: TParent,
+  args: TArgs,
+  context: TContext,
+  info: GraphQLResolveInfo
+) => TResult | Promise<TResult>
+
+export interface SubscriptionSubscriberObject<
+  TResult,
+  TKey extends string,
+  TParent,
+  TContext,
+  TArgs
+> {
+  subscribe: SubscriptionSubscribeFn<
+    { [key in TKey]: TResult },
+    TParent,
+    TContext,
+    TArgs
+  >
+  resolve?: SubscriptionResolveFn<
+    TResult,
+    { [key in TKey]: TResult },
+    TContext,
+    TArgs
+  >
+}
+
+export interface SubscriptionResolverObject<TResult, TParent, TContext, TArgs> {
+  subscribe: SubscriptionSubscribeFn<any, TParent, TContext, TArgs>
+  resolve: SubscriptionResolveFn<TResult, any, TContext, TArgs>
+}
+
+export type SubscriptionObject<
+  TResult,
+  TKey extends string,
+  TParent,
+  TContext,
+  TArgs
+> =
+  | SubscriptionSubscriberObject<TResult, TKey, TParent, TContext, TArgs>
+  | SubscriptionResolverObject<TResult, TParent, TContext, TArgs>
+
+export type SubscriptionResolver<
+  TResult,
+  TKey extends string,
+  TParent = {},
+  TContext = {},
+  TArgs = {}
+> =
+  | ((
+      ...args: any[]
+    ) => SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>)
+  | SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>
+
+export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
+  parent: TParent,
+  context: TContext,
+  info: GraphQLResolveInfo
+) => Maybe<TTypes>
+
+export type NextResolverFn<T> = () => Promise<T>
+
+export type DirectiveResolverFn<
+  TResult = {},
+  TParent = {},
+  TContext = {},
+  TArgs = {}
+> = (
+  next: NextResolverFn<TResult>,
+  parent: TParent,
+  args: TArgs,
+  context: TContext,
+  info: GraphQLResolveInfo
+) => TResult | Promise<TResult>
+
+/** Mapping between all available schema types and the resolvers types */
+export type ResolversTypes = {
+  Query: ResolverTypeWrapper<{}>
+  String: ResolverTypeWrapper<Scalars['String']>
+  CustomerQueryOutput: ResolverTypeWrapper<CustomerQueryOutput>
+  Customer: ResolverTypeWrapper<Customer>
+  ID: ResolverTypeWrapper<Scalars['ID']>
+  Int: ResolverTypeWrapper<Scalars['Int']>
+  ValidationError: ResolverTypeWrapper<ValidationError>
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']>
+  DistributorQueryOutput: ResolverTypeWrapper<DistributorQueryOutput>
+  Distributor: ResolverTypeWrapper<Distributor>
+  ProductQueryOutput: ResolverTypeWrapper<ProductQueryOutput>
+  Product: ResolverTypeWrapper<Product>
+  ModelNumber: ResolverTypeWrapper<ModelNumber>
+  Pricing: ResolverTypeWrapper<Pricing>
+  ProductType: ProductType
+  FeeStructure: ResolverTypeWrapper<FeeStructure>
+  ProductSymptom: ResolverTypeWrapper<ProductSymptom>
+  ModelNumberSymptomDetail: ResolverTypeWrapper<ModelNumberSymptomDetail>
+  AttachedImage: ResolverTypeWrapper<AttachedImage>
+  UploadStatus: UploadStatus
+  ModelNumberQueryOutput: ResolverTypeWrapper<ModelNumberQueryOutput>
+  ProductRegistrationQueryOutput: ResolverTypeWrapper<
+    ProductRegistrationQueryOutput
+  >
+  ProductRegistration: ResolverTypeWrapper<ProductRegistration>
+  ProductSymptomQueryOutput: ResolverTypeWrapper<ProductSymptomQueryOutput>
+  User: ResolverTypeWrapper<User>
+  RGAStatus: RgaStatus
+  RGAQueryOutput: ResolverTypeWrapper<RgaQueryOutput>
+  RGA: ResolverTypeWrapper<Rga>
+  RGAGood: ResolverTypeWrapper<RgaGood>
+  RGAGoodStatus: RgaGoodStatus
+  RGAStatusUpdate: ResolverTypeWrapper<RgaStatusUpdate>
+  UpdateProfile: ResolverTypeWrapper<UpdateProfile>
+  RGAStatusCountOutput: ResolverTypeWrapper<RgaStatusCountOutput>
+  Mutation: ResolverTypeWrapper<{}>
+  NewCustomerInput: NewCustomerInput
+  CustomerMutationOutput: ResolverTypeWrapper<CustomerMutationOutput>
+  ExistingCustomerInput: ExistingCustomerInput
+  NewDistributorInput: NewDistributorInput
+  DistributorMutationOutput: ResolverTypeWrapper<DistributorMutationOutput>
+  ExistingDistributorInput: ExistingDistributorInput
+  ProductInput: ProductInput
+  ProductMutationOutput: ResolverTypeWrapper<ProductMutationOutput>
+  ModelNumberInput: ModelNumberInput
+  PricingInput: PricingInput
+  FeeStructureInput: FeeStructureInput
+  ModelNumberMutationOutput: ResolverTypeWrapper<ModelNumberMutationOutput>
+  NewProductRegistrationInput: NewProductRegistrationInput
+  ProductRegistrationMutationOutput: ResolverTypeWrapper<
+    ProductRegistrationMutationOutput
+  >
+  ExistingProductRegistrationInput: ExistingProductRegistrationInput
+  NewProductSymptomInput: NewProductSymptomInput
+  ProductSymptomMutationOutput: ResolverTypeWrapper<
+    ProductSymptomMutationOutput
+  >
+  ExistingProductSymptomInput: ExistingProductSymptomInput
+  AttachedImageInput: AttachedImageInput
+  NewUserInput: NewUserInput
+  UserMutationOutput: ResolverTypeWrapper<UserMutationOutput>
+  ExistingUserInput: ExistingUserInput
+  UploadInput: UploadInput
+  UploadMutationOutput: ResolverTypeWrapper<UploadMutationOutput>
+  UploadURL: ResolverTypeWrapper<UploadUrl>
+  NewRGAInput: NewRgaInput
+  RGAMutationOutput: ResolverTypeWrapper<RgaMutationOutput>
+  NewRGAGoodInput: NewRgaGoodInput
+  RGAGoodMutationOutput: ResolverTypeWrapper<RgaGoodMutationOutput>
+  ExistingRGAGoodInput: ExistingRgaGoodInput
+}
+
+/** Mapping between all available schema types and the resolvers parents */
+export type ResolversParentTypes = {
+  Query: {}
+  String: Scalars['String']
+  CustomerQueryOutput: CustomerQueryOutput
+  Customer: Customer
+  ID: Scalars['ID']
+  Int: Scalars['Int']
+  ValidationError: ValidationError
+  Boolean: Scalars['Boolean']
+  DistributorQueryOutput: DistributorQueryOutput
+  Distributor: Distributor
+  ProductQueryOutput: ProductQueryOutput
+  Product: Product
+  ModelNumber: ModelNumber
+  Pricing: Pricing
+  ProductType: ProductType
+  FeeStructure: FeeStructure
+  ProductSymptom: ProductSymptom
+  ModelNumberSymptomDetail: ModelNumberSymptomDetail
+  AttachedImage: AttachedImage
+  UploadStatus: UploadStatus
+  ModelNumberQueryOutput: ModelNumberQueryOutput
+  ProductRegistrationQueryOutput: ProductRegistrationQueryOutput
+  ProductRegistration: ProductRegistration
+  ProductSymptomQueryOutput: ProductSymptomQueryOutput
+  User: User
+  RGAStatus: RgaStatus
+  RGAQueryOutput: RgaQueryOutput
+  RGA: Rga
+  RGAGood: RgaGood
+  RGAGoodStatus: RgaGoodStatus
+  RGAStatusUpdate: RgaStatusUpdate
+  UpdateProfile: UpdateProfile
+  RGAStatusCountOutput: RgaStatusCountOutput
+  Mutation: {}
+  NewCustomerInput: NewCustomerInput
+  CustomerMutationOutput: CustomerMutationOutput
+  ExistingCustomerInput: ExistingCustomerInput
+  NewDistributorInput: NewDistributorInput
+  DistributorMutationOutput: DistributorMutationOutput
+  ExistingDistributorInput: ExistingDistributorInput
+  ProductInput: ProductInput
+  ProductMutationOutput: ProductMutationOutput
+  ModelNumberInput: ModelNumberInput
+  PricingInput: PricingInput
+  FeeStructureInput: FeeStructureInput
+  ModelNumberMutationOutput: ModelNumberMutationOutput
+  NewProductRegistrationInput: NewProductRegistrationInput
+  ProductRegistrationMutationOutput: ProductRegistrationMutationOutput
+  ExistingProductRegistrationInput: ExistingProductRegistrationInput
+  NewProductSymptomInput: NewProductSymptomInput
+  ProductSymptomMutationOutput: ProductSymptomMutationOutput
+  ExistingProductSymptomInput: ExistingProductSymptomInput
+  AttachedImageInput: AttachedImageInput
+  NewUserInput: NewUserInput
+  UserMutationOutput: UserMutationOutput
+  ExistingUserInput: ExistingUserInput
+  UploadInput: UploadInput
+  UploadMutationOutput: UploadMutationOutput
+  UploadURL: UploadUrl
+  NewRGAInput: NewRgaInput
+  RGAMutationOutput: RgaMutationOutput
+  NewRGAGoodInput: NewRgaGoodInput
+  RGAGoodMutationOutput: RgaGoodMutationOutput
+  ExistingRGAGoodInput: ExistingRgaGoodInput
+}
+
+export type AttachedImageResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['AttachedImage'] = ResolversParentTypes['AttachedImage']
+> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
+  url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+  position?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  status?: Resolver<ResolversTypes['UploadStatus'], ParentType, ContextType>
+}
+
+export type CustomerResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Customer'] = ResolversParentTypes['Customer']
+> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
+  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+}
+
+export type CustomerMutationOutputResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['CustomerMutationOutput'] = ResolversParentTypes['CustomerMutationOutput']
+> = {
+  customer?: Resolver<
+    Maybe<ResolversTypes['Customer']>,
+    ParentType,
+    ContextType
+  >
+  errors?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>,
+    ParentType,
+    ContextType
+  >
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+}
+
+export type CustomerQueryOutputResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['CustomerQueryOutput'] = ResolversParentTypes['CustomerQueryOutput']
+> = {
+  customer?: Resolver<
+    Maybe<ResolversTypes['Customer']>,
+    ParentType,
+    ContextType
+  >
+  customers?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['Customer']>>>,
+    ParentType,
+    ContextType
+  >
+  pageSize?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
+  lastEvaluatedKey?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >
+  errors?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>,
+    ParentType,
+    ContextType
+  >
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+}
+
+export type DistributorResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Distributor'] = ResolversParentTypes['Distributor']
+> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
+  domain?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+}
+
+export type DistributorMutationOutputResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['DistributorMutationOutput'] = ResolversParentTypes['DistributorMutationOutput']
+> = {
+  distributor?: Resolver<
+    Maybe<ResolversTypes['Distributor']>,
+    ParentType,
+    ContextType
+  >
+  errors?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>,
+    ParentType,
+    ContextType
+  >
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+}
+
+export type DistributorQueryOutputResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['DistributorQueryOutput'] = ResolversParentTypes['DistributorQueryOutput']
+> = {
+  distributor?: Resolver<
+    Maybe<ResolversTypes['Distributor']>,
+    ParentType,
+    ContextType
+  >
+  distributors?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['Distributor']>>>,
+    ParentType,
+    ContextType
+  >
+  pageSize?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
+  lastEvaluatedKey?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >
+  errors?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>,
+    ParentType,
+    ContextType
+  >
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+}
+
+export type FeeStructureResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['FeeStructure'] = ResolversParentTypes['FeeStructure']
+> = {
+  distributor?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >
+  endUser?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+}
+
+export type ModelNumberResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['ModelNumber'] = ResolversParentTypes['ModelNumber']
+> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
+  pricing?: Resolver<ResolversTypes['Pricing'], ParentType, ContextType>
+  productIds?: Resolver<
+    Array<Maybe<ResolversTypes['String']>>,
+    ParentType,
+    ContextType
+  >
+  products?: Resolver<
+    Array<Maybe<ResolversTypes['Product']>>,
+    ParentType,
+    ContextType
+  >
+  productType?: Resolver<ResolversTypes['ProductType'], ParentType, ContextType>
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  lotted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+  warrantyTerm?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  warrantyDescription?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >
+  resolutionWithWarranty?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >
+  resolutionWithoutWarranty?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >
+  feeWithWarranty?: Resolver<
+    ResolversTypes['FeeStructure'],
+    ParentType,
+    ContextType
+  >
+  feeWithoutWarranty?: Resolver<
+    ResolversTypes['FeeStructure'],
+    ParentType,
+    ContextType
+  >
+  publicNotes?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >
+  privateNotes?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >
+  symptoms?: Resolver<
+    Array<Maybe<ResolversTypes['ProductSymptom']>>,
+    ParentType,
+    ContextType
+  >
+}
+
+export type ModelNumberMutationOutputResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['ModelNumberMutationOutput'] = ResolversParentTypes['ModelNumberMutationOutput']
+> = {
+  modelNumber?: Resolver<
+    Maybe<ResolversTypes['ModelNumber']>,
+    ParentType,
+    ContextType
+  >
+  errors?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>,
+    ParentType,
+    ContextType
+  >
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+}
+
+export type ModelNumberQueryOutputResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['ModelNumberQueryOutput'] = ResolversParentTypes['ModelNumberQueryOutput']
+> = {
+  modelNumber?: Resolver<
+    Maybe<ResolversTypes['ModelNumber']>,
+    ParentType,
+    ContextType
+  >
+  modelNumbers?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['ModelNumber']>>>,
+    ParentType,
+    ContextType
+  >
+  pageSize?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
+  lastEvaluatedKey?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >
+  errors?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>,
+    ParentType,
+    ContextType
+  >
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+}
+
+export type ModelNumberSymptomDetailResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['ModelNumberSymptomDetail'] = ResolversParentTypes['ModelNumberSymptomDetail']
+> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
+  productId?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  symptoms?: Resolver<
+    Array<Maybe<ResolversTypes['ProductSymptom']>>,
+    ParentType,
+    ContextType
+  >
+}
+
+export type MutationResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']
+> = {
+  version?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  createCustomer?: Resolver<
+    ResolversTypes['CustomerMutationOutput'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationCreateCustomerArgs, 'customerInput'>
+  >
+  updateCustomer?: Resolver<
+    ResolversTypes['CustomerMutationOutput'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationUpdateCustomerArgs, 'customerInput'>
+  >
+  destroyCustomer?: Resolver<
+    ResolversTypes['CustomerMutationOutput'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationDestroyCustomerArgs, 'id'>
+  >
+  createDistributor?: Resolver<
+    ResolversTypes['DistributorMutationOutput'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationCreateDistributorArgs, 'distributorInput'>
+  >
+  updateDistributor?: Resolver<
+    ResolversTypes['DistributorMutationOutput'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationUpdateDistributorArgs, 'distributorInput'>
+  >
+  destroyDistributor?: Resolver<
+    ResolversTypes['DistributorMutationOutput'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationDestroyDistributorArgs, 'id'>
+  >
+  createProduct?: Resolver<
+    ResolversTypes['ProductMutationOutput'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationCreateProductArgs, 'productInput'>
+  >
+  updateProduct?: Resolver<
+    ResolversTypes['ProductMutationOutput'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationUpdateProductArgs, 'productInput'>
+  >
+  destroyProduct?: Resolver<
+    ResolversTypes['ProductMutationOutput'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationDestroyProductArgs, 'id'>
+  >
+  createModelNumber?: Resolver<
+    ResolversTypes['ModelNumberMutationOutput'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationCreateModelNumberArgs, 'modelNumberInput'>
+  >
+  updateModelNumber?: Resolver<
+    ResolversTypes['ModelNumberMutationOutput'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationUpdateModelNumberArgs, 'modelNumberInput'>
+  >
+  destroyModelNumber?: Resolver<
+    ResolversTypes['ModelNumberMutationOutput'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationDestroyModelNumberArgs, 'id'>
+  >
+  createProductRegistration?: Resolver<
+    ResolversTypes['ProductRegistrationMutationOutput'],
+    ParentType,
+    ContextType,
+    RequireFields<
+      MutationCreateProductRegistrationArgs,
+      'productRegistrationInput'
+    >
+  >
+  updateProductRegistration?: Resolver<
+    ResolversTypes['ProductRegistrationMutationOutput'],
+    ParentType,
+    ContextType,
+    RequireFields<
+      MutationUpdateProductRegistrationArgs,
+      'productRegistrationInput'
+    >
+  >
+  destroyProductRegistration?: Resolver<
+    ResolversTypes['ProductRegistrationMutationOutput'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationDestroyProductRegistrationArgs, 'id'>
+  >
+  createProductSymptom?: Resolver<
+    ResolversTypes['ProductSymptomMutationOutput'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationCreateProductSymptomArgs, 'productSymptomInput'>
+  >
+  updateProductSymptom?: Resolver<
+    ResolversTypes['ProductSymptomMutationOutput'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationUpdateProductSymptomArgs, 'productSymptomInput'>
+  >
+  destroyProductSymptom?: Resolver<
+    ResolversTypes['ProductSymptomMutationOutput'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationDestroyProductSymptomArgs, 'id'>
+  >
+  linkSymptomToModel?: Resolver<
+    ResolversTypes['ProductSymptomMutationOutput'],
+    ParentType,
+    ContextType,
+    RequireFields<
+      MutationLinkSymptomToModelArgs,
+      'modelNumber' | 'symptomId' | 'linked'
+    >
+  >
+  attachImagesToSymptom?: Resolver<
+    ResolversTypes['ProductSymptomMutationOutput'],
+    ParentType,
+    ContextType,
+    RequireFields<
+      MutationAttachImagesToSymptomArgs,
+      'symptomId' | 'attachedImages'
+    >
+  >
+  createUser?: Resolver<
+    ResolversTypes['UserMutationOutput'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationCreateUserArgs, 'userInput'>
+  >
+  updateUser?: Resolver<
+    ResolversTypes['UserMutationOutput'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationUpdateUserArgs, 'userInput'>
+  >
+  destroyUser?: Resolver<
+    ResolversTypes['UserMutationOutput'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationDestroyUserArgs, 'id'>
+  >
+  resetPassword?: Resolver<
+    ResolversTypes['UserMutationOutput'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationResetPasswordArgs, 'password'>
+  >
+  createUploads?: Resolver<
+    ResolversTypes['UploadMutationOutput'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationCreateUploadsArgs, 'uploadInput'>
+  >
+  createRGA?: Resolver<
+    ResolversTypes['RGAMutationOutput'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationCreateRgaArgs, 'rgaInput'>
+  >
+  updateRGAStatus?: Resolver<
+    ResolversTypes['RGAMutationOutput'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationUpdateRgaStatusArgs, 'id' | 'status'>
+  >
+  createRGAGood?: Resolver<
+    ResolversTypes['RGAGoodMutationOutput'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationCreateRgaGoodArgs, 'rgaGoodInput'>
+  >
+  updateRGAGood?: Resolver<
+    ResolversTypes['RGAGoodMutationOutput'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationUpdateRgaGoodArgs, 'id' | 'rgaId' | 'rgaGoodInput'>
+  >
+  destroyRGAGood?: Resolver<
+    ResolversTypes['RGAGoodMutationOutput'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationDestroyRgaGoodArgs, 'id' | 'rgaId'>
+  >
+}
+
+export type PricingResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Pricing'] = ResolversParentTypes['Pricing']
+> = {
+  cost?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+  retail?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+}
+
+export type ProductResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Product'] = ResolversParentTypes['Product']
+> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  modelNumbers?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['ModelNumber']>>>,
+    ParentType,
+    ContextType
+  >
+}
+
+export type ProductMutationOutputResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['ProductMutationOutput'] = ResolversParentTypes['ProductMutationOutput']
+> = {
+  product?: Resolver<Maybe<ResolversTypes['Product']>, ParentType, ContextType>
+  errors?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>,
+    ParentType,
+    ContextType
+  >
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+}
+
+export type ProductQueryOutputResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['ProductQueryOutput'] = ResolversParentTypes['ProductQueryOutput']
+> = {
+  product?: Resolver<Maybe<ResolversTypes['Product']>, ParentType, ContextType>
+  products?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['Product']>>>,
+    ParentType,
+    ContextType
+  >
+  pageSize?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
+  lastEvaluatedKey?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >
+  errors?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>,
+    ParentType,
+    ContextType
+  >
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+}
+
+export type ProductRegistrationResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['ProductRegistration'] = ResolversParentTypes['ProductRegistration']
+> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
+  registeredOn?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  customer?: Resolver<ResolversTypes['Customer'], ParentType, ContextType>
+  customerId?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  productId?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  modelNumber?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  serial?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+  lotted?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>
+}
+
+export type ProductRegistrationMutationOutputResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['ProductRegistrationMutationOutput'] = ResolversParentTypes['ProductRegistrationMutationOutput']
+> = {
+  productRegistration?: Resolver<
+    Maybe<ResolversTypes['ProductRegistration']>,
+    ParentType,
+    ContextType
+  >
+  errors?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>,
+    ParentType,
+    ContextType
+  >
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+}
+
+export type ProductRegistrationQueryOutputResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['ProductRegistrationQueryOutput'] = ResolversParentTypes['ProductRegistrationQueryOutput']
+> = {
+  productRegistration?: Resolver<
+    Maybe<ResolversTypes['ProductRegistration']>,
+    ParentType,
+    ContextType
+  >
+  productRegistrations?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['ProductRegistration']>>>,
+    ParentType,
+    ContextType
+  >
+  pageSize?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
+  lastEvaluatedKey?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >
+  errors?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>,
+    ParentType,
+    ContextType
+  >
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+}
+
+export type ProductSymptomResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['ProductSymptom'] = ResolversParentTypes['ProductSymptom']
+> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  careTip?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+  synopsis?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+  solution?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+  fee?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+  preApproved?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+  faultCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+  associatedModelNumbers?: Resolver<
+    Array<Maybe<ResolversTypes['String']>>,
+    ParentType,
+    ContextType
+  >
+  modelNumbers?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['ModelNumberSymptomDetail']>>>,
+    ParentType,
+    ContextType
+  >
+  attachedImages?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['AttachedImage']>>>,
+    ParentType,
+    ContextType
+  >
+}
+
+export type ProductSymptomMutationOutputResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['ProductSymptomMutationOutput'] = ResolversParentTypes['ProductSymptomMutationOutput']
+> = {
+  productSymptom?: Resolver<
+    Maybe<ResolversTypes['ProductSymptom']>,
+    ParentType,
+    ContextType
+  >
+  modelNumber?: Resolver<
+    Maybe<ResolversTypes['ModelNumberSymptomDetail']>,
+    ParentType,
+    ContextType
+  >
+  errors?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>,
+    ParentType,
+    ContextType
+  >
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+}
+
+export type ProductSymptomQueryOutputResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['ProductSymptomQueryOutput'] = ResolversParentTypes['ProductSymptomQueryOutput']
+> = {
+  productSymptom?: Resolver<
+    Maybe<ResolversTypes['ProductSymptom']>,
+    ParentType,
+    ContextType
+  >
+  productSymptoms?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['ProductSymptom']>>>,
+    ParentType,
+    ContextType,
+    ProductSymptomQueryOutputProductSymptomsArgs
+  >
+  pageSize?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
+  lastEvaluatedKey?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >
+  errors?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>,
+    ParentType,
+    ContextType
+  >
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+}
+
+export type QueryResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']
+> = {
+  version?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  customers?: Resolver<
+    ResolversTypes['CustomerQueryOutput'],
+    ParentType,
+    ContextType,
+    QueryCustomersArgs
+  >
+  customer?: Resolver<
+    ResolversTypes['CustomerQueryOutput'],
+    ParentType,
+    ContextType,
+    RequireFields<QueryCustomerArgs, 'id'>
+  >
+  distributors?: Resolver<
+    ResolversTypes['DistributorQueryOutput'],
+    ParentType,
+    ContextType
+  >
+  distributor?: Resolver<
+    ResolversTypes['DistributorQueryOutput'],
+    ParentType,
+    ContextType,
+    RequireFields<QueryDistributorArgs, 'id'>
+  >
+  products?: Resolver<
+    Maybe<ResolversTypes['ProductQueryOutput']>,
+    ParentType,
+    ContextType,
+    QueryProductsArgs
+  >
+  modelNumbers?: Resolver<
+    Maybe<ResolversTypes['ModelNumberQueryOutput']>,
+    ParentType,
+    ContextType,
+    QueryModelNumbersArgs
+  >
+  product?: Resolver<
+    Maybe<ResolversTypes['ProductQueryOutput']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryProductArgs, 'id'>
+  >
+  modelNumber?: Resolver<
+    Maybe<ResolversTypes['ModelNumberQueryOutput']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryModelNumberArgs, 'id'>
+  >
+  productRegistrations?: Resolver<
+    ResolversTypes['ProductRegistrationQueryOutput'],
+    ParentType,
+    ContextType
+  >
+  productRegistration?: Resolver<
+    ResolversTypes['ProductRegistrationQueryOutput'],
+    ParentType,
+    ContextType,
+    RequireFields<QueryProductRegistrationArgs, 'id'>
+  >
+  productSymptoms?: Resolver<
+    ResolversTypes['ProductSymptomQueryOutput'],
+    ParentType,
+    ContextType,
+    QueryProductSymptomsArgs
+  >
+  productSymptom?: Resolver<
+    ResolversTypes['ProductSymptomQueryOutput'],
+    ParentType,
+    ContextType,
+    RequireFields<QueryProductSymptomArgs, 'id'>
+  >
+  users?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['User']>>>,
+    ParentType,
+    ContextType
+  >
+  user?: Resolver<
+    Maybe<ResolversTypes['User']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryUserArgs, 'id'>
+  >
+  userWithEmail?: Resolver<
+    Maybe<ResolversTypes['User']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryUserWithEmailArgs, 'email'>
+  >
+  info?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+  rgas?: Resolver<
+    ResolversTypes['RGAQueryOutput'],
+    ParentType,
+    ContextType,
+    QueryRgasArgs
+  >
+  rgaCount?: Resolver<
+    ResolversTypes['RGAStatusCountOutput'],
+    ParentType,
+    ContextType
+  >
+  rga?: Resolver<
+    ResolversTypes['RGAQueryOutput'],
+    ParentType,
+    ContextType,
+    RequireFields<QueryRgaArgs, 'id'>
+  >
+}
+
+export type RgaResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['RGA'] = ResolversParentTypes['RGA']
+> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
+  status?: Resolver<ResolversTypes['RGAStatus'], ParentType, ContextType>
+  submittedOn?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  submittedBy?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  distributor?: Resolver<ResolversTypes['Distributor'], ParentType, ContextType>
+  goods?: Resolver<
+    Array<Maybe<ResolversTypes['RGAGood']>>,
+    ParentType,
+    ContextType
+  >
+  statusLog?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['RGAStatusUpdate']>>>,
+    ParentType,
+    ContextType
+  >
+}
+
+export type RgaGoodResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['RGAGood'] = ResolversParentTypes['RGAGood']
+> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
+  rgaId?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  modelNumber?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  lotted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+  status?: Resolver<ResolversTypes['RGAGoodStatus'], ParentType, ContextType>
+  warrantied?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+  warrantyDescription?: Resolver<
+    ResolversTypes['String'],
+    ParentType,
+    ContextType
+  >
+  warrantyTerm?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  symptomId?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  symptomDescription?: Resolver<
+    ResolversTypes['String'],
+    ParentType,
+    ContextType
+  >
+  preApproved?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+  faultCode?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  serial?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+  productType?: Resolver<ResolversTypes['ProductType'], ParentType, ContextType>
+  productName?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  productId?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  resolution?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >
+  resolutionFee?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >
+  symptomSynopsis?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >
+  symptomSolution?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  rma?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+  po?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+  serviceFormUrl?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >
+  notes?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+  customerId?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >
+  customerName?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >
+  customerEmail?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >
+}
+
+export type RgaGoodMutationOutputResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['RGAGoodMutationOutput'] = ResolversParentTypes['RGAGoodMutationOutput']
+> = {
+  rgaId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+  rgaGood?: Resolver<Maybe<ResolversTypes['RGAGood']>, ParentType, ContextType>
+  errors?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>,
+    ParentType,
+    ContextType
+  >
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+}
+
+export type RgaMutationOutputResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['RGAMutationOutput'] = ResolversParentTypes['RGAMutationOutput']
+> = {
+  rga?: Resolver<Maybe<ResolversTypes['RGA']>, ParentType, ContextType>
+  errors?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>,
+    ParentType,
+    ContextType
+  >
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+}
+
+export type RgaQueryOutputResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['RGAQueryOutput'] = ResolversParentTypes['RGAQueryOutput']
+> = {
+  rga?: Resolver<Maybe<ResolversTypes['RGA']>, ParentType, ContextType>
+  rgas?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['RGA']>>>,
+    ParentType,
+    ContextType
+  >
+  pageSize?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
+  lastEvaluatedKey?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >
+  errors?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>,
+    ParentType,
+    ContextType
+  >
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+}
+
+export type RgaStatusCountOutputResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['RGAStatusCountOutput'] = ResolversParentTypes['RGAStatusCountOutput']
+> = {
+  issued?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
+  awaitingArrival?: Resolver<
+    Maybe<ResolversTypes['Int']>,
+    ParentType,
+    ContextType
+  >
+  received?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
+  assessing?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
+  repairing?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
+  shipping?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
+  closed?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
+  canceled?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+  errors?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>,
+    ParentType,
+    ContextType
+  >
+}
+
+export type RgaStatusUpdateResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['RGAStatusUpdate'] = ResolversParentTypes['RGAStatusUpdate']
+> = {
+  status?: Resolver<Maybe<ResolversTypes['RGAStatus']>, ParentType, ContextType>
+  notes?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+  updatedBy?: Resolver<
+    Maybe<ResolversTypes['UpdateProfile']>,
+    ParentType,
+    ContextType
+  >
+  updatedOn?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+}
+
+export type UpdateProfileResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['UpdateProfile'] = ResolversParentTypes['UpdateProfile']
+> = {
+  id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+}
+
+export type UploadMutationOutputResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['UploadMutationOutput'] = ResolversParentTypes['UploadMutationOutput']
+> = {
+  uploads?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['UploadURL']>>>,
+    ParentType,
+    ContextType
+  >
+  errors?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>,
+    ParentType,
+    ContextType
+  >
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+}
+
+export type UploadUrlResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['UploadURL'] = ResolversParentTypes['UploadURL']
+> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
+  url?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+}
+
+export type UserResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']
+> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
+  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  firstName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+  lastName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+}
+
+export type UserMutationOutputResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['UserMutationOutput'] = ResolversParentTypes['UserMutationOutput']
+> = {
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>
+  errors?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>,
+    ParentType,
+    ContextType
+  >
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+}
+
+export type ValidationErrorResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['ValidationError'] = ResolversParentTypes['ValidationError']
+> = {
+  path?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+}
+
+export type Resolvers<ContextType = any> = {
+  AttachedImage?: AttachedImageResolvers<ContextType>
+  Customer?: CustomerResolvers<ContextType>
+  CustomerMutationOutput?: CustomerMutationOutputResolvers<ContextType>
+  CustomerQueryOutput?: CustomerQueryOutputResolvers<ContextType>
+  Distributor?: DistributorResolvers<ContextType>
+  DistributorMutationOutput?: DistributorMutationOutputResolvers<ContextType>
+  DistributorQueryOutput?: DistributorQueryOutputResolvers<ContextType>
+  FeeStructure?: FeeStructureResolvers<ContextType>
+  ModelNumber?: ModelNumberResolvers<ContextType>
+  ModelNumberMutationOutput?: ModelNumberMutationOutputResolvers<ContextType>
+  ModelNumberQueryOutput?: ModelNumberQueryOutputResolvers<ContextType>
+  ModelNumberSymptomDetail?: ModelNumberSymptomDetailResolvers<ContextType>
+  Mutation?: MutationResolvers<ContextType>
+  Pricing?: PricingResolvers<ContextType>
+  Product?: ProductResolvers<ContextType>
+  ProductMutationOutput?: ProductMutationOutputResolvers<ContextType>
+  ProductQueryOutput?: ProductQueryOutputResolvers<ContextType>
+  ProductRegistration?: ProductRegistrationResolvers<ContextType>
+  ProductRegistrationMutationOutput?: ProductRegistrationMutationOutputResolvers<
+    ContextType
+  >
+  ProductRegistrationQueryOutput?: ProductRegistrationQueryOutputResolvers<
+    ContextType
+  >
+  ProductSymptom?: ProductSymptomResolvers<ContextType>
+  ProductSymptomMutationOutput?: ProductSymptomMutationOutputResolvers<
+    ContextType
+  >
+  ProductSymptomQueryOutput?: ProductSymptomQueryOutputResolvers<ContextType>
+  Query?: QueryResolvers<ContextType>
+  RGA?: RgaResolvers<ContextType>
+  RGAGood?: RgaGoodResolvers<ContextType>
+  RGAGoodMutationOutput?: RgaGoodMutationOutputResolvers<ContextType>
+  RGAMutationOutput?: RgaMutationOutputResolvers<ContextType>
+  RGAQueryOutput?: RgaQueryOutputResolvers<ContextType>
+  RGAStatusCountOutput?: RgaStatusCountOutputResolvers<ContextType>
+  RGAStatusUpdate?: RgaStatusUpdateResolvers<ContextType>
+  UpdateProfile?: UpdateProfileResolvers<ContextType>
+  UploadMutationOutput?: UploadMutationOutputResolvers<ContextType>
+  UploadURL?: UploadUrlResolvers<ContextType>
+  User?: UserResolvers<ContextType>
+  UserMutationOutput?: UserMutationOutputResolvers<ContextType>
+  ValidationError?: ValidationErrorResolvers<ContextType>
+}
+
+/**
+ * @deprecated
+ * Use "Resolvers" root object instead. If you wish to get "IResolvers", add "typesPrefix: I" to your config.
+ */
+export type IResolvers<ContextType = any> = Resolvers<ContextType>

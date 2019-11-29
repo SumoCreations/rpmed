@@ -19,6 +19,9 @@
     "app/**/*"
   ],
   "dependencies": {
+    "@graphql-codegen/typescript-resolvers": "^1.9.1",
+    "@types/graphql": "^14.5.0",
+    "@types/react": "^16.9.13",
     "apollo-server-lambda": "^2.4.8",
     "bcryptjs": "^2.4.3",
     "googleapis": "^39.2.0",

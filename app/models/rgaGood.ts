@@ -300,11 +300,16 @@ const generateServiceLetterUrl = async (
   try {
     await s3.headObject(params).promise()
   } catch (err) {
-    // tslint:disable-next-line
+    // tslint:disable-next-line no-console
     console.log(err)
-    // tslint:disable-next-line
-    console.log(err.code)
-    await generateServiceLetter(rgaGood, rgaStatus, token)
+    if (
+      [RgaStatus.Assessing, RgaStatus.Shipping, RgaStatus.Closed].includes(
+        rgaStatus
+      )
+    ) {
+      await generateServiceLetter(rgaGood, rgaStatus, token)
+    }
+    return null
   }
   return s3.getSignedUrl('getObject', params)
 }

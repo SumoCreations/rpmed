@@ -1,4 +1,6 @@
 import { Distributor, RGA, RGAGood } from '../../../../models'
+import * as oauth from '../../../../oauth'
+import { RgaStatus } from '../../../../schema'
 import { ErrorRGAWithIDDoesNotExist } from '../rgaErrors'
 import { IRGAQueryOutput } from './rgaQueryTypes'
 
@@ -16,10 +18,31 @@ export const rga = async (_, args): Promise<IRGAQueryOutput> => {
         ...RGA.output(result),
         distributor: async () =>
           Distributor.output(await Distributor.find(result.distributorId)),
-        goods: async () =>
-          ((await RGAGood.forRGA(result.partitionKey)) || []).map(
-            RGAGood.output
-          ),
+        goods: async () => {
+          return await Promise.all(
+            ((await RGAGood.forRGA(result.partitionKey)) || []).map(
+              async good => {
+                let serviceFormUrl = null
+                if (
+                  [RgaStatus.Shipping, RgaStatus.Assessing].includes(
+                    result.status
+                  )
+                ) {
+                  const { token } = await oauth.generate({ userId: 'admin' })
+                  serviceFormUrl = await RGAGood.generateServiceLetterUrl(
+                    good,
+                    result.status,
+                    token
+                  )
+                }
+                return {
+                  ...RGAGood.output(good),
+                  serviceFormUrl,
+                }
+              }
+            )
+          )
+        },
       },
       success: true,
     }
