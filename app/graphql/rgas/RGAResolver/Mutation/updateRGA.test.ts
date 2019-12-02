@@ -1,14 +1,9 @@
 import { DateTime } from 'luxon'
-import { Distributor, IRGA, RGA } from '../../../../models'
+import { IRGA, RGA } from '../../../../models'
 import { RgaStatus } from '../../../../schema'
-import { createRGA } from './createRGA'
+import { updateRGA } from './updateRGA'
 
-const sampleParams = {
-  submittedBy: 'someone-ex1@someOtherPartner.com',
-  submittedOn: DateTime.utc(2019, 5, 7, 1, 12, 11, 10).toISO(),
-}
-
-describe('createRGA', () => {
+describe('updateRGA', () => {
   let existingRGA: IRGA
   beforeAll(async done => {
     existingRGA = await RGA.create({
@@ -26,38 +21,38 @@ describe('createRGA', () => {
     done()
   })
 
-  test('should generate a new rga if it is valid', async () => {
+  test('should update a the rga if it is valid', async () => {
     expect.assertions(1)
-    const output = await createRGA(null, {
+    const output = await updateRGA(null, {
       rgaInput: {
-        ...sampleParams,
+        id: existingRGA.partitionKey,
+        shippingSpeed: 'Next-Day',
       },
     })
     expect(output.success).toBe(true)
   })
 
-  test('should generate a distributor that matches the submitted by domain', async () => {
-    expect.assertions(2)
-    const output = await createRGA(null, {
+  test('should fail if the RGA does not exist', async () => {
+    expect.assertions(3)
+    const invalidInput: any = {
       rgaInput: {
-        ...sampleParams,
+        id: 'does-not-exist',
+        shippingSpeed: 'Next-Day',
       },
-    })
-    const distributor = await Distributor.find(output.rga.distributorId)
-    expect(output.success).toEqual(true)
-    expect(distributor.domain).toEqual('someOtherPartner.com')
+    }
+    const output = await updateRGA(null, invalidInput)
+    expect(output.success).toBe(false)
   })
 
   test('should fail if the RGA does not pass validations', async () => {
     expect.assertions(3)
     const invalidInput: any = {
       rgaInput: {
-        ...sampleParams,
-        submittedBy: 'john@notvalid',
-        submittedOn: null,
+        id: null,
+        shippingSpeed: null,
       },
     }
-    const output = await createRGA(null, invalidInput)
+    const output = await updateRGA(null, invalidInput)
     expect(output.success).toBe(false)
     expect(output.errors.map(e => e.path)).toContain('submittedBy')
     expect(output.errors.map(e => e.path)).toContain('submittedOn')

@@ -111,6 +111,10 @@ export const typeDefs = gql`
     A log of all updates to this RGAs status.
     """
     statusLog: [RGAStatusUpdate]
+    """
+    The preferred shipping speed assigned to return this request to the customer.
+    """
+    shippingSpeed: String
   }
 
   """
@@ -375,7 +379,7 @@ export const typeDefs = gql`
   }
 
   """
-  A set of fields used to create or update a RGA.
+  A set of fields used to create an RGA.
   """
   input NewRGAInput {
     """
@@ -386,6 +390,24 @@ export const typeDefs = gql`
     The date the RGA was submitted.
     """
     submittedOn: String!
+    """
+    The preferred shipping speed assigned to return this request to the customer.
+    """
+    shippingSpeed: String
+  }
+
+  """
+  A set of fields used to update certain aspects of an RGA.
+  """
+  input ExistingRGAInput {
+    """
+    The id of the RGA.
+    """
+    id: String!
+    """
+    The preferred shipping speed assigned to return this request to the customer.
+    """
+    shippingSpeed: String!
   }
 
   """
@@ -553,6 +575,10 @@ export const typeDefs = gql`
     Creates a new RGA.
     """
     createRGA(rgaInput: NewRGAInput!): RGAMutationOutput!
+    """
+    Updates an existing RGA.
+    """
+    updateRGA(rgaInput: ExistingRGAInput!): RGAMutationOutput!
     """
     Updates the status of a specific RGA.
     """

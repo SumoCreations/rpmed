@@ -5,6 +5,7 @@ import { Distributor, IDistributor } from './distributor'
 import { IRGA, RGA } from './rga'
 
 const existingRGAParams = {
+  shippingSpeed: 'ground',
   status: RgaStatus.Issued,
   submittedBy: 'example-user@klsmartin.com',
   submittedOn: DateTime.utc(2019, 5, 7, 7, 30, 1, 1).toISO(),
@@ -21,6 +22,7 @@ describe('rga', () => {
     rga = await RGA.create({
       ...existingRGAParams,
       distributorId: distributor.partitionKey,
+      shippingSpeed: 'Ground',
     })
     done()
   })
@@ -41,6 +43,7 @@ describe('rga', () => {
       const rgaOnSameDay = await RGA.create({
         ...existingRGAParams,
         distributorId: distributor.partitionKey,
+        shippingSpeed: 'Ground',
       })
       expect(rgaOnSameDay.partitionKey).toMatch(/^05072019MR/)
     })
@@ -50,6 +53,7 @@ describe('rga', () => {
       const rgaOnSameDay = await RGA.create({
         ...existingRGAParams,
         distributorId: distributor.partitionKey,
+        shippingSpeed: 'Ground',
         submittedOn: DateTime.utc(2019, 5, 8, 7, 30, 1, 1).toISO(),
       })
       expect(rgaOnSameDay.partitionKey).toMatch(/^05082019MR/)
@@ -60,6 +64,7 @@ describe('rga', () => {
       const rgaOnSameDay = await RGA.create({
         ...existingRGAParams,
         distributorId: distributor.partitionKey,
+        shippingSpeed: 'Ground',
         submittedOn: DateTime.utc(2019, 5, 6, 7, 30, 1, 1).toISO(),
       })
       expect(rgaOnSameDay.partitionKey).toMatch(/^05062019MR/)
@@ -70,6 +75,7 @@ describe('rga', () => {
       const rgaOnSameDay = await RGA.create({
         ...existingRGAParams,
         distributorId: distributor.partitionKey,
+        shippingSpeed: 'Ground',
       })
       expect(rgaOnSameDay.partitionKey).toMatch(/^05072019MR/)
     })
@@ -108,6 +114,7 @@ describe('rga', () => {
       const existing = (rga = await RGA.create({
         ...existingRGAParams,
         distributorId: distributor.partitionKey,
+        shippingSpeed: 'Ground',
       }))
       expect.assertions(2)
       const madeUpUser = {

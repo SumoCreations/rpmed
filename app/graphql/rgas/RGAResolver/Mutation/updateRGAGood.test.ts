@@ -56,6 +56,7 @@ describe('updateRGAGood', () => {
   beforeEach(async done => {
     const rga = await RGA.create({
       distributorId: 'something-made-up',
+      shippingSpeed: 'Ground',
       status: RgaStatus.Issued,
       submittedBy: 'someone-ex1@partner.com',
       submittedOn: DateTime.utc(2019, 5, 8, 1, 12, 11, 12).toISO(),
@@ -63,13 +64,13 @@ describe('updateRGAGood', () => {
     existingRGAId = rga.partitionKey
     lottedGood = await RGAGood.create({
       ...sampleRawGoodInput,
-      rgaId: existingRGAId,
       lotted: true,
+      rgaId: existingRGAId,
     })
     nonLottedGood = await RGAGood.create({
       ...sampleRawGoodInput,
-      rgaId: existingRGAId,
       lotted: false,
+      rgaId: existingRGAId,
     })
     done()
   })

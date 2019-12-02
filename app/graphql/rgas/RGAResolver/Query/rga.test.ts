@@ -13,6 +13,7 @@ describe('Query', () => {
     })
     existingRGA = await RGA.create({
       distributorId: existingDistributor.partitionKey,
+      shippingSpeed: 'Ground',
       status: RgaStatus.Issued,
       submittedBy: 'some-one@example-dist.com',
       submittedOn: new Date().toISOString(),

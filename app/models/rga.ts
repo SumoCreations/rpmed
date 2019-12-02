@@ -45,6 +45,7 @@ export interface IRGAInput {
   distributorId: string
   submittedBy: string
   submittedOn: string
+  shippingSpeed: string
 }
 
 interface IUserUpdate {
@@ -77,6 +78,7 @@ export interface IRGA {
   submittedBy: string
   submittedOn: string
   statusLog?: IRGAStatusLogEntry[]
+  shippingSpeed: string
 }
 
 export interface IRGAOutput {
@@ -85,6 +87,8 @@ export interface IRGAOutput {
   status: RgaStatus
   submittedBy: string
   submittedOn: string
+  shippingSpeed: string
+  statusLog?: IRGAStatusLogEntry[]
 }
 
 const DATE_FORMAT = "MMddyyyy'MR'-mmssSSS"
@@ -139,17 +143,14 @@ const create = async ({
  */
 const update = async ({
   id,
-  submittedOn,
+  shippingSpeed,
   ...rgaInput
 }: IRGAInput): Promise<IRGA> => {
   const existing = await find(id)
   const item: IRGA = {
     ...existing,
-    ...rgaInput,
-    indexSortKey: [rgaInput.status, existing.submittedOn].join('#'),
+    shippingSpeed,
     sortKey: SECONDARY_KEY,
-    submittedBy: existing.submittedBy,
-    submittedOn: existing.submittedOn,
   }
   const params = {
     TransactItems: [

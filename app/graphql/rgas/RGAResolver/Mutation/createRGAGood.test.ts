@@ -59,6 +59,7 @@ describe('createRGAGood', () => {
     modelNumberId = modelNumber.partitionKey
     const rga = await RGA.create({
       distributorId: 'something-made-up',
+      shippingSpeed: 'Ground',
       status: RgaStatus.Issued,
       submittedBy: 'someone-ex1@partner.com',
       submittedOn: DateTime.utc(2019, 5, 7, 1, 12, 11, 10).toISO(),

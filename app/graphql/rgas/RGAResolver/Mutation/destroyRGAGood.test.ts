@@ -30,6 +30,7 @@ describe('destroyRGAGood', () => {
   beforeAll(async done => {
     const rga = await RGA.create({
       distributorId: 'something-made-up',
+      shippingSpeed: 'Ground',
       status: RgaStatus.Issued,
       submittedBy: 'someone-ex1@partner.com',
       submittedOn: DateTime.utc(2019, 5, 8, 1, 12, 11, 12).toISO(),

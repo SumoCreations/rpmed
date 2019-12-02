@@ -32,6 +32,7 @@ export const createRGA: CreateRGAMutation = async (_, { rgaInput }) => {
   const rga = await RGA.create({
     ...rgaInput,
     distributorId: distributor.partitionKey,
+    shippingSpeed: 'Ground',
     status: RgaStatus.Issued,
   })
   return { rga: RGA.output(rga), success: true }
