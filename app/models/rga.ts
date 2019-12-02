@@ -141,11 +141,7 @@ const create = async ({
  * Updates an existing RGA model in the database provided the supplied credentials are valid.
  * @param input The identifying inputs to assign to the RGA.
  */
-const update = async ({
-  id,
-  shippingSpeed,
-  ...rgaInput
-}: IRGAInput): Promise<IRGA> => {
+const update = async ({ id, shippingSpeed }: IRGAInput): Promise<IRGA> => {
   const existing = await find(id)
   const item: IRGA = {
     ...existing,
