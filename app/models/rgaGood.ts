@@ -262,7 +262,7 @@ const generateServiceLetter = async (
       process.env.CLIENT_DOMAIN
     }/admin/rga/${rgaStatus}/${rgaGood.rgaId}/service-form/${rgaGood.id}`
     // tslint:disable-next-line no-console
-    console.log(`publishing to SNS ${clientUrl}`)
+    console.log(`publishing SERVICE FORM to SNS ${clientUrl}`)
     await sns
       .publish({
         Message: JSON.stringify({
@@ -273,9 +273,61 @@ const generateServiceLetter = async (
               value: `Bearer ${token}`,
             },
           ],
-          key: `${rgaGood.rgaId}-${rgaGood.id}.pdf`,
-          pageRanges: '1-2',
+          key: `service-form-${rgaGood.rgaId}-${rgaGood.id}.pdf`,
+          margin: {
+            bottom: '0.075in',
+            left: '0.05in',
+            right: '0.05in',
+            top: '0.075in',
+          },
+          pageRanges: '1',
+          printBackground: true,
           type: 'pdf',
+          waitForSelector: '#serviceFormLogo',
+        }),
+        TopicArn: process.env.PDF_RENDER_TOPIC_ARN,
+      })
+      .promise()
+  } catch (e) {
+    // tslint:disable-next-line no-console
+    console.log('error publishing')
+    // tslint:disable-next-line no-console
+    console.log(e)
+  }
+}
+
+const generateCustomerLetter = async (
+  rgaGood: IRGAGood,
+  rgaStatus: RgaStatus,
+  token: string
+) => {
+  try {
+    const clientUrl = `https://${
+      process.env.CLIENT_DOMAIN
+    }/admin/rga/${rgaStatus}/${rgaGood.rgaId}/service-form/${rgaGood.id}`
+    // tslint:disable-next-line no-console
+    console.log(`publishing LETTER to SNS ${clientUrl}`)
+    await sns
+      .publish({
+        Message: JSON.stringify({
+          clientUrl,
+          cookies: [
+            {
+              name: 'ACCESS_TOKEN',
+              value: `Bearer ${token}`,
+            },
+          ],
+          key: `customer-letter-${rgaGood.rgaId}-${rgaGood.id}.pdf`,
+          margin: {
+            bottom: '0.075in',
+            left: '0.05in',
+            right: '0.05in',
+            top: '0.075in',
+          },
+          pageRanges: '2',
+          printBackground: true,
+          type: 'pdf',
+          waitForSelector: '#customerLetterLogo',
         }),
         TopicArn: process.env.PDF_RENDER_TOPIC_ARN,
       })
@@ -295,7 +347,7 @@ const generateServiceLetterUrl = async (
 ) => {
   const params = {
     Bucket: process.env.PDF_RENDER_BUCKET,
-    Key: `${rgaGood.rgaId}-${rgaGood.id}.pdf`,
+    Key: `service-form-${rgaGood.rgaId}-${rgaGood.id}.pdf`,
   }
   try {
     await s3.headObject(params).promise()
@@ -308,6 +360,32 @@ const generateServiceLetterUrl = async (
       )
     ) {
       await generateServiceLetter(rgaGood, rgaStatus, token)
+    }
+    return null
+  }
+  return s3.getSignedUrl('getObject', params)
+}
+
+const generateCustomerLetterUrl = async (
+  rgaGood: IRGAGood,
+  rgaStatus: RgaStatus,
+  token: string
+) => {
+  const params = {
+    Bucket: process.env.PDF_RENDER_BUCKET,
+    Key: `customer-letter-${rgaGood.rgaId}-${rgaGood.id}.pdf`,
+  }
+  try {
+    await s3.headObject(params).promise()
+  } catch (err) {
+    // tslint:disable-next-line no-console
+    console.log(err)
+    if (
+      [RgaStatus.Assessing, RgaStatus.Shipping, RgaStatus.Closed].includes(
+        rgaStatus
+      )
+    ) {
+      await generateCustomerLetter(rgaGood, rgaStatus, token)
     }
     return null
   }
@@ -367,6 +445,8 @@ export const RGAGood = {
   destroy,
   find,
   forRGA,
+  generateCustomerLetter,
+  generateCustomerLetterUrl,
   generateServiceLetter,
   generateServiceLetterUrl,
   output,

@@ -224,7 +224,11 @@ export const typeDefs = gql`
     """
     po: String
     """
-    A URL to download a generated PDF of the associated service form and letter.
+    A URL to download a generated PDF of the associated customerletter.
+    """
+    customerLetterUrl: String
+    """
+    A URL to download a generated PDF of the associated service form.
     """
     serviceFormUrl: String
     """

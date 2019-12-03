@@ -23,6 +23,7 @@ export const rga = async (_, args): Promise<IRGAQueryOutput> => {
             ((await RGAGood.forRGA(result.partitionKey)) || []).map(
               async good => {
                 let serviceFormUrl = null
+                let customerLetterUrl = null
                 if (
                   [RgaStatus.Shipping, RgaStatus.Assessing].includes(
                     result.status
@@ -34,9 +35,15 @@ export const rga = async (_, args): Promise<IRGAQueryOutput> => {
                     result.status,
                     token
                   )
+                  customerLetterUrl = await RGAGood.generateCustomerLetterUrl(
+                    good,
+                    result.status,
+                    token
+                  )
                 }
                 return {
                   ...RGAGood.output(good),
+                  customerLetterUrl,
                   serviceFormUrl,
                 }
               }
