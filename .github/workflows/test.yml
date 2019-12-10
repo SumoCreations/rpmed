@@ -27,3 +27,11 @@ jobs:
     - name: Perform tests
       run: |
         npm run test
+    - name: create deployment
+      uses: niklasmerz/github-deployment-action@master
+      if: contains(github.ref, 'master')
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        args: -o ${{ github.actor }} -r ${{ github.repository }} -c master -e production
+    
