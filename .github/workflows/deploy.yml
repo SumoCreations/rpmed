@@ -1,13 +1,10 @@
 name: Deploy
 
 on:
-  # Trigger the workflow on push or pull request,
-  # but only for the master, staging, or dev branches
-  push:
-    branches:
-      - master
-      - staging 
-      - dev
+  deployment:
+    - master
+    - staging 
+    - dev
 
 jobs:
   build:
