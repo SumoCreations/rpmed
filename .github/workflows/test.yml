@@ -11,10 +11,10 @@ jobs:
     - uses: actions/checkout@v1
     - name: Start DynamoDB in GitHub Actions
       uses: rrainn/dynamodb-action@v1.0
-    - name: Serverless
-      uses: serverless/github-action@v1.53.0
     - name: Installing dependencies
       run: npm install
+    - name: Serverless
+      uses: serverless/github-action@v1.53.0
     - name: Perform tests
       run: |
         npm run test
