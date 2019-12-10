@@ -20,6 +20,7 @@ const server = new ApolloServer({
     console.log(response)
     return response
   },
+  introspection: process.env.APOLLO_INTROSPECTION === 'true' ? true : false,
   playground: {
     settings: {
       'editor.theme': 'light',

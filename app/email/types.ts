@@ -5,9 +5,17 @@ export interface ITemplateVariables {
 export enum Template {
   CreateAccountConfirmation = 'createAccountConfirmation',
   ResetPassword = 'resetPassword',
+  RgaGoodServiceForm = 'rgaGoodServiceForm',
+  RgaGoodCustomerLetter = 'rgaGoodCustomerLetter',
+}
+
+export interface IAttachment {
+  filename: string
+  path: string
 }
 
 export interface IEmailSendParams {
+  attachments?: IAttachment[]
   template: Template
   subject: string
   to: string[]

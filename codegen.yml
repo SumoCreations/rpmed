@@ -1,5 +1,5 @@
 overwrite: true
-schema: 'http://localhost:4000/graphql'
+schema: 'https://dev.rpmed-apps.com/graphql'
 generates:
   app/schema/graphql.ts:
     plugins:

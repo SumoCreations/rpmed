@@ -29,14 +29,56 @@ custom:
     staging: staging.rpmed-apps.com
     prod: prod.rpmed-apps.com
   clientDomain:
-    dev: dev-admin.medled.com
+    dev: rpmed-service-admin-dev.herokuapp.com
     staging: staging-admin.medled.com
     prod: admin.medled.com
+  apolloIntrospection:
+    dev: true
+    staging: false
+    prod: false
   customDomain:
     domainName: ${self:custom.domain.${opt:stage, self:provider.stage}}
     basePath: ''
     stage: ${opt:stage, self:provider.stage}
     createRoute53Record: true
+  confirmRgaGoodPdfSnsTopic: confirm-rga-good-pdf-${opt:stage, self:provider.stage}
+  confirmRgaGoodPdfSnsTopicArn:
+    dev:
+      {
+        'Fn::Join':
+          [
+            '',
+            [
+              'arn:aws:sns:${opt:region, self:provider.region}:',
+              { 'Ref': 'AWS::AccountId' },
+              ':${self:custom.confirmRgaGoodPdfSnsTopic}',
+            ],
+          ],
+      }
+    staging:
+      {
+        'Fn::Join':
+          [
+            '',
+            [
+              'arn:aws:sns:${opt:region, self:provider.region}:',
+              { 'Ref': 'AWS::AccountId' },
+              ':${self:custom.confirmRgaGoodPdfSnsTopic}',
+            ],
+          ],
+      }
+    prod:
+      {
+        'Fn::Join':
+          [
+            '',
+            [
+              'arn:aws:sns:${opt:region, self:provider.region}:',
+              { 'Ref': 'AWS::AccountId' },
+              ':${self:custom.confirmRgaGoodPdfSnsTopic}',
+            ],
+          ],
+      }
 
 provider:
   name: aws
@@ -47,6 +89,7 @@ provider:
     ACCESS_TOKEN_LIFESPAN: 5m
     REFRESH_TOKEN_LIFESPAN: 7d
     SALT_ROUNDS: 10
+    APOLLO_INTROSPECTION: ${self:custom.apolloIntrospection.${opt:stage, self:provider.stage}}
     CLIENT_DOMAIN: ${self:custom.clientDomain.${opt:stage, self:provider.stage}}
     RECAPTCHA_KEY: 6LdOqZoUAAAAAJ79IuWa4mU57Urnd-N6oxP4XhiR
     OAUTH_SIGNATURE: 'Ph$2\@!Rq<ev_W;:N(2+>Bwxez$3?;9~srf*nxiVJLz:lw7Djgs(Q/UhwmZ@"YLi<'
@@ -59,7 +102,7 @@ provider:
     SES_SOURCE_ARN: arn:aws:ses:us-west-2:426380452104:identity/rpmed-apps.com
     PDF_RENDER_TOPIC_ARN: ${cf:serverless-puppeteer-service-${opt:stage, self:provider.stage}.RenderTopicExport}
     PDF_RENDER_BUCKET: ${cf:serverless-puppeteer-service-${opt:stage, self:provider.stage}.CachedFilesBucketName}
-
+    PDF_CONFIRMATION_TOPIC_ARN: ${self:custom.confirmRgaGoodPdfSnsTopicArn.${opt:stage, self:provider.stage}}
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -68,6 +111,7 @@ provider:
     - Effect: Allow
       Action:
         - ses:SendEmail
+        - ses:SendRawEmail
       Resource: 'arn:aws:ses:us-west-2:426380452104:identity/rpmed-apps.com'
     - Effect: Allow
       Action:
@@ -104,6 +148,10 @@ functions:
           method: post
           path: auth/token
           cors: true
+  confirmRgaGoodPdf:
+    handler: app/deliver.confirmRgaGoodPdf
+    events:
+      - sns: ${self:custom.confirmRgaGoodPdfSnsTopic}
   forgotPassword:
     handler: app/forgot.sendResetPasswordEmail
     events:
@@ -129,3 +177,5 @@ resources:
   - ${file(resources/s3-bucket.yml)}
   # DynamoDB
   - ${file(resources/dynamo.yml)}
+  # SNS
+  - ${file(resources/sns.yml)}

@@ -136,6 +136,11 @@ export interface IRGAGoodOutput {
   warrantyDescription: string
 }
 
+export enum RGAGoodDocumentType {
+  CustomerLetter = 'customer-letter',
+  ServiceForm = 'service-form',
+}
+
 /**
  * Generates a new RGAGood model in the database provided the supplied input is valid.
  * @param input The identifying input to assign to the RGAGood.
@@ -273,7 +278,12 @@ const generateServiceLetter = async (
               value: `Bearer ${token}`,
             },
           ],
-          key: `service-form-${rgaGood.rgaId}-${rgaGood.id}.pdf`,
+          jobId: `${RGAGoodDocumentType.ServiceForm}#${rgaGood.rgaId}#${
+            rgaGood.id
+          }`,
+          key: `${RGAGoodDocumentType.ServiceForm}-${rgaGood.rgaId}-${
+            rgaGood.id
+          }.pdf`,
           margin: {
             bottom: '0.075in',
             left: '0.05in',
@@ -282,6 +292,7 @@ const generateServiceLetter = async (
           },
           pageRanges: '1',
           printBackground: true,
+          successNotificationArn: process.env.PDF_CONFIRMATION_TOPIC_ARN,
           type: 'pdf',
           waitForSelector: '#serviceFormLogo',
         }),
@@ -317,7 +328,12 @@ const generateCustomerLetter = async (
               value: `Bearer ${token}`,
             },
           ],
-          key: `customer-letter-${rgaGood.rgaId}-${rgaGood.id}.pdf`,
+          jobId: `${RGAGoodDocumentType.CustomerLetter}#${rgaGood.rgaId}#${
+            rgaGood.id
+          }`,
+          key: `${RGAGoodDocumentType.CustomerLetter}-${rgaGood.rgaId}-${
+            rgaGood.id
+          }.pdf`,
           margin: {
             bottom: '0.075in',
             left: '0.05in',
@@ -326,6 +342,7 @@ const generateCustomerLetter = async (
           },
           pageRanges: '2',
           printBackground: true,
+          successNotificationArn: process.env.PDF_CONFIRMATION_TOPIC_ARN,
           type: 'pdf',
           waitForSelector: '#customerLetterLogo',
         }),
@@ -343,7 +360,7 @@ const generateCustomerLetter = async (
 const generateServiceLetterUrl = async (
   rgaGood: IRGAGood,
   rgaStatus: RgaStatus,
-  token: string
+  token?: string
 ) => {
   const params = {
     Bucket: process.env.PDF_RENDER_BUCKET,
@@ -354,6 +371,13 @@ const generateServiceLetterUrl = async (
   } catch (err) {
     // tslint:disable-next-line no-console
     console.log(err)
+    if (!token) {
+      // tslint:disable-next-line no-console
+      console.log(
+        `Aborting render of service letter. Token was not supplied (${token})`
+      )
+      return null
+    }
     if (
       [RgaStatus.Assessing, RgaStatus.Shipping, RgaStatus.Closed].includes(
         rgaStatus
@@ -369,7 +393,7 @@ const generateServiceLetterUrl = async (
 const generateCustomerLetterUrl = async (
   rgaGood: IRGAGood,
   rgaStatus: RgaStatus,
-  token: string
+  token?: string
 ) => {
   const params = {
     Bucket: process.env.PDF_RENDER_BUCKET,
@@ -380,6 +404,13 @@ const generateCustomerLetterUrl = async (
   } catch (err) {
     // tslint:disable-next-line no-console
     console.log(err)
+    if (!token) {
+      // tslint:disable-next-line no-console
+      console.log(
+        `Aborting render of customer letter. Token was not supplied (${token})`
+      )
+      return null
+    }
     if (
       [RgaStatus.Assessing, RgaStatus.Shipping, RgaStatus.Closed].includes(
         rgaStatus

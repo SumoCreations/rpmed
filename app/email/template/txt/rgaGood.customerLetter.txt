@@ -1,0 +1,4 @@
+Hello ${FIRST_NAME}, we have finished processing your return request. Please review the attached PDF and save for your records.
+
+RGA: ${RGA}
+RMA: ${RMA}

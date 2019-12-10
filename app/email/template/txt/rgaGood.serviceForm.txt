@@ -1,0 +1,5 @@
+MedLED® Lighting has performed an investigation into a headlight
+return. Please review and save the attached PDF(s) for your records:
+
+RGA: ${RGA}
+RMA: ${RMA}

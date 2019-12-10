@@ -201,6 +201,14 @@ export type ExistingRgaGoodInput = {
   customerEmail?: Maybe<Scalars['String']>
 }
 
+/** A set of fields used to update certain aspects of an RGA. */
+export type ExistingRgaInput = {
+  /** The id of the RGA. */
+  id: Scalars['String']
+  /** The preferred shipping speed assigned to return this request to the customer. */
+  shippingSpeed: Scalars['String']
+}
+
 /** A set of fields used to create or update a user. */
 export type ExistingUserInput = {
   id: Scalars['ID']
@@ -390,6 +398,8 @@ export type Mutation = {
   createUploads: UploadMutationOutput
   /** Creates a new RGA. */
   createRGA: RgaMutationOutput
+  /** Updates an existing RGA. */
+  updateRGA: RgaMutationOutput
   /** Updates the status of a specific RGA. */
   updateRGAStatus: RgaMutationOutput
   /** Creates a new good for an existing RGA. */
@@ -534,6 +544,11 @@ export type MutationCreateRgaArgs = {
 }
 
 /** The root mutation for the schema. */
+export type MutationUpdateRgaArgs = {
+  rgaInput: ExistingRgaInput
+}
+
+/** The root mutation for the schema. */
 export type MutationUpdateRgaStatusArgs = {
   id: Scalars['ID']
   status: RgaStatus
@@ -623,12 +638,14 @@ export type NewRgaGoodInput = {
   customerEmail?: Maybe<Scalars['String']>
 }
 
-/** A set of fields used to create or update a RGA. */
+/** A set of fields used to create an RGA. */
 export type NewRgaInput = {
   /** The email address of the contact who created the RGA. */
   submittedBy: Scalars['String']
   /** The date the RGA was submitted. */
   submittedOn: Scalars['String']
+  /** The preferred shipping speed assigned to return this request to the customer. */
+  shippingSpeed?: Maybe<Scalars['String']>
 }
 
 /** A set of fields used to create or update a user. */
@@ -960,6 +977,8 @@ export type Rga = {
   goods: Array<Maybe<RgaGood>>
   /** A log of all updates to this RGAs status. */
   statusLog?: Maybe<Array<Maybe<RgaStatusUpdate>>>
+  /** The preferred shipping speed assigned to return this request to the customer. */
+  shippingSpeed?: Maybe<Scalars['String']>
 }
 
 /** A good associated to a particular RGA. */
@@ -1009,7 +1028,9 @@ export type RgaGood = {
   rma?: Maybe<Scalars['String']>
   /** The associated PO from our distributor / partner's records. */
   po?: Maybe<Scalars['String']>
-  /** A URL to download a generated PDF of the associated service form and letter. */
+  /** A URL to download a generated PDF of the associated customerletter. */
+  customerLetterUrl?: Maybe<Scalars['String']>
+  /** A URL to download a generated PDF of the associated service form. */
   serviceFormUrl?: Maybe<Scalars['String']>
   /** Any additional notes about this good specifically.. */
   notes?: Maybe<Scalars['String']>
@@ -1401,6 +1422,7 @@ export type ResolversTypes = {
   UploadURL: ResolverTypeWrapper<UploadUrl>
   NewRGAInput: NewRgaInput
   RGAMutationOutput: ResolverTypeWrapper<RgaMutationOutput>
+  ExistingRGAInput: ExistingRgaInput
   NewRGAGoodInput: NewRgaGoodInput
   RGAGoodMutationOutput: ResolverTypeWrapper<RgaGoodMutationOutput>
   ExistingRGAGoodInput: ExistingRgaGoodInput
@@ -1469,6 +1491,7 @@ export type ResolversParentTypes = {
   UploadURL: UploadUrl
   NewRGAInput: NewRgaInput
   RGAMutationOutput: RgaMutationOutput
+  ExistingRGAInput: ExistingRgaInput
   NewRGAGoodInput: NewRgaGoodInput
   RGAGoodMutationOutput: RgaGoodMutationOutput
   ExistingRGAGoodInput: ExistingRgaGoodInput
@@ -1897,6 +1920,12 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationCreateRgaArgs, 'rgaInput'>
   >
+  updateRGA?: Resolver<
+    ResolversTypes['RGAMutationOutput'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationUpdateRgaArgs, 'rgaInput'>
+  >
   updateRGAStatus?: Resolver<
     ResolversTypes['RGAMutationOutput'],
     ParentType,
@@ -2252,6 +2281,11 @@ export type RgaResolvers<
     ParentType,
     ContextType
   >
+  shippingSpeed?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >
 }
 
 export type RgaGoodResolvers<
@@ -2300,6 +2334,11 @@ export type RgaGoodResolvers<
   symptomSolution?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   rma?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
   po?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+  customerLetterUrl?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >
   serviceFormUrl?: Resolver<
     Maybe<ResolversTypes['String']>,
     ParentType,

@@ -1,0 +1,6 @@
+Outputs:
+  ConfirmRgaGoodTopicExport:
+    Value:
+      Ref: SNSTopicConfirmrgagoodpdf${opt:stage, self:provider.stage}
+    Export:
+      Name: SNSTopicConfirmrgagoodpdf${opt:stage, self:provider.stage}
