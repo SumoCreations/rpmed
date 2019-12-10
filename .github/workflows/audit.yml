@@ -18,7 +18,7 @@ jobs:
       uses: oke-py/npm-audit-action@v1.0.1
       with:
         # GitHub access token used to create an issue
-        token: b7c24946aab3ca13bb6ace96d9fd6fa0a7f00399
+        token: ${{ secrets.GITHUB_TOKEN }}
         # Issue assignees (separated by commma)
         issue_assignees: jimjeffers
         # Issue assignees (separated by commma)
