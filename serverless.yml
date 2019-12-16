@@ -82,7 +82,7 @@ custom:
 
 provider:
   name: aws
-  runtime: nodejs8.10
+  runtime: nodejs12.x
   profile: rpmed-serverless
   region: us-west-2
   environment:

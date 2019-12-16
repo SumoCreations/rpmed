@@ -402,6 +402,8 @@ export type Mutation = {
   updateRGA: RgaMutationOutput
   /** Updates the status of a specific RGA. */
   updateRGAStatus: RgaMutationOutput
+  /** Updates the shipping status of a specific RGA. */
+  updateRGAShippingStatus: RgaMutationOutput
   /** Creates a new good for an existing RGA. */
   createRGAGood: RgaGoodMutationOutput
   /** Updates an existing good for an existing RGA. */
@@ -553,6 +555,13 @@ export type MutationUpdateRgaStatusArgs = {
   id: Scalars['ID']
   status: RgaStatus
   notes?: Maybe<Scalars['String']>
+}
+
+/** The root mutation for the schema. */
+export type MutationUpdateRgaShippingStatusArgs = {
+  id: Scalars['ID']
+  notes?: Maybe<Scalars['String']>
+  shippingUpdates?: Maybe<Array<Maybe<RgaGoodShippingInput>>>
 }
 
 /** The root mutation for the schema. */
@@ -1055,12 +1064,28 @@ export type RgaGoodMutationOutput = {
   success: Scalars['Boolean']
 }
 
+/** The input to apply a shipping update make changes to an existing RGA Good. */
+export type RgaGoodShippingInput = {
+  /** The unique serial number or uuid associated to the good. */
+  id: Scalars['ID']
+  /** A list of email addresses to notify the shipping alert / tracking message. */
+  recipients?: Maybe<Array<Maybe<Scalars['String']>>>
+  /** The shipping status for the good. */
+  status: RgaShippingStatus
+  /** The message to email to all specified recipients */
+  message?: Maybe<Scalars['String']>
+  /** The tracking number associated to the return shipment. */
+  tracking?: Maybe<Scalars['String']>
+}
+
 /** The current status of a given good belonging to an RGA. */
 export enum RgaGoodStatus {
   /** The good is considered valid and part of the request. */
   Valid = 'VALID',
   /** The good was removed from the request at some point. */
   Archived = 'ARCHIVED',
+  /** Indicates a good has been delayed from shipping. */
+  Delayed = 'DELAYED',
 }
 
 /** The result of a mutation applied to a RGA. */
@@ -1091,6 +1116,14 @@ export type RgaQueryOutput = {
   success: Scalars['Boolean']
 }
 
+/** Indicates the shipping status for a given good that belongs to an RGA. */
+export enum RgaShippingStatus {
+  /** Indicates that a given item could not be shipped for various reasons. */
+  Delayed = 'DELAYED',
+  /** Indicates an RGA good has shipped. */
+  Shipped = 'SHIPPED',
+}
+
 /** Defines a state a given RGA could be in. */
 export enum RgaStatus {
   /**
@@ -1118,6 +1151,11 @@ export enum RgaStatus {
    * may be added for further explanation.
    **/
   Canceled = 'CANCELED',
+  /**
+   * Indicates the RGA may have partially shipped but still has some pending
+   * items that have been delayed.
+   **/
+  Delayed = 'DELAYED',
 }
 
 /** A list of totals for any given rga status. */
@@ -1423,6 +1461,8 @@ export type ResolversTypes = {
   NewRGAInput: NewRgaInput
   RGAMutationOutput: ResolverTypeWrapper<RgaMutationOutput>
   ExistingRGAInput: ExistingRgaInput
+  RGAGoodShippingInput: RgaGoodShippingInput
+  RGAShippingStatus: RgaShippingStatus
   NewRGAGoodInput: NewRgaGoodInput
   RGAGoodMutationOutput: ResolverTypeWrapper<RgaGoodMutationOutput>
   ExistingRGAGoodInput: ExistingRgaGoodInput
@@ -1492,6 +1532,8 @@ export type ResolversParentTypes = {
   NewRGAInput: NewRgaInput
   RGAMutationOutput: RgaMutationOutput
   ExistingRGAInput: ExistingRgaInput
+  RGAGoodShippingInput: RgaGoodShippingInput
+  RGAShippingStatus: RgaShippingStatus
   NewRGAGoodInput: NewRgaGoodInput
   RGAGoodMutationOutput: RgaGoodMutationOutput
   ExistingRGAGoodInput: ExistingRgaGoodInput
@@ -1931,6 +1973,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationUpdateRgaStatusArgs, 'id' | 'status'>
+  >
+  updateRGAShippingStatus?: Resolver<
+    ResolversTypes['RGAMutationOutput'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationUpdateRgaShippingStatusArgs, 'id'>
   >
   createRGAGood?: Resolver<
     ResolversTypes['RGAGoodMutationOutput'],

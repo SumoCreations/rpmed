@@ -7,6 +7,7 @@ export enum Template {
   ResetPassword = 'resetPassword',
   RgaGoodServiceForm = 'rgaGoodServiceForm',
   RgaGoodCustomerLetter = 'rgaGoodCustomerLetter',
+  RgaGoodShippingConfirmation = 'rgaGoodShippingConfirmation',
 }
 
 export interface IAttachment {

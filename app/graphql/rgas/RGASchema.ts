@@ -40,6 +40,25 @@ export const typeDefs = gql`
     may be added for further explanation.
     """
     CANCELED
+    """
+    Indicates the RGA may have partially shipped but still has some pending
+    items that have been delayed.
+    """
+    DELAYED
+  }
+
+  """
+  Indicates the shipping status for a given good that belongs to an RGA.
+  """
+  enum RGAShippingStatus {
+    """
+    Indicates that a given item could not be shipped for various reasons.
+    """
+    DELAYED
+    """
+    Indicates an RGA good has shipped.
+    """
+    SHIPPED
   }
 
   type UpdateProfile {
@@ -129,6 +148,10 @@ export const typeDefs = gql`
     The good was removed from the request at some point.
     """
     ARCHIVED
+    """
+    Indicates a good has been delayed from shipping.
+    """
+    DELAYED
   }
 
   """
@@ -574,6 +597,32 @@ export const typeDefs = gql`
     customerEmail: String
   }
 
+  """
+  The input to apply a shipping update make changes to an existing RGA Good.
+  """
+  input RGAGoodShippingInput {
+    """
+    The unique serial number or uuid associated to the good.
+    """
+    id: ID!
+    """
+    A list of email addresses to notify the shipping alert / tracking message.
+    """
+    recipients: [String]
+    """
+    The shipping status for the good.
+    """
+    status: RGAShippingStatus!
+    """
+    The message to email to all specified recipients
+    """
+    message: String
+    """
+    The tracking number associated to the return shipment.
+    """
+    tracking: String
+  }
+
   extend type Mutation {
     """
     Creates a new RGA.
@@ -599,6 +648,23 @@ export const typeDefs = gql`
       Any additional notes about the update.
       """
       notes: String
+    ): RGAMutationOutput!
+    """
+    Updates the shipping status of a specific RGA.
+    """
+    updateRGAShippingStatus(
+      """
+      The ID of the RGA to update.
+      """
+      id: ID!
+      """
+      Any additional notes about the update.
+      """
+      notes: String
+      """
+      The specific shipping updates for each good belonging to the RGA.
+      """
+      shippingUpdates: [RGAGoodShippingInput]
     ): RGAMutationOutput!
     """
     Creates a new good for an existing RGA.
