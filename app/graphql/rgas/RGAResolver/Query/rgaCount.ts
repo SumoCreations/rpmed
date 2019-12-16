@@ -15,6 +15,7 @@ export const rgaCount = async (): Promise<IRGACountQueryOutput> => {
       shipping: async () => await RGA.countWithStatus(RgaStatus.Shipping),
       closed: async () => await RGA.countWithStatus(RgaStatus.Closed),
       canceled: async () => await RGA.countWithStatus(RgaStatus.Canceled),
+      delayed: async () => await RGA.countWithStatus(RgaStatus.Delayed),
       success: true,
     }
   } catch (e) {

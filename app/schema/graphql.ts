@@ -1163,6 +1163,8 @@ export type RgaStatusCountOutput = {
   __typename?: 'RGAStatusCountOutput'
   /** Count of all issued RGAs that may not have been shipped. */
   issued?: Maybe<Scalars['Int']>
+  /** Count of all RGAs that have delayed items. */
+  delayed?: Maybe<Scalars['Int']>
   /** Count of all RGAs awaiting arrival. */
   awaitingArrival?: Maybe<Scalars['Int']>
   /** Count of all received RGAs that have not yet been assessed. */
@@ -2466,6 +2468,7 @@ export type RgaStatusCountOutputResolvers<
   ParentType extends ResolversParentTypes['RGAStatusCountOutput'] = ResolversParentTypes['RGAStatusCountOutput']
 > = {
   issued?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
+  delayed?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
   awaitingArrival?: Resolver<
     Maybe<ResolversTypes['Int']>,
     ParentType,

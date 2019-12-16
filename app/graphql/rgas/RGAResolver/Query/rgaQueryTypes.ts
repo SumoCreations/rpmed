@@ -23,6 +23,7 @@ export interface IRGAQueryOutput {
 export interface IRGACountQueryOutput {
   issued?: () => Promise<number> | number | null
   awaitingArrival?: () => Promise<number> | number | null
+  delayed?: () => Promise<number> | number | null
   received?: () => Promise<number> | number | null
   assessing?: () => Promise<number> | number | null
   repairing?: () => Promise<number> | number | null

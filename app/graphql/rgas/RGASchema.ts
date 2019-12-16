@@ -351,6 +351,10 @@ export const typeDefs = gql`
     """
     issued: Int
     """
+    Count of all RGAs that have delayed items.
+    """
+    delayed: Int
+    """
     Count of all RGAs awaiting arrival.
     """
     awaitingArrival: Int

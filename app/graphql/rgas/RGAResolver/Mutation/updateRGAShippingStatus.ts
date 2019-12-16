@@ -46,7 +46,7 @@ const testForMessage: any = (s: any, r: any) => {
 
 const validationSchema = Yup.object().shape({
   notes: Yup.string(),
-  shippingInfo: Yup.array(
+  shippingUpdates: Yup.array(
     Yup.object().shape({
       message: Yup.string().when(['status', 'recipients'], {
         is: testForMessage,
