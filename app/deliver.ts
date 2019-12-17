@@ -2,7 +2,7 @@ import { SNSHandler } from 'aws-lambda'
 import * as email from './email'
 import { RGA, RGAGood, RGAGoodDocumentType } from './models'
 
-const adminEmail = 'jim@sumocreations.com'
+const adminEmail = 'MedLED@rpmed.com'
 
 /**
  * Sends a confirmation email with a customer service letter

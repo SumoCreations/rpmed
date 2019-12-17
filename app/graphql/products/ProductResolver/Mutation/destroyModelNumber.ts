@@ -17,6 +17,8 @@ export const destroyModelNumber = async (
   try {
     await ModelNumber.destroy(id)
   } catch (e) {
+    // tslint:disable-next-line
+    console.log(e)
     return generateMutationError([ErrorModelNumberCouldNotBeDestroyed])
   }
   return { modelNumber: ModelNumber.output(modelNumber), success: true }

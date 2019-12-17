@@ -368,7 +368,9 @@ const destroy = async (id: string): Promise<boolean> => {
     }
     await client.transactWrite(params).promise()
     return true
-  } catch {
+  } catch (e) {
+    // tslint:disable-next-line no-console
+    console.log(e)
     return false
   }
 }
@@ -389,8 +391,8 @@ const output = ({
     id: partitionKey,
     lotted: modelNumber.lotted || false,
     privateNotes: modelNumber.privateNotes || '',
-    productIds: [...productIdHash.split('::')],
-    productType: secondaryIndexSortKey,
+    productIds: productIdHash ? [...productIdHash.split('::')] : [],
+    productType: secondaryIndexSortKey || ProductType.Accessory,
     publicNotes: modelNumber.publicNotes || '',
     resolutionWithWarranty: modelNumber.resolutionWithWarranty || '',
     resolutionWithoutWarranty: modelNumber.resolutionWithoutWarranty || '',

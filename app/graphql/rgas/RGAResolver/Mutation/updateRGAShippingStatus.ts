@@ -125,7 +125,7 @@ export const updateRGAShippingStatus: UpdateRgaStatusResolver = async (
             }
             await email.send({
               subject: '[MedLED] Item Shipping',
-              template: email.Template.RgaGoodCustomerLetter,
+              template: email.Template.RgaGoodShippingConfirmation,
               to: [r],
               variables: {
                 message: email.renderer(u.message, messageVars),

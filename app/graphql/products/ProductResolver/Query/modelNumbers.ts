@@ -55,6 +55,8 @@ export const modelNumbers = async (
       success: true,
     }
   } catch (e) {
+    // tslint:disable-next-line
+    console.log(e)
     return {
       errors: [
         {
