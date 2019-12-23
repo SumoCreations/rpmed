@@ -4,6 +4,7 @@ import { updateCustomer } from './updateCustomer'
 const sampleParams = {
   email: 'update-customer-test@example.com',
   name: 'Jim Jeffers',
+  specialty: 'Surgeon',
 }
 
 describe('updateCustomer', () => {

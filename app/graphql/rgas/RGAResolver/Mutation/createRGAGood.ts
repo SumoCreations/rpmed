@@ -116,6 +116,7 @@ export const createRGAGood: CreateRGAGoodMutation = async (
         (await Customer.create({
           email: rgaGoodInput.customerEmail,
           name: rgaGoodInput.customerName,
+          specialty: '',
         }))
     } catch (e) {
       // tslint:disable no-console

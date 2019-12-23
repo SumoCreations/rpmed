@@ -120,6 +120,7 @@ describe('createRGAGood', () => {
     const existingCustomer = await Customer.create({
       email: 'some-other-fellow@rga-good-tester.com',
       name: 'Existing Customer',
+      specialty: 'Surgeon',
     })
     const existingRegistration = await ProductRegistration.create({
       customerId: existingCustomer.partitionKey,

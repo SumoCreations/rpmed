@@ -24,11 +24,13 @@ export const product = async (
       success: true,
     }
   } catch (e) {
+    // tslint:disable-next-line no-console
+    console.log(e)
     return {
       errors: [
         {
-          path: '_',
           message: e.localizedMessage || 'Could not retrieve product',
+          path: '_',
         },
       ],
       success: false,

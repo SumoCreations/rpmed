@@ -15,15 +15,18 @@ export const products = async (
       )
       .map(Product.output)
     return {
+      pageSize: results.length,
       products: results,
       success: true,
     }
   } catch (e) {
+    // tslint:disable-next-line no-console
+    console.log(e)
     return {
       errors: [
         {
-          path: '_',
           message: e.localizedMessage || 'Could not retrieve products',
+          path: '_',
         },
       ],
       success: false,

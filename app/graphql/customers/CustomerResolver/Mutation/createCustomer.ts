@@ -18,7 +18,7 @@ export const createCustomer = async (
     return { errors: Validation.formatError(e), success: false }
   }
 
-  const { email, name } = customerInput
+  const { email, name, specialty } = customerInput
   const existingCustomer = await Customer.findByEmail(email)
   if (existingCustomer) {
     return {
@@ -28,7 +28,7 @@ export const createCustomer = async (
   }
 
   try {
-    const customer = await Customer.create({ email, name })
+    const customer = await Customer.create({ email, name, specialty })
     return { customer: Customer.output(customer), success: true }
   } catch (e) {
     return { success: false, errors: [ErrorCustomerCredentialsInvalid] }

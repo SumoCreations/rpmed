@@ -7,6 +7,7 @@ const name = 'Jim Jeffers'
 const sampleParams = {
   email,
   name,
+  specialty: 'General',
 }
 
 describe('createCustomer', () => {
@@ -16,6 +17,7 @@ describe('createCustomer', () => {
       (customer = await Customer.create({
         email: 'create-customer-test-2@rpmed.com',
         name,
+        specialty: 'General',
       }))
   )
 
@@ -41,7 +43,11 @@ describe('createCustomer', () => {
   test('should fail and report multiple invalid values', async () => {
     expect.assertions(2)
     const output = await createCustomer(null, {
-      customerInput: { email: 'jimsumocreations.com', name: null },
+      customerInput: {
+        email: 'jimsumocreations.com',
+        name: null,
+        specialty: 'General',
+      },
     })
     expect(output.success).toBe(false)
     expect(output.errors.map(e => e.path)).toContain('email')

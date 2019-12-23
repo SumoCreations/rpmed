@@ -8,10 +8,12 @@ describe('Query', () => {
     existingCustomer = await Customer.create({
       email: 'customers-query-test-1@rpmed.com',
       name: 'Test User 1',
+      specialty: 'Surgeon',
     })
     existingCustomer2 = await Customer.create({
       email: 'customers-query-test-2@rpmed.com',
       name: 'Test User 2',
+      specialty: 'Surgeon',
     })
     done()
   })

@@ -4,6 +4,7 @@ import { destroyCustomer } from './destroyCustomer'
 const sampleParams = {
   email: 'destroy-customer-test@example.com',
   name: 'Jim Jeffers',
+  specialty: 'Surgeon',
 }
 
 describe('destroyCustomer', () => {

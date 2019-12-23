@@ -42,6 +42,7 @@ describe('product registration', () => {
     customer = await Customer.create({
       email: 'doug@klsmartin.com',
       name: 'KLS Martin',
+      specialty: 'Surgeon',
     })
     productRegistration = await ProductRegistration.create({
       customerId: customer.partitionKey,

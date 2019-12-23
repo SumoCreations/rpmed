@@ -4,6 +4,7 @@ import { Customer, ICustomer } from './customer'
 const existingCustomerParams = {
   email: 'doug@klsmartin.com',
   name: 'KLS Martin',
+  specialty: 'Surgeon',
 }
 
 describe('customer', () => {

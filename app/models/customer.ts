@@ -36,6 +36,7 @@ export interface ICustomerInput {
   name: string
   email: string
   id?: string
+  specialty: string
 }
 
 export interface ICustomer {
@@ -43,12 +44,14 @@ export interface ICustomer {
   email: string
   partitionKey: string
   sortKey: string
+  specialty: string
 }
 
 export interface ICustomerOutput {
   name: string
   email: string
   id: string
+  specialty: string
 }
 
 /**

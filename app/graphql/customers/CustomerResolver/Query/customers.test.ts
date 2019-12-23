@@ -12,10 +12,12 @@ describe('Query', () => {
       await Customer.create({
         email: 'customers-query-test-3@rpmed.com',
         name: 'Test User 1',
+        specialty: 'Surgeon',
       })
       await Customer.create({
         email: 'customers-query-test-4@rpmed.com',
         name: 'Test User 2',
+        specialty: 'Surgeon',
       })
       const output = await customers({}, {})
       expect(output.success).toEqual(true)

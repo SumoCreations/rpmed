@@ -27,6 +27,7 @@ export const generateSampleParams = async (
   const customer = await M.Customer.create({
     email: `${makeId(inputs.key, 'customerEmail')}@rpmed.com`,
     name: makeId(inputs.key, 'Customer-Name'),
+    specialty: 'Surgeon',
   })
   const product = await M.Product.create({
     description: makeId(inputs.key, 'This is a description '),
