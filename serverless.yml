@@ -159,13 +159,13 @@ functions:
           method: post
           path: auth/forgot
           cors: true
-  importSheets:
-    handler: app/sheets.importSheets
-    events:
-      - http:
-          method: get
-          path: import/data
-          cors: true
+  # importSheets:
+  #   handler: app/sheets.importSheets
+  #   events:
+  #     - http:
+  #         method: get
+  #         path: import/data
+  #         cors: true
   modelsFromSheet:
     handler: app/sheets.importModels
     timeout: 60

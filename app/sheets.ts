@@ -223,16 +223,13 @@ const processSymptoms = auth =>
               console.log(modelNumbersForSymptom.join(', '))
               console.log('Joining...')
 
-              await Promise.all(
-                modelNumbersForSymptom.map(async m => {
-                  await addSymptomToModelNumber(symptom.partitionKey, m)
-                  console.log(
-                    `Added model number: ${m} to symptom ${
-                      symptom.partitionKey
-                    }`
-                  )
-                })
-              )
+              await modelNumbersForSymptom.reduce(async (p, m) => {
+                await p
+                await addSymptomToModelNumber(symptom.partitionKey, m)
+                console.log(
+                  `Added model number: ${m} to symptom ${symptom.partitionKey}`
+                )
+              }, Promise.resolve(''))
 
               console.log(
                 '---------------------------------------------------------------------'
