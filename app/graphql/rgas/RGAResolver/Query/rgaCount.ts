@@ -9,7 +9,6 @@ export const rgaCount = async (): Promise<IRGACountQueryOutput> => {
       issued: async () => await RGA.countWithStatus(RgaStatus.Issued),
       awaitingArrival: async () =>
         await RGA.countWithStatus(RgaStatus.AwaitingArrival),
-      received: async () => await RGA.countWithStatus(RgaStatus.Received),
       assessing: async () => await RGA.countWithStatus(RgaStatus.Assessing),
       repairing: async () => await RGA.countWithStatus(RgaStatus.Repairing),
       shipping: async () => await RGA.countWithStatus(RgaStatus.Shipping),

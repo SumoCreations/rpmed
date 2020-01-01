@@ -16,10 +16,6 @@ export const typeDefs = gql`
     """
     AWAITING_ARRIVAL
     """
-    RPMED has received the package / goods associated to this RGA.
-    """
-    RECEIVED
-    """
     RPMED team is assessing the contents of the package.
     """
     ASSESSING
@@ -59,6 +55,28 @@ export const typeDefs = gql`
     Indicates an RGA good has shipped.
     """
     SHIPPED
+  }
+
+  """
+  Indicates the shipping carrier used to transport a good associated to an RGA.
+  """
+  enum RGAShippingCarrier {
+    """
+    FedEx as a shipping carrier.
+    """
+    FEDEX
+    """
+    UPS as a shipping carrier.
+    """
+    UPS
+    """
+    DHL as a shipping carrier.
+    """
+    DHL
+    """
+    Another shipping carrier not fully supported by the system.
+    """
+    OTHER
   }
 
   type UpdateProfile {
@@ -625,6 +643,10 @@ export const typeDefs = gql`
     The tracking number associated to the return shipment.
     """
     tracking: String
+    """
+    The carrier used to transport the return shipment.
+    """
+    carrier: RGAShippingCarrier
   }
 
   extend type Mutation {

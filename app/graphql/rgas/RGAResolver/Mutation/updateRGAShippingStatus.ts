@@ -7,6 +7,7 @@ import {
   Rga,
   RgaGoodStatus,
   RgaMutationOutput,
+  RgaShippingCarrier,
   RgaShippingStatus,
   RgaStatus,
 } from '../../../../schema'
@@ -101,6 +102,18 @@ export const updateRGAShippingStatus: UpdateRgaStatusResolver = async (
   const status =
     delayedUpdates.length > 0 ? RgaStatus.Delayed : RgaStatus.Closed
 
+  const urlForCarrier = (carrier: RgaShippingCarrier, tracking: string) => {
+    switch (carrier) {
+      case RgaShippingCarrier.Fedex:
+        return `https://www.fedex.com/fedextrack/?tracknumbers=${tracking}`
+      case RgaShippingCarrier.Ups:
+        return `https://www.ups.com/track?loc=en_US&tracknum=${tracking}`
+      case RgaShippingCarrier.Dhl:
+        return `https://www.dhl.com/en/express/tracking.html?AWB=${tracking}&brand=DHL`
+      default:
+        return `https://easypackagetracker.org/track9/?keyword=All%20Carriers`
+    }
+  }
   // Send email notifications to each recipient.
   await Promise.all(
     shippedUpdates.map(async u => {
@@ -118,10 +131,11 @@ export const updateRGAShippingStatus: UpdateRgaStatusResolver = async (
             const messageVars = {
               model: good.modelNumber,
               name: good.customerName || 'Valued Customer',
-              rga: good.rgaId || 'n/a',
+              rga: good.rgaId ? good.rgaId.substring(0, 13) : 'n/a',
               rma: good.rma || 'n/a',
-              serial: good.id,
-              tracking: u.id,
+              serial: good.lotted ? good.id : 'no serial #',
+              tracking: u.tracking,
+              trackingUrl: urlForCarrier(u.carrier, u.tracking),
             }
             await email.send({
               subject: '[MedLED] Item Shipping',
@@ -129,6 +143,10 @@ export const updateRGAShippingStatus: UpdateRgaStatusResolver = async (
               to: [r],
               variables: {
                 message: email.renderer(u.message, messageVars),
+                messageHtml: email.renderer(
+                  u.message.replace(/\n/gi, '<br/>'),
+                  messageVars
+                ),
                 ...messageVars,
               },
             })

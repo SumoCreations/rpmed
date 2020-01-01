@@ -1076,6 +1076,8 @@ export type RgaGoodShippingInput = {
   message?: Maybe<Scalars['String']>
   /** The tracking number associated to the return shipment. */
   tracking?: Maybe<Scalars['String']>
+  /** The carrier used to transport the return shipment. */
+  carrier?: Maybe<RgaShippingCarrier>
 }
 
 /** The current status of a given good belonging to an RGA. */
@@ -1116,6 +1118,18 @@ export type RgaQueryOutput = {
   success: Scalars['Boolean']
 }
 
+/** Indicates the shipping carrier used to transport a good associated to an RGA. */
+export enum RgaShippingCarrier {
+  /** FedEx as a shipping carrier. */
+  Fedex = 'FEDEX',
+  /** UPS as a shipping carrier. */
+  Ups = 'UPS',
+  /** DHL as a shipping carrier. */
+  Dhl = 'DHL',
+  /** Another shipping carrier not fully supported by the system. */
+  Other = 'OTHER',
+}
+
 /** Indicates the shipping status for a given good that belongs to an RGA. */
 export enum RgaShippingStatus {
   /** Indicates that a given item could not be shipped for various reasons. */
@@ -1136,8 +1150,6 @@ export enum RgaStatus {
    * RPMED is awaiting the delivery of the customer's package.
    **/
   AwaitingArrival = 'AWAITING_ARRIVAL',
-  /** RPMED has received the package / goods associated to this RGA. */
-  Received = 'RECEIVED',
   /** RPMED team is assessing the contents of the package. */
   Assessing = 'ASSESSING',
   /** RPMED team is making any necessary repairs. */
@@ -1465,6 +1477,7 @@ export type ResolversTypes = {
   ExistingRGAInput: ExistingRgaInput
   RGAGoodShippingInput: RgaGoodShippingInput
   RGAShippingStatus: RgaShippingStatus
+  RGAShippingCarrier: RgaShippingCarrier
   NewRGAGoodInput: NewRgaGoodInput
   RGAGoodMutationOutput: ResolverTypeWrapper<RgaGoodMutationOutput>
   ExistingRGAGoodInput: ExistingRgaGoodInput
@@ -1536,6 +1549,7 @@ export type ResolversParentTypes = {
   ExistingRGAInput: ExistingRgaInput
   RGAGoodShippingInput: RgaGoodShippingInput
   RGAShippingStatus: RgaShippingStatus
+  RGAShippingCarrier: RgaShippingCarrier
   NewRGAGoodInput: NewRgaGoodInput
   RGAGoodMutationOutput: RgaGoodMutationOutput
   ExistingRGAGoodInput: ExistingRgaGoodInput
