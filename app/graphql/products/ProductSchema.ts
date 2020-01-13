@@ -113,11 +113,11 @@ export const typeDefs = gql`
     """
     How much will it cost to service this item if it is covered by a warranty.
     """
-    feeWithWarranty: FeeStructure!
+    feeWithWarranty: FeeStructure
     """
     How much will it cost to service this item if it is not covered by a warranty.
     """
-    feeWithoutWarranty: FeeStructure!
+    feeWithoutWarranty: FeeStructure
     """
     Any public notes related to servicing this model variation.
     """
@@ -197,7 +197,7 @@ export const typeDefs = gql`
     """
     Pricing for this specific model.
     """
-    pricing: PricingInput!
+    pricing: PricingInput
     """
     A brief description of this product variant.
     """
@@ -217,11 +217,11 @@ export const typeDefs = gql`
     """
     How much will it cost to service this item if it is covered by a warranty.
     """
-    feeWithWarranty: FeeStructureInput!
+    feeWithWarranty: FeeStructureInput
     """
     How much will it cost to service this item if it is not covered by a warranty.
     """
-    feeWithoutWarranty: FeeStructureInput!
+    feeWithoutWarranty: FeeStructureInput
     """
     How issues will be resolved if this item is covered by a warranty.
     """
@@ -384,6 +384,13 @@ export const typeDefs = gql`
     """
     updateModelNumber(
       modelNumberInput: ModelNumberInput!
+    ): ModelNumberMutationOutput!
+    """
+    Updates an existing product variant's lotted status.
+    """
+    updateModelNumberLotted(
+      id: ID!
+      lotted: Boolean!
     ): ModelNumberMutationOutput!
     """
     Removes an existing product variant.

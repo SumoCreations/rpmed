@@ -171,6 +171,41 @@ const update = async ({
 }
 
 /**
+ * Updates an existing model number record's lotted status in the database provided the
+ * supplied input is valid.
+ * @param input The identifying credentials to assign to the account.
+ */
+const setLotted = async ({
+  id,
+  lotted,
+}: {
+  id: string
+  lotted: boolean
+}): Promise<IModelNumber> => {
+  const params = {
+    TransactItems: [
+      {
+        Update: {
+          ConditionExpression: 'attribute_exists(partitionKey)',
+          ExpressionAttributeNames: { '#lotted': 'lotted' },
+          ExpressionAttributeValues: {
+            ':lotted': lotted,
+          },
+          Key: {
+            partitionKey: id,
+            sortKey: SECONDARY_KEY,
+          },
+          TableName: process.env.DYNAMODB_RESOURCES_TABLE,
+          UpdateExpression: 'set #lotted = :lotted',
+        },
+      },
+    ],
+  }
+  await client.transactWrite(params).promise()
+  return await find(id)
+}
+
+/**
  * Retreives a model number configuration by its ID.
  * @param id The ID of the model number to find.
  */
@@ -413,5 +448,6 @@ export const ModelNumber = {
   forType,
   forTypeAndProductID,
   output,
+  setLotted,
   update,
 }

@@ -35,8 +35,8 @@ const Default = Yup.object<IModelNumberValidationInput>({
     endUser: RequiredString(),
   }),
   feeWithoutWarranty: Yup.object().shape({
-    distributor: RequiredString(),
-    endUser: RequiredString(),
+    distributor: OptionalString(),
+    endUser: OptionalString(),
   }),
   id: RequiredString(),
   lotted: Yup.boolean().required('Cannot be blank'),
@@ -53,6 +53,15 @@ const Default = Yup.object<IModelNumberValidationInput>({
   warrantyTerm: RequiredNumber(),
 })
 
+const Lotted = Yup.object<{
+  lotted: boolean
+  id: string
+}>({
+  id: RequiredString(),
+  lotted: Yup.boolean().required('Cannot be blank'),
+})
+
 export const ModelNumber = {
   Default,
+  Lotted,
 }

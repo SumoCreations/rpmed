@@ -260,9 +260,9 @@ export type ModelNumber = {
   /** How issues will be resolved if this item is not covered by a warranty. */
   resolutionWithoutWarranty?: Maybe<Scalars['String']>
   /** How much will it cost to service this item if it is covered by a warranty. */
-  feeWithWarranty: FeeStructure
+  feeWithWarranty?: Maybe<FeeStructure>
   /** How much will it cost to service this item if it is not covered by a warranty. */
-  feeWithoutWarranty: FeeStructure
+  feeWithoutWarranty?: Maybe<FeeStructure>
   /** Any public notes related to servicing this model variation. */
   publicNotes?: Maybe<Scalars['String']>
   /** Any internal notes for employess when servicing this model variation. */
@@ -280,7 +280,7 @@ export type ModelNumberInput = {
   /** The high level category type this product belongs to. */
   productType: ProductType
   /** Pricing for this specific model. */
-  pricing: PricingInput
+  pricing?: Maybe<PricingInput>
   /** A brief description of this product variant. */
   description: Scalars['String']
   /** If a product is lotted it has a class of serial numbers associated to it. */
@@ -290,9 +290,9 @@ export type ModelNumberInput = {
   /** A description of the warranty that applies to this model. */
   warrantyDescription?: Maybe<Scalars['String']>
   /** How much will it cost to service this item if it is covered by a warranty. */
-  feeWithWarranty: FeeStructureInput
+  feeWithWarranty?: Maybe<FeeStructureInput>
   /** How much will it cost to service this item if it is not covered by a warranty. */
-  feeWithoutWarranty: FeeStructureInput
+  feeWithoutWarranty?: Maybe<FeeStructureInput>
   /** How issues will be resolved if this item is covered by a warranty. */
   resolutionWithWarranty?: Maybe<Scalars['String']>
   /** How issues will be resolved if this item is not covered by a warranty. */
@@ -368,6 +368,8 @@ export type Mutation = {
   createModelNumber: ModelNumberMutationOutput
   /** Updates an existing product variant. */
   updateModelNumber: ModelNumberMutationOutput
+  /** Updates an existing product variant's lotted status. */
+  updateModelNumberLotted: ModelNumberMutationOutput
   /** Removes an existing product variant. */
   destroyModelNumber: ModelNumberMutationOutput
   /** Creates a new registration. */
@@ -465,6 +467,12 @@ export type MutationCreateModelNumberArgs = {
 /** The root mutation for the schema. */
 export type MutationUpdateModelNumberArgs = {
   modelNumberInput: ModelNumberInput
+}
+
+/** The root mutation for the schema. */
+export type MutationUpdateModelNumberLottedArgs = {
+  id: Scalars['ID']
+  lotted: Scalars['Boolean']
 }
 
 /** The root mutation for the schema. */
@@ -1721,12 +1729,12 @@ export type ModelNumberResolvers<
     ContextType
   >
   feeWithWarranty?: Resolver<
-    ResolversTypes['FeeStructure'],
+    Maybe<ResolversTypes['FeeStructure']>,
     ParentType,
     ContextType
   >
   feeWithoutWarranty?: Resolver<
-    ResolversTypes['FeeStructure'],
+    Maybe<ResolversTypes['FeeStructure']>,
     ParentType,
     ContextType
   >
@@ -1875,6 +1883,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationUpdateModelNumberArgs, 'modelNumberInput'>
+  >
+  updateModelNumberLotted?: Resolver<
+    ResolversTypes['ModelNumberMutationOutput'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationUpdateModelNumberLottedArgs, 'id' | 'lotted'>
   >
   destroyModelNumber?: Resolver<
     ResolversTypes['ModelNumberMutationOutput'],
