@@ -68,6 +68,7 @@ export interface IModelNumber {
   symptoms: string[]
   pricing: IPricing
   productIdHash: string
+  productType: ProductType
   indexSortKey: string // productIds
   lotted: boolean
   warrantyTerm: number
@@ -85,6 +86,7 @@ export interface IModelNumberOutput {
   id: string // not optional as it is managed by the user not a user generated UUID.
   pricing: IPricing
   productIds: string[]
+  productType: ProductType
   lotted: boolean
   warrantyTerm: number
   warrantyDescription: string
@@ -111,6 +113,7 @@ const create = async ({
     indexSortKey: id,
     partitionKey: id,
     productIdHash: productIds.join('::'),
+    productType,
     secondaryIndexSortKey: productType,
     sortKey: SECONDARY_KEY,
     symptoms: [],

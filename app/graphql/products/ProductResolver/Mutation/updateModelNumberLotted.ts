@@ -35,7 +35,6 @@ export const updateModelNumberLotted = async (
     return {
       modelNumber: {
         ...ModelNumber.output(modelNumber),
-        productType: null,
         products: null,
         symptoms: null,
       },
