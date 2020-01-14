@@ -1,18 +1,12 @@
 import { Distributor, RGA } from '../../../../models'
-import { RgaStatus } from '../../../../schema'
+import { MutationCreateRgaArgs, RgaStatus } from '../../../../schema'
 import { generateMutationError } from '../../../../util'
 import * as Validation from '../../../../validations'
 import { IRGAMutationOutput } from './rgaMutationTypes'
 
-interface IRGAInputParams {
-  rgaInput: {
-    submittedBy: string
-    submittedOn: string
-  }
-}
 type CreateRGAMutation = (
   context: any,
-  rgaInput: IRGAInputParams
+  rgaInput: MutationCreateRgaArgs
 ) => Promise<IRGAMutationOutput>
 
 /**
@@ -32,7 +26,7 @@ export const createRGA: CreateRGAMutation = async (_, { rgaInput }) => {
   const rga = await RGA.create({
     ...rgaInput,
     distributorId: distributor.partitionKey,
-    shippingSpeed: 'Ground',
+    shippingSpeed: rgaInput.shippingSpeed || 'Ground',
     status: RgaStatus.Issued,
   })
   return { rga: RGA.output(rga), success: true }

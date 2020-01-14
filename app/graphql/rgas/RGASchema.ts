@@ -285,9 +285,25 @@ export const typeDefs = gql`
     """
     customerName: String
     """
-    The name of the customer this good belongs to - it will be automatically registered if it hasn't already been.
+    The email of the customer this good belongs to - it will be automatically registered if it hasn't already been.
     """
     customerEmail: String
+    """
+    The specialty of the customer this good belongs to - it will be automatically registered if it hasn't already been.
+    """
+    customerSpecialty: String
+    """
+    The preferred shipping speed assigned to return this good to the customer.
+    """
+    shippingSpeed: String
+    """
+    The tracking number associated to the return shipment.
+    """
+    tracking: String
+    """
+    The carrier used to transport the return shipment.
+    """
+    carrier: RGAShippingCarrier
   }
 
   """
@@ -515,6 +531,14 @@ export const typeDefs = gql`
     The name of the customer this good belongs to - it will be automatically registered if it hasn't already been.
     """
     customerEmail: String
+    """
+    The specialty of the customer this good belongs to - it will be automatically registered if it hasn't already been.
+    """
+    customerSpecialty: String
+    """
+    The preferred shipping speed assigned to return this good to the customer.
+    """
+    shippingSpeed: String
   }
 
   """
@@ -614,9 +638,17 @@ export const typeDefs = gql`
     """
     customerName: String
     """
-    The name of the customer this good belongs to - it will be automatically registered if it hasn't already been.
+    The email of the customer this good belongs to - it will be automatically registered if it hasn't already been.
     """
     customerEmail: String
+    """
+    The specialty of the customer this good belongs to - it will be automatically registered if it hasn't already been.
+    """
+    customerSpecialty: String
+    """
+    The preferred shipping speed assigned to return this good to the customer.
+    """
+    shippingSpeed: String
   }
 
   """
