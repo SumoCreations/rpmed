@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid'
-import { RgaGoodStatus, RgaStatus } from '../schema'
+import { FeeStructure, RgaGoodStatus, RgaStatus } from '../schema'
 import {
   filterBlankAttributes,
   getDynamoClient,
@@ -59,7 +59,7 @@ export interface IRGAGoodInput {
   customerName?: string
   customerEmail?: string
   resolution?: string
-  resolutionFee?: string
+  resolutionFee?: FeeStructure
   symptomId: string
   symptomDescription: string
   symptomSynopsis: string
@@ -93,7 +93,7 @@ export interface IRGAGood {
   customerName?: string
   customerEmail?: string
   resolution?: string
-  resolutionFee?: string
+  resolutionFee?: FeeStructure
   symptomId: string
   symptomDescription: string
   symptomSynopsis: string
@@ -124,7 +124,7 @@ export interface IRGAGoodOutput {
   customerName?: string
   customerEmail?: string
   resolution?: string
-  resolutionFee?: string
+  resolutionFee?: FeeStructure
   symptomId: string
   symptomDescription: string
   symptomSynopsis: string

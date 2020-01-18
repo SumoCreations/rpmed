@@ -8,7 +8,7 @@ import {
   RGA,
   RGAGood,
 } from '../../../../models'
-import { ProductType, RgaGoodStatus } from '../../../../schema'
+import { ProductType, RgaGoodStatus, FeeStructure } from '../../../../schema'
 import { generateMutationError } from '../../../../util'
 import * as Validation from '../../../../validations'
 import { IRGAGoodMutationOutput } from './rgaMutationTypes'
@@ -130,9 +130,9 @@ export const createRGAGood: CreateRGAGoodMutation = async (
   const resolution = warrantied
     ? modelNumber.resolutionWithWarranty
     : modelNumber.resolutionWithoutWarranty
-  const resolutionFee = warrantied
-    ? modelNumber.feeWithWarranty.distributor
-    : modelNumber.feeWithoutWarranty.distributor
+  const resolutionFee: FeeStructure = warrantied
+    ? modelNumber.feeWithWarranty
+    : modelNumber.feeWithoutWarranty
   let rgaGood: IRGAGood
 
   try {

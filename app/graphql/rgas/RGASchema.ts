@@ -245,10 +245,6 @@ export const typeDefs = gql`
     """
     resolution: String
     """
-    The fee involved for resolving this issue.
-    """
-    resolutionFee: String
-    """
     The synopsis of the associated symptom.
     """
     symptomSynopsis: String
@@ -256,6 +252,10 @@ export const typeDefs = gql`
     The solution for associated symptom.
     """
     symptomSolution: String!
+    """
+    The fee involved for resolving this issue.
+    """
+    resolutionFee: FeeStructure
     """
     The associated RMA from our distributor / partner's records.
     """
@@ -504,6 +504,10 @@ export const typeDefs = gql`
     """
     rgaId: String!
     """
+    The fee involved for resolving this issue.
+    """
+    resolutionFee: FeeStructureInput
+    """
     The model number for representing the specific product configuration for this good.
     """
     modelNumber: String!
@@ -608,7 +612,7 @@ export const typeDefs = gql`
     """
     The fee involved for resolving this issue.
     """
-    resolutionFee: String
+    resolutionFee: FeeStructureInput
     """
     The synopsis of the associated symptom.
     """

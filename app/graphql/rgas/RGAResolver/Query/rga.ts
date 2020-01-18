@@ -43,6 +43,7 @@ export const rga = async (_, args): Promise<IRGAQueryOutput> => {
                 }
                 return {
                   ...RGAGood.output(good),
+                  resolutionFee: typeof good.resolutionFee === 'object' ? good.resolutionFee : { distributor: 'RFQ', endUser: 'RFQ' },
                   customerLetterUrl,
                   serviceFormUrl,
                 }
