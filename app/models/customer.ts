@@ -32,39 +32,43 @@ const client = getDynamoClient()
 
 const SECONDARY_KEY = 'CUSTOMER'
 
-export interface ICustomerInput {
+interface ICustomerBase {
   name: string
   email: string
-  id?: string
-  specialty: string
+  phone?: string
+  street?: string
+  street2?: string
+  city?: string
+  state?: string
+  zip?: string
+  country?: string
+  specialty?: string
 }
 
-export interface ICustomer {
-  name: string
-  email: string
+export interface ICustomerInput extends ICustomerBase {
+  id?: string
+}
+
+export interface ICustomer extends ICustomerBase {
+  id: string
   partitionKey: string
   sortKey: string
-  specialty: string
 }
 
-export interface ICustomerOutput {
-  name: string
-  email: string
+export interface ICustomerOutput extends ICustomerBase {
   id: string
-  specialty: string
 }
 
 /**
  * Generates a new customer model provided the input is valid.
  * @param input The identifying credentials to assign to the customer.
  */
-const create = async ({
-  id,
-  ...customerInput
-}: ICustomerInput): Promise<ICustomer> => {
+const create = async (customerInput: ICustomerInput): Promise<ICustomer> => {
+  const id = uuid()
   const item: ICustomer = {
     ...customerInput,
-    partitionKey: uuid(),
+    id,
+    partitionKey: id,
     sortKey: SECONDARY_KEY,
   }
   const hsk = customerInput.email

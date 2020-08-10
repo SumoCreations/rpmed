@@ -42,6 +42,7 @@ export const modelNumbers = async (
           ? p.id.toLowerCase().indexOf(args.search.toLowerCase()) >= 0
           : true
       )
+      .filter(p => (args.public ? p.publiclyViewable : true))
       .map(o => ({
         ...o,
         products: async () =>

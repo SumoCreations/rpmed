@@ -73,31 +73,31 @@ export const typeDefs = gql`
     """
     Pricing for this specific model.
     """
-    pricing: Pricing!
+    pricing: Pricing
     """
     The ids of the product(s) this variant can be associated with.
     """
-    productIds: [String]!
+    productIds: [String]
     """
     The product(s) this variant can be associated with.
     """
-    products: [Product]!
+    products: [Product]
     """
     The high level category for this model number.
     """
-    productType: ProductType!
+    productType: ProductType
     """
     A brief description of this product variant.
     """
-    description: String!
+    description: String
     """
     If a product is lotted it has a class of serial numbers associated to it.
     """
-    lotted: Boolean!
+    lotted: Boolean
     """
     The length of the warranty that applies to this model in months.
     """
-    warrantyTerm: Int!
+    warrantyTerm: Int
     """
     A description of the warranty that applies to this model.
     """
@@ -127,9 +127,13 @@ export const typeDefs = gql`
     """
     privateNotes: String
     """
+    If a product model is not publicly viewableit will not show up on forms for a customer.
+    """
+    publiclyViewable: Boolean
+    """
     A list of all associated symptoms related to this model number.
     """
-    symptoms: [ProductSymptom]!
+    symptoms: [ProductSymptom]
   }
 
   """
@@ -189,11 +193,11 @@ export const typeDefs = gql`
     """
     The ids of the products this variant belongs to.
     """
-    productIds: [String]!
+    productIds: [String]
     """
     The high level category type this product belongs to.
     """
-    productType: ProductType!
+    productType: ProductType
     """
     Pricing for this specific model.
     """
@@ -201,15 +205,15 @@ export const typeDefs = gql`
     """
     A brief description of this product variant.
     """
-    description: String!
+    description: String
     """
     If a product is lotted it has a class of serial numbers associated to it.
     """
-    lotted: Boolean!
+    lotted: Boolean
     """
     The length of the warranty that applies to this model in months.
     """
-    warrantyTerm: Int!
+    warrantyTerm: Int
     """
     A description of the warranty that applies to this model.
     """
@@ -238,6 +242,10 @@ export const typeDefs = gql`
     Any internal notes for employess when servicing this model variation.
     """
     privateNotes: String
+    """
+    If a product model is not publicly viewable it will not show up on forms for a customer.
+    """
+    publiclyViewable: Boolean
   }
 
   """
@@ -289,6 +297,7 @@ export const typeDefs = gql`
       productId: String
       productType: ProductType
       symptom: String
+      public: Boolean
     ): ModelNumberQueryOutput
     """
     A specific product in the system via ID.
@@ -391,6 +400,13 @@ export const typeDefs = gql`
     updateModelNumberLotted(
       id: ID!
       lotted: Boolean!
+    ): ModelNumberMutationOutput!
+    """
+    Updates an existing product variant's lotted status.
+    """
+    updateModelNumberViewable(
+      id: ID!
+      publiclyViewable: Boolean!
     ): ModelNumberMutationOutput!
     """
     Removes an existing product variant.

@@ -34,10 +34,26 @@ export type Customer = {
    __typename?: 'Customer',
   /** The unique identifier for this customer */
   id: Scalars['ID'],
-  /** The email address for this customer. */
-  email: Scalars['String'],
-  /** The actual name of the customer. */
+  /** The email of the customer. */
+  email?: Maybe<Scalars['String']>,
+  /** The name of the customer. */
   name?: Maybe<Scalars['String']>,
+  /** The phone number of the customer. */
+  phone?: Maybe<Scalars['String']>,
+  /** The street address for the customer. */
+  street?: Maybe<Scalars['String']>,
+  /** The street address (line 2) for the customer. */
+  street2?: Maybe<Scalars['String']>,
+  /** The city of the address for the customer. */
+  city?: Maybe<Scalars['String']>,
+  /** The state of the address for the customer. */
+  state?: Maybe<Scalars['String']>,
+  /** The zip of the address for the customer. */
+  zip?: Maybe<Scalars['String']>,
+  /** The country of the address for the customer. */
+  country?: Maybe<Scalars['String']>,
+  /** The specialty of the customer. */
+  specialty?: Maybe<Scalars['String']>,
 };
 
 /** The result of a mutation applied to a customer. */
@@ -146,62 +162,6 @@ export type ExistingProductSymptomInput = {
   name?: Maybe<Scalars['String']>,
 };
 
-/** The input to make changes to an existing RGA Good. */
-export type ExistingRgaGoodInput = {
-  /** The model number for representing the specific product configuration for this good. */
-  modelNumber?: Maybe<Scalars['String']>,
-  /** Indicates whether or not the model was considered to be lotted. */
-  lotted?: Maybe<Scalars['Boolean']>,
-  /** The current status of the good. */
-  status?: Maybe<RgaGoodStatus>,
-  /** Indicates whether or not this product is currently under warranty. */
-  warrantied?: Maybe<Scalars['Boolean']>,
-  /** Indicates the details of the associated products warranty. */
-  warrantyDescription?: Maybe<Scalars['String']>,
-  /** Indicates the number of months the associated product was warrantied for. */
-  warrantyTerm?: Maybe<Scalars['Int']>,
-  /** The symptom / reason this product is being returned. */
-  symptomId?: Maybe<Scalars['String']>,
-  /** The current description of the symptom. */
-  symptomDescription?: Maybe<Scalars['String']>,
-  /** Indicates whether or not the resolution for the symptom was a pre-approved repair. */
-  preApproved?: Maybe<Scalars['Boolean']>,
-  /** The fault code associated to the prescribed symptom. */
-  faultCode?: Maybe<Scalars['String']>,
-  /** The serial number unique to this good if lotted. If left blank and not lotted a uuid will be generated. */
-  serial?: Maybe<Scalars['String']>,
-  /** Indicates the product type for this good. */
-  productType?: Maybe<ProductType>,
-  /** Indicates the name of product family this good. */
-  productName?: Maybe<Scalars['String']>,
-  /** Indicates the product family this good. */
-  productId?: Maybe<Scalars['String']>,
-  /** The proposed resolution the issue affecting this good. */
-  resolution?: Maybe<Scalars['String']>,
-  /** The fee involved for resolving this issue. */
-  resolutionFee?: Maybe<FeeStructureInput>,
-  /** The synopsis of the associated symptom. */
-  symptomSynopsis?: Maybe<Scalars['String']>,
-  /** The solution for associated symptom. */
-  symptomSolution?: Maybe<Scalars['String']>,
-  /** The associated RMA from our distributor / partner's records. */
-  rma?: Maybe<Scalars['String']>,
-  /** The associated PO from our distributor / partner's records. */
-  po?: Maybe<Scalars['String']>,
-  /** Any additional notes about this good specifically.. */
-  notes?: Maybe<Scalars['String']>,
-  /** The id of the customer if the product has been registered to a user. */
-  customerId?: Maybe<Scalars['String']>,
-  /** The name of the customer this good belongs to - it will be automatically registered if it hasn't already been. */
-  customerName?: Maybe<Scalars['String']>,
-  /** The email of the customer this good belongs to - it will be automatically registered if it hasn't already been. */
-  customerEmail?: Maybe<Scalars['String']>,
-  /** The specialty of the customer this good belongs to - it will be automatically registered if it hasn't already been. */
-  customerSpecialty?: Maybe<Scalars['String']>,
-  /** The preferred shipping speed assigned to return this good to the customer. */
-  shippingSpeed?: Maybe<Scalars['String']>,
-};
-
 /** A set of fields used to update certain aspects of an RGA. */
 export type ExistingRgaInput = {
   /** The id of the RGA. */
@@ -241,19 +201,19 @@ export type ModelNumber = {
   /** The model number identifying a product variant. */
   id: Scalars['ID'],
   /** Pricing for this specific model. */
-  pricing: Pricing,
+  pricing?: Maybe<Pricing>,
   /** The ids of the product(s) this variant can be associated with. */
-  productIds: Array<Maybe<Scalars['String']>>,
+  productIds?: Maybe<Array<Maybe<Scalars['String']>>>,
   /** The product(s) this variant can be associated with. */
-  products: Array<Maybe<Product>>,
+  products?: Maybe<Array<Maybe<Product>>>,
   /** The high level category for this model number. */
-  productType: ProductType,
+  productType?: Maybe<ProductType>,
   /** A brief description of this product variant. */
-  description: Scalars['String'],
+  description?: Maybe<Scalars['String']>,
   /** If a product is lotted it has a class of serial numbers associated to it. */
-  lotted: Scalars['Boolean'],
+  lotted?: Maybe<Scalars['Boolean']>,
   /** The length of the warranty that applies to this model in months. */
-  warrantyTerm: Scalars['Int'],
+  warrantyTerm?: Maybe<Scalars['Int']>,
   /** A description of the warranty that applies to this model. */
   warrantyDescription?: Maybe<Scalars['String']>,
   /** How issues will be resolved if this item is covered by a warranty. */
@@ -268,8 +228,10 @@ export type ModelNumber = {
   publicNotes?: Maybe<Scalars['String']>,
   /** Any internal notes for employess when servicing this model variation. */
   privateNotes?: Maybe<Scalars['String']>,
+  /** If a product model is not publicly viewableit will not show up on forms for a customer. */
+  publiclyViewable?: Maybe<Scalars['Boolean']>,
   /** A list of all associated symptoms related to this model number. */
-  symptoms: Array<Maybe<ProductSymptom>>,
+  symptoms?: Maybe<Array<Maybe<ProductSymptom>>>,
 };
 
 /** Describes a model number to be created or updated. */
@@ -277,17 +239,17 @@ export type ModelNumberInput = {
   /** The model number identifying a product variant. */
   id: Scalars['ID'],
   /** The ids of the products this variant belongs to. */
-  productIds: Array<Maybe<Scalars['String']>>,
+  productIds?: Maybe<Array<Maybe<Scalars['String']>>>,
   /** The high level category type this product belongs to. */
-  productType: ProductType,
+  productType?: Maybe<ProductType>,
   /** Pricing for this specific model. */
   pricing?: Maybe<PricingInput>,
   /** A brief description of this product variant. */
-  description: Scalars['String'],
+  description?: Maybe<Scalars['String']>,
   /** If a product is lotted it has a class of serial numbers associated to it. */
-  lotted: Scalars['Boolean'],
+  lotted?: Maybe<Scalars['Boolean']>,
   /** The length of the warranty that applies to this model in months. */
-  warrantyTerm: Scalars['Int'],
+  warrantyTerm?: Maybe<Scalars['Int']>,
   /** A description of the warranty that applies to this model. */
   warrantyDescription?: Maybe<Scalars['String']>,
   /** How much will it cost to service this item if it is covered by a warranty. */
@@ -302,6 +264,8 @@ export type ModelNumberInput = {
   publicNotes?: Maybe<Scalars['String']>,
   /** Any internal notes for employess when servicing this model variation. */
   privateNotes?: Maybe<Scalars['String']>,
+  /** If a product model is not publicly viewable it will not show up on forms for a customer. */
+  publiclyViewable?: Maybe<Scalars['Boolean']>,
 };
 
 /** The result of a mutation applied to a ModelNumber. */
@@ -371,6 +335,8 @@ export type Mutation = {
   updateModelNumber: ModelNumberMutationOutput,
   /** Updates an existing product variant's lotted status. */
   updateModelNumberLotted: ModelNumberMutationOutput,
+  /** Updates an existing product variant's lotted status. */
+  updateModelNumberViewable: ModelNumberMutationOutput,
   /** Removes an existing product variant. */
   destroyModelNumber: ModelNumberMutationOutput,
   /** Creates a new registration. */
@@ -405,6 +371,8 @@ export type Mutation = {
   updateRGA: RgaMutationOutput,
   /** Updates the status of a specific RGA. */
   updateRGAStatus: RgaMutationOutput,
+  /** Allows an end user to submit an RGA Good for review by the RPMed Internal Team. */
+  submitRGAForReview: RgaMutationOutput,
   /** Updates the shipping status of a specific RGA. */
   updateRGAShippingStatus: RgaMutationOutput,
   /** Creates a new good for an existing RGA. */
@@ -486,6 +454,13 @@ export type MutationUpdateModelNumberArgs = {
 export type MutationUpdateModelNumberLottedArgs = {
   id: Scalars['ID'],
   lotted: Scalars['Boolean']
+};
+
+
+/** The root mutation for the schema. */
+export type MutationUpdateModelNumberViewableArgs = {
+  id: Scalars['ID'],
+  publiclyViewable: Scalars['Boolean']
 };
 
 
@@ -597,6 +572,13 @@ export type MutationUpdateRgaStatusArgs = {
 
 
 /** The root mutation for the schema. */
+export type MutationSubmitRgaForReviewArgs = {
+  id: Scalars['ID'],
+  notes?: Maybe<Scalars['String']>
+};
+
+
+/** The root mutation for the schema. */
 export type MutationUpdateRgaShippingStatusArgs = {
   id: Scalars['ID'],
   notes?: Maybe<Scalars['String']>,
@@ -606,7 +588,8 @@ export type MutationUpdateRgaShippingStatusArgs = {
 
 /** The root mutation for the schema. */
 export type MutationCreateRgaGoodArgs = {
-  rgaGoodInput: NewRgaGoodInput
+  rgaId: Scalars['String'],
+  rgaGoodInput: RgaGoodInput
 };
 
 
@@ -614,7 +597,7 @@ export type MutationCreateRgaGoodArgs = {
 export type MutationUpdateRgaGoodArgs = {
   id: Scalars['ID'],
   rgaId: Scalars['String'],
-  rgaGoodInput: ExistingRgaGoodInput
+  rgaGoodInput: RgaGoodInput
 };
 
 
@@ -626,8 +609,26 @@ export type MutationDestroyRgaGoodArgs = {
 
 /** A set of fields used to create or update a customer. */
 export type NewCustomerInput = {
+  /** The email of the customer. */
   email: Scalars['String'],
+  /** The name of the customer. */
   name?: Maybe<Scalars['String']>,
+  /** The phone number of the customer. */
+  phone?: Maybe<Scalars['String']>,
+  /** The street address for the customer. */
+  street?: Maybe<Scalars['String']>,
+  /** The street address (line 2) for the customer. */
+  street2?: Maybe<Scalars['String']>,
+  /** The city of the address for the customer. */
+  city?: Maybe<Scalars['String']>,
+  /** The state of the address for the customer. */
+  state?: Maybe<Scalars['String']>,
+  /** The zip of the address for the customer. */
+  zip?: Maybe<Scalars['String']>,
+  /** The country of the address for the customer. */
+  country?: Maybe<Scalars['String']>,
+  /** The specialty of the customer. */
+  specialty?: Maybe<Scalars['String']>,
 };
 
 /** A set of fields used to create or update a distributor. */
@@ -657,42 +658,6 @@ export type NewProductSymptomInput = {
   solution?: Maybe<Scalars['String']>,
   synopsis?: Maybe<Scalars['String']>,
   name?: Maybe<Scalars['String']>,
-};
-
-/** A set of fields used to create or update a RGA. */
-export type NewRgaGoodInput = {
-  /** Indicates whether or not this product is currently under warranty. */
-  warrantied: Scalars['Boolean'],
-  /** The symptom / reason this product is being returned. */
-  symptomId: Scalars['String'],
-  /** Indicates the id of product family this good was associated with. */
-  productId: Scalars['String'],
-  /** Indicates the product type for this good. */
-  productType: ProductType,
-  /** Indicates the name of product family this good. */
-  productName: Scalars['String'],
-  /** The RGA this good is assigned to. */
-  rgaId: Scalars['String'],
-  /** The fee involved for resolving this issue. */
-  resolutionFee?: Maybe<FeeStructureInput>,
-  /** The model number for representing the specific product configuration for this good. */
-  modelNumber: Scalars['String'],
-  /** The serial number unique to this good if lotted. If left blank and not lotted a uuid will be generated. */
-  serial?: Maybe<Scalars['String']>,
-  /** The associated RMA from our distributor / partner's records. */
-  rma?: Maybe<Scalars['String']>,
-  /** The associated PO from our distributor / partner's records. */
-  po?: Maybe<Scalars['String']>,
-  /** Any additional notes about this good specifically.. */
-  notes?: Maybe<Scalars['String']>,
-  /** The name of the customer this good belongs to - it will be automatically registered if it hasn't already been. */
-  customerName?: Maybe<Scalars['String']>,
-  /** The name of the customer this good belongs to - it will be automatically registered if it hasn't already been. */
-  customerEmail?: Maybe<Scalars['String']>,
-  /** The specialty of the customer this good belongs to - it will be automatically registered if it hasn't already been. */
-  customerSpecialty?: Maybe<Scalars['String']>,
-  /** The preferred shipping speed assigned to return this good to the customer. */
-  shippingSpeed?: Maybe<Scalars['String']>,
 };
 
 /** A set of fields used to create an RGA. */
@@ -974,7 +939,8 @@ export type QueryModelNumbersArgs = {
   search?: Maybe<Scalars['String']>,
   productId?: Maybe<Scalars['String']>,
   productType?: Maybe<ProductType>,
-  symptom?: Maybe<Scalars['String']>
+  symptom?: Maybe<Scalars['String']>,
+  public?: Maybe<Scalars['Boolean']>
 };
 
 
@@ -1112,6 +1078,20 @@ export type RgaGood = {
   customerName?: Maybe<Scalars['String']>,
   /** The email of the customer this good belongs to - it will be automatically registered if it hasn't already been. */
   customerEmail?: Maybe<Scalars['String']>,
+  /** The phone number of the customer this good belongs to. */
+  customerPhone?: Maybe<Scalars['String']>,
+  /** The street address for the customer this good belongs to. */
+  customerStreet?: Maybe<Scalars['String']>,
+  /** The street address (line 2) for the customer this good belongs to. */
+  customerStreet2?: Maybe<Scalars['String']>,
+  /** The city of the address for the customer this good belongs to. */
+  customerCity?: Maybe<Scalars['String']>,
+  /** The state of the address for the customer this good belongs to. */
+  customerState?: Maybe<Scalars['String']>,
+  /** The zip of the address for the customer this good belongs to. */
+  customerZip?: Maybe<Scalars['String']>,
+  /** The country of the address for the customer this good belongs to. */
+  customerCountry?: Maybe<Scalars['String']>,
   /** The specialty of the customer this good belongs to - it will be automatically registered if it hasn't already been. */
   customerSpecialty?: Maybe<Scalars['String']>,
   /** The preferred shipping speed assigned to return this good to the customer. */
@@ -1120,6 +1100,76 @@ export type RgaGood = {
   tracking?: Maybe<Scalars['String']>,
   /** The carrier used to transport the return shipment. */
   carrier?: Maybe<RgaShippingCarrier>,
+};
+
+/** The input to make changes to an existing RGA Good. */
+export type RgaGoodInput = {
+  /** The model number for representing the specific product configuration for this good. */
+  modelNumber?: Maybe<Scalars['String']>,
+  /** Indicates whether or not the model was considered to be lotted. */
+  lotted?: Maybe<Scalars['Boolean']>,
+  /** The current status of the good. */
+  status?: Maybe<RgaGoodStatus>,
+  /** Indicates whether or not this product is currently under warranty. */
+  warrantied?: Maybe<Scalars['Boolean']>,
+  /** Indicates the details of the associated products warranty. */
+  warrantyDescription?: Maybe<Scalars['String']>,
+  /** Indicates the number of months the associated product was warrantied for. */
+  warrantyTerm?: Maybe<Scalars['Int']>,
+  /** The symptom / reason this product is being returned. */
+  symptomId?: Maybe<Scalars['String']>,
+  /** The current description of the symptom. */
+  symptomDescription?: Maybe<Scalars['String']>,
+  /** Indicates whether or not the resolution for the symptom was a pre-approved repair. */
+  preApproved?: Maybe<Scalars['Boolean']>,
+  /** The fault code associated to the prescribed symptom. */
+  faultCode?: Maybe<Scalars['String']>,
+  /** The serial number unique to this good if lotted. If left blank and not lotted a uuid will be generated. */
+  serial?: Maybe<Scalars['String']>,
+  /** Indicates the product type for this good. */
+  productType?: Maybe<ProductType>,
+  /** Indicates the name of product family this good. */
+  productName?: Maybe<Scalars['String']>,
+  /** Indicates the product family this good. */
+  productId?: Maybe<Scalars['String']>,
+  /** The proposed resolution the issue affecting this good. */
+  resolution?: Maybe<Scalars['String']>,
+  /** The fee involved for resolving this issue. */
+  resolutionFee?: Maybe<FeeStructureInput>,
+  /** The synopsis of the associated symptom. */
+  symptomSynopsis?: Maybe<Scalars['String']>,
+  /** The solution for associated symptom. */
+  symptomSolution?: Maybe<Scalars['String']>,
+  /** The associated RMA from our distributor / partner's records. */
+  rma?: Maybe<Scalars['String']>,
+  /** The associated PO from our distributor / partner's records. */
+  po?: Maybe<Scalars['String']>,
+  /** Any additional notes about this good specifically.. */
+  notes?: Maybe<Scalars['String']>,
+  /** The id of the customer if the product has been registered to a user. */
+  customerId?: Maybe<Scalars['String']>,
+  /** The name of the customer this good belongs to - it will be automatically registered if it hasn't already been. */
+  customerName?: Maybe<Scalars['String']>,
+  /** The email of the customer this good belongs to - it will be automatically registered if it hasn't already been. */
+  customerEmail?: Maybe<Scalars['String']>,
+  /** The phone number of the customer this good belongs to. */
+  customerPhone?: Maybe<Scalars['String']>,
+  /** The street address for the customer this good belongs to. */
+  customerStreet?: Maybe<Scalars['String']>,
+  /** The street address (line 2) for the customer this good belongs to. */
+  customerStreet2?: Maybe<Scalars['String']>,
+  /** The city of the address for the customer this good belongs to. */
+  customerCity?: Maybe<Scalars['String']>,
+  /** The state of the address for the customer this good belongs to. */
+  customerState?: Maybe<Scalars['String']>,
+  /** The zip of the address for the customer this good belongs to. */
+  customerZip?: Maybe<Scalars['String']>,
+  /** The country of the address for the customer this good belongs to. */
+  customerCountry?: Maybe<Scalars['String']>,
+  /** The specialty of the customer this good belongs to - it will be automatically registered if it hasn't already been. */
+  customerSpecialty?: Maybe<Scalars['String']>,
+  /** The preferred shipping speed assigned to return this good to the customer. */
+  shippingSpeed?: Maybe<Scalars['String']>,
 };
 
 /** The result of a mutation applied to a RGA. */
@@ -1510,9 +1560,8 @@ export type ResolversTypes = {
   ExistingRGAInput: ExistingRgaInput,
   RGAGoodShippingInput: RgaGoodShippingInput,
   RGAShippingStatus: RgaShippingStatus,
-  NewRGAGoodInput: NewRgaGoodInput,
+  RGAGoodInput: RgaGoodInput,
   RGAGoodMutationOutput: ResolverTypeWrapper<RgaGoodMutationOutput>,
-  ExistingRGAGoodInput: ExistingRgaGoodInput,
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -1582,9 +1631,8 @@ export type ResolversParentTypes = {
   ExistingRGAInput: ExistingRgaInput,
   RGAGoodShippingInput: RgaGoodShippingInput,
   RGAShippingStatus: RgaShippingStatus,
-  NewRGAGoodInput: NewRgaGoodInput,
+  RGAGoodInput: RgaGoodInput,
   RGAGoodMutationOutput: RgaGoodMutationOutput,
-  ExistingRGAGoodInput: ExistingRgaGoodInput,
 };
 
 export type AttachedImageResolvers<ContextType = any, ParentType extends ResolversParentTypes['AttachedImage'] = ResolversParentTypes['AttachedImage']> = {
@@ -1596,8 +1644,16 @@ export type AttachedImageResolvers<ContextType = any, ParentType extends Resolve
 
 export type CustomerResolvers<ContextType = any, ParentType extends ResolversParentTypes['Customer'] = ResolversParentTypes['Customer']> = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
-  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  phone?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  street?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  street2?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  city?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  state?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  zip?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  country?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  specialty?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
 };
 
 export type CustomerMutationOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['CustomerMutationOutput'] = ResolversParentTypes['CustomerMutationOutput']> = {
@@ -1643,13 +1699,13 @@ export type FeeStructureResolvers<ContextType = any, ParentType extends Resolver
 
 export type ModelNumberResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModelNumber'] = ResolversParentTypes['ModelNumber']> = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
-  pricing?: Resolver<ResolversTypes['Pricing'], ParentType, ContextType>,
-  productIds?: Resolver<Array<Maybe<ResolversTypes['String']>>, ParentType, ContextType>,
-  products?: Resolver<Array<Maybe<ResolversTypes['Product']>>, ParentType, ContextType>,
-  productType?: Resolver<ResolversTypes['ProductType'], ParentType, ContextType>,
-  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
-  lotted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>,
-  warrantyTerm?: Resolver<ResolversTypes['Int'], ParentType, ContextType>,
+  pricing?: Resolver<Maybe<ResolversTypes['Pricing']>, ParentType, ContextType>,
+  productIds?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>,
+  products?: Resolver<Maybe<Array<Maybe<ResolversTypes['Product']>>>, ParentType, ContextType>,
+  productType?: Resolver<Maybe<ResolversTypes['ProductType']>, ParentType, ContextType>,
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  lotted?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>,
+  warrantyTerm?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>,
   warrantyDescription?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   resolutionWithWarranty?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   resolutionWithoutWarranty?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
@@ -1657,7 +1713,8 @@ export type ModelNumberResolvers<ContextType = any, ParentType extends Resolvers
   feeWithoutWarranty?: Resolver<Maybe<ResolversTypes['FeeStructure']>, ParentType, ContextType>,
   publicNotes?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   privateNotes?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
-  symptoms?: Resolver<Array<Maybe<ResolversTypes['ProductSymptom']>>, ParentType, ContextType>,
+  publiclyViewable?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>,
+  symptoms?: Resolver<Maybe<Array<Maybe<ResolversTypes['ProductSymptom']>>>, ParentType, ContextType>,
 };
 
 export type ModelNumberMutationOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModelNumberMutationOutput'] = ResolversParentTypes['ModelNumberMutationOutput']> = {
@@ -1695,6 +1752,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createModelNumber?: Resolver<ResolversTypes['ModelNumberMutationOutput'], ParentType, ContextType, RequireFields<MutationCreateModelNumberArgs, 'modelNumberInput'>>,
   updateModelNumber?: Resolver<ResolversTypes['ModelNumberMutationOutput'], ParentType, ContextType, RequireFields<MutationUpdateModelNumberArgs, 'modelNumberInput'>>,
   updateModelNumberLotted?: Resolver<ResolversTypes['ModelNumberMutationOutput'], ParentType, ContextType, RequireFields<MutationUpdateModelNumberLottedArgs, 'id' | 'lotted'>>,
+  updateModelNumberViewable?: Resolver<ResolversTypes['ModelNumberMutationOutput'], ParentType, ContextType, RequireFields<MutationUpdateModelNumberViewableArgs, 'id' | 'publiclyViewable'>>,
   destroyModelNumber?: Resolver<ResolversTypes['ModelNumberMutationOutput'], ParentType, ContextType, RequireFields<MutationDestroyModelNumberArgs, 'id'>>,
   createProductRegistration?: Resolver<ResolversTypes['ProductRegistrationMutationOutput'], ParentType, ContextType, RequireFields<MutationCreateProductRegistrationArgs, 'productRegistrationInput'>>,
   updateProductRegistration?: Resolver<ResolversTypes['ProductRegistrationMutationOutput'], ParentType, ContextType, RequireFields<MutationUpdateProductRegistrationArgs, 'productRegistrationInput'>>,
@@ -1712,8 +1770,9 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createRGA?: Resolver<ResolversTypes['RGAMutationOutput'], ParentType, ContextType, RequireFields<MutationCreateRgaArgs, 'rgaInput'>>,
   updateRGA?: Resolver<ResolversTypes['RGAMutationOutput'], ParentType, ContextType, RequireFields<MutationUpdateRgaArgs, 'rgaInput'>>,
   updateRGAStatus?: Resolver<ResolversTypes['RGAMutationOutput'], ParentType, ContextType, RequireFields<MutationUpdateRgaStatusArgs, 'id' | 'status'>>,
+  submitRGAForReview?: Resolver<ResolversTypes['RGAMutationOutput'], ParentType, ContextType, RequireFields<MutationSubmitRgaForReviewArgs, 'id'>>,
   updateRGAShippingStatus?: Resolver<ResolversTypes['RGAMutationOutput'], ParentType, ContextType, RequireFields<MutationUpdateRgaShippingStatusArgs, 'id'>>,
-  createRGAGood?: Resolver<ResolversTypes['RGAGoodMutationOutput'], ParentType, ContextType, RequireFields<MutationCreateRgaGoodArgs, 'rgaGoodInput'>>,
+  createRGAGood?: Resolver<ResolversTypes['RGAGoodMutationOutput'], ParentType, ContextType, RequireFields<MutationCreateRgaGoodArgs, 'rgaId' | 'rgaGoodInput'>>,
   updateRGAGood?: Resolver<ResolversTypes['RGAGoodMutationOutput'], ParentType, ContextType, RequireFields<MutationUpdateRgaGoodArgs, 'id' | 'rgaId' | 'rgaGoodInput'>>,
   destroyRGAGood?: Resolver<ResolversTypes['RGAGoodMutationOutput'], ParentType, ContextType, RequireFields<MutationDestroyRgaGoodArgs, 'id' | 'rgaId'>>,
 };
@@ -1864,6 +1923,13 @@ export type RgaGoodResolvers<ContextType = any, ParentType extends ResolversPare
   customerId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   customerName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   customerEmail?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  customerPhone?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  customerStreet?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  customerStreet2?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  customerCity?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  customerState?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  customerZip?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  customerCountry?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   customerSpecialty?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   shippingSpeed?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   tracking?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,

@@ -10,13 +10,45 @@ export const typeDefs = gql`
     """
     id: ID!
     """
-    The email address for this customer.
+    The email of the customer.
     """
-    email: String!
+    email: String
     """
-    The actual name of the customer.
+    The name of the customer.
     """
     name: String
+    """
+    The phone number of the customer.
+    """
+    phone: String
+    """
+    The street address for the customer.
+    """
+    street: String
+    """
+    The street address (line 2) for the customer.
+    """
+    street2: String
+    """
+    The city of the address for the customer.
+    """
+    city: String
+    """
+    The state of the address for the customer.
+    """
+    state: String
+    """
+    The zip of the address for the customer.
+    """
+    zip: String
+    """
+    The country of the address for the customer.
+    """
+    country: String
+    """
+    The specialty of the customer.
+    """
+    specialty: String
   }
 
   """
@@ -82,8 +114,46 @@ export const typeDefs = gql`
   A set of fields used to create or update a customer.
   """
   input NewCustomerInput {
+    """
+    The email of the customer.
+    """
     email: String!
+    """
+    The name of the customer.
+    """
     name: String
+    """
+    The phone number of the customer.
+    """
+    phone: String
+    """
+    The street address for the customer.
+    """
+    street: String
+    """
+    The street address (line 2) for the customer.
+    """
+    street2: String
+    """
+    The city of the address for the customer.
+    """
+    city: String
+    """
+    The state of the address for the customer.
+    """
+    state: String
+    """
+    The zip of the address for the customer.
+    """
+    zip: String
+    """
+    The country of the address for the customer.
+    """
+    country: String
+    """
+    The specialty of the customer.
+    """
+    specialty: String
   }
 
   """

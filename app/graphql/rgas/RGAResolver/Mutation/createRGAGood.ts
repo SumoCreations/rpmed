@@ -8,35 +8,18 @@ import {
   RGA,
   RGAGood,
 } from '../../../../models'
-import { ProductType, RgaGoodStatus, FeeStructure } from '../../../../schema'
+import {
+  RgaGoodStatus,
+  FeeStructure,
+  MutationCreateRgaGoodArgs,
+} from '../../../../schema'
 import { generateMutationError } from '../../../../util'
 import * as Validation from '../../../../validations'
 import { IRGAGoodMutationOutput } from './rgaMutationTypes'
 
-interface IRGAGoodInputParams {
-  rgaGoodInput: {
-    warrantied: boolean
-    symptomId: string
-    rgaId: string
-    productId: string
-    productName: string
-    productType: ProductType
-    lotted: boolean
-    modelNumber: string
-    serial?: string
-    rma?: string
-    po?: string
-    notes?: string
-    customerName?: string
-    customerEmail?: string
-    submittedBy?: string
-    submittedOn?: string
-  }
-}
-
 type CreateRGAGoodMutation = (
   context: any,
-  rgaGoodInput: IRGAGoodInputParams
+  rgaGoodInput: MutationCreateRgaGoodArgs
 ) => Promise<IRGAGoodMutationOutput>
 
 const present = (val: string | null) =>
@@ -46,7 +29,7 @@ const present = (val: string | null) =>
  */
 export const createRGAGood: CreateRGAGoodMutation = async (
   _,
-  { rgaGoodInput }
+  { rgaGoodInput, rgaId }
 ) => {
   try {
     await Validation.RGAGood.Default.validate(rgaGoodInput, {
@@ -56,12 +39,10 @@ export const createRGAGood: CreateRGAGoodMutation = async (
     return generateMutationError(Validation.formatError(e))
   }
 
-  const rga = await RGA.find(rgaGoodInput.rgaId)
+  const rga = await RGA.find(rgaId)
   if (!rga) {
     return {
-      errors: [
-        { path: 'rgaId', message: `RGA ${rgaGoodInput.rgaId} does not exist` },
-      ],
+      errors: [{ path: 'rgaId', message: `RGA ${rgaId} does not exist` }],
       success: false,
     }
   }
@@ -144,9 +125,10 @@ export const createRGAGood: CreateRGAGoodMutation = async (
       preApproved: existingSymptom.preApproved,
       resolution,
       resolutionFee,
+      rgaId,
       status: RgaGoodStatus.Valid,
-      submittedBy: rgaGoodInput.submittedBy || rga.submittedBy,
-      submittedOn: rgaGoodInput.submittedOn || rga.submittedOn,
+      submittedBy: rga.submittedBy,
+      submittedOn: rga.submittedOn,
       symptomDescription: existingSymptom.name,
       symptomSolution: existingSymptom.solution,
       symptomSynopsis: existingSymptom.synopsis,

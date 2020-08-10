@@ -40,100 +40,56 @@ const client = getDynamoClient()
 const sns = getSNSClient()
 const s3 = getS3Client()
 
-export interface IRGAGoodInput {
-  id?: string
-  faultCode: string
+export interface IRGAGoodBase {
+  faultCode?: string
   rgaId: string
-  lotted: boolean
-  preApproved: boolean
-  modelNumber: string
-  status: RgaGoodStatus
+  lotted?: boolean
+  preApproved?: boolean
+  modelNumber?: string
+  status?: RgaGoodStatus
   serial?: string
   rma?: string
   po?: string
   notes?: string
-  productType: string
-  productId: string
-  productName: string
+  productType?: string
+  productId?: string
+  productName?: string
   customerId?: string
   customerName?: string
+  customerPhone?: string
   customerEmail?: string
+  customerStreet?: string
+  customerStreet2?: string
+  customerCity?: string
+  customerState?: string
+  customerZip?: string
+  customerCountry?: string
   resolution?: string
   resolutionFee?: FeeStructure
-  symptomId: string
-  symptomDescription: string
-  symptomSynopsis: string
-  symptomSolution: string
+  symptomId?: string
+  symptomDescription?: string
+  symptomSynopsis?: string
+  symptomSolution?: string
   submittedBy: string
   submittedOn: string
-  warrantied: boolean
-  warrantyTerm: number
-  warrantyDescription: string
+  warrantied?: boolean
+  warrantyTerm?: number
+  warrantyDescription?: string
 }
 
-export interface IRGAGood {
+export interface IRGAGoodInput extends IRGAGoodBase {
+  id?: string
+}
+
+export interface IRGAGood extends IRGAGoodBase {
   partitionKey: string // rgaId
   sortKey: string // good#serial
   indexSortKey: string // productId#modelNumber
   id: string
-  faultCode: string
-  rgaId: string
-  lotted: boolean
-  preApproved: boolean
-  modelNumber: string
-  status: RgaGoodStatus
-  serial?: string
-  rma?: string
-  po?: string
-  notes?: string
-  productType: string
-  productId: string
-  productName: string
-  customerId?: string
-  customerName?: string
-  customerEmail?: string
-  resolution?: string
-  resolutionFee?: FeeStructure
-  symptomId: string
-  symptomDescription: string
-  symptomSynopsis: string
-  symptomSolution: string
-  submittedBy: string
-  submittedOn: string
-  warrantied: boolean
-  warrantyTerm: number
-  warrantyDescription: string
 }
 
-export interface IRGAGoodOutput {
+export interface IRGAGoodOutput extends IRGAGoodBase {
   id: string
-  faultCode: string
-  rgaId: string
-  lotted: boolean
-  preApproved: boolean
-  modelNumber: string
-  status: RgaGoodStatus
-  serial?: string
-  rma?: string
-  po?: string
-  notes?: string
-  productType: string
-  productId: string
-  productName: string
-  customerId?: string
-  customerName?: string
-  customerEmail?: string
-  resolution?: string
-  resolutionFee?: FeeStructure
-  symptomId: string
-  symptomDescription: string
-  symptomSynopsis: string
-  symptomSolution: string
-  submittedBy: string
-  submittedOn: string
-  warrantied: boolean
-  warrantyTerm: number
-  warrantyDescription: string
 }
 
 export enum RGAGoodDocumentType {
@@ -265,7 +221,7 @@ const generateServiceLetter = async (
   try {
     const clientUrl = `https://${
       process.env.CLIENT_DOMAIN
-    }/admin/rga/${rgaStatus}/${rgaGood.rgaId}/service-form/${rgaGood.id}`
+      }/admin/rga/${rgaStatus}/${rgaGood.rgaId}/service-form/${rgaGood.id}`
     // tslint:disable-next-line no-console
     console.log(`publishing SERVICE FORM to SNS ${clientUrl}`)
     await sns
@@ -280,10 +236,10 @@ const generateServiceLetter = async (
           ],
           jobId: `${RGAGoodDocumentType.ServiceForm}#${rgaGood.rgaId}#${
             rgaGood.id
-          }`,
+            }`,
           key: `${RGAGoodDocumentType.ServiceForm}-${rgaGood.rgaId}-${
             rgaGood.id
-          }.pdf`,
+            }.pdf`,
           margin: {
             bottom: '0.075in',
             left: '0.05in',
@@ -315,7 +271,7 @@ const generateCustomerLetter = async (
   try {
     const clientUrl = `https://${
       process.env.CLIENT_DOMAIN
-    }/admin/rga/${rgaStatus}/${rgaGood.rgaId}/service-form/${rgaGood.id}`
+      }/admin/rga/${rgaStatus}/${rgaGood.rgaId}/service-form/${rgaGood.id}`
     // tslint:disable-next-line no-console
     console.log(`publishing LETTER to SNS ${clientUrl}`)
     await sns
@@ -330,10 +286,10 @@ const generateCustomerLetter = async (
           ],
           jobId: `${RGAGoodDocumentType.CustomerLetter}#${rgaGood.rgaId}#${
             rgaGood.id
-          }`,
+            }`,
           key: `${RGAGoodDocumentType.CustomerLetter}-${rgaGood.rgaId}-${
             rgaGood.id
-          }.pdf`,
+            }.pdf`,
           margin: {
             bottom: '0.075in',
             left: '0.05in',
@@ -366,8 +322,10 @@ const generateServiceLetterUrl = async (
     Bucket: process.env.PDF_RENDER_BUCKET,
     Key: `service-form-${rgaGood.rgaId}-${rgaGood.id}.pdf`,
   }
+  console.log("Looking up service letter url...")
   try {
-    await s3.headObject(params).promise()
+    const head = await s3.headObject(params).promise()
+    console.log(head)
   } catch (err) {
     // tslint:disable-next-line no-console
     console.log(err)
@@ -387,6 +345,9 @@ const generateServiceLetterUrl = async (
     }
     return null
   }
+  // tslint:disable-next-line no-console
+  console.log("Fetching signed url:")
+  console.log(params)
   return s3.getSignedUrl('getObject', params)
 }
 

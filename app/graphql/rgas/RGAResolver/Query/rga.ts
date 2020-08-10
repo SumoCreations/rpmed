@@ -13,6 +13,7 @@ export const rga = async (_, args): Promise<IRGAQueryOutput> => {
         success: false,
       }
     }
+    console.log(`Attempting to resolve RGA: ${args.id}`)
     return {
       rga: {
         ...RGA.output(result),
@@ -30,6 +31,7 @@ export const rga = async (_, args): Promise<IRGAQueryOutput> => {
                   )
                 ) {
                   const { token } = await oauth.generate({ userId: 'admin' })
+                  console.log(`Attempting to generate service letter url for good: ${good.id}`)
                   serviceFormUrl = await RGAGood.generateServiceLetterUrl(
                     good,
                     result.status,
@@ -43,7 +45,10 @@ export const rga = async (_, args): Promise<IRGAQueryOutput> => {
                 }
                 return {
                   ...RGAGood.output(good),
-                  resolutionFee: typeof good.resolutionFee === 'object' ? good.resolutionFee : { distributor: 'RFQ', endUser: 'RFQ' },
+                  resolutionFee:
+                    typeof good.resolutionFee === 'object'
+                      ? good.resolutionFee
+                      : { distributor: 'RFQ', endUser: 'RFQ' },
                   customerLetterUrl,
                   serviceFormUrl,
                 }

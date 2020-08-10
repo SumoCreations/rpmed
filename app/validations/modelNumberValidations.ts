@@ -61,7 +61,16 @@ const Lotted = Yup.object<{
   lotted: Yup.boolean().required('Cannot be blank'),
 })
 
+const Viewable = Yup.object<{
+  publiclyViewable: boolean
+  id: string
+}>({
+  id: RequiredString(),
+  publiclyViewable: Yup.boolean().required('Cannot be blank'),
+})
+
 export const ModelNumber = {
   Default,
   Lotted,
+  Viewable,
 }

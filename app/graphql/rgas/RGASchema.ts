@@ -289,6 +289,34 @@ export const typeDefs = gql`
     """
     customerEmail: String
     """
+    The phone number of the customer this good belongs to.
+    """
+    customerPhone: String
+    """
+    The street address for the customer this good belongs to.
+    """
+    customerStreet: String
+    """
+    The street address (line 2) for the customer this good belongs to.
+    """
+    customerStreet2: String
+    """
+    The city of the address for the customer this good belongs to.
+    """
+    customerCity: String
+    """
+    The state of the address for the customer this good belongs to.
+    """
+    customerState: String
+    """
+    The zip of the address for the customer this good belongs to.
+    """
+    customerZip: String
+    """
+    The country of the address for the customer this good belongs to.
+    """
+    customerCountry: String
+    """
     The specialty of the customer this good belongs to - it will be automatically registered if it hasn't already been.
     """
     customerSpecialty: String
@@ -476,79 +504,9 @@ export const typeDefs = gql`
   }
 
   """
-  A set of fields used to create or update a RGA.
-  """
-  input NewRGAGoodInput {
-    """
-    Indicates whether or not this product is currently under warranty.
-    """
-    warrantied: Boolean!
-    """
-    The symptom / reason this product is being returned.
-    """
-    symptomId: String!
-    """
-    Indicates the id of product family this good was associated with.
-    """
-    productId: String!
-    """
-    Indicates the product type for this good.
-    """
-    productType: ProductType!
-    """
-    Indicates the name of product family this good.
-    """
-    productName: String!
-    """
-    The RGA this good is assigned to.
-    """
-    rgaId: String!
-    """
-    The fee involved for resolving this issue.
-    """
-    resolutionFee: FeeStructureInput
-    """
-    The model number for representing the specific product configuration for this good.
-    """
-    modelNumber: String!
-    """
-    The serial number unique to this good if lotted. If left blank and not lotted a uuid will be generated.
-    """
-    serial: String
-    """
-    The associated RMA from our distributor / partner's records.
-    """
-    rma: String
-    """
-    The associated PO from our distributor / partner's records.
-    """
-    po: String
-    """
-    Any additional notes about this good specifically..
-    """
-    notes: String
-    """
-    The name of the customer this good belongs to - it will be automatically registered if it hasn't already been.
-    """
-    customerName: String
-    """
-    The name of the customer this good belongs to - it will be automatically registered if it hasn't already been.
-    """
-    customerEmail: String
-    """
-    The specialty of the customer this good belongs to - it will be automatically registered if it hasn't already been.
-    """
-    customerSpecialty: String
-    """
-    The preferred shipping speed assigned to return this good to the customer.
-    """
-    shippingSpeed: String
-  }
-
-  """
   The input to make changes to an existing RGA Good.
   """
-  input ExistingRGAGoodInput {
+  input RGAGoodInput {
     """
     The model number for representing the specific product configuration for this good.
     """
@@ -646,6 +604,34 @@ export const typeDefs = gql`
     """
     customerEmail: String
     """
+    The phone number of the customer this good belongs to.
+    """
+    customerPhone: String
+    """
+    The street address for the customer this good belongs to.
+    """
+    customerStreet: String
+    """
+    The street address (line 2) for the customer this good belongs to.
+    """
+    customerStreet2: String
+    """
+    The city of the address for the customer this good belongs to.
+    """
+    customerCity: String
+    """
+    The state of the address for the customer this good belongs to.
+    """
+    customerState: String
+    """
+    The zip of the address for the customer this good belongs to.
+    """
+    customerZip: String
+    """
+    The country of the address for the customer this good belongs to.
+    """
+    customerCountry: String
+    """
     The specialty of the customer this good belongs to - it will be automatically registered if it hasn't already been.
     """
     customerSpecialty: String
@@ -712,6 +698,19 @@ export const typeDefs = gql`
       notes: String
     ): RGAMutationOutput!
     """
+    Allows an end user to submit an RGA Good for review by the RPMed Internal Team.
+    """
+    submitRGAForReview(
+      """
+      The id of the RGA to process.
+      """
+      id: ID!
+      """
+      Any additional notes about the RGA.
+      """
+      notes: String
+    ): RGAMutationOutput!
+    """
     Updates the shipping status of a specific RGA.
     """
     updateRGAShippingStatus(
@@ -731,14 +730,17 @@ export const typeDefs = gql`
     """
     Creates a new good for an existing RGA.
     """
-    createRGAGood(rgaGoodInput: NewRGAGoodInput!): RGAGoodMutationOutput!
+    createRGAGood(
+      rgaId: String!
+      rgaGoodInput: RGAGoodInput!
+    ): RGAGoodMutationOutput!
     """
     Updates an existing good for an existing RGA.
     """
     updateRGAGood(
       id: ID!
       rgaId: String!
-      rgaGoodInput: ExistingRGAGoodInput!
+      rgaGoodInput: RGAGoodInput!
     ): RGAGoodMutationOutput!
     """
     Removes an existing RGA good.

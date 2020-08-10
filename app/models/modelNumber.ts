@@ -57,6 +57,7 @@ export interface IModelNumberInput {
   resolutionWithWarranty?: string | null | undefined
   resolutionWithoutWarranty?: string | null | undefined
   publicNotes?: string | null | undefined
+  publiclyViewable?: boolean | null | undefined
   privateNotes?: string | null | undefined
 }
 
@@ -78,6 +79,7 @@ export interface IModelNumber {
   resolutionWithWarranty?: string | null | undefined
   resolutionWithoutWarranty?: string | null | undefined
   publicNotes?: string | null | undefined
+  publiclyViewable?: boolean | null | undefined
   privateNotes?: string | null | undefined
 }
 
@@ -95,6 +97,7 @@ export interface IModelNumberOutput {
   resolutionWithWarranty?: string | null | undefined
   resolutionWithoutWarranty?: string | null | undefined
   publicNotes?: string | null | undefined
+  publiclyViewable?: boolean | null | undefined
   privateNotes?: string | null | undefined
 }
 
@@ -200,6 +203,41 @@ const setLotted = async ({
           },
           TableName: process.env.DYNAMODB_RESOURCES_TABLE,
           UpdateExpression: 'set #lotted = :lotted',
+        },
+      },
+    ],
+  }
+  await client.transactWrite(params).promise()
+  return await find(id)
+}
+
+/**
+ * Updates an existing model number record's lotted status in the database provided the
+ * supplied input is valid.
+ * @param input The identifying credentials to assign to the account.
+ */
+const setViewable = async ({
+  id,
+  publiclyViewable,
+}: {
+  id: string
+  publiclyViewable: boolean
+}): Promise<IModelNumber> => {
+  const params = {
+    TransactItems: [
+      {
+        Update: {
+          ConditionExpression: 'attribute_exists(partitionKey)',
+          ExpressionAttributeNames: { '#publiclyViewable': 'publiclyViewable' },
+          ExpressionAttributeValues: {
+            ':publiclyViewable': publiclyViewable,
+          },
+          Key: {
+            partitionKey: id,
+            sortKey: SECONDARY_KEY,
+          },
+          TableName: process.env.DYNAMODB_RESOURCES_TABLE,
+          UpdateExpression: 'set #publiclyViewable = :publiclyViewable',
         },
       },
     ],
@@ -452,5 +490,6 @@ export const ModelNumber = {
   forTypeAndProductID,
   output,
   setLotted,
+  setViewable,
   update,
 }
