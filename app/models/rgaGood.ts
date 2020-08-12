@@ -221,7 +221,7 @@ const generateServiceLetter = async (
   try {
     const clientUrl = `https://${
       process.env.CLIENT_DOMAIN
-      }/admin/rga/${rgaStatus}/${rgaGood.rgaId}/service-form/${rgaGood.id}`
+    }/admin/rga/${rgaStatus}/${rgaGood.rgaId}/service-form/${rgaGood.id}`
     // tslint:disable-next-line no-console
     console.log(`publishing SERVICE FORM to SNS ${clientUrl}`)
     await sns
@@ -236,10 +236,10 @@ const generateServiceLetter = async (
           ],
           jobId: `${RGAGoodDocumentType.ServiceForm}#${rgaGood.rgaId}#${
             rgaGood.id
-            }`,
+          }`,
           key: `${RGAGoodDocumentType.ServiceForm}-${rgaGood.rgaId}-${
             rgaGood.id
-            }.pdf`,
+          }.pdf`,
           margin: {
             bottom: '0.075in',
             left: '0.05in',
@@ -271,7 +271,7 @@ const generateCustomerLetter = async (
   try {
     const clientUrl = `https://${
       process.env.CLIENT_DOMAIN
-      }/admin/rga/${rgaStatus}/${rgaGood.rgaId}/service-form/${rgaGood.id}`
+    }/admin/rga/${rgaStatus}/${rgaGood.rgaId}/service-form/${rgaGood.id}`
     // tslint:disable-next-line no-console
     console.log(`publishing LETTER to SNS ${clientUrl}`)
     await sns
@@ -286,10 +286,10 @@ const generateCustomerLetter = async (
           ],
           jobId: `${RGAGoodDocumentType.CustomerLetter}#${rgaGood.rgaId}#${
             rgaGood.id
-            }`,
+          }`,
           key: `${RGAGoodDocumentType.CustomerLetter}-${rgaGood.rgaId}-${
             rgaGood.id
-            }.pdf`,
+          }.pdf`,
           margin: {
             bottom: '0.075in',
             left: '0.05in',
@@ -322,7 +322,7 @@ const generateServiceLetterUrl = async (
     Bucket: process.env.PDF_RENDER_BUCKET,
     Key: `service-form-${rgaGood.rgaId}-${rgaGood.id}.pdf`,
   }
-  console.log("Looking up service letter url...")
+  console.log('Looking up service letter url...')
   try {
     const head = await s3.headObject(params).promise()
     console.log(head)
@@ -346,7 +346,7 @@ const generateServiceLetterUrl = async (
     return null
   }
   // tslint:disable-next-line no-console
-  console.log("Fetching signed url:")
+  console.log('Fetching signed url:')
   console.log(params)
   return s3.getSignedUrl('getObject', params)
 }

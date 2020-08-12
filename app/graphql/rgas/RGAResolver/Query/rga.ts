@@ -31,7 +31,11 @@ export const rga = async (_, args): Promise<IRGAQueryOutput> => {
                   )
                 ) {
                   const { token } = await oauth.generate({ userId: 'admin' })
-                  console.log(`Attempting to generate service letter url for good: ${good.id}`)
+                  console.log(
+                    `Attempting to generate service letter url for good: ${
+                      good.id
+                    }`
+                  )
                   serviceFormUrl = await RGAGood.generateServiceLetterUrl(
                     good,
                     result.status,
