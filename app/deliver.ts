@@ -53,7 +53,7 @@ export const confirmRgaGoodPdf: SNSHandler = async event => {
             },
           ],
           subject: `[RGA][${good.rgaId}] Customer Letter`,
-          template: email.Template.RgaGoodServiceForm,
+          template: email.Template.RgaGoodCustomerLetter,
           to: [`${'RPMed'} <${adminEmail}>`],
           variables: {
             documentDescription: `Customer Letter - ${good.rgaId}`,
