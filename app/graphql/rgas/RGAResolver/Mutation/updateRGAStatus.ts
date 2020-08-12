@@ -60,7 +60,7 @@ export const updateRGAStatus: UpdateRgaStatusResolver = async (
       name: `${user.firstName} ${user.lastName}`,
     },
   })
-  if (status === RgaStatus.Assessing) {
+  if (status === RgaStatus.Closed) {
     const goods = await RGAGood.forRGA(id)
     const { token } = oauth.generate({ userId: user.partitionKey })
     await Promise.all(
