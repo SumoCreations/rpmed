@@ -24,26 +24,26 @@ export const confirmRgaGoodPdf: SNSHandler = async event => {
           rga.status
         )
         if (good.customerEmail) {
-          await email.send({
-            attachments: [
-              {
-                filename: key,
-                path: letterUrl,
-              },
-            ],
-            subject: '[MedLED] Return Status',
-            template: email.Template.RgaGoodCustomerLetter,
-            to: [
-              `${good.customerName || 'RPMed Customer'} <${
-                good.customerEmail
-              }>`,
-            ],
-            variables: {
-              firstName: good.customerName || 'Valued Customer',
-              rga: good.rgaId || 'n/a',
-              rma: good.rma || 'n/a',
-            },
-          })
+          // await email.send({
+          //   attachments: [
+          //     {
+          //       filename: key,
+          //       path: letterUrl,
+          //     },
+          //   ],
+          //   subject: '[MedLED] Return Status',
+          //   template: email.Template.RgaGoodCustomerLetter,
+          //   to: [
+          //     `${good.customerName || 'RPMed Customer'} <${
+          //       good.customerEmail
+          //     }>`,
+          //   ],
+          //   variables: {
+          //     firstName: good.customerName || 'Valued Customer',
+          //     rga: good.rgaId || 'n/a',
+          //     rma: good.rma || 'n/a',
+          //   },
+          // })
         }
         await email.send({
           attachments: [
