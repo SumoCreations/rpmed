@@ -13,7 +13,6 @@ export const rga = async (_, args): Promise<IRGAQueryOutput> => {
         success: false,
       }
     }
-    console.log(`Attempting to resolve RGA: ${args.id}`)
     return {
       rga: {
         ...RGA.output(result),
@@ -25,11 +24,7 @@ export const rga = async (_, args): Promise<IRGAQueryOutput> => {
               async good => {
                 let serviceFormUrl = null
                 let customerLetterUrl = null
-                if (
-                  [RgaStatus.Shipping, RgaStatus.Assessing].includes(
-                    result.status
-                  )
-                ) {
+                if ([RgaStatus.Closed].includes(result.status)) {
                   const { token } = await oauth.generate({ userId: 'admin' })
                   console.log(
                     `Attempting to generate service letter url for good: ${
