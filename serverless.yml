@@ -41,6 +41,44 @@ custom:
     basePath: ''
     stage: ${opt:stage, self:provider.stage}
     createRoute53Record: true
+  backgroundJobTopic: '${self:service}-${opt:stage, self:provider.stage}-sns-background-job'
+  backgroundJobTopicTopicArn:
+    dev:
+      {
+        'Fn::Join':
+          [
+            '',
+            [
+              'arn:aws-us-gov:sns:${opt:region, self:provider.region}:',
+              { 'Ref': 'AWS::AccountId' },
+              ':${self:custom.backgroundJobTopic}',
+            ],
+          ],
+      }
+    staging:
+      {
+        'Fn::Join':
+          [
+            '',
+            [
+              'arn:aws-us-gov:sns:${opt:region, self:provider.region}:',
+              { 'Ref': 'AWS::AccountId' },
+              ':${self:custom.backgroundJobTopic}',
+            ],
+          ],
+      }
+    prod:
+      {
+        'Fn::Join':
+          [
+            '',
+            [
+              'arn:aws-us-gov:sns:${opt:region, self:provider.region}:',
+              { 'Ref': 'AWS::AccountId' },
+              ':${self:custom.backgroundJobTopic}',
+            ],
+          ],
+      }
   confirmRgaGoodPdfSnsTopic: confirm-rga-good-pdf-${opt:stage, self:provider.stage}
   confirmRgaGoodPdfSnsTopicArn:
     dev:
@@ -148,10 +186,6 @@ functions:
           method: post
           path: auth/token
           cors: true
-  confirmRgaGoodPdf:
-    handler: app/deliver.confirmRgaGoodPdf
-    events:
-      - sns: ${self:custom.confirmRgaGoodPdfSnsTopic}
   forgotPassword:
     handler: app/forgot.sendResetPasswordEmail
     events:
@@ -159,13 +193,18 @@ functions:
           method: post
           path: auth/forgot
           cors: true
-  # importSheets:
-  #   handler: app/sheets.importSheets
-  #   events:
-  #     - http:
-  #         method: get
-  #         path: import/data
-  #         cors: true
+  handlePdf:
+    handler: app/background.handlePdf
+    reservedConcurrency: 10
+    timeout: 300
+    events:
+      - sns: ${self:custom.confirmRgaGoodPdfSnsTopic}
+  background:
+    handler: app/background.handleJob
+    reservedConcurrency: 10
+    timeout: 300
+    events:
+      - sns: ${self:custom.backgroundJobTopic}
   modelsFromSheet:
     handler: app/sheets.importModels
     timeout: 60

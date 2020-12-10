@@ -187,43 +187,47 @@ export const typeDefs = gql`
     """
     The model number for representing the specific product configuration for this good.
     """
-    modelNumber: String!
+    modelNumber: String
     """
     Indicates whether or not the model was considered to be lotted.
     """
-    lotted: Boolean!
+    lotted: Boolean
     """
     The current status of the good.
     """
-    status: RGAGoodStatus!
+    status: RGAGoodStatus
     """
     Indicates whether or not this product is currently under warranty.
     """
-    warrantied: Boolean!
+    warrantied: Boolean
+    """
+    Indicates whether or not an SSD is applicable to this good.
+    """
+    ssd: Boolean
     """
     Indicates the details of the associated products warranty.
     """
-    warrantyDescription: String!
+    warrantyDescription: String
     """
     Indicates the number of months the associated product was warrantied for.
     """
-    warrantyTerm: Int!
+    warrantyTerm: Int
     """
     The symptom / reason this product is being returned.
     """
-    symptomId: String!
+    symptomId: String
     """
     The current description of the symptom.
     """
-    symptomDescription: String!
+    symptomDescription: String
     """
     Indicates whether or not the resolution for the symptom was a pre-approved repair.
     """
-    preApproved: Boolean!
+    preApproved: Boolean
     """
     The fault code associated to the prescribed symptom.
     """
-    faultCode: String!
+    faultCode: String
     """
     The serial number unique to this good if lotted. If left blank and not lotted a uuid will be generated.
     """
@@ -231,15 +235,15 @@ export const typeDefs = gql`
     """
     Indicates the product type for this good.
     """
-    productType: ProductType!
+    productType: ProductType
     """
     Indicates the name of product family this good.
     """
-    productName: String!
+    productName: String
     """
     Indicates the product family this good.
     """
-    productId: String!
+    productId: String
     """
     The proposed resolution the issue affecting this good.
     """
@@ -251,7 +255,7 @@ export const typeDefs = gql`
     """
     The solution for associated symptom.
     """
-    symptomSolution: String!
+    symptomSolution: String
     """
     The fee involved for resolving this issue.
     """
@@ -332,6 +336,18 @@ export const typeDefs = gql`
     The carrier used to transport the return shipment.
     """
     carrier: RGAShippingCarrier
+    """
+    The original date of purchase if known.
+    """
+    datePurchased: String
+    """
+    The disposition of the good after evaluation.
+    """
+    disposition: String
+    """
+    Any additional comments for the service letter.
+    """
+    additionalComments: String
   }
 
   """
@@ -639,6 +655,22 @@ export const typeDefs = gql`
     The preferred shipping speed assigned to return this good to the customer.
     """
     shippingSpeed: String
+    """
+    The original date of purchase if known.
+    """
+    datePurchased: String
+    """
+    The disposition of the good after evaluation.
+    """
+    disposition: String
+    """
+    Indicates whether or not an SSD is applicable to this good.
+    """
+    ssd: Boolean
+    """
+    Any additional comments for the service letter.
+    """
+    additionalComments: String
   }
 
   """

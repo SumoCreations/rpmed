@@ -1,5 +1,4 @@
 import { Distributor, RGA, RGAGood } from '../../../../models'
-import * as oauth from '../../../../oauth'
 import { RgaStatus } from '../../../../schema'
 import { ErrorRGAWithIDDoesNotExist } from '../rgaErrors'
 import { IRGAQueryOutput } from './rgaQueryTypes'
@@ -25,21 +24,9 @@ export const rga = async (_, args): Promise<IRGAQueryOutput> => {
                 let serviceFormUrl = null
                 let customerLetterUrl = null
                 if ([RgaStatus.Closed].includes(result.status)) {
-                  const { token } = await oauth.generate({ userId: 'admin' })
-                  console.log(
-                    `Attempting to generate service letter url for good: ${
-                      good.id
-                    }`
-                  )
-                  serviceFormUrl = await RGAGood.generateServiceLetterUrl(
-                    good,
-                    result.status,
-                    token
-                  )
+                  serviceFormUrl = await RGAGood.generateServiceLetterUrl(good)
                   customerLetterUrl = await RGAGood.generateCustomerLetterUrl(
-                    good,
-                    result.status,
-                    token
+                    good
                   )
                 }
                 return {

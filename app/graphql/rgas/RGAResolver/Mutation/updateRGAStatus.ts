@@ -10,6 +10,7 @@ import {
   ErrorRGAWithIDDoesNotExist,
   ErrorUserProfileNotFound,
 } from '../rgaErrors'
+import { dispatch, BackgroundJob } from '../../../../jobs'
 
 type UpdateRgaStatusResolver = (
   parent: any,
@@ -62,10 +63,16 @@ export const updateRGAStatus: UpdateRgaStatusResolver = async (
   })
   if (status === RgaStatus.Closed) {
     const goods = await RGAGood.forRGA(id)
-    const { token } = oauth.generate({ userId: user.partitionKey })
     await Promise.all(
       goods.map(async good => {
-        await RGAGood.generateServiceLetter(good, rga.status, token)
+        await dispatch(BackgroundJob.RequestServiceLetterForRgaGood, {
+          rgaId: id,
+          rgaGoodId: good.id,
+        })
+        await dispatch(BackgroundJob.RequestCustomerLetterForRgaGood, {
+          rgaId: id,
+          rgaGoodId: good.id,
+        })
       })
     )
   }

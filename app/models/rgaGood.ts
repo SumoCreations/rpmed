@@ -1,11 +1,6 @@
 import { v4 as uuid } from 'uuid'
-import { FeeStructure, RgaGoodStatus, RgaStatus } from '../schema'
-import {
-  filterBlankAttributes,
-  getDynamoClient,
-  getS3Client,
-  getSNSClient,
-} from '../util'
+import { FeeStructure, RgaGoodStatus } from '../schema'
+import { filterBlankAttributes, getDynamoClient, getS3Client } from '../util'
 
 /**
  * Dynamo DB Model:
@@ -37,7 +32,6 @@ import {
 const SECONDARY_KEY = 'GOOD'
 
 const client = getDynamoClient()
-const sns = getSNSClient()
 const s3 = getS3Client()
 
 export interface IRGAGoodBase {
@@ -73,8 +67,12 @@ export interface IRGAGoodBase {
   submittedBy: string
   submittedOn: string
   warrantied?: boolean
+  ssd?: boolean
   warrantyTerm?: number
   warrantyDescription?: string
+  datePurchased?: string
+  disposition?: string
+  additionalComments?: string
 }
 
 export interface IRGAGoodInput extends IRGAGoodBase {
@@ -90,11 +88,6 @@ export interface IRGAGood extends IRGAGoodBase {
 
 export interface IRGAGoodOutput extends IRGAGoodBase {
   id: string
-}
-
-export enum RGAGoodDocumentType {
-  CustomerLetter = 'customer-letter',
-  ServiceForm = 'service-form',
 }
 
 /**
@@ -213,111 +206,7 @@ const forRGA = async (rgaId: string): Promise<IRGAGood[]> => {
   return result.Items ? (result.Items as IRGAGood[]) : []
 }
 
-const generateServiceLetter = async (
-  rgaGood: IRGAGood,
-  rgaStatus: RgaStatus,
-  token: string
-) => {
-  try {
-    const clientUrl = `https://${
-      process.env.CLIENT_DOMAIN
-    }/admin/rga/${rgaStatus}/${rgaGood.rgaId}/service-form/${rgaGood.id}`
-    // tslint:disable-next-line no-console
-    console.log(`publishing SERVICE FORM to SNS ${clientUrl}`)
-    await sns
-      .publish({
-        Message: JSON.stringify({
-          clientUrl,
-          cookies: [
-            {
-              name: 'ACCESS_TOKEN',
-              value: `Bearer ${token}`,
-            },
-          ],
-          jobId: `${RGAGoodDocumentType.ServiceForm}#${rgaGood.rgaId}#${
-            rgaGood.id
-          }`,
-          key: `${RGAGoodDocumentType.ServiceForm}-${rgaGood.rgaId}-${
-            rgaGood.id
-          }.pdf`,
-          margin: {
-            bottom: '0.075in',
-            left: '0.05in',
-            right: '0.05in',
-            top: '0.075in',
-          },
-          pageRanges: '1',
-          printBackground: true,
-          successNotificationArn: process.env.PDF_CONFIRMATION_TOPIC_ARN,
-          type: 'pdf',
-          waitForSelector: '#serviceFormLogo',
-        }),
-        TopicArn: process.env.PDF_RENDER_TOPIC_ARN,
-      })
-      .promise()
-  } catch (e) {
-    // tslint:disable-next-line no-console
-    console.log('error publishing')
-    // tslint:disable-next-line no-console
-    console.log(e)
-  }
-}
-
-const generateCustomerLetter = async (
-  rgaGood: IRGAGood,
-  rgaStatus: RgaStatus,
-  token: string
-) => {
-  try {
-    const clientUrl = `https://${
-      process.env.CLIENT_DOMAIN
-    }/admin/rga/${rgaStatus}/${rgaGood.rgaId}/service-form/${rgaGood.id}`
-    // tslint:disable-next-line no-console
-    console.log(`publishing LETTER to SNS ${clientUrl}`)
-    await sns
-      .publish({
-        Message: JSON.stringify({
-          clientUrl,
-          cookies: [
-            {
-              name: 'ACCESS_TOKEN',
-              value: `Bearer ${token}`,
-            },
-          ],
-          jobId: `${RGAGoodDocumentType.CustomerLetter}#${rgaGood.rgaId}#${
-            rgaGood.id
-          }`,
-          key: `${RGAGoodDocumentType.CustomerLetter}-${rgaGood.rgaId}-${
-            rgaGood.id
-          }.pdf`,
-          margin: {
-            bottom: '0.075in',
-            left: '0.05in',
-            right: '0.05in',
-            top: '0.075in',
-          },
-          pageRanges: '2',
-          printBackground: true,
-          successNotificationArn: process.env.PDF_CONFIRMATION_TOPIC_ARN,
-          type: 'pdf',
-          waitForSelector: '#customerLetterLogo',
-        }),
-        TopicArn: process.env.PDF_RENDER_TOPIC_ARN,
-      })
-      .promise()
-  } catch (e) {
-    // tslint:disable-next-line no-console
-    console.log('error publishing')
-    // tslint:disable-next-line no-console
-    console.log(e)
-  }
-}
-
-const generateServiceLetterUrl = async (
-  rgaGood: IRGAGood,
-  rgaStatus: RgaStatus,
-  token?: string
-) => {
+const generateServiceLetterUrl = async (rgaGood: IRGAGood) => {
   const params = {
     Bucket: process.env.PDF_RENDER_BUCKET,
     Key: `service-form-${rgaGood.rgaId}-${rgaGood.id}.pdf`,
@@ -329,20 +218,6 @@ const generateServiceLetterUrl = async (
   } catch (err) {
     // tslint:disable-next-line no-console
     console.log(err)
-    if (!token) {
-      // tslint:disable-next-line no-console
-      console.log(
-        `Aborting render of service letter. Token was not supplied (${token})`
-      )
-      return null
-    }
-    if (
-      [RgaStatus.Assessing, RgaStatus.Shipping, RgaStatus.Closed].includes(
-        rgaStatus
-      )
-    ) {
-      await generateServiceLetter(rgaGood, rgaStatus, token)
-    }
     return null
   }
   // tslint:disable-next-line no-console
@@ -351,11 +226,7 @@ const generateServiceLetterUrl = async (
   return s3.getSignedUrl('getObject', params)
 }
 
-const generateCustomerLetterUrl = async (
-  rgaGood: IRGAGood,
-  rgaStatus: RgaStatus,
-  token?: string
-) => {
+const generateCustomerLetterUrl = async (rgaGood: IRGAGood) => {
   const params = {
     Bucket: process.env.PDF_RENDER_BUCKET,
     Key: `customer-letter-${rgaGood.rgaId}-${rgaGood.id}.pdf`,
@@ -365,20 +236,6 @@ const generateCustomerLetterUrl = async (
   } catch (err) {
     // tslint:disable-next-line no-console
     console.log(err)
-    if (!token) {
-      // tslint:disable-next-line no-console
-      console.log(
-        `Aborting render of customer letter. Token was not supplied (${token})`
-      )
-      return null
-    }
-    if (
-      [RgaStatus.Assessing, RgaStatus.Shipping, RgaStatus.Closed].includes(
-        rgaStatus
-      )
-    ) {
-      await generateCustomerLetter(rgaGood, rgaStatus, token)
-    }
     return null
   }
   return s3.getSignedUrl('getObject', params)
@@ -437,9 +294,7 @@ export const RGAGood = {
   destroy,
   find,
   forRGA,
-  generateCustomerLetter,
   generateCustomerLetterUrl,
-  generateServiceLetter,
   generateServiceLetterUrl,
   output,
   update,
