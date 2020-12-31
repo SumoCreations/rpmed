@@ -1,5 +1,5 @@
 import { Distributor, RGA, RGAGood } from '../../../../models'
-import { RgaStatus } from '../../../../schema'
+import { RgaGoodStatus, RgaStatus } from '../../../../schema'
 import { ErrorRGAWithIDDoesNotExist } from '../rgaErrors'
 import { IRGAQueryOutput } from './rgaQueryTypes'
 
@@ -23,7 +23,7 @@ export const rga = async (_, args): Promise<IRGAQueryOutput> => {
               async good => {
                 let serviceFormUrl = null
                 let customerLetterUrl = null
-                if ([RgaStatus.Closed].includes(result.status)) {
+                if (RGA.readyForDocuments(result)) {
                   serviceFormUrl = await RGAGood.generateServiceLetterUrl(
                     args.id,
                     good.id
