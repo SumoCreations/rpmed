@@ -1,5 +1,4 @@
 import { Distributor, RGA, RGAGood } from '../../../../models'
-import { RgaGoodStatus, RgaStatus } from '../../../../schema'
 import { ErrorRGAWithIDDoesNotExist } from '../rgaErrors'
 import { IRGAQueryOutput } from './rgaQueryTypes'
 
