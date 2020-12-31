@@ -1,0 +1,14 @@
+Resources:
+  JobIdLookUpTable:
+    Type: 'AWS::DynamoDB::Table'
+    Properties:
+      TableName: ${self:provider.environment.DYNAMODB_JOBID_LOOKUP_TABLE}
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
