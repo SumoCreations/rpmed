@@ -58,7 +58,7 @@ const processMissingDocsForConnection = async (
           id
         )
         if (!customerLetterUrl) {
-          await dispatch(BackgroundJob.RequestServiceLetterForRgaGood, {
+          await dispatch(BackgroundJob.RequestCustomerLetterForRgaGood, {
             rgaId,
             rgaGoodId: id,
           })
