@@ -1,4 +1,5 @@
 export enum BackgroundJob {
-  RequestServiceLetterForRgaGood,
-  RequestCustomerLetterForRgaGood,
+  RequestServiceLetterForRgaGood = 'RequestServiceLetterForRgaGood',
+  RequestCustomerLetterForRgaGood = 'RequestCustomerLetterForRgaGood',
+  GenerateMissingRgaDocs = 'GenerateMissingRgaDocs',
 }

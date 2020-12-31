@@ -17,6 +17,7 @@ import {
   ErrorRGAWithIDDoesNotExist,
   ErrorUserProfileNotFound,
 } from '../rgaErrors'
+import { generateDocumentsForGood } from '../documentHelpers'
 
 type UpdateRgaStatusResolver = (
   parent: any,
@@ -172,6 +173,13 @@ export const updateRGAShippingStatus: UpdateRgaStatusResolver = async (
       name: `${user.firstName} ${user.lastName}`,
     },
   })
+
+  const goods = await RGAGood.forRGA(id)
+  await Promise.all(
+    goods.map(async good => {
+      await generateDocumentsForGood(id, good.id)
+    })
+  )
 
   return {
     rga: {

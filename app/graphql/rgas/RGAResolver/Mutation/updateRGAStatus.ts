@@ -10,7 +10,7 @@ import {
   ErrorRGAWithIDDoesNotExist,
   ErrorUserProfileNotFound,
 } from '../rgaErrors'
-import { dispatch, BackgroundJob } from '../../../../jobs'
+import { generateDocumentsForGood } from '../documentHelpers'
 
 type UpdateRgaStatusResolver = (
   parent: any,
@@ -65,14 +65,7 @@ export const updateRGAStatus: UpdateRgaStatusResolver = async (
     const goods = await RGAGood.forRGA(id)
     await Promise.all(
       goods.map(async good => {
-        await dispatch(BackgroundJob.RequestServiceLetterForRgaGood, {
-          rgaId: id,
-          rgaGoodId: good.id,
-        })
-        await dispatch(BackgroundJob.RequestCustomerLetterForRgaGood, {
-          rgaId: id,
-          rgaGoodId: good.id,
-        })
+        await generateDocumentsForGood(id, good.id)
       })
     )
   }

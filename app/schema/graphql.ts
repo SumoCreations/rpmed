@@ -29,6 +29,21 @@ export type AttachedImageInput = {
   position: Scalars['Int'],
 };
 
+/** 
+ * Used as an argument on any query incorporating the relay connection spec
+ * to orchestrate paginated results
+ **/
+export type ConnectionPayload = {
+  /** The id of the item to fetch forward pagination. Use with first. */
+  after?: Maybe<Scalars['ID']>,
+  /** The id of the item to fetch backward pagination. Use with last. */
+  before?: Maybe<Scalars['ID']>,
+  /** A limit when performing forward pagination. */
+  first?: Maybe<Scalars['Int']>,
+  /** A limit when performing backward pagination. */
+  last?: Maybe<Scalars['Int']>,
+};
+
 /** A customer of Riverpoint Medical. */
 export type Customer = {
    __typename?: 'Customer',
@@ -676,6 +691,42 @@ export type NewUserInput = {
   password: Scalars['String'],
   firstName: Scalars['String'],
   lastName: Scalars['String'],
+};
+
+/** Provides essential pagination info for a connection (or paginated request) */
+export type PageInfo = {
+   __typename?: 'PageInfo',
+  /** Indicates whether or not there is a next page after this connection result. */
+  hasNextPage: Scalars['Boolean'],
+  /** Returns any available pages after to the current set based on the limit. */
+  hasNextPages: Array<Maybe<PaginationEntry>>,
+  /** Indicates whether or not there is a previous page before this connection result. */
+  hasPreviousPage: Scalars['Boolean'],
+  /** Returns any available pages prior to the current set based on the limit. */
+  hasPreviousPages: Array<Maybe<PaginationEntry>>,
+  /** The cursor representing the id of the first item in the connection result. */
+  startCursor: Scalars['ID'],
+  /** The cursor representing the id of the last item in the connection result. */
+  endCursor: Scalars['ID'],
+};
+
+
+/** Provides essential pagination info for a connection (or paginated request) */
+export type PageInfoHasNextPagesArgs = {
+  amount: Scalars['Int']
+};
+
+
+/** Provides essential pagination info for a connection (or paginated request) */
+export type PageInfoHasPreviousPagesArgs = {
+  amount: Scalars['Int']
+};
+
+/** A description of a pagination destination to fetch additional paginated results. */
+export type PaginationEntry = {
+   __typename?: 'PaginationEntry',
+  /** The id of the entry to use for the pagination request. */
+  cursor: Scalars['ID'],
 };
 
 /** Pricing for a product model variant. */
@@ -1412,7 +1463,7 @@ export type UserMutationOutput = {
   success: Scalars['Boolean'],
 };
 
-/** A validation error that provides details for an unsuccseful mutation or query. */
+/** A validation error that provides details for an unsuccesful mutation or query. */
 export type ValidationError = {
    __typename?: 'ValidationError',
   /** A path indicating the attribute that failed validation. */
@@ -1578,6 +1629,9 @@ export type ResolversTypes = {
   RGAShippingStatus: RgaShippingStatus,
   RGAGoodInput: RgaGoodInput,
   RGAGoodMutationOutput: ResolverTypeWrapper<RgaGoodMutationOutput>,
+  ConnectionPayload: ConnectionPayload,
+  PageInfo: ResolverTypeWrapper<PageInfo>,
+  PaginationEntry: ResolverTypeWrapper<PaginationEntry>,
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -1649,6 +1703,9 @@ export type ResolversParentTypes = {
   RGAShippingStatus: RgaShippingStatus,
   RGAGoodInput: RgaGoodInput,
   RGAGoodMutationOutput: RgaGoodMutationOutput,
+  ConnectionPayload: ConnectionPayload,
+  PageInfo: PageInfo,
+  PaginationEntry: PaginationEntry,
 };
 
 export type AttachedImageResolvers<ContextType = any, ParentType extends ResolversParentTypes['AttachedImage'] = ResolversParentTypes['AttachedImage']> = {
@@ -1791,6 +1848,19 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createRGAGood?: Resolver<ResolversTypes['RGAGoodMutationOutput'], ParentType, ContextType, RequireFields<MutationCreateRgaGoodArgs, 'rgaId' | 'rgaGoodInput'>>,
   updateRGAGood?: Resolver<ResolversTypes['RGAGoodMutationOutput'], ParentType, ContextType, RequireFields<MutationUpdateRgaGoodArgs, 'id' | 'rgaId' | 'rgaGoodInput'>>,
   destroyRGAGood?: Resolver<ResolversTypes['RGAGoodMutationOutput'], ParentType, ContextType, RequireFields<MutationDestroyRgaGoodArgs, 'id' | 'rgaId'>>,
+};
+
+export type PageInfoResolvers<ContextType = any, ParentType extends ResolversParentTypes['PageInfo'] = ResolversParentTypes['PageInfo']> = {
+  hasNextPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>,
+  hasNextPages?: Resolver<Array<Maybe<ResolversTypes['PaginationEntry']>>, ParentType, ContextType, RequireFields<PageInfoHasNextPagesArgs, 'amount'>>,
+  hasPreviousPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>,
+  hasPreviousPages?: Resolver<Array<Maybe<ResolversTypes['PaginationEntry']>>, ParentType, ContextType, RequireFields<PageInfoHasPreviousPagesArgs, 'amount'>>,
+  startCursor?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
+  endCursor?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
+};
+
+export type PaginationEntryResolvers<ContextType = any, ParentType extends ResolversParentTypes['PaginationEntry'] = ResolversParentTypes['PaginationEntry']> = {
+  cursor?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
 };
 
 export type PricingResolvers<ContextType = any, ParentType extends ResolversParentTypes['Pricing'] = ResolversParentTypes['Pricing']> = {
@@ -2048,6 +2118,8 @@ export type Resolvers<ContextType = any> = {
   ModelNumberQueryOutput?: ModelNumberQueryOutputResolvers<ContextType>,
   ModelNumberSymptomDetail?: ModelNumberSymptomDetailResolvers<ContextType>,
   Mutation?: MutationResolvers<ContextType>,
+  PageInfo?: PageInfoResolvers<ContextType>,
+  PaginationEntry?: PaginationEntryResolvers<ContextType>,
   Pricing?: PricingResolvers<ContextType>,
   Product?: ProductResolvers<ContextType>,
   ProductMutationOutput?: ProductMutationOutputResolvers<ContextType>,

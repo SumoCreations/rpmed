@@ -206,10 +206,10 @@ const forRGA = async (rgaId: string): Promise<IRGAGood[]> => {
   return result.Items ? (result.Items as IRGAGood[]) : []
 }
 
-const generateServiceLetterUrl = async (rgaGood: IRGAGood) => {
+const generateServiceLetterUrl = async (rgaId: string, rgaGoodId: string) => {
   const params = {
     Bucket: process.env.PDF_RENDER_BUCKET,
-    Key: `service-form-${rgaGood.rgaId}-${rgaGood.id}.pdf`,
+    Key: `service-form-${rgaId}-${rgaGoodId}.pdf`,
   }
   console.log('Looking up service letter url...')
   try {
@@ -226,10 +226,10 @@ const generateServiceLetterUrl = async (rgaGood: IRGAGood) => {
   return s3.getSignedUrl('getObject', params)
 }
 
-const generateCustomerLetterUrl = async (rgaGood: IRGAGood) => {
+const generateCustomerLetterUrl = async (rgaId: string, rgaGoodId: string) => {
   const params = {
     Bucket: process.env.PDF_RENDER_BUCKET,
-    Key: `customer-letter-${rgaGood.rgaId}-${rgaGood.id}.pdf`,
+    Key: `customer-letter-${rgaId}-${rgaGoodId}.pdf`,
   }
   try {
     await s3.headObject(params).promise()

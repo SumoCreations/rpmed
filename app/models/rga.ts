@@ -1,3 +1,4 @@
+import { connectedQuery } from './connection'
 import { padStart } from 'lodash'
 import { DateTime } from 'luxon'
 import { RgaStatus } from '../schema'
@@ -101,6 +102,13 @@ const randomPaddedTwoDigit = () =>
   padStart(`${Math.round(Math.random() * 99)}`, 2, '0')
 const generateId = (dateString: string) =>
   `${generateDate(dateString)}${randomPaddedTwoDigit()}`
+
+/**
+ * A convenience method to detect whether or not an RGA should have documents generated.
+ * @param rga An RGA to test for completion.
+ */
+const readyForDocuments = (rga: IRGA) =>
+  [RgaStatus.Closed, RgaStatus.Delayed].includes(rga.status)
 
 /**
  * Generates a new RGA model in the database provided the supplied credentials are valid.
@@ -223,6 +231,22 @@ const find = async (id: string): Promise<IRGA | null> => {
   const result = await client.get(searchParams).promise()
   return result.Item ? (result.Item as IRGA) : null
 }
+
+/**
+ * Retreives a list of all schools.
+ */
+const allModels = connectedQuery<IRGA>(
+  {
+    ExpressionAttributeValues: {
+      ':rkey': SECONDARY_KEY,
+    },
+    IndexName: 'GSI_1',
+    KeyConditionExpression: 'sortKey = :rkey',
+    ScanIndexForward: false,
+    TableName: process.env.DYNAMODB_RESOURCES_TABLE,
+  },
+  getDynamoClient()
+)
 
 /**
  * Retreives a list of all RGAs.
@@ -352,6 +376,7 @@ const output = ({
 export const RGA = {
   SECONDARY_KEY,
   all,
+  allModels,
   countWithStatus,
   create,
   destroy,
@@ -361,4 +386,5 @@ export const RGA = {
   submittedOnDate,
   update,
   updateStatus,
+  readyForDocuments,
 }

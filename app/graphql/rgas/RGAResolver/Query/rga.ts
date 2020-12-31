@@ -24,9 +24,13 @@ export const rga = async (_, args): Promise<IRGAQueryOutput> => {
                 let serviceFormUrl = null
                 let customerLetterUrl = null
                 if ([RgaStatus.Closed].includes(result.status)) {
-                  serviceFormUrl = await RGAGood.generateServiceLetterUrl(good)
+                  serviceFormUrl = await RGAGood.generateServiceLetterUrl(
+                    args.id,
+                    good.id
+                  )
                   customerLetterUrl = await RGAGood.generateCustomerLetterUrl(
-                    good
+                    args.id,
+                    good.id
                   )
                 }
                 return {

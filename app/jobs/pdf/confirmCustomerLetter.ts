@@ -16,7 +16,7 @@ export const confirmCustomerLetter = async ({
 }: PdfJobParams) => {
   try {
     const good = await RGAGood.find(rgaId, rgaGoodId)
-    const letterUrl = await RGAGood.generateCustomerLetterUrl(good)
+    const letterUrl = await RGAGood.generateCustomerLetterUrl(rgaId, rgaGoodId)
     if (good.customerEmail) {
       await email.send({
         attachments: [

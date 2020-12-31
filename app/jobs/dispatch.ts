@@ -1,21 +1,20 @@
+import { getSNSClient } from '../util'
 import { BackgroundJob } from './types'
-import { requestCustomerLetter, requestServiceLetter } from './pdf'
 
-export const dispatch = async (job: BackgroundJob, params: any) => {
-  switch (job) {
-    case BackgroundJob.RequestCustomerLetterForRgaGood:
-      await requestCustomerLetter(
-        params.rgaId,
-        params.rgaGoodId,
-        params.rgaStatus
-      )
-      break
-    case BackgroundJob.RequestServiceLetterForRgaGood:
-      await requestServiceLetter(
-        params.rgaId,
-        params.rgaGoodId,
-        params.rgaStatus
-      )
-      break
+/**
+ * Dispatches a job to be executed via an SNS event.
+ * @param jobType The name of the job to trigger.
+ * @param params Any parameters that will be passed as a JSON string to the SNS message.
+ */
+export const dispatch = async (jobType: BackgroundJob, params: object) => {
+  if (process.env.stage === 'TEST') {
+    return
   }
+  const client = getSNSClient()
+  await client
+    .publish({
+      TopicArn: process.env.SNS_EXECUTE_BACKGROUND_JOB,
+      Message: JSON.stringify({ jobType, ...params }),
+    })
+    .promise()
 }

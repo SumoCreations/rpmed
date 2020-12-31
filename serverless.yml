@@ -29,8 +29,8 @@ custom:
     staging: staging.rpmed-apps.com
     prod: prod.rpmed-apps.com
   clientDomain:
-    dev: rpmed-service-admin-dev.herokuapp.com
-    staging: staging-admin.medled.com
+    dev: dev-admin.rpmed-apps.com
+    staging: staging-admin.rpmed-apps.com
     prod: admin.medled.com
   apolloIntrospection:
     dev: true
@@ -49,7 +49,7 @@ custom:
           [
             '',
             [
-              'arn:aws-us-gov:sns:${opt:region, self:provider.region}:',
+              'arn:aws:sns:${opt:region, self:provider.region}:',
               { 'Ref': 'AWS::AccountId' },
               ':${self:custom.backgroundJobTopic}',
             ],
@@ -61,7 +61,7 @@ custom:
           [
             '',
             [
-              'arn:aws-us-gov:sns:${opt:region, self:provider.region}:',
+              'arn:aws:sns:${opt:region, self:provider.region}:',
               { 'Ref': 'AWS::AccountId' },
               ':${self:custom.backgroundJobTopic}',
             ],
@@ -73,7 +73,7 @@ custom:
           [
             '',
             [
-              'arn:aws-us-gov:sns:${opt:region, self:provider.region}:',
+              'arn:aws:sns:${opt:region, self:provider.region}:',
               { 'Ref': 'AWS::AccountId' },
               ':${self:custom.backgroundJobTopic}',
             ],
@@ -141,11 +141,19 @@ provider:
     PDF_RENDER_TOPIC_ARN: ${cf:serverless-puppeteer-service-${opt:stage, self:provider.stage}.RenderTopicExport}
     PDF_RENDER_BUCKET: ${cf:serverless-puppeteer-service-${opt:stage, self:provider.stage}.CachedFilesBucketName}
     PDF_CONFIRMATION_TOPIC_ARN: ${self:custom.confirmRgaGoodPdfSnsTopicArn.${opt:stage, self:provider.stage}}
+    SNS_EXECUTE_BACKGROUND_JOB: ${self:custom.backgroundJobTopicTopicArn.${opt:stage, self:provider.stage}}
   iamRoleStatements:
     - Effect: Allow
       Action:
         - sns:Publish
       Resource: ${cf:serverless-puppeteer-service-${opt:stage, self:provider.stage}.RenderTopicExport}
+    - Effect: Allow
+      Action:
+        - sns:DeleteEndpoint
+        - sns:Publish
+        - sns:GetPlatformApplicationAttributes
+        - sns:CreatePlatformEndpoint
+      Resource: 'arn:aws:sns:${opt:region, self:provider.region}:*'
     - Effect: Allow
       Action:
         - ses:SendEmail

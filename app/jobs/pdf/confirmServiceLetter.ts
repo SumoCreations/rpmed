@@ -16,7 +16,10 @@ export const confirmServiceLetter = async ({
 }: PdfJobParams) => {
   try {
     const good = await RGAGood.find(rgaId, rgaGoodId)
-    const serviceFormUrl = await RGAGood.generateServiceLetterUrl(good)
+    const serviceFormUrl = await RGAGood.generateServiceLetterUrl(
+      rgaId,
+      rgaGoodId
+    )
     await email.send({
       attachments: [
         {
