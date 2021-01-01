@@ -28,6 +28,7 @@ interface IRenderRequestOptions {
   imageType?: string
   omitBackground?: boolean
   scale?: number
+  waitUntil?: string
   waitForSelector?: string
   width?: number
 }
@@ -49,6 +50,7 @@ export default async (
     type,
     key: incommingKey,
     jobId,
+    waitUntil,
     ...options
   } = opts
   const start = new Date().getTime()

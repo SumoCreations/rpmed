@@ -40,6 +40,7 @@ export const requestCustomerLetter = async ({
           printBackground: true,
           bucketName: process.env.GENERATED_DOCUMENTS_BUCKET,
           type: 'pdf',
+          waitUntil: 'networkIdle0',
           waitForSelector: '#customerLetterLogo',
         }),
         TopicArn: process.env.PDF_RENDER_TOPIC_ARN,

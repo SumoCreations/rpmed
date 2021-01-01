@@ -34,7 +34,7 @@ export const generateMissingRgaDocs = async ({
  */
 const processMissingDocsForConnection = async (
   connection: ConnectedQuery<IRGA>,
-  { jobType, ...props }: PdfJobParams
+  { jobType, force, ...props }: PdfJobParams
 ) => {
   console.log('Processing connection.')
   await connection.nodes.reduce(async (p, rga) => {
@@ -47,20 +47,28 @@ const processMissingDocsForConnection = async (
           rgaId,
           id
         )
-        if (!serviceLetterUrl) {
+        if (!serviceLetterUrl || force) {
+          console.log(
+            `Dispatching '${BackgroundJob.RequestServiceLetterForRgaGood}' for good with id: '${id}'.`
+          )
           await dispatch(BackgroundJob.RequestServiceLetterForRgaGood, {
             rgaId,
             rgaGoodId: id,
+            force,
           })
         }
         const customerLetterUrl = await RGAGood.generateCustomerLetterUrl(
           rgaId,
           id
         )
-        if (!customerLetterUrl) {
+        if (!customerLetterUrl || force) {
+          console.log(
+            `Dispatching '${BackgroundJob.RequestCustomerLetterForRgaGood}' for good with id: '${id}'.`
+          )
           await dispatch(BackgroundJob.RequestCustomerLetterForRgaGood, {
             rgaId,
             rgaGoodId: id,
+            force,
           })
         }
       })
@@ -69,6 +77,7 @@ const processMissingDocsForConnection = async (
   if (connection.pageInfo.hasNextPage) {
     await dispatch(jobType, {
       ...props,
+      force,
       cursor: connection.pageInfo.endCursor,
     })
   }

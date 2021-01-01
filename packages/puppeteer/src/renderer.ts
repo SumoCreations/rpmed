@@ -25,17 +25,17 @@ class Renderer {
    */
   public async createPage(
     url: string,
-    options: Puppeteer.DirectNavigationOptions = {},
+    _: Puppeteer.DirectNavigationOptions = {},
     waitForSelector: string | null,
     media: 'screen' | 'print' | null,
     assetBlacklist: string,
     cookies?: ICookie[]
   ): Promise<Puppeteer.Page> {
-    const { waitUntil } = options
+    // const { waitUntil } = options
     const page = await this.browser.newPage()
     page.emulateMediaType(media)
     await page.setRequestInterception(true)
-    page.on('request', (interceptedRequest) => {
+    page.on('request', interceptedRequest => {
       const requestUrl = interceptedRequest.url()
       if (!assetBlacklist || assetBlacklist.length < 1) {
         interceptedRequest.continue()
@@ -43,7 +43,7 @@ class Renderer {
       }
       const blackListed = assetBlacklist
         .split('::')
-        .filter((a) => requestUrl.match(a))
+        .filter(a => requestUrl.match(a))
       if (blackListed.length > 0) {
         interceptedRequest.abort()
       } else {
@@ -53,10 +53,15 @@ class Renderer {
     })
 
     await page.setCookie(...(cookies || []))
+    console.log(`Waiting until ${'networkidle0'}`)
+    console.log(`await page.goto("${url}", {
+      waitUntil: 'networkidle0',
+    })`)
     await page.goto(url, {
-      waitUntil: waitUntil || 'networkidle2',
+      waitUntil: 'networkidle0',
     })
     if (waitForSelector) {
+      console.log(`Waiting for selector ${waitForSelector}`)
       await page.waitForSelector(waitForSelector)
     }
     return page
