@@ -28,6 +28,7 @@ export const confirmCustomerLetter = async ({
         to: [
           `${good.customerName || 'RPMed Customer'} <${good.customerEmail}>`,
         ],
+        cc: [`${'RPMed'} <${process.env.ADMIN_EMAIL}>`],
         variables: {
           firstName: good.customerName || 'Valued Customer',
           rga: good.rgaId || 'n/a',
@@ -35,22 +36,6 @@ export const confirmCustomerLetter = async ({
         },
       })
     }
-    await email.send({
-      attachments: [
-        {
-          filename: key,
-          path: letterUrl,
-        },
-      ],
-      subject: `[RGA][${good.rgaId}] Customer Letter`,
-      template: email.Template.RgaGoodCustomerLetter,
-      to: [`${'RPMed'} <${process.env.ADMIN_EMAIL}>`],
-      variables: {
-        documentDescription: `Customer Letter - ${good.rgaId}`,
-        rga: good.rgaId || 'n/a',
-        rma: good.rma || 'n/a',
-      },
-    })
   } catch (e) {
     // tslint:disable-next-line no-console
     console.log(e)
