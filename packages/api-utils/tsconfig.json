@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "lib": ["es2017", "es2019", "esnext.asynciterable", "dom"],
+    "module": "es6",
+    "moduleResolution": "node",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "sourceMap": true,
+    "target": "es2017",
+    "esModuleInterop": true,
+    "outDir": "lib",
+    "skipLibCheck": true,
+    "noImplicitUseStrict": true,
+    "strict": false,
+    "declaration": true
+  },
+  "include": ["src"],
+  "exclude": ["node_modules"]
+}

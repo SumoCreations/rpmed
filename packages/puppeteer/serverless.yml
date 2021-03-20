@@ -1,0 +1,57 @@
+service: rpmed-puppeteer
+
+plugins:
+  - serverless-webpack
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  profile: rpmed-serverless
+  region: us-west-2
+  environment:
+    CACHED_FILES_BUCKET: ${self:service}-${opt:stage, self:provider.stage}-cached-files
+    DYNAMODB_JOBID_LOOKUP_TABLE: ${self:service}-${opt:stage, self:provider.stage}-job-lookup-table
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:PutObject
+        - s3:GetObject
+      Resource: 'arn:aws:s3:::${self:provider.environment.CACHED_FILES_BUCKET}/*'
+    - Effect: Allow
+      Action:
+        - s3:PutObject
+        - s3:GetObject
+      Resource: 'arn:aws:s3:::${cf:rpmed-service-api-${opt:stage, self:provider.stage}.GeneratedDocumentsBucketName}/*'
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+        - dynamodb:BatchGetItem
+      Resource: 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:service}-${opt:stage, self:provider.stage}-*'
+
+package:
+  exclude:
+    - chrome-layer/**
+    - node_modules/chrome-aws-lambda/**
+
+functions:
+  render-pdf:
+    handler: src/handler.render
+    timeout: 30
+    memorySize: 2048
+    events:
+      - sns: ${self:service}-render-pdf-${opt:stage, self:provider.stage}
+    layers:
+      - arn:aws:lambda:us-west-2:764866452798:layer:chrome-aws-lambda:20
+
+resources:
+  # Dynamo
+  - ${file(resources/dynamo.yml)}
+  # SNS
+  - ${file(resources/sns.yml)}
+  # S3
+  - ${file(resources/s3-bucket.yml)}

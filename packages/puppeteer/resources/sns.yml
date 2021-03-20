@@ -1,0 +1,6 @@
+Outputs:
+  RenderTopicExport:
+    Value:
+      Ref: SNSTopicRpmedpuppeteerrenderpdf${opt:stage, self:provider.stage}
+    Export:
+      Name: SNSTopicRpmedpuppeteerrenderpdf${opt:stage, self:provider.stage}

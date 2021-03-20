@@ -1,0 +1,11 @@
+import { TemplateVariables } from './types';
+/**
+ * Accepts an HTML template string and maps any supplied variables to the template. For example
+ * if you had a passed variables such as {confirmationLink: 'http://www.myurl.com/confirm/'} the
+ * renderer would attempt to replace the token '${CONFIRMATION_LINK}' with the supplied url.
+ * All keys are converted to UPPER CASE and snake_case.
+ *
+ * @param templateString A string containing an HTML template.
+ * @param variables A simple JS object which will have its keys and values mapped to the HTML string.
+ */
+export declare const renderer: (templateString: string, variables?: TemplateVariables) => string;
