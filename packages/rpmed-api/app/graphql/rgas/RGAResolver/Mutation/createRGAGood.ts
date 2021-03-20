@@ -74,9 +74,7 @@ export const createRGAGood: CreateRGAGoodMutation = async (
     return {
       errors: [
         {
-          message: `Product with serial'${
-            rgaGoodInput.serial
-          }' already assigned to an RGA`,
+          message: `Product with serial'${rgaGoodInput.serial}' already assigned to an RGA`,
           path: 'serial',
         },
       ],

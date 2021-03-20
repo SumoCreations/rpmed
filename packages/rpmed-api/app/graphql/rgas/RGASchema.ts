@@ -185,6 +185,10 @@ export const typeDefs = gql`
     """
     rgaId: String!
     """
+    The unique service id for this good.
+    """
+    serviceId: String
+    """
     The model number for representing the specific product configuration for this good.
     """
     modelNumber: String
@@ -232,6 +236,10 @@ export const typeDefs = gql`
     The serial number unique to this good if lotted. If left blank and not lotted a uuid will be generated.
     """
     serial: String
+    """
+    A new serial number if the unit was replaced.
+    """
+    newSerial: String
     """
     Indicates the product type for this good.
     """
@@ -567,6 +575,10 @@ export const typeDefs = gql`
     The serial number unique to this good if lotted. If left blank and not lotted a uuid will be generated.
     """
     serial: String
+    """
+    A new serial number if the unit was replaced.
+    """
+    newSerial: String
     """
     Indicates the product type for this good.
     """

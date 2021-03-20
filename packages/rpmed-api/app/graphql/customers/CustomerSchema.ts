@@ -49,6 +49,10 @@ export const typeDefs = gql`
     The specialty of the customer.
     """
     specialty: String
+    """
+    The hospital of the customer.
+    """
+    hospital: String
   }
 
   """

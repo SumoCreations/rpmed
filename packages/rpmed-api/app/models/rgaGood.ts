@@ -84,10 +84,12 @@ export interface IRGAGood extends IRGAGoodBase {
   sortKey: string // good#serial
   indexSortKey: string // productId#modelNumber
   id: string
+  serviceId?: string
 }
 
 export interface IRGAGoodOutput extends IRGAGoodBase {
   id: string
+  serviceId: string
 }
 
 /**
@@ -286,6 +288,7 @@ const output = ({
       : (rgaGood.serial && rgaGood.serial.length > 0) || false,
   status: rgaGood.status || RgaGoodStatus.Valid,
   warrantyDescription: rgaGood.warrantyDescription || 'n/a',
+  serviceId: `MP${partitionKey.slice(11, -1)}`,
 })
 
 export const RGAGood = {
