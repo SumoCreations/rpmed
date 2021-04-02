@@ -113,7 +113,7 @@ const create = async ({
     lotted,
     partitionKey,
     rgaId,
-    serial: serial ?? `NOT LOTTED (UID: ${id})`,
+    serial: serial ?? '',
     sortKey: `${SECONDARY_KEY}#${id}`,
     status: RgaGoodStatus.Valid,
     submittedOn: submittedOn || new Date().toISOString(),
@@ -125,6 +125,9 @@ const create = async ({
           ConditionExpression: 'attribute_not_exists(sortKey)',
           Item: {
             ...filterBlankAttributes(item),
+            customerProvidedDetails: {
+              ...filterBlankAttributes(item),
+            },
           },
           TableName: process.env.DYNAMODB_RESOURCES_TABLE,
         },
