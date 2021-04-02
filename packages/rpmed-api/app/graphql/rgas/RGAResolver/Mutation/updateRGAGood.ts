@@ -2,8 +2,6 @@ import { RGA, RGAGood } from '../../../../models'
 import { ProductType } from '../../../../schema'
 import {
   ErrorRGAGoodCouldNotBeUpdated,
-  ErrorRGAGoodLottedCannotBeModified,
-  ErrorRGAGoodSerialCannotBeModified,
   ErrorRGAGoodWithIDDoesNotExist,
   ErrorRGAWithIDDoesNotExist,
 } from '../rgaErrors'
@@ -43,19 +41,6 @@ export const updateRGAGood = async (
   const existing = await RGAGood.find(rgaId, id)
   if (!existing) {
     return { success: false, errors: [ErrorRGAGoodWithIDDoesNotExist] }
-  }
-  if (
-    typeof rgaGoodInput.lotted === 'boolean' &&
-    existing.lotted !== rgaGoodInput.lotted
-  ) {
-    return { success: false, errors: [ErrorRGAGoodLottedCannotBeModified] }
-  }
-  if (
-    existing.lotted &&
-    rgaGoodInput.serial &&
-    existing.serial !== rgaGoodInput.serial
-  ) {
-    return { success: false, errors: [ErrorRGAGoodSerialCannotBeModified] }
   }
   try {
     const rgaGood = await RGAGood.update({

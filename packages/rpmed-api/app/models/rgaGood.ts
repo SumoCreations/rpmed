@@ -17,7 +17,7 @@ import { filterBlankAttributes, getDynamoClient, getS3Client } from '../util'
  * ----------------------------------------------------------------------
  * | Partition Key      | Sort Key              | HSK
  * ----------------------------------------------------------------------
- * | RGA-ID             | GOOD#Serial           | ProductId#ModelNumber
+ * | RGA-ID             | GOOD#UUID             | ProductId#ModelNumber
  * ----------------------------------------------------------------------
  *
  * This allows for the following access patterns:
@@ -104,7 +104,7 @@ const create = async ({
   ...good
 }: IRGAGoodInput): Promise<IRGAGood> => {
   const partitionKey = rgaId
-  const id = lotted ? serial : uuid()
+  const id = uuid()
   const indexSortKey = `${good.productId}#${good.modelNumber}`
   const item: IRGAGood = {
     ...good,
@@ -113,7 +113,7 @@ const create = async ({
     lotted,
     partitionKey,
     rgaId,
-    serial: id,
+    serial: serial ?? `NOT LOTTED (UID: ${id})`,
     sortKey: `${SECONDARY_KEY}#${id}`,
     status: RgaGoodStatus.Valid,
     submittedOn: submittedOn || new Date().toISOString(),
@@ -154,6 +154,8 @@ const update = async ({
     ...good,
     indexSortKey: `${good.productId}#${good.modelNumber}`,
     partitionKey,
+    lotted,
+    serial: lotted ? serial : '',
     rgaId,
     status: RgaGoodStatus.Valid,
     submittedOn: submittedOn || new Date().toISOString(),
@@ -288,7 +290,7 @@ const output = ({
       : (rgaGood.serial && rgaGood.serial.length > 0) || false,
   status: rgaGood.status || RgaGoodStatus.Valid,
   warrantyDescription: rgaGood.warrantyDescription || 'n/a',
-  serviceId: `MP${partitionKey.slice(11, -1)}`,
+  serviceId: `MP${sortKey.split('#')[1]}`,
 })
 
 export const RGAGood = {
