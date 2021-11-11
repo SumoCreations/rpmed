@@ -1,0 +1,14 @@
+mutation destroyProductSymptom($id: String!) {
+  response: destroyProductSymptom(id: $id) {
+    productSymptom {
+      id
+      name
+      faultCode
+      fee
+    }
+    errors {
+      message
+      path
+    }
+  }
+}

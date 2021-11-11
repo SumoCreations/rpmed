@@ -1,0 +1,18 @@
+query Rgas($status: RGAStatus) {
+  response: rgas(status: $status) {
+    rgas {
+      id
+      submittedOn
+      submittedBy
+      status
+      goods {
+        id
+      }
+    }
+    errors {
+      message
+      path
+    }
+    success
+  }
+}

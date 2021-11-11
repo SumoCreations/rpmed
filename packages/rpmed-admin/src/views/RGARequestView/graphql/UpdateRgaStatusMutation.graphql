@@ -1,0 +1,26 @@
+mutation UpdateRgaStatus($id: ID!, $status: RGAStatus!, $notes: String) {
+  response: updateRGAStatus(id: $id, status: $status, notes: $notes) {
+    rga {
+      id
+      status
+      submittedBy
+      submittedOn
+      shippingSpeed
+      statusLog {
+        status
+        notes
+        updatedOn
+        updatedBy {
+          name
+          id
+          email
+        }
+      }
+    }
+    errors {
+      message
+      path
+    }
+    success
+  }
+}

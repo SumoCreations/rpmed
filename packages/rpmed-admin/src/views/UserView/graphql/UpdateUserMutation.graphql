@@ -1,0 +1,14 @@
+mutation UpdateUser($userInput: ExistingUserInput!) {
+  response: updateUser(userInput: $userInput) {
+    user {
+      id
+      firstName
+      lastName
+      email
+    }
+    errors {
+      message
+      path
+    }
+  }
+}

@@ -8,9 +8,6 @@
   "main": "lib/index.js",
   "private": true,
   "sideEffects": false,
-  "engines": {
-    "node": "12.x.0"
-  },
   "scripts": {
     "build": "rm -rf ./lib && tsc",
     "test": "jest"

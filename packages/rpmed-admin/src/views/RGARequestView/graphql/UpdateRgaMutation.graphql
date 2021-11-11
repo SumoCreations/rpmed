@@ -1,0 +1,16 @@
+mutation UpdateRGA($rgaInput: ExistingRGAInput!) {
+  response: updateRGA(rgaInput: $rgaInput) {
+    rga {
+      id
+      shippingSpeed
+      status
+      submittedBy
+      submittedOn
+    }
+    errors {
+      message
+      path
+    }
+    success
+  }
+}
