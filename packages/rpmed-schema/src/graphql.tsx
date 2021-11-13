@@ -1486,6 +1486,68 @@ export type ValidationError = {
   message: Scalars['String'];
 };
 
+export type CreateRgaGoodMutationVariables = Exact<{
+  rgaId: Scalars['String'];
+  rgaGoodInput: RgaGoodInput;
+}>;
+
+
+export type CreateRgaGoodMutation = (
+  { __typename?: 'Mutation' }
+  & { response: (
+    { __typename?: 'RGAGoodMutationOutput' }
+    & Pick<RgaGoodMutationOutput, 'rgaId' | 'success'>
+    & { rgaGood?: Maybe<(
+      { __typename?: 'RGAGood' }
+      & Pick<RgaGood, 'id' | 'rgaId' | 'serviceId' | 'customerId' | 'customerEmail' | 'customerName' | 'customerPhone' | 'customerStreet' | 'customerStreet2' | 'customerZip' | 'customerCity' | 'customerState' | 'customerCountry' | 'customerSpecialty' | 'faultCode' | 'serial' | 'newSerial' | 'lotted' | 'preApproved' | 'productId' | 'productName' | 'productType' | 'symptomId' | 'symptomDescription' | 'symptomSolution' | 'symptomSynopsis' | 'modelNumber' | 'po' | 'rma' | 'warrantied' | 'warrantyTerm' | 'warrantyDescription' | 'notes' | 'serviceFormUrl' | 'customerLetterUrl' | 'additionalComments' | 'datePurchased' | 'disposition'>
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'message' | 'path'>
+    )>>> }
+  ) }
+);
+
+export type CreateRgaMutationVariables = Exact<{
+  rgaInput: NewRgaInput;
+}>;
+
+
+export type CreateRgaMutation = (
+  { __typename?: 'Mutation' }
+  & { response: (
+    { __typename?: 'RGAMutationOutput' }
+    & Pick<RgaMutationOutput, 'success'>
+    & { rga?: Maybe<(
+      { __typename?: 'RGA' }
+      & Pick<Rga, 'id' | 'shippingSpeed' | 'status' | 'submittedBy' | 'submittedOn'>
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'message' | 'path'>
+    )>>> }
+  ) }
+);
+
+export type DestroyRgaGoodMutationVariables = Exact<{
+  id: Scalars['ID'];
+  rgaId: Scalars['String'];
+}>;
+
+
+export type DestroyRgaGoodMutation = (
+  { __typename?: 'Mutation' }
+  & { response: (
+    { __typename?: 'RGAGoodMutationOutput' }
+    & Pick<RgaGoodMutationOutput, 'rgaId' | 'success'>
+    & { rgaGood?: Maybe<(
+      { __typename?: 'RGAGood' }
+      & Pick<RgaGood, 'modelNumber' | 'serial' | 'id' | 'warrantied' | 'faultCode' | 'status' | 'symptomId' | 'symptomDescription' | 'customerId' | 'customerEmail' | 'customerName' | 'customerPhone' | 'customerStreet' | 'customerStreet2' | 'customerZip' | 'customerCity' | 'customerState' | 'customerCountry' | 'customerSpecialty' | 'notes' | 'rma' | 'po' | 'additionalComments' | 'datePurchased' | 'disposition'>
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'message' | 'path'>
+    )>>> }
+  ) }
+);
+
 export type DistributorQueryVariables = Exact<{
   distributorId: Scalars['String'];
 }>;
@@ -1506,7 +1568,434 @@ export type DistributorQuery = (
   ) }
 );
 
+export type ModelNumbersViewableQueryVariables = Exact<{ [key: string]: never; }>;
 
+
+export type ModelNumbersViewableQuery = (
+  { __typename?: 'Query' }
+  & { response?: Maybe<(
+    { __typename?: 'ModelNumberQueryOutput' }
+    & Pick<ModelNumberQueryOutput, 'pageSize' | 'success'>
+    & { modelNumbers?: Maybe<Array<Maybe<(
+      { __typename?: 'ModelNumber' }
+      & Pick<ModelNumber, 'id' | 'publiclyViewable'>
+    )>>>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'path' | 'message'>
+    )>>> }
+  )> }
+);
+
+export type ResetPasswordMutationVariables = Exact<{
+  password: Scalars['String'];
+}>;
+
+
+export type ResetPasswordMutation = (
+  { __typename?: 'Mutation' }
+  & { response: (
+    { __typename?: 'UserMutationOutput' }
+    & Pick<UserMutationOutput, 'success'>
+    & { user?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'email'>
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'path' | 'message'>
+    )>>> }
+  ) }
+);
+
+export type RgaCountsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type RgaCountsQuery = (
+  { __typename?: 'Query' }
+  & { rgaCount: (
+    { __typename?: 'RGAStatusCountOutput' }
+    & Pick<RgaStatusCountOutput, 'issued' | 'delayed' | 'awaitingArrival' | 'received' | 'assessing' | 'repairing' | 'shipping' | 'closed' | 'canceled' | 'success'>
+    & { errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'message' | 'path'>
+    )>>> }
+  ) }
+);
+
+export type RgaQueryVariables = Exact<{
+  rgaId: Scalars['String'];
+}>;
+
+
+export type RgaQuery = (
+  { __typename?: 'Query' }
+  & { response: (
+    { __typename?: 'RGAQueryOutput' }
+    & Pick<RgaQueryOutput, 'success'>
+    & { rga?: Maybe<(
+      { __typename?: 'RGA' }
+      & Pick<Rga, 'id' | 'shippingSpeed' | 'submittedOn' | 'submittedBy' | 'status'>
+      & { statusLog?: Maybe<Array<Maybe<(
+        { __typename?: 'RGAStatusUpdate' }
+        & Pick<RgaStatusUpdate, 'status' | 'updatedOn' | 'notes'>
+        & { updatedBy?: Maybe<(
+          { __typename?: 'UpdateProfile' }
+          & Pick<UpdateProfile, 'id' | 'name' | 'email'>
+        )> }
+      )>>>, goods: Array<Maybe<(
+        { __typename?: 'RGAGood' }
+        & Pick<RgaGood, 'id' | 'serviceId' | 'customerEmail' | 'customerId' | 'customerName' | 'customerLetterUrl' | 'customerSpecialty' | 'faultCode' | 'serial' | 'newSerial' | 'lotted' | 'preApproved' | 'productId' | 'productName' | 'productType' | 'symptomId' | 'symptomDescription' | 'symptomSolution' | 'symptomSynopsis' | 'modelNumber' | 'po' | 'rma' | 'rgaId' | 'warrantied' | 'warrantyTerm' | 'warrantyDescription' | 'notes' | 'serviceFormUrl' | 'shippingSpeed' | 'ssd' | 'additionalComments' | 'datePurchased' | 'disposition'>
+        & { resolutionFee?: Maybe<(
+          { __typename?: 'FeeStructure' }
+          & Pick<FeeStructure, 'distributor' | 'endUser'>
+        )> }
+      )>> }
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'message' | 'path'>
+    )>>> }
+  ) }
+);
+
+export type RgasQueryVariables = Exact<{
+  status?: Maybe<RgaStatus>;
+}>;
+
+
+export type RgasQuery = (
+  { __typename?: 'Query' }
+  & { response: (
+    { __typename?: 'RGAQueryOutput' }
+    & Pick<RgaQueryOutput, 'success'>
+    & { rgas?: Maybe<Array<Maybe<(
+      { __typename?: 'RGA' }
+      & Pick<Rga, 'id' | 'submittedOn' | 'submittedBy' | 'status'>
+      & { goods: Array<Maybe<(
+        { __typename?: 'RGAGood' }
+        & Pick<RgaGood, 'id'>
+      )>> }
+    )>>>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'message' | 'path'>
+    )>>> }
+  ) }
+);
+
+export type UpdateModelNumberViewableMutationVariables = Exact<{
+  id: Scalars['ID'];
+  publiclyViewable: Scalars['Boolean'];
+}>;
+
+
+export type UpdateModelNumberViewableMutation = (
+  { __typename?: 'Mutation' }
+  & { response: (
+    { __typename?: 'ModelNumberMutationOutput' }
+    & { modelNumber?: Maybe<(
+      { __typename?: 'ModelNumber' }
+      & Pick<ModelNumber, 'id' | 'publiclyViewable'>
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'message' | 'path'>
+    )>>> }
+  ) }
+);
+
+export type UpdateRgaGoodMutationVariables = Exact<{
+  id: Scalars['ID'];
+  rgaId: Scalars['String'];
+  rgaGoodInput: RgaGoodInput;
+}>;
+
+
+export type UpdateRgaGoodMutation = (
+  { __typename?: 'Mutation' }
+  & { response: (
+    { __typename?: 'RGAGoodMutationOutput' }
+    & Pick<RgaGoodMutationOutput, 'success' | 'rgaId'>
+    & { errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'message' | 'path'>
+    )>>>, rgaGood?: Maybe<(
+      { __typename?: 'RGAGood' }
+      & Pick<RgaGood, 'id' | 'serviceId' | 'customerId' | 'customerEmail' | 'customerName' | 'customerPhone' | 'customerStreet' | 'customerStreet2' | 'customerZip' | 'customerCity' | 'customerState' | 'customerCountry' | 'customerSpecialty' | 'faultCode' | 'serial' | 'newSerial' | 'lotted' | 'preApproved' | 'productId' | 'productName' | 'productType' | 'symptomId' | 'symptomDescription' | 'symptomSolution' | 'symptomSynopsis' | 'modelNumber' | 'po' | 'rma' | 'warrantied' | 'warrantyTerm' | 'warrantyDescription' | 'notes' | 'serviceFormUrl' | 'customerLetterUrl' | 'ssd' | 'additionalComments' | 'datePurchased' | 'disposition'>
+      & { resolutionFee?: Maybe<(
+        { __typename?: 'FeeStructure' }
+        & Pick<FeeStructure, 'distributor' | 'endUser'>
+      )> }
+    )> }
+  ) }
+);
+
+export type UpdateRgaMutationVariables = Exact<{
+  rgaInput: ExistingRgaInput;
+}>;
+
+
+export type UpdateRgaMutation = (
+  { __typename?: 'Mutation' }
+  & { response: (
+    { __typename?: 'RGAMutationOutput' }
+    & Pick<RgaMutationOutput, 'success'>
+    & { rga?: Maybe<(
+      { __typename?: 'RGA' }
+      & Pick<Rga, 'id' | 'shippingSpeed' | 'status' | 'submittedBy' | 'submittedOn'>
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'message' | 'path'>
+    )>>> }
+  ) }
+);
+
+export type UpdateRgaShippingStatusMutationVariables = Exact<{
+  id: Scalars['ID'];
+  shippingUpdates?: Maybe<Array<Maybe<RgaGoodShippingInput>> | Maybe<RgaGoodShippingInput>>;
+  notes?: Maybe<Scalars['String']>;
+}>;
+
+
+export type UpdateRgaShippingStatusMutation = (
+  { __typename?: 'Mutation' }
+  & { response: (
+    { __typename?: 'RGAMutationOutput' }
+    & Pick<RgaMutationOutput, 'success'>
+    & { rga?: Maybe<(
+      { __typename?: 'RGA' }
+      & Pick<Rga, 'id' | 'status' | 'submittedBy' | 'submittedOn' | 'shippingSpeed'>
+      & { statusLog?: Maybe<Array<Maybe<(
+        { __typename?: 'RGAStatusUpdate' }
+        & Pick<RgaStatusUpdate, 'status' | 'notes' | 'updatedOn'>
+        & { updatedBy?: Maybe<(
+          { __typename?: 'UpdateProfile' }
+          & Pick<UpdateProfile, 'name' | 'id' | 'email'>
+        )> }
+      )>>> }
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'message' | 'path'>
+    )>>> }
+  ) }
+);
+
+export type UpdateRgaStatusMutationVariables = Exact<{
+  id: Scalars['ID'];
+  status: RgaStatus;
+  notes?: Maybe<Scalars['String']>;
+}>;
+
+
+export type UpdateRgaStatusMutation = (
+  { __typename?: 'Mutation' }
+  & { response: (
+    { __typename?: 'RGAMutationOutput' }
+    & Pick<RgaMutationOutput, 'success'>
+    & { rga?: Maybe<(
+      { __typename?: 'RGA' }
+      & Pick<Rga, 'id' | 'status' | 'submittedBy' | 'submittedOn' | 'shippingSpeed'>
+      & { statusLog?: Maybe<Array<Maybe<(
+        { __typename?: 'RGAStatusUpdate' }
+        & Pick<RgaStatusUpdate, 'status' | 'notes' | 'updatedOn'>
+        & { updatedBy?: Maybe<(
+          { __typename?: 'UpdateProfile' }
+          & Pick<UpdateProfile, 'name' | 'id' | 'email'>
+        )> }
+      )>>> }
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'message' | 'path'>
+    )>>> }
+  ) }
+);
+
+
+export const CreateRgaGoodDocument = gql`
+    mutation CreateRGAGood($rgaId: String!, $rgaGoodInput: RGAGoodInput!) {
+  response: createRGAGood(rgaId: $rgaId, rgaGoodInput: $rgaGoodInput) {
+    rgaId
+    rgaGood {
+      id
+      rgaId
+      serviceId
+      customerId
+      customerEmail
+      customerName
+      customerPhone
+      customerStreet
+      customerStreet2
+      customerZip
+      customerCity
+      customerState
+      customerCountry
+      customerSpecialty
+      faultCode
+      serial
+      newSerial
+      lotted
+      preApproved
+      productId
+      productName
+      productType
+      symptomId
+      symptomDescription
+      symptomSolution
+      symptomSynopsis
+      modelNumber
+      po
+      rma
+      warrantied
+      warrantyTerm
+      warrantyDescription
+      notes
+      serviceFormUrl
+      customerLetterUrl
+      additionalComments
+      datePurchased
+      disposition
+    }
+    errors {
+      message
+      path
+    }
+    success
+  }
+}
+    `;
+export type CreateRgaGoodMutationFn = Apollo.MutationFunction<CreateRgaGoodMutation, CreateRgaGoodMutationVariables>;
+
+/**
+ * __useCreateRgaGoodMutation__
+ *
+ * To run a mutation, you first call `useCreateRgaGoodMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateRgaGoodMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createRgaGoodMutation, { data, loading, error }] = useCreateRgaGoodMutation({
+ *   variables: {
+ *      rgaId: // value for 'rgaId'
+ *      rgaGoodInput: // value for 'rgaGoodInput'
+ *   },
+ * });
+ */
+export function useCreateRgaGoodMutation(baseOptions?: Apollo.MutationHookOptions<CreateRgaGoodMutation, CreateRgaGoodMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateRgaGoodMutation, CreateRgaGoodMutationVariables>(CreateRgaGoodDocument, options);
+      }
+export type CreateRgaGoodMutationHookResult = ReturnType<typeof useCreateRgaGoodMutation>;
+export type CreateRgaGoodMutationResult = Apollo.MutationResult<CreateRgaGoodMutation>;
+export type CreateRgaGoodMutationOptions = Apollo.BaseMutationOptions<CreateRgaGoodMutation, CreateRgaGoodMutationVariables>;
+export const CreateRgaDocument = gql`
+    mutation CreateRGA($rgaInput: NewRGAInput!) {
+  response: createRGA(rgaInput: $rgaInput) {
+    rga {
+      id
+      shippingSpeed
+      status
+      submittedBy
+      submittedOn
+    }
+    errors {
+      message
+      path
+    }
+    success
+  }
+}
+    `;
+export type CreateRgaMutationFn = Apollo.MutationFunction<CreateRgaMutation, CreateRgaMutationVariables>;
+
+/**
+ * __useCreateRgaMutation__
+ *
+ * To run a mutation, you first call `useCreateRgaMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateRgaMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createRgaMutation, { data, loading, error }] = useCreateRgaMutation({
+ *   variables: {
+ *      rgaInput: // value for 'rgaInput'
+ *   },
+ * });
+ */
+export function useCreateRgaMutation(baseOptions?: Apollo.MutationHookOptions<CreateRgaMutation, CreateRgaMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateRgaMutation, CreateRgaMutationVariables>(CreateRgaDocument, options);
+      }
+export type CreateRgaMutationHookResult = ReturnType<typeof useCreateRgaMutation>;
+export type CreateRgaMutationResult = Apollo.MutationResult<CreateRgaMutation>;
+export type CreateRgaMutationOptions = Apollo.BaseMutationOptions<CreateRgaMutation, CreateRgaMutationVariables>;
+export const DestroyRgaGoodDocument = gql`
+    mutation DestroyRGAGood($id: ID!, $rgaId: String!) {
+  response: destroyRGAGood(id: $id, rgaId: $rgaId) {
+    rgaId
+    rgaGood {
+      modelNumber
+      serial
+      id
+      warrantied
+      faultCode
+      status
+      symptomId
+      symptomDescription
+      customerId
+      customerEmail
+      customerName
+      customerPhone
+      customerStreet
+      customerStreet2
+      customerZip
+      customerCity
+      customerState
+      customerCountry
+      customerSpecialty
+      notes
+      rma
+      po
+      additionalComments
+      datePurchased
+      disposition
+    }
+    errors {
+      message
+      path
+    }
+    success
+  }
+}
+    `;
+export type DestroyRgaGoodMutationFn = Apollo.MutationFunction<DestroyRgaGoodMutation, DestroyRgaGoodMutationVariables>;
+
+/**
+ * __useDestroyRgaGoodMutation__
+ *
+ * To run a mutation, you first call `useDestroyRgaGoodMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDestroyRgaGoodMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [destroyRgaGoodMutation, { data, loading, error }] = useDestroyRgaGoodMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      rgaId: // value for 'rgaId'
+ *   },
+ * });
+ */
+export function useDestroyRgaGoodMutation(baseOptions?: Apollo.MutationHookOptions<DestroyRgaGoodMutation, DestroyRgaGoodMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DestroyRgaGoodMutation, DestroyRgaGoodMutationVariables>(DestroyRgaGoodDocument, options);
+      }
+export type DestroyRgaGoodMutationHookResult = ReturnType<typeof useDestroyRgaGoodMutation>;
+export type DestroyRgaGoodMutationResult = Apollo.MutationResult<DestroyRgaGoodMutation>;
+export type DestroyRgaGoodMutationOptions = Apollo.BaseMutationOptions<DestroyRgaGoodMutation, DestroyRgaGoodMutationVariables>;
 export const DistributorDocument = gql`
     query Distributor($distributorId: String!) {
   response: distributor(id: $distributorId) {
@@ -1551,6 +2040,560 @@ export function useDistributorLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type DistributorQueryHookResult = ReturnType<typeof useDistributorQuery>;
 export type DistributorLazyQueryHookResult = ReturnType<typeof useDistributorLazyQuery>;
 export type DistributorQueryResult = Apollo.QueryResult<DistributorQuery, DistributorQueryVariables>;
+export const ModelNumbersViewableDocument = gql`
+    query ModelNumbersViewable {
+  response: modelNumbers {
+    modelNumbers {
+      id
+      publiclyViewable
+    }
+    pageSize
+    success
+    errors {
+      path
+      message
+    }
+  }
+}
+    `;
+
+/**
+ * __useModelNumbersViewableQuery__
+ *
+ * To run a query within a React component, call `useModelNumbersViewableQuery` and pass it any options that fit your needs.
+ * When your component renders, `useModelNumbersViewableQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useModelNumbersViewableQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useModelNumbersViewableQuery(baseOptions?: Apollo.QueryHookOptions<ModelNumbersViewableQuery, ModelNumbersViewableQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ModelNumbersViewableQuery, ModelNumbersViewableQueryVariables>(ModelNumbersViewableDocument, options);
+      }
+export function useModelNumbersViewableLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ModelNumbersViewableQuery, ModelNumbersViewableQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ModelNumbersViewableQuery, ModelNumbersViewableQueryVariables>(ModelNumbersViewableDocument, options);
+        }
+export type ModelNumbersViewableQueryHookResult = ReturnType<typeof useModelNumbersViewableQuery>;
+export type ModelNumbersViewableLazyQueryHookResult = ReturnType<typeof useModelNumbersViewableLazyQuery>;
+export type ModelNumbersViewableQueryResult = Apollo.QueryResult<ModelNumbersViewableQuery, ModelNumbersViewableQueryVariables>;
+export const ResetPasswordDocument = gql`
+    mutation ResetPassword($password: String!) {
+  response: resetPassword(password: $password) {
+    user {
+      email
+    }
+    errors {
+      path
+      message
+    }
+    success
+  }
+}
+    `;
+export type ResetPasswordMutationFn = Apollo.MutationFunction<ResetPasswordMutation, ResetPasswordMutationVariables>;
+
+/**
+ * __useResetPasswordMutation__
+ *
+ * To run a mutation, you first call `useResetPasswordMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useResetPasswordMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [resetPasswordMutation, { data, loading, error }] = useResetPasswordMutation({
+ *   variables: {
+ *      password: // value for 'password'
+ *   },
+ * });
+ */
+export function useResetPasswordMutation(baseOptions?: Apollo.MutationHookOptions<ResetPasswordMutation, ResetPasswordMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ResetPasswordMutation, ResetPasswordMutationVariables>(ResetPasswordDocument, options);
+      }
+export type ResetPasswordMutationHookResult = ReturnType<typeof useResetPasswordMutation>;
+export type ResetPasswordMutationResult = Apollo.MutationResult<ResetPasswordMutation>;
+export type ResetPasswordMutationOptions = Apollo.BaseMutationOptions<ResetPasswordMutation, ResetPasswordMutationVariables>;
+export const RgaCountsDocument = gql`
+    query RgaCounts {
+  rgaCount {
+    issued
+    delayed
+    awaitingArrival
+    received
+    assessing
+    repairing
+    shipping
+    closed
+    canceled
+    success
+    errors {
+      message
+      path
+    }
+  }
+}
+    `;
+
+/**
+ * __useRgaCountsQuery__
+ *
+ * To run a query within a React component, call `useRgaCountsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRgaCountsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRgaCountsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useRgaCountsQuery(baseOptions?: Apollo.QueryHookOptions<RgaCountsQuery, RgaCountsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<RgaCountsQuery, RgaCountsQueryVariables>(RgaCountsDocument, options);
+      }
+export function useRgaCountsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RgaCountsQuery, RgaCountsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<RgaCountsQuery, RgaCountsQueryVariables>(RgaCountsDocument, options);
+        }
+export type RgaCountsQueryHookResult = ReturnType<typeof useRgaCountsQuery>;
+export type RgaCountsLazyQueryHookResult = ReturnType<typeof useRgaCountsLazyQuery>;
+export type RgaCountsQueryResult = Apollo.QueryResult<RgaCountsQuery, RgaCountsQueryVariables>;
+export const RgaDocument = gql`
+    query RGA($rgaId: String!) {
+  response: rga(id: $rgaId) {
+    rga {
+      id
+      shippingSpeed
+      submittedOn
+      submittedBy
+      status
+      statusLog {
+        status
+        updatedOn
+        updatedBy {
+          id
+          name
+          email
+        }
+        notes
+      }
+      goods {
+        id
+        serviceId
+        customerEmail
+        customerId
+        customerName
+        customerLetterUrl
+        customerSpecialty
+        faultCode
+        serial
+        newSerial
+        lotted
+        preApproved
+        productId
+        productName
+        productType
+        symptomId
+        symptomDescription
+        symptomSolution
+        symptomSynopsis
+        modelNumber
+        resolutionFee {
+          distributor
+          endUser
+        }
+        po
+        rma
+        rgaId
+        warrantied
+        warrantyTerm
+        warrantyDescription
+        notes
+        serviceFormUrl
+        shippingSpeed
+        ssd
+        additionalComments
+        datePurchased
+        disposition
+      }
+    }
+    errors {
+      message
+      path
+    }
+    success
+  }
+}
+    `;
+
+/**
+ * __useRgaQuery__
+ *
+ * To run a query within a React component, call `useRgaQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRgaQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRgaQuery({
+ *   variables: {
+ *      rgaId: // value for 'rgaId'
+ *   },
+ * });
+ */
+export function useRgaQuery(baseOptions: Apollo.QueryHookOptions<RgaQuery, RgaQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<RgaQuery, RgaQueryVariables>(RgaDocument, options);
+      }
+export function useRgaLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RgaQuery, RgaQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<RgaQuery, RgaQueryVariables>(RgaDocument, options);
+        }
+export type RgaQueryHookResult = ReturnType<typeof useRgaQuery>;
+export type RgaLazyQueryHookResult = ReturnType<typeof useRgaLazyQuery>;
+export type RgaQueryResult = Apollo.QueryResult<RgaQuery, RgaQueryVariables>;
+export const RgasDocument = gql`
+    query Rgas($status: RGAStatus) {
+  response: rgas(status: $status) {
+    rgas {
+      id
+      submittedOn
+      submittedBy
+      status
+      goods {
+        id
+      }
+    }
+    errors {
+      message
+      path
+    }
+    success
+  }
+}
+    `;
+
+/**
+ * __useRgasQuery__
+ *
+ * To run a query within a React component, call `useRgasQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRgasQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRgasQuery({
+ *   variables: {
+ *      status: // value for 'status'
+ *   },
+ * });
+ */
+export function useRgasQuery(baseOptions?: Apollo.QueryHookOptions<RgasQuery, RgasQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<RgasQuery, RgasQueryVariables>(RgasDocument, options);
+      }
+export function useRgasLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RgasQuery, RgasQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<RgasQuery, RgasQueryVariables>(RgasDocument, options);
+        }
+export type RgasQueryHookResult = ReturnType<typeof useRgasQuery>;
+export type RgasLazyQueryHookResult = ReturnType<typeof useRgasLazyQuery>;
+export type RgasQueryResult = Apollo.QueryResult<RgasQuery, RgasQueryVariables>;
+export const UpdateModelNumberViewableDocument = gql`
+    mutation UpdateModelNumberViewable($id: ID!, $publiclyViewable: Boolean!) {
+  response: updateModelNumberViewable(id: $id, publiclyViewable: $publiclyViewable) {
+    modelNumber {
+      id
+      publiclyViewable
+    }
+    errors {
+      message
+      path
+    }
+  }
+}
+    `;
+export type UpdateModelNumberViewableMutationFn = Apollo.MutationFunction<UpdateModelNumberViewableMutation, UpdateModelNumberViewableMutationVariables>;
+
+/**
+ * __useUpdateModelNumberViewableMutation__
+ *
+ * To run a mutation, you first call `useUpdateModelNumberViewableMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateModelNumberViewableMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateModelNumberViewableMutation, { data, loading, error }] = useUpdateModelNumberViewableMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      publiclyViewable: // value for 'publiclyViewable'
+ *   },
+ * });
+ */
+export function useUpdateModelNumberViewableMutation(baseOptions?: Apollo.MutationHookOptions<UpdateModelNumberViewableMutation, UpdateModelNumberViewableMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateModelNumberViewableMutation, UpdateModelNumberViewableMutationVariables>(UpdateModelNumberViewableDocument, options);
+      }
+export type UpdateModelNumberViewableMutationHookResult = ReturnType<typeof useUpdateModelNumberViewableMutation>;
+export type UpdateModelNumberViewableMutationResult = Apollo.MutationResult<UpdateModelNumberViewableMutation>;
+export type UpdateModelNumberViewableMutationOptions = Apollo.BaseMutationOptions<UpdateModelNumberViewableMutation, UpdateModelNumberViewableMutationVariables>;
+export const UpdateRgaGoodDocument = gql`
+    mutation UpdateRGAGood($id: ID!, $rgaId: String!, $rgaGoodInput: RGAGoodInput!) {
+  response: updateRGAGood(id: $id, rgaId: $rgaId, rgaGoodInput: $rgaGoodInput) {
+    success
+    errors {
+      message
+      path
+    }
+    rgaId
+    rgaGood {
+      id
+      serviceId
+      customerId
+      customerEmail
+      customerName
+      customerPhone
+      customerStreet
+      customerStreet2
+      customerZip
+      customerCity
+      customerState
+      customerCountry
+      customerSpecialty
+      faultCode
+      serial
+      newSerial
+      lotted
+      preApproved
+      productId
+      productName
+      productType
+      symptomId
+      symptomDescription
+      symptomSolution
+      symptomSynopsis
+      modelNumber
+      resolutionFee {
+        distributor
+        endUser
+      }
+      po
+      rma
+      warrantied
+      warrantyTerm
+      warrantyDescription
+      notes
+      serviceFormUrl
+      customerLetterUrl
+      ssd
+      additionalComments
+      datePurchased
+      disposition
+    }
+  }
+}
+    `;
+export type UpdateRgaGoodMutationFn = Apollo.MutationFunction<UpdateRgaGoodMutation, UpdateRgaGoodMutationVariables>;
+
+/**
+ * __useUpdateRgaGoodMutation__
+ *
+ * To run a mutation, you first call `useUpdateRgaGoodMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateRgaGoodMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateRgaGoodMutation, { data, loading, error }] = useUpdateRgaGoodMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      rgaId: // value for 'rgaId'
+ *      rgaGoodInput: // value for 'rgaGoodInput'
+ *   },
+ * });
+ */
+export function useUpdateRgaGoodMutation(baseOptions?: Apollo.MutationHookOptions<UpdateRgaGoodMutation, UpdateRgaGoodMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateRgaGoodMutation, UpdateRgaGoodMutationVariables>(UpdateRgaGoodDocument, options);
+      }
+export type UpdateRgaGoodMutationHookResult = ReturnType<typeof useUpdateRgaGoodMutation>;
+export type UpdateRgaGoodMutationResult = Apollo.MutationResult<UpdateRgaGoodMutation>;
+export type UpdateRgaGoodMutationOptions = Apollo.BaseMutationOptions<UpdateRgaGoodMutation, UpdateRgaGoodMutationVariables>;
+export const UpdateRgaDocument = gql`
+    mutation UpdateRGA($rgaInput: ExistingRGAInput!) {
+  response: updateRGA(rgaInput: $rgaInput) {
+    rga {
+      id
+      shippingSpeed
+      status
+      submittedBy
+      submittedOn
+    }
+    errors {
+      message
+      path
+    }
+    success
+  }
+}
+    `;
+export type UpdateRgaMutationFn = Apollo.MutationFunction<UpdateRgaMutation, UpdateRgaMutationVariables>;
+
+/**
+ * __useUpdateRgaMutation__
+ *
+ * To run a mutation, you first call `useUpdateRgaMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateRgaMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateRgaMutation, { data, loading, error }] = useUpdateRgaMutation({
+ *   variables: {
+ *      rgaInput: // value for 'rgaInput'
+ *   },
+ * });
+ */
+export function useUpdateRgaMutation(baseOptions?: Apollo.MutationHookOptions<UpdateRgaMutation, UpdateRgaMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateRgaMutation, UpdateRgaMutationVariables>(UpdateRgaDocument, options);
+      }
+export type UpdateRgaMutationHookResult = ReturnType<typeof useUpdateRgaMutation>;
+export type UpdateRgaMutationResult = Apollo.MutationResult<UpdateRgaMutation>;
+export type UpdateRgaMutationOptions = Apollo.BaseMutationOptions<UpdateRgaMutation, UpdateRgaMutationVariables>;
+export const UpdateRgaShippingStatusDocument = gql`
+    mutation UpdateRGAShippingStatus($id: ID!, $shippingUpdates: [RGAGoodShippingInput], $notes: String) {
+  response: updateRGAShippingStatus(id: $id, shippingUpdates: $shippingUpdates, notes: $notes) {
+    rga {
+      id
+      status
+      submittedBy
+      submittedOn
+      shippingSpeed
+      statusLog {
+        status
+        notes
+        updatedOn
+        updatedBy {
+          name
+          id
+          email
+        }
+      }
+    }
+    errors {
+      message
+      path
+    }
+    success
+  }
+}
+    `;
+export type UpdateRgaShippingStatusMutationFn = Apollo.MutationFunction<UpdateRgaShippingStatusMutation, UpdateRgaShippingStatusMutationVariables>;
+
+/**
+ * __useUpdateRgaShippingStatusMutation__
+ *
+ * To run a mutation, you first call `useUpdateRgaShippingStatusMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateRgaShippingStatusMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateRgaShippingStatusMutation, { data, loading, error }] = useUpdateRgaShippingStatusMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      shippingUpdates: // value for 'shippingUpdates'
+ *      notes: // value for 'notes'
+ *   },
+ * });
+ */
+export function useUpdateRgaShippingStatusMutation(baseOptions?: Apollo.MutationHookOptions<UpdateRgaShippingStatusMutation, UpdateRgaShippingStatusMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateRgaShippingStatusMutation, UpdateRgaShippingStatusMutationVariables>(UpdateRgaShippingStatusDocument, options);
+      }
+export type UpdateRgaShippingStatusMutationHookResult = ReturnType<typeof useUpdateRgaShippingStatusMutation>;
+export type UpdateRgaShippingStatusMutationResult = Apollo.MutationResult<UpdateRgaShippingStatusMutation>;
+export type UpdateRgaShippingStatusMutationOptions = Apollo.BaseMutationOptions<UpdateRgaShippingStatusMutation, UpdateRgaShippingStatusMutationVariables>;
+export const UpdateRgaStatusDocument = gql`
+    mutation UpdateRgaStatus($id: ID!, $status: RGAStatus!, $notes: String) {
+  response: updateRGAStatus(id: $id, status: $status, notes: $notes) {
+    rga {
+      id
+      status
+      submittedBy
+      submittedOn
+      shippingSpeed
+      statusLog {
+        status
+        notes
+        updatedOn
+        updatedBy {
+          name
+          id
+          email
+        }
+      }
+    }
+    errors {
+      message
+      path
+    }
+    success
+  }
+}
+    `;
+export type UpdateRgaStatusMutationFn = Apollo.MutationFunction<UpdateRgaStatusMutation, UpdateRgaStatusMutationVariables>;
+
+/**
+ * __useUpdateRgaStatusMutation__
+ *
+ * To run a mutation, you first call `useUpdateRgaStatusMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateRgaStatusMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateRgaStatusMutation, { data, loading, error }] = useUpdateRgaStatusMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      status: // value for 'status'
+ *      notes: // value for 'notes'
+ *   },
+ * });
+ */
+export function useUpdateRgaStatusMutation(baseOptions?: Apollo.MutationHookOptions<UpdateRgaStatusMutation, UpdateRgaStatusMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateRgaStatusMutation, UpdateRgaStatusMutationVariables>(UpdateRgaStatusDocument, options);
+      }
+export type UpdateRgaStatusMutationHookResult = ReturnType<typeof useUpdateRgaStatusMutation>;
+export type UpdateRgaStatusMutationResult = Apollo.MutationResult<UpdateRgaStatusMutation>;
+export type UpdateRgaStatusMutationOptions = Apollo.BaseMutationOptions<UpdateRgaStatusMutation, UpdateRgaStatusMutationVariables>;
 
       export interface IntrospectionResultData {
         __schema: {

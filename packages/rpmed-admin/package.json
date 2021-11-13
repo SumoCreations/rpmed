@@ -45,7 +45,8 @@
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.1",
     "uuid": "^3.3.2",
     "validator": "^10.11.0",
-    "yup": "^0.27.0"
+    "yup": "^0.27.0",
+    "rpmed-schema": "1.0.0"
   },
   "scripts": {
     "start": "craco start",
