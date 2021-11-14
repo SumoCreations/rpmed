@@ -6,10 +6,10 @@ import * as React from 'react'
 import { Helmet } from 'react-helmet'
 import { RouteComponentProps } from 'react-router'
 import { ErrorList } from 'rpmed-validation-schema'
-import { ProductType } from '../../schema'
+import { ProductType } from 'rpmed-schema'
 import { Actions, Card, Content, Layout, Toolbar } from 'rpmed-ui/lib/V1'
 import { mapDefaultValues } from '../../validations'
-import { useCreateModelNumber } from './graphql'
+import { useCreateModelNumberMutation } from 'rpmed-schema'
 import {
   IModelNumberFormValues,
   ModelNumberForm,
@@ -20,7 +20,7 @@ export const ModelNumberCreateView: React.FC<RouteComponentProps> = ({
   history,
   location,
 }) => {
-  const createModelNumber = useCreateModelNumber()
+  const [createModelNumber, _] = useCreateModelNumberMutation()
   const handleBack = () => history.push('/admin/products/modelNumbers')
   const queryValues = qs.parse(location.search) as IModelNumberFormValues
   const handleSubmit: ModelNumberFormSubmitHandler = async (
@@ -39,7 +39,7 @@ export const ModelNumberCreateView: React.FC<RouteComponentProps> = ({
     const errors = (get(result, 'data.response.errors') || []) as ErrorList
     if (errors.length > 0) {
       errors.forEach(({ path, message }) => {
-        actions.setFieldError(path, message)
+        actions.setFieldError((path as any), message)
       })
       console.log(errors)
       return

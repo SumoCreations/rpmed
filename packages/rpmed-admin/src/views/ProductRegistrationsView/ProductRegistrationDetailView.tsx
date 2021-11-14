@@ -13,10 +13,11 @@ import {
   Layout,
   Toolbar,
 } from 'rpmed-ui/lib/V1'
-import { useProductRegistration, useUpdateProductRegistration } from './graphql'
+import { useProductRegistrationQuery, useUpdateProductRegistrationMutation } from 'rpmed-schema'
 import {
   ProductRegistrationForm,
   ProductRegistrationFormSubmitHandler,
+  IProductRegistrationFormValues
 } from './ProductRegistrationForm'
 
 interface IProductRegistrationRouterProps {
@@ -27,22 +28,27 @@ const View: React.FunctionComponent<RouteComponentProps<
   IProductRegistrationRouterProps
 >> = ({ history, match }) => {
   const handleBack = () => history.push('/admin/registrations')
-  const updateProductRegistration = useUpdateProductRegistration()
-  const { loading, productRegistration } = useProductRegistration(
-    match.params.productRegistrationId
+  const [updateProductRegistration, _] = useUpdateProductRegistrationMutation()
+  const { loading, data } = useProductRegistrationQuery({
+    variables: {
+      productRegistrationId:
+        match.params.productRegistrationId
+    }
+  }
   )
+  const productRegistration = data?.response.productRegistration
   const initialValues = {
-    customerId: productRegistration.customerId,
+    customerId: productRegistration?.customerId,
     customerName: (get(productRegistration, 'customer.name') as string) || '',
-    id: productRegistration.id,
-    lotted: productRegistration.lotted as boolean,
-    modelNumber: productRegistration.modelNumber,
-    productId: productRegistration.productId,
-    registeredOn: productRegistration.registeredOn as string,
+    id: productRegistration?.id,
+    lotted: productRegistration?.lotted as boolean,
+    modelNumber: productRegistration?.modelNumber,
+    productId: productRegistration?.productId,
+    registeredOn: productRegistration?.registeredOn as string,
     registeredOnDisplayDate: new Date(
-      productRegistration.registeredOn as string
+      productRegistration?.registeredOn as string
     ).toLocaleDateString(),
-    serial: productRegistration.serial,
+    serial: productRegistration?.serial,
   }
   const handleSubmit: ProductRegistrationFormSubmitHandler = async (
     values,
@@ -51,11 +57,11 @@ const View: React.FunctionComponent<RouteComponentProps<
     const result = await updateProductRegistration({
       variables: {
         productRegistrationInput: {
-          customerId: values.customerId || '',
-          id: productRegistration.id,
-          modelNumber: values.modelNumber || '',
-          registeredOn: values.registeredOn || '',
-          serial: (values.serial as string) || '',
+          customerId: values.customerId ?? '',
+          id: productRegistration?.id ?? '',
+          modelNumber: values.modelNumber ?? '',
+          registeredOn: values.registeredOn ?? '',
+          serial: (values.serial as string) ?? '',
         },
       },
     })
@@ -63,7 +69,7 @@ const View: React.FunctionComponent<RouteComponentProps<
     const errors = (get(result, 'data.response.errors') || []) as ErrorList
     if (errors.length > 0) {
       errors.forEach(({ path, message }) => {
-        actions.setFieldError(path, message)
+        actions.setFieldError((path as any), message)
       })
       return
     }
@@ -83,16 +89,16 @@ const View: React.FunctionComponent<RouteComponentProps<
         </Toolbar.View>
         <Card.Flat>
           <Helmet
-            title={`${productRegistration.name ||
+            title={`${productRegistration?.customer.name ||
               'Loading Product Registration'} - RPMed Service Admin`}
           />
           {loading ? (
             <Indicators.Spinner size="lg" />
           ) : (
-            <h2>{productRegistration.name}</h2>
+            <h2>{productRegistration?.customer.name}</h2>
           )}
           <ProductRegistrationForm
-            initialValues={initialValues}
+            initialValues={initialValues as IProductRegistrationFormValues}
             onSubmit={handleSubmit}
           />
         </Card.Flat>

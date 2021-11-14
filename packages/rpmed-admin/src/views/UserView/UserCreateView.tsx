@@ -6,11 +6,11 @@ import { Helmet } from 'react-helmet'
 import { RouteComponentProps } from 'react-router'
 import { ErrorList } from 'rpmed-validation-schema'
 import { Actions, Card, Content, Layout, Toolbar } from 'rpmed-ui/lib/V1'
-import { useCreateUser } from './graphql'
+import { useCreateUserMutation } from 'rpmed-schema'
 import { UserForm, UserFormSubmitHandler } from './UserForm'
 
 export const UserCreateView: React.FC<RouteComponentProps> = ({ history }) => {
-  const createUser = useCreateUser()
+  const [createUser, _] = useCreateUserMutation()
   const handleBack = () => history.push('/admin/controls/users')
   const handleSubmit: UserFormSubmitHandler = async (values, actions) => {
     const result = await createUser({
@@ -27,7 +27,7 @@ export const UserCreateView: React.FC<RouteComponentProps> = ({ history }) => {
     const errors = (get(result, 'data.response.errors') || []) as ErrorList
     if (errors.length > 0) {
       errors.forEach(({ path, message }) => {
-        actions.setFieldError(path, message)
+        actions.setFieldError((path as any), message)
       })
       return
     }

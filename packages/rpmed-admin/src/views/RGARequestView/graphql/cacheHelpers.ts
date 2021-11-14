@@ -1,4 +1,4 @@
-import { RgaStatus } from '../../../schema'
+import { RgaStatus } from 'rpmed-schema'
 
 export const keyForStatus = (status: RgaStatus) => {
   switch (status) {

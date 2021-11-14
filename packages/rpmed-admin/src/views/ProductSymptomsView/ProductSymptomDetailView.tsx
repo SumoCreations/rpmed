@@ -3,7 +3,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
 import { RouteComponentProps } from 'react-router'
-import { ProductSymptom } from '../../schema'
+import {
+  ProductSymptom, AttachedImage,
+  useAttachImagesToSymptomMutation,
+  useLinkSymptomToModelNumberMutation,
+  useProductSymptomQuery,
+  UploadStatus,
+} from 'rpmed-schema'
 import {
   Actions,
   Card,
@@ -19,13 +25,7 @@ import {
 } from 'rpmed-ui/lib/V1'
 import { ModelNumbersMap, ModelSelectHandlerFn } from './ModelNumbersMap'
 import { AssociatedPhotos } from './AssociatedPhotosView'
-import {
-  IAttachedImage,
-  useAttachImagesToSymptom,
-  useLinkSymptomToModelNumber,
-  useProductSymptom,
-} from './graphql'
-import { FilePreview } from 'rpmed-ui'
+import { FilePreview, FileUploadStatus } from 'rpmed-ui'
 
 interface IProductSymptomRouterProps {
   productSymptomId: string
@@ -36,10 +36,10 @@ interface IProductSymptomRouterProps {
  * useable by the GraphQL API for attached images.
  * @param preview A form file preview from the file drop component.
  */
-const convertToAttachedFile = (preview: FilePreview): IAttachedImage => ({
+const convertToAttachedFile = (preview: FilePreview): AttachedImage => ({
   id: preview.id,
   position: preview.position ?? 0,
-  status: preview.status,
+  status: preview.status as any,
 })
 
 /**
@@ -119,7 +119,7 @@ const AssociatedModelsList: React.FC<IAssociatedModelListProps> = ({
   productSymptomId,
   associatedModelNumbers,
 }) => {
-  const linkSymptomToModelNumber = useLinkSymptomToModelNumber()
+  const [linkSymptomToModelNumber, _] = useLinkSymptomToModelNumberMutation()
   const hasModel = (model: string) =>
     (associatedModelNumbers || ([] as string[])).includes(model)
   const handleSelectModel: ModelSelectHandlerFn = async ({
@@ -168,8 +168,9 @@ interface ISymptomPhotoListProps {
 const SymptomPhotoList: React.FC<ISymptomPhotoListProps> = ({
   productSymptomId,
 }) => {
-  const { productSymptom } = useProductSymptom(productSymptomId)
-  const attachImages = useAttachImagesToSymptom()
+  const { data } = useProductSymptomQuery({ variables: { productSymptomId: productSymptomId ?? '' } })
+  const productSymptom = data?.response.productSymptom
+  const [attachImages, _] = useAttachImagesToSymptomMutation()
   const handleUpdate = async (filePreviews: FilePreview[]) => {
     await attachImages({
       variables: {
@@ -191,9 +192,10 @@ const SymptomPhotoList: React.FC<ISymptomPhotoListProps> = ({
 const View: React.FunctionComponent<RouteComponentProps<
   IProductSymptomRouterProps
 >> = ({ history, match }) => {
-  const { loading, productSymptom } = useProductSymptom(
-    match.params.productSymptomId
+  const { loading, data } = useProductSymptomQuery(
+    { variables: { productSymptomId: match.params.productSymptomId ?? '' } }
   )
+  const productSymptom = data?.response.productSymptom
   const handleBack = () => history.push('/admin/products/symptoms')
   const onClickEdit = () =>
     history.push(

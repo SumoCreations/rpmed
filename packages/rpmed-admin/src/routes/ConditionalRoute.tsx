@@ -8,8 +8,8 @@ import {
 
 interface IConditionalRouteProps extends RouteProps {
   component:
-    | React.ComponentType<RouteComponentProps<any>>
-    | React.ComponentType<any>
+  | React.ComponentType<RouteComponentProps<any>>
+  | React.ComponentType<any>
   redirectIf: () => boolean
   redirectPath: string
 }
@@ -22,8 +22,8 @@ export class ConditionalRoute extends Route<IConditionalRouteProps> {
       redirectIf,
       redirectPath,
       ...rest
-    }: IConditionalRouteProps = this.props
-    const renderComponent: RenderComponent = props =>
+    }: any = this.props
+    const renderComponent: RenderComponent = (props) =>
       redirectIf() ? <Redirect to={redirectPath} /> : <Component {...props} />
 
     return <Route {...rest} render={renderComponent} />

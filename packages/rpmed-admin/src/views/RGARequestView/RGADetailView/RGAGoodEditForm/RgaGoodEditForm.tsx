@@ -4,7 +4,7 @@ import { Formik, FormikHelpers } from 'formik'
 import React, { useState } from 'react'
 import { Box, Flex, Text } from 'rebass'
 import * as Validation from 'rpmed-validation-schema'
-import { ModelNumber, FeeStructure } from '../../../../schema'
+import { ModelNumber, FeeStructure } from 'rpmed-schema'
 import {
   Actions,
   Divider,
@@ -23,12 +23,12 @@ import { ProductSymptomSelectFn } from '../../../ProductSymptomsView'
 import { IRGAGoodFormValues } from '../RGAGoodForm'
 import { AdvancedSection } from './AdvancedSection'
 
-const SummaryView = styled(Flex)<{ active?: boolean }>`
+const SummaryView = styled(Flex) <{ active?: boolean }>`
   border: 1px solid
     ${p =>
-      p.active
-        ? p.theme.colorContentAreaBorderSelected
-        : p.theme.colorContentAreaBorder};
+    p.active
+      ? p.theme.colorContentAreaBorderSelected
+      : p.theme.colorContentAreaBorder};
   border-radius: ${p => p.theme.borderRadius};
 `
 

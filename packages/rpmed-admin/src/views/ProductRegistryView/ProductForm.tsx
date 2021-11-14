@@ -4,13 +4,9 @@ import { Formik, FormikHelpers, FormikProps } from 'formik'
 import * as React from 'react'
 import * as Validation from 'rpmed-validation-schema'
 import { Form, Indicators, Input } from 'rpmed-ui/lib/V1'
+import { ProductInput } from 'rpmed-schema'
 
-interface IProductFormValues {
-  [key: string]: string | undefined
-  id?: string | undefined
-  name?: string | undefined
-  description?: string | undefined
-}
+interface IProductFormValues extends ProductInput { }
 
 export type ProductFormSubmitHandler = (
   values: IProductFormValues,

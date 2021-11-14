@@ -4,7 +4,7 @@ import get from 'lodash.get'
 import React from 'react'
 import { RouteComponentProps } from 'react-router'
 import { Box, Flex } from 'rebass'
-import { RgaStatus, ValidationError } from '../../schema'
+import { RgaStatus, ValidationError } from 'rpmed-schema'
 import { Actions, Heading, Indicators, Layout, Toolbar } from 'rpmed-ui/lib/V1'
 import { useRGA, useUpdateRGAStatus } from './graphql'
 import {

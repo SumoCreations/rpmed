@@ -5,7 +5,7 @@ import * as React from 'react'
 import { Helmet } from 'react-helmet'
 import { RouteComponentProps } from 'react-router'
 import { ErrorList } from 'rpmed-validation-schema'
-import { Product } from '../../schema'
+import { ModelNumber, Product } from 'rpmed-schema'
 import {
   Actions,
   Card,
@@ -14,7 +14,7 @@ import {
   Layout,
   Toolbar,
 } from 'rpmed-ui/lib/V1'
-import { useModelNumber, useUpdateModelNumber } from './graphql'
+import { useModelNumberQuery, useUpdateModelNumberMutation } from 'rpmed-schema'
 import {
   ModelNumberForm,
   ModelNumberFormSubmitHandler,
@@ -29,8 +29,9 @@ export const ModelNumberEditView: React.FC<RouteComponentProps<
 >> = ({ match, history }) => {
   const handleBack = () =>
     history.push(`/admin/products/modelNumbers/${match.params.modelNumberId}`)
-  const updateModelNumber = useUpdateModelNumber()
-  const { loading, modelNumber } = useModelNumber(match.params.modelNumberId)
+  const [updateModelNumber, _] = useUpdateModelNumberMutation()
+  const { loading, data } = useModelNumberQuery({ variables: { modelNumberId: match.params.modelNumberId ?? '' } })
+  const modelNumber = data?.response?.modelNumber
   const handleSubmit: ModelNumberFormSubmitHandler = async (
     values,
     actions
@@ -59,14 +60,14 @@ export const ModelNumberEditView: React.FC<RouteComponentProps<
       const errors = (get(result, 'data.response.errors') || []) as ErrorList
       if (errors.length > 0) {
         errors.forEach(({ path, message }) => {
-          actions.setFieldError(path, message)
+          actions.setFieldError((path as any), message)
         })
         return
       }
-      history.push(`/admin/products/modelNumbers/${modelNumber.id}`)
-    } catch (e) {
+      history.push(`/admin/products/modelNumbers/${modelNumber?.id}`)
+    } catch (e: any) {
       actions.setSubmitting(false)
-      actions.setFieldError('_', e.message)
+      actions.setFieldError('_', e?.message)
     }
   }
   return (
@@ -83,19 +84,18 @@ export const ModelNumberEditView: React.FC<RouteComponentProps<
         </Toolbar.View>
         <Card.Flat>
           <Helmet
-            title={`${
-              loading ? 'Loading Product' : modelNumber.id
-            } - RPMed Service Admin`}
+            title={`${loading ? 'Loading Product' : modelNumber?.id
+              } - RPMed Service Admin`}
           />
           {loading ? (
             <Indicators.Spinner size="lg" />
           ) : (
-            <h2>{modelNumber.id}</h2>
+            <h2>{modelNumber?.id}</h2>
           )}
           <ModelNumberForm
             initialValues={{
-              ...modelNumber,
-              productList: ((modelNumber.products ||
+              ...((modelNumber ?? {}) as ModelNumber),
+              productList: ((modelNumber?.products ||
                 []) as Product[]).map(({ id, name }) => ({ id, name })),
             }}
             onSubmit={handleSubmit}

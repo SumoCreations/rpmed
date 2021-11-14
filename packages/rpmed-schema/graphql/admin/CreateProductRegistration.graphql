@@ -1,0 +1,25 @@
+mutation CreateProductRegistration(
+  $productRegistrationInput: NewProductRegistrationInput!
+) {
+  response: createProductRegistration(
+    productRegistrationInput: $productRegistrationInput
+  ) {
+    success
+    productRegistration {
+      id
+      customer {
+        id
+        email
+        name
+      }
+      modelNumber
+      productId
+      customerId
+      serial
+    }
+    errors {
+      path
+      message
+    }
+  }
+}

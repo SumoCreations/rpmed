@@ -1,8 +1,8 @@
 import { Formik } from 'formik'
 import React, { useState } from 'react'
-import { ProductSymptom, ProductType } from '../../schema'
+import { ProductSymptom, ProductType } from 'rpmed-schema'
 import { Grid } from 'rpmed-ui/lib/V1'
-import { useProductSymptoms } from './graphql'
+import { useProductSymptomsQuery } from 'rpmed-schema'
 import {
   ModelNumberSelectField,
   ModelNumberSelectFn,
@@ -22,10 +22,14 @@ interface IFilterState {
 export const useProductFilters = ({ searchText }: { searchText?: string }) => {
   const [filters, setFilters] = useState({} as IFilterState)
 
-  const { productSymptoms, ...query } = useProductSymptoms({
-    modelNumber: filters.modelNumber || '',
-    search: searchText || '',
+  const { data, ...query } = useProductSymptomsQuery({
+    variables: {
+      modelNumber: filters.modelNumber || '',
+      search: searchText || '',
+    }
   })
+  const productSymptoms = data?.response.productSymptoms
+  const pageSize = data?.response.pageSize ?? 0
 
   const handleSelectProduct: ProductSelectFn = p => {
     setFilters({
@@ -104,11 +108,11 @@ export const useProductFilters = ({ searchText }: { searchText?: string }) => {
   const filterProductSymptom = ({ name, faultCode, id }: ProductSymptom) =>
     searchText && searchText.length > 0
       ? [id, name, faultCode]
-          .map(
-            val =>
-              val && val.toLowerCase().indexOf(searchText.toLowerCase()) >= 0
-          )
-          .includes(true)
+        .map(
+          val =>
+            val && val.toLowerCase().indexOf(searchText.toLowerCase()) >= 0
+        )
+        .includes(true)
       : true
 
   const filteredSymptoms = ((productSymptoms || []) as ProductSymptom[])
@@ -120,6 +124,7 @@ export const useProductFilters = ({ searchText }: { searchText?: string }) => {
     filters,
     productSymptoms: filteredSymptoms,
     ProductFilters,
+    pageSize,
     ...query,
   }
 }

@@ -1,4 +1,4 @@
-import { useRgaCountsQuery } from '../../../schema'
+import { useRgaCountsQuery } from 'rpmed-schema'
 
 export const useRgaCounts = () => {
   const { data, error, loading } = useRgaCountsQuery({

@@ -1,0 +1,15 @@
+query Products($search: String) {
+  response: products(search: $search) {
+    products {
+      id
+      name
+      description
+    }
+    pageSize
+    success
+    errors {
+      message
+      path
+    }
+  }
+}

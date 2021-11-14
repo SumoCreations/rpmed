@@ -11,7 +11,7 @@ import {
 
 import 'react-day-picker/lib/style.css'
 
-interface IProductRegistrationFormValues {
+export interface IProductRegistrationFormValues {
   [key: string]: string | boolean | undefined
   id?: string | undefined
   customerId?: string | undefined

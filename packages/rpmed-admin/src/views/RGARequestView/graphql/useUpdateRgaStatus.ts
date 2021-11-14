@@ -6,7 +6,7 @@ import {
   RgasQuery,
   RgaStatus,
   useUpdateRgaStatusMutation,
-} from '../../../schema'
+} from 'rpmed-schema'
 
 import { keyForStatus } from './cacheHelpers'
 

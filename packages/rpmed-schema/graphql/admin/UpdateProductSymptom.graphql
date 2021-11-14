@@ -1,0 +1,19 @@
+mutation UpdateProductSymptom(
+  $productSymptomInput: ExistingProductSymptomInput!
+) {
+  response: updateProductSymptom(productSymptomInput: $productSymptomInput) {
+    productSymptom {
+      id
+      name
+      fee
+      faultCode
+      synopsis
+      solution
+      careTip
+    }
+    errors {
+      message
+      path
+    }
+  }
+}

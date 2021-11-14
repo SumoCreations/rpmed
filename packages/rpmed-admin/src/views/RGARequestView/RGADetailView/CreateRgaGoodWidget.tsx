@@ -2,7 +2,7 @@ import get from 'lodash.get'
 import React, { useState } from 'react'
 import { Flex } from 'rebass'
 import { ErrorList } from 'rpmed-validation-schema'
-import { ProductType } from '../../../schema'
+import { ProductType } from 'rpmed-schema'
 import { Card, Divider, Heading, Indicators } from 'rpmed-ui/lib/V1'
 import { useCreateRGAGood } from '../graphql'
 import { RGAGoodForm, RGAGoodFormSubmitHandler } from './RGAGoodForm'
@@ -47,7 +47,7 @@ export const CreateRGAGoodWidget: React.FunctionComponent<{
     const errors = (get(result, 'data.response.errors') || []) as ErrorList
     if (errors.length > 0) {
       errors.forEach(({ path, message }) => {
-        actions.setFieldError(path, message)
+        actions.setFieldError((path as any), message)
       })
       return
     }

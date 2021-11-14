@@ -14,7 +14,7 @@ import {
   Layout,
   Toolbar,
 } from 'rpmed-ui/lib/V1'
-import { useLinkSymptomToModelNumber } from './graphql'
+import { useLinkSymptomToModelNumberMutation } from 'rpmed-schema'
 import { useProductFilters } from './useProductFilters'
 import { Flex } from 'rebass'
 import { ModelNumbersMap, ModelSelectHandlerFn } from './ModelNumbersMap'
@@ -31,7 +31,7 @@ export const ProductSymptomMapView: React.FC = () => {
     refetch,
     ProductFilters,
   } = useProductFilters({ searchText })
-  const linkSymptomToModelNumber = useLinkSymptomToModelNumber()
+  const [linkSymptomToModelNumber, _] = useLinkSymptomToModelNumberMutation()
   const networkActive = loading || networkStatus === 4
   const handleRefresh = () => refetch()
   const onClickNew = () => history.push('/admin/products/symptoms/new')

@@ -2,7 +2,7 @@ import { faStickyNote } from '@fortawesome/pro-regular-svg-icons'
 import { Formik, FormikHelpers } from 'formik'
 import React from 'react'
 import { Box, Flex, Text } from 'rebass'
-import { RgaStatus } from '../../schema'
+import { RgaStatus } from 'rpmed-schema'
 import { Divider, Form, Heading, Indicators, Input } from 'rpmed-ui/lib/V1'
 import { RGAStatusWidget } from './RGAStatusWidget'
 

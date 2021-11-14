@@ -1,4 +1,4 @@
-import { Rga, RgasQueryVariables, useRgasQuery } from '../../../schema'
+import { Rga, RgasQueryVariables, useRgasQuery } from 'rpmed-schema'
 
 export const useRGAs = ({ status }: RgasQueryVariables) => {
   const { data, error, loading } = useRgasQuery({

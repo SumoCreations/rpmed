@@ -23,7 +23,7 @@ import {
   Toolbar,
 } from 'rpmed-ui/lib/V1'
 import { DestroyDistributorButton } from './DestroyDistributorButton'
-import { IDistributorDataShape, useDistributors } from './graphql'
+import { Distributor, useDistributorsQuery } from 'rpmed-schema'
 
 const { useState } = React
 
@@ -32,7 +32,7 @@ const sendTo = (p: { history: History; url: string }) => () =>
 
 interface IDistributorProps {
   history: History
-  onDelete: (product: IDistributorDataShape) => void
+  onDelete: (product: Distributor) => void
   filterText: string
 }
 
@@ -41,7 +41,7 @@ const Distributors: React.FunctionComponent<IDistributorProps> = ({
   onDelete,
   filterText,
 }) => {
-  const { loading, error, data } = useDistributors()
+  const { loading, error, data } = useDistributorsQuery()
   if (loading) {
     return <p>Loading...</p>
   }
@@ -49,17 +49,17 @@ const Distributors: React.FunctionComponent<IDistributorProps> = ({
     return <Errors.LoadingError error={error} />
   }
 
-  const filterDistributor = ({ name, domain, id }: IDistributorDataShape) =>
+  const filterDistributor = ({ name, domain, id }: Distributor) =>
     filterText.length > 0
       ? [id, name, domain]
-          .map(val => val.toLowerCase().indexOf(filterText.toLowerCase()) >= 0)
-          .includes(true)
+        .map(val => (val?.toLowerCase().indexOf(filterText.toLowerCase()) ?? -1) >= 0)
+        .includes(true)
       : true
 
-  const onClickDelete = (product: IDistributorDataShape) => () =>
+  const onClickDelete = (product: Distributor) => () =>
     onDelete(product)
   const distributors = (get(data, 'response.distributors') ||
-    []) as IDistributorDataShape[]
+    []) as Distributor[]
   const rows = distributors.filter(filterDistributor).map(p => [
     <Link to={`/admin/distributors/${p.id}`} key={p.id}>
       {p.name}
@@ -101,10 +101,10 @@ export const DistributorListView: React.FC<RouteComponentProps<{}>> = ({
   history,
 }) => {
   const [productToDelete, setDistributorToDelete] = useState(
-    null as IDistributorDataShape | null
+    null as Distributor | null
   )
   const [searchText, setSearchText] = useState('')
-  const confirmDistributorToDelete = (product: IDistributorDataShape) =>
+  const confirmDistributorToDelete = (product: Distributor) =>
     setDistributorToDelete(product)
   const onClickNew = () => history.push('/admin/distributors/new')
   const onSearchChange: React.ChangeEventHandler = event =>

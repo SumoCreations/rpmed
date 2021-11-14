@@ -5,7 +5,7 @@ import { Helmet } from 'react-helmet'
 import { RouteComponentProps } from 'react-router'
 import { Box, Flex } from 'rebass'
 import { useQuery } from '../../../routes'
-import { Rga, RgaGood, RgaStatus } from '../../../schema'
+import { Rga, RgaGood, RgaStatus } from 'rpmed-schema'
 import {
   Actions,
   Content,
@@ -87,8 +87,8 @@ const View: React.FunctionComponent<RouteComponentProps<IRGARouterProps>> = ({
   const goodToDelete =
     rga && search.deleteId
       ? rga.goods
-          .map(g => g as RgaGood)
-          .filter(g => g.id === search.deleteId)[0]
+        .map(g => g as RgaGood)
+        .filter(g => g.id === search.deleteId)[0]
       : null
   const goodToEdit =
     rga && search.editId

@@ -6,7 +6,7 @@ import { Card, Content, Layout, Toolbar } from 'rpmed-ui/lib/V1'
 import {
   useModelNumbersLottedQuery,
   useUpdateModelNumberLottedMutation,
-} from '../ProductSymptomsView/graphql'
+} from 'rpmed-schema'
 import { ModelNumbersMap, ModelSelectHandlerFn } from '../ProductSymptomsView'
 
 export const ModelNumbersLottedMap: React.FC = () => {

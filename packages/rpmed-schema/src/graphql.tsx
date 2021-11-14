@@ -1486,6 +1486,166 @@ export type ValidationError = {
   message: Scalars['String'];
 };
 
+export type AttachImagesToSymptomMutationVariables = Exact<{
+  symptomId: Scalars['String'];
+  attachedImages: Array<Maybe<AttachedImageInput>> | Maybe<AttachedImageInput>;
+}>;
+
+
+export type AttachImagesToSymptomMutation = (
+  { __typename?: 'Mutation' }
+  & { response: (
+    { __typename?: 'ProductSymptomMutationOutput' }
+    & Pick<ProductSymptomMutationOutput, 'success'>
+    & { productSymptom?: Maybe<(
+      { __typename?: 'ProductSymptom' }
+      & Pick<ProductSymptom, 'id'>
+      & { attachedImages?: Maybe<Array<Maybe<(
+        { __typename?: 'AttachedImage' }
+        & Pick<AttachedImage, 'position' | 'status' | 'id' | 'url'>
+      )>>> }
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'message' | 'path'>
+    )>>> }
+  ) }
+);
+
+export type CreateCustomerMutationVariables = Exact<{
+  customerInput: NewCustomerInput;
+}>;
+
+
+export type CreateCustomerMutation = (
+  { __typename?: 'Mutation' }
+  & { response: (
+    { __typename?: 'CustomerMutationOutput' }
+    & { customer?: Maybe<(
+      { __typename?: 'Customer' }
+      & Pick<Customer, 'id' | 'name' | 'email'>
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'message' | 'path'>
+    )>>> }
+  ) }
+);
+
+export type CreateDistributorMutationVariables = Exact<{
+  distributorInput: NewDistributorInput;
+}>;
+
+
+export type CreateDistributorMutation = (
+  { __typename?: 'Mutation' }
+  & { response: (
+    { __typename?: 'DistributorMutationOutput' }
+    & Pick<DistributorMutationOutput, 'success'>
+    & { distributor?: Maybe<(
+      { __typename?: 'Distributor' }
+      & Pick<Distributor, 'id' | 'name' | 'domain'>
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'message' | 'path'>
+    )>>> }
+  ) }
+);
+
+export type CreateModelNumberMutationVariables = Exact<{
+  modelNumberInput: ModelNumberInput;
+}>;
+
+
+export type CreateModelNumberMutation = (
+  { __typename?: 'Mutation' }
+  & { response: (
+    { __typename?: 'ModelNumberMutationOutput' }
+    & Pick<ModelNumberMutationOutput, 'success'>
+    & { modelNumber?: Maybe<(
+      { __typename?: 'ModelNumber' }
+      & Pick<ModelNumber, 'id' | 'description' | 'productIds' | 'productType' | 'lotted' | 'warrantyTerm' | 'warrantyDescription' | 'resolutionWithWarranty' | 'resolutionWithoutWarranty' | 'publicNotes' | 'privateNotes'>
+      & { products?: Maybe<Array<Maybe<(
+        { __typename?: 'Product' }
+        & Pick<Product, 'id' | 'name'>
+      )>>>, feeWithWarranty?: Maybe<(
+        { __typename?: 'FeeStructure' }
+        & Pick<FeeStructure, 'distributor' | 'endUser'>
+      )>, feeWithoutWarranty?: Maybe<(
+        { __typename?: 'FeeStructure' }
+        & Pick<FeeStructure, 'distributor' | 'endUser'>
+      )>, pricing?: Maybe<(
+        { __typename?: 'Pricing' }
+        & Pick<Pricing, 'cost' | 'retail'>
+      )> }
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'message' | 'path'>
+    )>>> }
+  ) }
+);
+
+export type CreateProductMutationVariables = Exact<{
+  productInput: ProductInput;
+}>;
+
+
+export type CreateProductMutation = (
+  { __typename?: 'Mutation' }
+  & { response: (
+    { __typename?: 'ProductMutationOutput' }
+    & Pick<ProductMutationOutput, 'success'>
+    & { product?: Maybe<(
+      { __typename?: 'Product' }
+      & Pick<Product, 'id' | 'name' | 'description'>
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'message' | 'path'>
+    )>>> }
+  ) }
+);
+
+export type CreateProductRegistrationMutationVariables = Exact<{
+  productRegistrationInput: NewProductRegistrationInput;
+}>;
+
+
+export type CreateProductRegistrationMutation = (
+  { __typename?: 'Mutation' }
+  & { response: (
+    { __typename?: 'ProductRegistrationMutationOutput' }
+    & Pick<ProductRegistrationMutationOutput, 'success'>
+    & { productRegistration?: Maybe<(
+      { __typename?: 'ProductRegistration' }
+      & Pick<ProductRegistration, 'id' | 'modelNumber' | 'productId' | 'customerId' | 'serial'>
+      & { customer: (
+        { __typename?: 'Customer' }
+        & Pick<Customer, 'id' | 'email' | 'name'>
+      ) }
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'path' | 'message'>
+    )>>> }
+  ) }
+);
+
+export type CreateProductSymptomMutationVariables = Exact<{
+  productSymptomInput: NewProductSymptomInput;
+}>;
+
+
+export type CreateProductSymptomMutation = (
+  { __typename?: 'Mutation' }
+  & { response: (
+    { __typename?: 'ProductSymptomMutationOutput' }
+    & { productSymptom?: Maybe<(
+      { __typename?: 'ProductSymptom' }
+      & Pick<ProductSymptom, 'id' | 'name' | 'fee' | 'faultCode' | 'synopsis' | 'solution' | 'careTip'>
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'message' | 'path'>
+    )>>> }
+  ) }
+);
+
 export type CreateRgaGoodMutationVariables = Exact<{
   rgaId: Scalars['String'];
   rgaGoodInput: RgaGoodInput;
@@ -1527,6 +1687,179 @@ export type CreateRgaMutation = (
   ) }
 );
 
+export type CreateUserMutationVariables = Exact<{
+  userInput: NewUserInput;
+}>;
+
+
+export type CreateUserMutation = (
+  { __typename?: 'Mutation' }
+  & { response: (
+    { __typename?: 'UserMutationOutput' }
+    & { user?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'firstName' | 'lastName' | 'email'>
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'message' | 'path'>
+    )>>> }
+  ) }
+);
+
+export type CustomerQueryVariables = Exact<{
+  customerId: Scalars['String'];
+}>;
+
+
+export type CustomerQuery = (
+  { __typename?: 'Query' }
+  & { response: (
+    { __typename?: 'CustomerQueryOutput' }
+    & Pick<CustomerQueryOutput, 'success'>
+    & { customer?: Maybe<(
+      { __typename?: 'Customer' }
+      & Pick<Customer, 'id' | 'name' | 'email'>
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'message' | 'path'>
+    )>>> }
+  ) }
+);
+
+export type CustomersQueryVariables = Exact<{
+  search?: Maybe<Scalars['String']>;
+}>;
+
+
+export type CustomersQuery = (
+  { __typename?: 'Query' }
+  & { response: (
+    { __typename?: 'CustomerQueryOutput' }
+    & Pick<CustomerQueryOutput, 'success'>
+    & { customers?: Maybe<Array<Maybe<(
+      { __typename?: 'Customer' }
+      & Pick<Customer, 'id' | 'name' | 'email'>
+    )>>>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'message' | 'path'>
+    )>>> }
+  ) }
+);
+
+export type DestroyDistributorMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DestroyDistributorMutation = (
+  { __typename?: 'Mutation' }
+  & { response: (
+    { __typename?: 'DistributorMutationOutput' }
+    & { distributor?: Maybe<(
+      { __typename?: 'Distributor' }
+      & Pick<Distributor, 'id' | 'name' | 'domain'>
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'message' | 'path'>
+    )>>> }
+  ) }
+);
+
+export type DestroyCustomerMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DestroyCustomerMutation = (
+  { __typename?: 'Mutation' }
+  & { response: (
+    { __typename?: 'CustomerMutationOutput' }
+    & { customer?: Maybe<(
+      { __typename?: 'Customer' }
+      & Pick<Customer, 'id' | 'name' | 'email'>
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'message' | 'path'>
+    )>>> }
+  ) }
+);
+
+export type DestroyModelNumberMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DestroyModelNumberMutation = (
+  { __typename?: 'Mutation' }
+  & { response: (
+    { __typename?: 'ModelNumberMutationOutput' }
+    & { modelNumber?: Maybe<(
+      { __typename?: 'ModelNumber' }
+      & Pick<ModelNumber, 'id'>
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'message' | 'path'>
+    )>>> }
+  ) }
+);
+
+export type DestroyProductMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DestroyProductMutation = (
+  { __typename?: 'Mutation' }
+  & { response: (
+    { __typename?: 'ProductMutationOutput' }
+    & { product?: Maybe<(
+      { __typename?: 'Product' }
+      & Pick<Product, 'id' | 'name' | 'description'>
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'message' | 'path'>
+    )>>> }
+  ) }
+);
+
+export type DestroyProductRegistrationMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DestroyProductRegistrationMutation = (
+  { __typename?: 'Mutation' }
+  & { response: (
+    { __typename?: 'ProductRegistrationMutationOutput' }
+    & { productRegistration?: Maybe<(
+      { __typename?: 'ProductRegistration' }
+      & Pick<ProductRegistration, 'id'>
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'message' | 'path'>
+    )>>> }
+  ) }
+);
+
+export type DestroyProductSymptomMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DestroyProductSymptomMutation = (
+  { __typename?: 'Mutation' }
+  & { response: (
+    { __typename?: 'ProductSymptomMutationOutput' }
+    & { productSymptom?: Maybe<(
+      { __typename?: 'ProductSymptom' }
+      & Pick<ProductSymptom, 'id' | 'name' | 'faultCode' | 'fee'>
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'message' | 'path'>
+    )>>> }
+  ) }
+);
+
 export type DestroyRgaGoodMutationVariables = Exact<{
   id: Scalars['ID'];
   rgaId: Scalars['String'];
@@ -1541,6 +1874,25 @@ export type DestroyRgaGoodMutation = (
     & { rgaGood?: Maybe<(
       { __typename?: 'RGAGood' }
       & Pick<RgaGood, 'modelNumber' | 'serial' | 'id' | 'warrantied' | 'faultCode' | 'status' | 'symptomId' | 'symptomDescription' | 'customerId' | 'customerEmail' | 'customerName' | 'customerPhone' | 'customerStreet' | 'customerStreet2' | 'customerZip' | 'customerCity' | 'customerState' | 'customerCountry' | 'customerSpecialty' | 'notes' | 'rma' | 'po' | 'additionalComments' | 'datePurchased' | 'disposition'>
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'message' | 'path'>
+    )>>> }
+  ) }
+);
+
+export type DestroyUserMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DestroyUserMutation = (
+  { __typename?: 'Mutation' }
+  & { response: (
+    { __typename?: 'UserMutationOutput' }
+    & { user?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'firstName' | 'lastName' | 'email'>
     )>, errors?: Maybe<Array<Maybe<(
       { __typename?: 'ValidationError' }
       & Pick<ValidationError, 'message' | 'path'>
@@ -1568,6 +1920,157 @@ export type DistributorQuery = (
   ) }
 );
 
+export type DistributorsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type DistributorsQuery = (
+  { __typename?: 'Query' }
+  & { response: (
+    { __typename?: 'DistributorQueryOutput' }
+    & Pick<DistributorQueryOutput, 'success'>
+    & { distributors?: Maybe<Array<Maybe<(
+      { __typename?: 'Distributor' }
+      & Pick<Distributor, 'id' | 'name' | 'domain'>
+    )>>>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'message' | 'path'>
+    )>>> }
+  ) }
+);
+
+export type LinkSymptomToModelNumberMutationVariables = Exact<{
+  modelNumber: Scalars['String'];
+  symptomId: Scalars['String'];
+  linked: Scalars['Boolean'];
+}>;
+
+
+export type LinkSymptomToModelNumberMutation = (
+  { __typename?: 'Mutation' }
+  & { response: (
+    { __typename?: 'ProductSymptomMutationOutput' }
+    & Pick<ProductSymptomMutationOutput, 'success'>
+    & { productSymptom?: Maybe<(
+      { __typename?: 'ProductSymptom' }
+      & Pick<ProductSymptom, 'id' | 'name' | 'associatedModelNumbers'>
+    )>, modelNumber?: Maybe<(
+      { __typename?: 'ModelNumberSymptomDetail' }
+      & Pick<ModelNumberSymptomDetail, 'id'>
+      & { symptoms: Array<Maybe<(
+        { __typename?: 'ProductSymptom' }
+        & Pick<ProductSymptom, 'id' | 'faultCode' | 'name'>
+      )>> }
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'message' | 'path'>
+    )>>> }
+  ) }
+);
+
+export type ModelNumberQueryVariables = Exact<{
+  modelNumberId: Scalars['String'];
+}>;
+
+
+export type ModelNumberQuery = (
+  { __typename?: 'Query' }
+  & { response?: Maybe<(
+    { __typename?: 'ModelNumberQueryOutput' }
+    & Pick<ModelNumberQueryOutput, 'success'>
+    & { modelNumber?: Maybe<(
+      { __typename?: 'ModelNumber' }
+      & Pick<ModelNumber, 'id' | 'description' | 'productIds' | 'productType' | 'lotted' | 'warrantyTerm' | 'warrantyDescription' | 'resolutionWithWarranty' | 'resolutionWithoutWarranty' | 'publicNotes' | 'privateNotes'>
+      & { products?: Maybe<Array<Maybe<(
+        { __typename?: 'Product' }
+        & Pick<Product, 'id' | 'name'>
+      )>>>, symptoms?: Maybe<Array<Maybe<(
+        { __typename?: 'ProductSymptom' }
+        & Pick<ProductSymptom, 'id' | 'name' | 'faultCode'>
+      )>>>, feeWithWarranty?: Maybe<(
+        { __typename?: 'FeeStructure' }
+        & Pick<FeeStructure, 'distributor' | 'endUser'>
+      )>, feeWithoutWarranty?: Maybe<(
+        { __typename?: 'FeeStructure' }
+        & Pick<FeeStructure, 'distributor' | 'endUser'>
+      )>, pricing?: Maybe<(
+        { __typename?: 'Pricing' }
+        & Pick<Pricing, 'cost' | 'retail'>
+      )> }
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'path' | 'message'>
+    )>>> }
+  )> }
+);
+
+export type ModelNumbersLottedQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ModelNumbersLottedQuery = (
+  { __typename?: 'Query' }
+  & { response?: Maybe<(
+    { __typename?: 'ModelNumberQueryOutput' }
+    & Pick<ModelNumberQueryOutput, 'pageSize' | 'success'>
+    & { modelNumbers?: Maybe<Array<Maybe<(
+      { __typename?: 'ModelNumber' }
+      & Pick<ModelNumber, 'id' | 'lotted'>
+    )>>>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'path' | 'message'>
+    )>>> }
+  )> }
+);
+
+export type ModelNumbersQueryVariables = Exact<{
+  search?: Maybe<Scalars['String']>;
+  productId?: Maybe<Scalars['String']>;
+  productType?: Maybe<ProductType>;
+}>;
+
+
+export type ModelNumbersQuery = (
+  { __typename?: 'Query' }
+  & { response?: Maybe<(
+    { __typename?: 'ModelNumberQueryOutput' }
+    & Pick<ModelNumberQueryOutput, 'pageSize' | 'success'>
+    & { modelNumbers?: Maybe<Array<Maybe<(
+      { __typename?: 'ModelNumber' }
+      & Pick<ModelNumber, 'id' | 'lotted' | 'warrantyTerm' | 'warrantyDescription' | 'productType' | 'description'>
+      & { feeWithWarranty?: Maybe<(
+        { __typename?: 'FeeStructure' }
+        & Pick<FeeStructure, 'distributor' | 'endUser'>
+      )>, products?: Maybe<Array<Maybe<(
+        { __typename?: 'Product' }
+        & Pick<Product, 'id' | 'name'>
+      )>>>, feeWithoutWarranty?: Maybe<(
+        { __typename?: 'FeeStructure' }
+        & Pick<FeeStructure, 'distributor' | 'endUser'>
+      )> }
+    )>>>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'path' | 'message'>
+    )>>> }
+  )> }
+);
+
+export type ModelNumbersSimpleQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ModelNumbersSimpleQuery = (
+  { __typename?: 'Query' }
+  & { response?: Maybe<(
+    { __typename?: 'ModelNumberQueryOutput' }
+    & Pick<ModelNumberQueryOutput, 'pageSize' | 'success'>
+    & { modelNumbers?: Maybe<Array<Maybe<(
+      { __typename?: 'ModelNumber' }
+      & Pick<ModelNumber, 'id'>
+    )>>>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'path' | 'message'>
+    )>>> }
+  )> }
+);
+
 export type ModelNumbersViewableQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1582,6 +2085,145 @@ export type ModelNumbersViewableQuery = (
     )>>>, errors?: Maybe<Array<Maybe<(
       { __typename?: 'ValidationError' }
       & Pick<ValidationError, 'path' | 'message'>
+    )>>> }
+  )> }
+);
+
+export type ProductQueryVariables = Exact<{
+  productId: Scalars['String'];
+}>;
+
+
+export type ProductQuery = (
+  { __typename?: 'Query' }
+  & { response?: Maybe<(
+    { __typename?: 'ProductQueryOutput' }
+    & Pick<ProductQueryOutput, 'success'>
+    & { product?: Maybe<(
+      { __typename?: 'Product' }
+      & Pick<Product, 'id' | 'name' | 'description'>
+      & { modelNumbers?: Maybe<Array<Maybe<(
+        { __typename?: 'ModelNumber' }
+        & Pick<ModelNumber, 'id' | 'description' | 'lotted' | 'warrantyTerm'>
+      )>>> }
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'path' | 'message'>
+    )>>> }
+  )> }
+);
+
+export type ProductRegistrationQueryVariables = Exact<{
+  productRegistrationId: Scalars['String'];
+}>;
+
+
+export type ProductRegistrationQuery = (
+  { __typename?: 'Query' }
+  & { response: (
+    { __typename?: 'ProductRegistrationQueryOutput' }
+    & Pick<ProductRegistrationQueryOutput, 'success'>
+    & { productRegistration?: Maybe<(
+      { __typename?: 'ProductRegistration' }
+      & Pick<ProductRegistration, 'id' | 'productId' | 'customerId' | 'lotted' | 'serial' | 'modelNumber' | 'registeredOn'>
+      & { customer: (
+        { __typename?: 'Customer' }
+        & Pick<Customer, 'id' | 'name' | 'email'>
+      ) }
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'message' | 'path'>
+    )>>> }
+  ) }
+);
+
+export type ProductRegistrationsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ProductRegistrationsQuery = (
+  { __typename?: 'Query' }
+  & { response: (
+    { __typename?: 'ProductRegistrationQueryOutput' }
+    & Pick<ProductRegistrationQueryOutput, 'success'>
+    & { productRegistrations?: Maybe<Array<Maybe<(
+      { __typename?: 'ProductRegistration' }
+      & Pick<ProductRegistration, 'id' | 'productId' | 'customerId' | 'serial' | 'modelNumber'>
+      & { customer: (
+        { __typename?: 'Customer' }
+        & Pick<Customer, 'id' | 'name' | 'email'>
+      ) }
+    )>>>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'message' | 'path'>
+    )>>> }
+  ) }
+);
+
+export type ProductSymptomQueryVariables = Exact<{
+  productSymptomId: Scalars['String'];
+}>;
+
+
+export type ProductSymptomQuery = (
+  { __typename?: 'Query' }
+  & { response: (
+    { __typename?: 'ProductSymptomQueryOutput' }
+    & Pick<ProductSymptomQueryOutput, 'success'>
+    & { productSymptom?: Maybe<(
+      { __typename?: 'ProductSymptom' }
+      & Pick<ProductSymptom, 'id' | 'name' | 'faultCode' | 'fee' | 'preApproved' | 'synopsis' | 'solution' | 'careTip' | 'associatedModelNumbers'>
+      & { attachedImages?: Maybe<Array<Maybe<(
+        { __typename?: 'AttachedImage' }
+        & Pick<AttachedImage, 'id' | 'position' | 'status' | 'url'>
+      )>>> }
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'message' | 'path'>
+    )>>> }
+  ) }
+);
+
+export type ProductSymptomsQueryVariables = Exact<{
+  search?: Maybe<Scalars['String']>;
+  modelNumber?: Maybe<Scalars['String']>;
+}>;
+
+
+export type ProductSymptomsQuery = (
+  { __typename?: 'Query' }
+  & { response: (
+    { __typename?: 'ProductSymptomQueryOutput' }
+    & Pick<ProductSymptomQueryOutput, 'pageSize' | 'success'>
+    & { productSymptoms?: Maybe<Array<Maybe<(
+      { __typename?: 'ProductSymptom' }
+      & Pick<ProductSymptom, 'id' | 'name' | 'faultCode' | 'fee' | 'preApproved' | 'careTip' | 'solution' | 'synopsis' | 'associatedModelNumbers'>
+      & { attachedImages?: Maybe<Array<Maybe<(
+        { __typename?: 'AttachedImage' }
+        & Pick<AttachedImage, 'id' | 'position' | 'status' | 'url'>
+      )>>> }
+    )>>>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'message' | 'path'>
+    )>>> }
+  ) }
+);
+
+export type ProductsQueryVariables = Exact<{
+  search?: Maybe<Scalars['String']>;
+}>;
+
+
+export type ProductsQuery = (
+  { __typename?: 'Query' }
+  & { response?: Maybe<(
+    { __typename?: 'ProductQueryOutput' }
+    & Pick<ProductQueryOutput, 'pageSize' | 'success'>
+    & { products?: Maybe<Array<Maybe<(
+      { __typename?: 'Product' }
+      & Pick<Product, 'id' | 'name' | 'description'>
+    )>>>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'message' | 'path'>
     )>>> }
   )> }
 );
@@ -1680,6 +2322,96 @@ export type RgasQuery = (
   ) }
 );
 
+export type UpdateCustomerMutationVariables = Exact<{
+  customerInput: ExistingCustomerInput;
+}>;
+
+
+export type UpdateCustomerMutation = (
+  { __typename?: 'Mutation' }
+  & { response: (
+    { __typename?: 'CustomerMutationOutput' }
+    & { customer?: Maybe<(
+      { __typename?: 'Customer' }
+      & Pick<Customer, 'id' | 'name' | 'email'>
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'message' | 'path'>
+    )>>> }
+  ) }
+);
+
+export type UpdateDistributorMutationVariables = Exact<{
+  distributorInput: ExistingDistributorInput;
+}>;
+
+
+export type UpdateDistributorMutation = (
+  { __typename?: 'Mutation' }
+  & { response: (
+    { __typename?: 'DistributorMutationOutput' }
+    & { distributor?: Maybe<(
+      { __typename?: 'Distributor' }
+      & Pick<Distributor, 'id' | 'name' | 'domain'>
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'message' | 'path'>
+    )>>> }
+  ) }
+);
+
+export type UpdateModelNumberLottedMutationVariables = Exact<{
+  id: Scalars['ID'];
+  lotted: Scalars['Boolean'];
+}>;
+
+
+export type UpdateModelNumberLottedMutation = (
+  { __typename?: 'Mutation' }
+  & { response: (
+    { __typename?: 'ModelNumberMutationOutput' }
+    & { modelNumber?: Maybe<(
+      { __typename?: 'ModelNumber' }
+      & Pick<ModelNumber, 'id' | 'lotted'>
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'message' | 'path'>
+    )>>> }
+  ) }
+);
+
+export type UpdateModelNumberMutationVariables = Exact<{
+  modelNumberInput: ModelNumberInput;
+}>;
+
+
+export type UpdateModelNumberMutation = (
+  { __typename?: 'Mutation' }
+  & { response: (
+    { __typename?: 'ModelNumberMutationOutput' }
+    & { modelNumber?: Maybe<(
+      { __typename?: 'ModelNumber' }
+      & Pick<ModelNumber, 'id' | 'description' | 'productIds' | 'productType' | 'lotted' | 'warrantyTerm' | 'warrantyDescription' | 'resolutionWithWarranty' | 'resolutionWithoutWarranty' | 'publicNotes' | 'privateNotes'>
+      & { products?: Maybe<Array<Maybe<(
+        { __typename?: 'Product' }
+        & Pick<Product, 'id' | 'name'>
+      )>>>, pricing?: Maybe<(
+        { __typename?: 'Pricing' }
+        & Pick<Pricing, 'cost' | 'retail'>
+      )>, feeWithWarranty?: Maybe<(
+        { __typename?: 'FeeStructure' }
+        & Pick<FeeStructure, 'distributor' | 'endUser'>
+      )>, feeWithoutWarranty?: Maybe<(
+        { __typename?: 'FeeStructure' }
+        & Pick<FeeStructure, 'distributor' | 'endUser'>
+      )> }
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'message' | 'path'>
+    )>>> }
+  ) }
+);
+
 export type UpdateModelNumberViewableMutationVariables = Exact<{
   id: Scalars['ID'];
   publiclyViewable: Scalars['Boolean'];
@@ -1693,6 +2425,68 @@ export type UpdateModelNumberViewableMutation = (
     & { modelNumber?: Maybe<(
       { __typename?: 'ModelNumber' }
       & Pick<ModelNumber, 'id' | 'publiclyViewable'>
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'message' | 'path'>
+    )>>> }
+  ) }
+);
+
+export type UpdateProductMutationVariables = Exact<{
+  productInput: ProductInput;
+}>;
+
+
+export type UpdateProductMutation = (
+  { __typename?: 'Mutation' }
+  & { response: (
+    { __typename?: 'ProductMutationOutput' }
+    & { product?: Maybe<(
+      { __typename?: 'Product' }
+      & Pick<Product, 'id' | 'name' | 'description'>
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'message' | 'path'>
+    )>>> }
+  ) }
+);
+
+export type UpdateProductRegistrationMutationVariables = Exact<{
+  productRegistrationInput: ExistingProductRegistrationInput;
+}>;
+
+
+export type UpdateProductRegistrationMutation = (
+  { __typename?: 'Mutation' }
+  & { response: (
+    { __typename?: 'ProductRegistrationMutationOutput' }
+    & Pick<ProductRegistrationMutationOutput, 'success'>
+    & { productRegistration?: Maybe<(
+      { __typename?: 'ProductRegistration' }
+      & Pick<ProductRegistration, 'id' | 'modelNumber' | 'productId' | 'customerId' | 'serial'>
+      & { customer: (
+        { __typename?: 'Customer' }
+        & Pick<Customer, 'id' | 'email' | 'name'>
+      ) }
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'path' | 'message'>
+    )>>> }
+  ) }
+);
+
+export type UpdateProductSymptomMutationVariables = Exact<{
+  productSymptomInput: ExistingProductSymptomInput;
+}>;
+
+
+export type UpdateProductSymptomMutation = (
+  { __typename?: 'Mutation' }
+  & { response: (
+    { __typename?: 'ProductSymptomMutationOutput' }
+    & { productSymptom?: Maybe<(
+      { __typename?: 'ProductSymptom' }
+      & Pick<ProductSymptom, 'id' | 'name' | 'fee' | 'faultCode' | 'synopsis' | 'solution' | 'careTip'>
     )>, errors?: Maybe<Array<Maybe<(
       { __typename?: 'ValidationError' }
       & Pick<ValidationError, 'message' | 'path'>
@@ -1806,7 +2600,382 @@ export type UpdateRgaStatusMutation = (
   ) }
 );
 
+export type UpdateUserMutationVariables = Exact<{
+  userInput: ExistingUserInput;
+}>;
 
+
+export type UpdateUserMutation = (
+  { __typename?: 'Mutation' }
+  & { response: (
+    { __typename?: 'UserMutationOutput' }
+    & { user?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'firstName' | 'lastName' | 'email'>
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'message' | 'path'>
+    )>>> }
+  ) }
+);
+
+export type UserQueryVariables = Exact<{
+  userId: Scalars['String'];
+}>;
+
+
+export type UserQuery = (
+  { __typename?: 'Query' }
+  & { user?: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'email' | 'firstName' | 'lastName'>
+  )> }
+);
+
+export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type UsersQuery = (
+  { __typename?: 'Query' }
+  & { users?: Maybe<Array<Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'firstName' | 'lastName' | 'email'>
+  )>>> }
+);
+
+
+export const AttachImagesToSymptomDocument = gql`
+    mutation AttachImagesToSymptom($symptomId: String!, $attachedImages: [AttachedImageInput]!) {
+  response: attachImagesToSymptom(symptomId: $symptomId, attachedImages: $attachedImages) {
+    productSymptom {
+      id
+      attachedImages {
+        position
+        status
+        id
+        url
+      }
+    }
+    success
+    errors {
+      message
+      path
+    }
+  }
+}
+    `;
+export type AttachImagesToSymptomMutationFn = Apollo.MutationFunction<AttachImagesToSymptomMutation, AttachImagesToSymptomMutationVariables>;
+
+/**
+ * __useAttachImagesToSymptomMutation__
+ *
+ * To run a mutation, you first call `useAttachImagesToSymptomMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAttachImagesToSymptomMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [attachImagesToSymptomMutation, { data, loading, error }] = useAttachImagesToSymptomMutation({
+ *   variables: {
+ *      symptomId: // value for 'symptomId'
+ *      attachedImages: // value for 'attachedImages'
+ *   },
+ * });
+ */
+export function useAttachImagesToSymptomMutation(baseOptions?: Apollo.MutationHookOptions<AttachImagesToSymptomMutation, AttachImagesToSymptomMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AttachImagesToSymptomMutation, AttachImagesToSymptomMutationVariables>(AttachImagesToSymptomDocument, options);
+      }
+export type AttachImagesToSymptomMutationHookResult = ReturnType<typeof useAttachImagesToSymptomMutation>;
+export type AttachImagesToSymptomMutationResult = Apollo.MutationResult<AttachImagesToSymptomMutation>;
+export type AttachImagesToSymptomMutationOptions = Apollo.BaseMutationOptions<AttachImagesToSymptomMutation, AttachImagesToSymptomMutationVariables>;
+export const CreateCustomerDocument = gql`
+    mutation CreateCustomer($customerInput: NewCustomerInput!) {
+  response: createCustomer(customerInput: $customerInput) {
+    customer {
+      id
+      name
+      email
+    }
+    errors {
+      message
+      path
+    }
+  }
+}
+    `;
+export type CreateCustomerMutationFn = Apollo.MutationFunction<CreateCustomerMutation, CreateCustomerMutationVariables>;
+
+/**
+ * __useCreateCustomerMutation__
+ *
+ * To run a mutation, you first call `useCreateCustomerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCustomerMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCustomerMutation, { data, loading, error }] = useCreateCustomerMutation({
+ *   variables: {
+ *      customerInput: // value for 'customerInput'
+ *   },
+ * });
+ */
+export function useCreateCustomerMutation(baseOptions?: Apollo.MutationHookOptions<CreateCustomerMutation, CreateCustomerMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateCustomerMutation, CreateCustomerMutationVariables>(CreateCustomerDocument, options);
+      }
+export type CreateCustomerMutationHookResult = ReturnType<typeof useCreateCustomerMutation>;
+export type CreateCustomerMutationResult = Apollo.MutationResult<CreateCustomerMutation>;
+export type CreateCustomerMutationOptions = Apollo.BaseMutationOptions<CreateCustomerMutation, CreateCustomerMutationVariables>;
+export const CreateDistributorDocument = gql`
+    mutation CreateDistributor($distributorInput: NewDistributorInput!) {
+  response: createDistributor(distributorInput: $distributorInput) {
+    distributor {
+      id
+      name
+      domain
+    }
+    errors {
+      message
+      path
+    }
+    success
+  }
+}
+    `;
+export type CreateDistributorMutationFn = Apollo.MutationFunction<CreateDistributorMutation, CreateDistributorMutationVariables>;
+
+/**
+ * __useCreateDistributorMutation__
+ *
+ * To run a mutation, you first call `useCreateDistributorMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateDistributorMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createDistributorMutation, { data, loading, error }] = useCreateDistributorMutation({
+ *   variables: {
+ *      distributorInput: // value for 'distributorInput'
+ *   },
+ * });
+ */
+export function useCreateDistributorMutation(baseOptions?: Apollo.MutationHookOptions<CreateDistributorMutation, CreateDistributorMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateDistributorMutation, CreateDistributorMutationVariables>(CreateDistributorDocument, options);
+      }
+export type CreateDistributorMutationHookResult = ReturnType<typeof useCreateDistributorMutation>;
+export type CreateDistributorMutationResult = Apollo.MutationResult<CreateDistributorMutation>;
+export type CreateDistributorMutationOptions = Apollo.BaseMutationOptions<CreateDistributorMutation, CreateDistributorMutationVariables>;
+export const CreateModelNumberDocument = gql`
+    mutation CreateModelNumber($modelNumberInput: ModelNumberInput!) {
+  response: createModelNumber(modelNumberInput: $modelNumberInput) {
+    modelNumber {
+      id
+      description
+      productIds
+      products {
+        id
+        name
+      }
+      productType
+      lotted
+      warrantyTerm
+      warrantyDescription
+      feeWithWarranty {
+        distributor
+        endUser
+      }
+      feeWithoutWarranty {
+        distributor
+        endUser
+      }
+      pricing {
+        cost
+        retail
+      }
+      resolutionWithWarranty
+      resolutionWithoutWarranty
+      publicNotes
+      privateNotes
+    }
+    errors {
+      message
+      path
+    }
+    success
+  }
+}
+    `;
+export type CreateModelNumberMutationFn = Apollo.MutationFunction<CreateModelNumberMutation, CreateModelNumberMutationVariables>;
+
+/**
+ * __useCreateModelNumberMutation__
+ *
+ * To run a mutation, you first call `useCreateModelNumberMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateModelNumberMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createModelNumberMutation, { data, loading, error }] = useCreateModelNumberMutation({
+ *   variables: {
+ *      modelNumberInput: // value for 'modelNumberInput'
+ *   },
+ * });
+ */
+export function useCreateModelNumberMutation(baseOptions?: Apollo.MutationHookOptions<CreateModelNumberMutation, CreateModelNumberMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateModelNumberMutation, CreateModelNumberMutationVariables>(CreateModelNumberDocument, options);
+      }
+export type CreateModelNumberMutationHookResult = ReturnType<typeof useCreateModelNumberMutation>;
+export type CreateModelNumberMutationResult = Apollo.MutationResult<CreateModelNumberMutation>;
+export type CreateModelNumberMutationOptions = Apollo.BaseMutationOptions<CreateModelNumberMutation, CreateModelNumberMutationVariables>;
+export const CreateProductDocument = gql`
+    mutation CreateProduct($productInput: ProductInput!) {
+  response: createProduct(productInput: $productInput) {
+    product {
+      id
+      name
+      description
+    }
+    errors {
+      message
+      path
+    }
+    success
+  }
+}
+    `;
+export type CreateProductMutationFn = Apollo.MutationFunction<CreateProductMutation, CreateProductMutationVariables>;
+
+/**
+ * __useCreateProductMutation__
+ *
+ * To run a mutation, you first call `useCreateProductMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateProductMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createProductMutation, { data, loading, error }] = useCreateProductMutation({
+ *   variables: {
+ *      productInput: // value for 'productInput'
+ *   },
+ * });
+ */
+export function useCreateProductMutation(baseOptions?: Apollo.MutationHookOptions<CreateProductMutation, CreateProductMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateProductMutation, CreateProductMutationVariables>(CreateProductDocument, options);
+      }
+export type CreateProductMutationHookResult = ReturnType<typeof useCreateProductMutation>;
+export type CreateProductMutationResult = Apollo.MutationResult<CreateProductMutation>;
+export type CreateProductMutationOptions = Apollo.BaseMutationOptions<CreateProductMutation, CreateProductMutationVariables>;
+export const CreateProductRegistrationDocument = gql`
+    mutation CreateProductRegistration($productRegistrationInput: NewProductRegistrationInput!) {
+  response: createProductRegistration(productRegistrationInput: $productRegistrationInput) {
+    success
+    productRegistration {
+      id
+      customer {
+        id
+        email
+        name
+      }
+      modelNumber
+      productId
+      customerId
+      serial
+    }
+    errors {
+      path
+      message
+    }
+  }
+}
+    `;
+export type CreateProductRegistrationMutationFn = Apollo.MutationFunction<CreateProductRegistrationMutation, CreateProductRegistrationMutationVariables>;
+
+/**
+ * __useCreateProductRegistrationMutation__
+ *
+ * To run a mutation, you first call `useCreateProductRegistrationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateProductRegistrationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createProductRegistrationMutation, { data, loading, error }] = useCreateProductRegistrationMutation({
+ *   variables: {
+ *      productRegistrationInput: // value for 'productRegistrationInput'
+ *   },
+ * });
+ */
+export function useCreateProductRegistrationMutation(baseOptions?: Apollo.MutationHookOptions<CreateProductRegistrationMutation, CreateProductRegistrationMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateProductRegistrationMutation, CreateProductRegistrationMutationVariables>(CreateProductRegistrationDocument, options);
+      }
+export type CreateProductRegistrationMutationHookResult = ReturnType<typeof useCreateProductRegistrationMutation>;
+export type CreateProductRegistrationMutationResult = Apollo.MutationResult<CreateProductRegistrationMutation>;
+export type CreateProductRegistrationMutationOptions = Apollo.BaseMutationOptions<CreateProductRegistrationMutation, CreateProductRegistrationMutationVariables>;
+export const CreateProductSymptomDocument = gql`
+    mutation CreateProductSymptom($productSymptomInput: NewProductSymptomInput!) {
+  response: createProductSymptom(productSymptomInput: $productSymptomInput) {
+    productSymptom {
+      id
+      name
+      fee
+      faultCode
+      synopsis
+      solution
+      careTip
+    }
+    errors {
+      message
+      path
+    }
+  }
+}
+    `;
+export type CreateProductSymptomMutationFn = Apollo.MutationFunction<CreateProductSymptomMutation, CreateProductSymptomMutationVariables>;
+
+/**
+ * __useCreateProductSymptomMutation__
+ *
+ * To run a mutation, you first call `useCreateProductSymptomMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateProductSymptomMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createProductSymptomMutation, { data, loading, error }] = useCreateProductSymptomMutation({
+ *   variables: {
+ *      productSymptomInput: // value for 'productSymptomInput'
+ *   },
+ * });
+ */
+export function useCreateProductSymptomMutation(baseOptions?: Apollo.MutationHookOptions<CreateProductSymptomMutation, CreateProductSymptomMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateProductSymptomMutation, CreateProductSymptomMutationVariables>(CreateProductSymptomDocument, options);
+      }
+export type CreateProductSymptomMutationHookResult = ReturnType<typeof useCreateProductSymptomMutation>;
+export type CreateProductSymptomMutationResult = Apollo.MutationResult<CreateProductSymptomMutation>;
+export type CreateProductSymptomMutationOptions = Apollo.BaseMutationOptions<CreateProductSymptomMutation, CreateProductSymptomMutationVariables>;
 export const CreateRgaGoodDocument = gql`
     mutation CreateRGAGood($rgaId: String!, $rgaGoodInput: RGAGoodInput!) {
   response: createRGAGood(rgaId: $rgaId, rgaGoodInput: $rgaGoodInput) {
@@ -1930,6 +3099,379 @@ export function useCreateRgaMutation(baseOptions?: Apollo.MutationHookOptions<Cr
 export type CreateRgaMutationHookResult = ReturnType<typeof useCreateRgaMutation>;
 export type CreateRgaMutationResult = Apollo.MutationResult<CreateRgaMutation>;
 export type CreateRgaMutationOptions = Apollo.BaseMutationOptions<CreateRgaMutation, CreateRgaMutationVariables>;
+export const CreateUserDocument = gql`
+    mutation CreateUser($userInput: NewUserInput!) {
+  response: createUser(userInput: $userInput) {
+    user {
+      id
+      firstName
+      lastName
+      email
+    }
+    errors {
+      message
+      path
+    }
+  }
+}
+    `;
+export type CreateUserMutationFn = Apollo.MutationFunction<CreateUserMutation, CreateUserMutationVariables>;
+
+/**
+ * __useCreateUserMutation__
+ *
+ * To run a mutation, you first call `useCreateUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createUserMutation, { data, loading, error }] = useCreateUserMutation({
+ *   variables: {
+ *      userInput: // value for 'userInput'
+ *   },
+ * });
+ */
+export function useCreateUserMutation(baseOptions?: Apollo.MutationHookOptions<CreateUserMutation, CreateUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateUserMutation, CreateUserMutationVariables>(CreateUserDocument, options);
+      }
+export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutation>;
+export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>;
+export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
+export const CustomerDocument = gql`
+    query Customer($customerId: String!) {
+  response: customer(id: $customerId) {
+    customer {
+      id
+      name
+      email
+    }
+    errors {
+      message
+      path
+    }
+    success
+  }
+}
+    `;
+
+/**
+ * __useCustomerQuery__
+ *
+ * To run a query within a React component, call `useCustomerQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCustomerQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCustomerQuery({
+ *   variables: {
+ *      customerId: // value for 'customerId'
+ *   },
+ * });
+ */
+export function useCustomerQuery(baseOptions: Apollo.QueryHookOptions<CustomerQuery, CustomerQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CustomerQuery, CustomerQueryVariables>(CustomerDocument, options);
+      }
+export function useCustomerLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CustomerQuery, CustomerQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CustomerQuery, CustomerQueryVariables>(CustomerDocument, options);
+        }
+export type CustomerQueryHookResult = ReturnType<typeof useCustomerQuery>;
+export type CustomerLazyQueryHookResult = ReturnType<typeof useCustomerLazyQuery>;
+export type CustomerQueryResult = Apollo.QueryResult<CustomerQuery, CustomerQueryVariables>;
+export const CustomersDocument = gql`
+    query Customers($search: String) {
+  response: customers(search: $search) {
+    customers {
+      id
+      name
+      email
+    }
+    errors {
+      message
+      path
+    }
+    success
+  }
+}
+    `;
+
+/**
+ * __useCustomersQuery__
+ *
+ * To run a query within a React component, call `useCustomersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCustomersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCustomersQuery({
+ *   variables: {
+ *      search: // value for 'search'
+ *   },
+ * });
+ */
+export function useCustomersQuery(baseOptions?: Apollo.QueryHookOptions<CustomersQuery, CustomersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CustomersQuery, CustomersQueryVariables>(CustomersDocument, options);
+      }
+export function useCustomersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CustomersQuery, CustomersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CustomersQuery, CustomersQueryVariables>(CustomersDocument, options);
+        }
+export type CustomersQueryHookResult = ReturnType<typeof useCustomersQuery>;
+export type CustomersLazyQueryHookResult = ReturnType<typeof useCustomersLazyQuery>;
+export type CustomersQueryResult = Apollo.QueryResult<CustomersQuery, CustomersQueryVariables>;
+export const DestroyDistributorDocument = gql`
+    mutation DestroyDistributor($id: String!) {
+  response: destroyDistributor(id: $id) {
+    distributor {
+      id
+      name
+      domain
+    }
+    errors {
+      message
+      path
+    }
+  }
+}
+    `;
+export type DestroyDistributorMutationFn = Apollo.MutationFunction<DestroyDistributorMutation, DestroyDistributorMutationVariables>;
+
+/**
+ * __useDestroyDistributorMutation__
+ *
+ * To run a mutation, you first call `useDestroyDistributorMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDestroyDistributorMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [destroyDistributorMutation, { data, loading, error }] = useDestroyDistributorMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDestroyDistributorMutation(baseOptions?: Apollo.MutationHookOptions<DestroyDistributorMutation, DestroyDistributorMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DestroyDistributorMutation, DestroyDistributorMutationVariables>(DestroyDistributorDocument, options);
+      }
+export type DestroyDistributorMutationHookResult = ReturnType<typeof useDestroyDistributorMutation>;
+export type DestroyDistributorMutationResult = Apollo.MutationResult<DestroyDistributorMutation>;
+export type DestroyDistributorMutationOptions = Apollo.BaseMutationOptions<DestroyDistributorMutation, DestroyDistributorMutationVariables>;
+export const DestroyCustomerDocument = gql`
+    mutation DestroyCustomer($id: String!) {
+  response: destroyCustomer(id: $id) {
+    customer {
+      id
+      name
+      email
+    }
+    errors {
+      message
+      path
+    }
+  }
+}
+    `;
+export type DestroyCustomerMutationFn = Apollo.MutationFunction<DestroyCustomerMutation, DestroyCustomerMutationVariables>;
+
+/**
+ * __useDestroyCustomerMutation__
+ *
+ * To run a mutation, you first call `useDestroyCustomerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDestroyCustomerMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [destroyCustomerMutation, { data, loading, error }] = useDestroyCustomerMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDestroyCustomerMutation(baseOptions?: Apollo.MutationHookOptions<DestroyCustomerMutation, DestroyCustomerMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DestroyCustomerMutation, DestroyCustomerMutationVariables>(DestroyCustomerDocument, options);
+      }
+export type DestroyCustomerMutationHookResult = ReturnType<typeof useDestroyCustomerMutation>;
+export type DestroyCustomerMutationResult = Apollo.MutationResult<DestroyCustomerMutation>;
+export type DestroyCustomerMutationOptions = Apollo.BaseMutationOptions<DestroyCustomerMutation, DestroyCustomerMutationVariables>;
+export const DestroyModelNumberDocument = gql`
+    mutation destroyModelNumber($id: ID!) {
+  response: destroyModelNumber(id: $id) {
+    modelNumber {
+      id
+    }
+    errors {
+      message
+      path
+    }
+  }
+}
+    `;
+export type DestroyModelNumberMutationFn = Apollo.MutationFunction<DestroyModelNumberMutation, DestroyModelNumberMutationVariables>;
+
+/**
+ * __useDestroyModelNumberMutation__
+ *
+ * To run a mutation, you first call `useDestroyModelNumberMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDestroyModelNumberMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [destroyModelNumberMutation, { data, loading, error }] = useDestroyModelNumberMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDestroyModelNumberMutation(baseOptions?: Apollo.MutationHookOptions<DestroyModelNumberMutation, DestroyModelNumberMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DestroyModelNumberMutation, DestroyModelNumberMutationVariables>(DestroyModelNumberDocument, options);
+      }
+export type DestroyModelNumberMutationHookResult = ReturnType<typeof useDestroyModelNumberMutation>;
+export type DestroyModelNumberMutationResult = Apollo.MutationResult<DestroyModelNumberMutation>;
+export type DestroyModelNumberMutationOptions = Apollo.BaseMutationOptions<DestroyModelNumberMutation, DestroyModelNumberMutationVariables>;
+export const DestroyProductDocument = gql`
+    mutation DestroyProduct($id: ID!) {
+  response: destroyProduct(id: $id) {
+    product {
+      id
+      name
+      description
+    }
+    errors {
+      message
+      path
+    }
+  }
+}
+    `;
+export type DestroyProductMutationFn = Apollo.MutationFunction<DestroyProductMutation, DestroyProductMutationVariables>;
+
+/**
+ * __useDestroyProductMutation__
+ *
+ * To run a mutation, you first call `useDestroyProductMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDestroyProductMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [destroyProductMutation, { data, loading, error }] = useDestroyProductMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDestroyProductMutation(baseOptions?: Apollo.MutationHookOptions<DestroyProductMutation, DestroyProductMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DestroyProductMutation, DestroyProductMutationVariables>(DestroyProductDocument, options);
+      }
+export type DestroyProductMutationHookResult = ReturnType<typeof useDestroyProductMutation>;
+export type DestroyProductMutationResult = Apollo.MutationResult<DestroyProductMutation>;
+export type DestroyProductMutationOptions = Apollo.BaseMutationOptions<DestroyProductMutation, DestroyProductMutationVariables>;
+export const DestroyProductRegistrationDocument = gql`
+    mutation DestroyProductRegistration($id: String!) {
+  response: destroyProductRegistration(id: $id) {
+    productRegistration {
+      id
+    }
+    errors {
+      message
+      path
+    }
+  }
+}
+    `;
+export type DestroyProductRegistrationMutationFn = Apollo.MutationFunction<DestroyProductRegistrationMutation, DestroyProductRegistrationMutationVariables>;
+
+/**
+ * __useDestroyProductRegistrationMutation__
+ *
+ * To run a mutation, you first call `useDestroyProductRegistrationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDestroyProductRegistrationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [destroyProductRegistrationMutation, { data, loading, error }] = useDestroyProductRegistrationMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDestroyProductRegistrationMutation(baseOptions?: Apollo.MutationHookOptions<DestroyProductRegistrationMutation, DestroyProductRegistrationMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DestroyProductRegistrationMutation, DestroyProductRegistrationMutationVariables>(DestroyProductRegistrationDocument, options);
+      }
+export type DestroyProductRegistrationMutationHookResult = ReturnType<typeof useDestroyProductRegistrationMutation>;
+export type DestroyProductRegistrationMutationResult = Apollo.MutationResult<DestroyProductRegistrationMutation>;
+export type DestroyProductRegistrationMutationOptions = Apollo.BaseMutationOptions<DestroyProductRegistrationMutation, DestroyProductRegistrationMutationVariables>;
+export const DestroyProductSymptomDocument = gql`
+    mutation destroyProductSymptom($id: String!) {
+  response: destroyProductSymptom(id: $id) {
+    productSymptom {
+      id
+      name
+      faultCode
+      fee
+    }
+    errors {
+      message
+      path
+    }
+  }
+}
+    `;
+export type DestroyProductSymptomMutationFn = Apollo.MutationFunction<DestroyProductSymptomMutation, DestroyProductSymptomMutationVariables>;
+
+/**
+ * __useDestroyProductSymptomMutation__
+ *
+ * To run a mutation, you first call `useDestroyProductSymptomMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDestroyProductSymptomMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [destroyProductSymptomMutation, { data, loading, error }] = useDestroyProductSymptomMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDestroyProductSymptomMutation(baseOptions?: Apollo.MutationHookOptions<DestroyProductSymptomMutation, DestroyProductSymptomMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DestroyProductSymptomMutation, DestroyProductSymptomMutationVariables>(DestroyProductSymptomDocument, options);
+      }
+export type DestroyProductSymptomMutationHookResult = ReturnType<typeof useDestroyProductSymptomMutation>;
+export type DestroyProductSymptomMutationResult = Apollo.MutationResult<DestroyProductSymptomMutation>;
+export type DestroyProductSymptomMutationOptions = Apollo.BaseMutationOptions<DestroyProductSymptomMutation, DestroyProductSymptomMutationVariables>;
 export const DestroyRgaGoodDocument = gql`
     mutation DestroyRGAGood($id: ID!, $rgaId: String!) {
   response: destroyRGAGood(id: $id, rgaId: $rgaId) {
@@ -1996,6 +3538,48 @@ export function useDestroyRgaGoodMutation(baseOptions?: Apollo.MutationHookOptio
 export type DestroyRgaGoodMutationHookResult = ReturnType<typeof useDestroyRgaGoodMutation>;
 export type DestroyRgaGoodMutationResult = Apollo.MutationResult<DestroyRgaGoodMutation>;
 export type DestroyRgaGoodMutationOptions = Apollo.BaseMutationOptions<DestroyRgaGoodMutation, DestroyRgaGoodMutationVariables>;
+export const DestroyUserDocument = gql`
+    mutation destroyUser($id: String!) {
+  response: destroyUser(id: $id) {
+    user {
+      id
+      firstName
+      lastName
+      email
+    }
+    errors {
+      message
+      path
+    }
+  }
+}
+    `;
+export type DestroyUserMutationFn = Apollo.MutationFunction<DestroyUserMutation, DestroyUserMutationVariables>;
+
+/**
+ * __useDestroyUserMutation__
+ *
+ * To run a mutation, you first call `useDestroyUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDestroyUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [destroyUserMutation, { data, loading, error }] = useDestroyUserMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDestroyUserMutation(baseOptions?: Apollo.MutationHookOptions<DestroyUserMutation, DestroyUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DestroyUserMutation, DestroyUserMutationVariables>(DestroyUserDocument, options);
+      }
+export type DestroyUserMutationHookResult = ReturnType<typeof useDestroyUserMutation>;
+export type DestroyUserMutationResult = Apollo.MutationResult<DestroyUserMutation>;
+export type DestroyUserMutationOptions = Apollo.BaseMutationOptions<DestroyUserMutation, DestroyUserMutationVariables>;
 export const DistributorDocument = gql`
     query Distributor($distributorId: String!) {
   response: distributor(id: $distributorId) {
@@ -2040,6 +3624,321 @@ export function useDistributorLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type DistributorQueryHookResult = ReturnType<typeof useDistributorQuery>;
 export type DistributorLazyQueryHookResult = ReturnType<typeof useDistributorLazyQuery>;
 export type DistributorQueryResult = Apollo.QueryResult<DistributorQuery, DistributorQueryVariables>;
+export const DistributorsDocument = gql`
+    query Distributors {
+  response: distributors {
+    distributors {
+      id
+      name
+      domain
+    }
+    errors {
+      message
+      path
+    }
+    success
+  }
+}
+    `;
+
+/**
+ * __useDistributorsQuery__
+ *
+ * To run a query within a React component, call `useDistributorsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDistributorsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDistributorsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useDistributorsQuery(baseOptions?: Apollo.QueryHookOptions<DistributorsQuery, DistributorsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<DistributorsQuery, DistributorsQueryVariables>(DistributorsDocument, options);
+      }
+export function useDistributorsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DistributorsQuery, DistributorsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<DistributorsQuery, DistributorsQueryVariables>(DistributorsDocument, options);
+        }
+export type DistributorsQueryHookResult = ReturnType<typeof useDistributorsQuery>;
+export type DistributorsLazyQueryHookResult = ReturnType<typeof useDistributorsLazyQuery>;
+export type DistributorsQueryResult = Apollo.QueryResult<DistributorsQuery, DistributorsQueryVariables>;
+export const LinkSymptomToModelNumberDocument = gql`
+    mutation LinkSymptomToModelNumber($modelNumber: String!, $symptomId: String!, $linked: Boolean!) {
+  response: linkSymptomToModel(modelNumber: $modelNumber, symptomId: $symptomId, linked: $linked) {
+    success
+    productSymptom {
+      id
+      name
+      associatedModelNumbers
+    }
+    modelNumber {
+      id
+      symptoms {
+        id
+        faultCode
+        name
+      }
+    }
+    errors {
+      message
+      path
+    }
+  }
+}
+    `;
+export type LinkSymptomToModelNumberMutationFn = Apollo.MutationFunction<LinkSymptomToModelNumberMutation, LinkSymptomToModelNumberMutationVariables>;
+
+/**
+ * __useLinkSymptomToModelNumberMutation__
+ *
+ * To run a mutation, you first call `useLinkSymptomToModelNumberMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLinkSymptomToModelNumberMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [linkSymptomToModelNumberMutation, { data, loading, error }] = useLinkSymptomToModelNumberMutation({
+ *   variables: {
+ *      modelNumber: // value for 'modelNumber'
+ *      symptomId: // value for 'symptomId'
+ *      linked: // value for 'linked'
+ *   },
+ * });
+ */
+export function useLinkSymptomToModelNumberMutation(baseOptions?: Apollo.MutationHookOptions<LinkSymptomToModelNumberMutation, LinkSymptomToModelNumberMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LinkSymptomToModelNumberMutation, LinkSymptomToModelNumberMutationVariables>(LinkSymptomToModelNumberDocument, options);
+      }
+export type LinkSymptomToModelNumberMutationHookResult = ReturnType<typeof useLinkSymptomToModelNumberMutation>;
+export type LinkSymptomToModelNumberMutationResult = Apollo.MutationResult<LinkSymptomToModelNumberMutation>;
+export type LinkSymptomToModelNumberMutationOptions = Apollo.BaseMutationOptions<LinkSymptomToModelNumberMutation, LinkSymptomToModelNumberMutationVariables>;
+export const ModelNumberDocument = gql`
+    query ModelNumber($modelNumberId: String!) {
+  response: modelNumber(id: $modelNumberId) {
+    modelNumber {
+      id
+      description
+      productIds
+      productType
+      products {
+        id
+        name
+      }
+      symptoms {
+        id
+        name
+        faultCode
+      }
+      lotted
+      warrantyTerm
+      warrantyDescription
+      feeWithWarranty {
+        distributor
+        endUser
+      }
+      feeWithoutWarranty {
+        distributor
+        endUser
+      }
+      pricing {
+        cost
+        retail
+      }
+      resolutionWithWarranty
+      resolutionWithoutWarranty
+      publicNotes
+      privateNotes
+    }
+    success
+    errors {
+      path
+      message
+    }
+  }
+}
+    `;
+
+/**
+ * __useModelNumberQuery__
+ *
+ * To run a query within a React component, call `useModelNumberQuery` and pass it any options that fit your needs.
+ * When your component renders, `useModelNumberQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useModelNumberQuery({
+ *   variables: {
+ *      modelNumberId: // value for 'modelNumberId'
+ *   },
+ * });
+ */
+export function useModelNumberQuery(baseOptions: Apollo.QueryHookOptions<ModelNumberQuery, ModelNumberQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ModelNumberQuery, ModelNumberQueryVariables>(ModelNumberDocument, options);
+      }
+export function useModelNumberLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ModelNumberQuery, ModelNumberQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ModelNumberQuery, ModelNumberQueryVariables>(ModelNumberDocument, options);
+        }
+export type ModelNumberQueryHookResult = ReturnType<typeof useModelNumberQuery>;
+export type ModelNumberLazyQueryHookResult = ReturnType<typeof useModelNumberLazyQuery>;
+export type ModelNumberQueryResult = Apollo.QueryResult<ModelNumberQuery, ModelNumberQueryVariables>;
+export const ModelNumbersLottedDocument = gql`
+    query ModelNumbersLotted {
+  response: modelNumbers {
+    modelNumbers {
+      id
+      lotted
+    }
+    pageSize
+    success
+    errors {
+      path
+      message
+    }
+  }
+}
+    `;
+
+/**
+ * __useModelNumbersLottedQuery__
+ *
+ * To run a query within a React component, call `useModelNumbersLottedQuery` and pass it any options that fit your needs.
+ * When your component renders, `useModelNumbersLottedQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useModelNumbersLottedQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useModelNumbersLottedQuery(baseOptions?: Apollo.QueryHookOptions<ModelNumbersLottedQuery, ModelNumbersLottedQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ModelNumbersLottedQuery, ModelNumbersLottedQueryVariables>(ModelNumbersLottedDocument, options);
+      }
+export function useModelNumbersLottedLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ModelNumbersLottedQuery, ModelNumbersLottedQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ModelNumbersLottedQuery, ModelNumbersLottedQueryVariables>(ModelNumbersLottedDocument, options);
+        }
+export type ModelNumbersLottedQueryHookResult = ReturnType<typeof useModelNumbersLottedQuery>;
+export type ModelNumbersLottedLazyQueryHookResult = ReturnType<typeof useModelNumbersLottedLazyQuery>;
+export type ModelNumbersLottedQueryResult = Apollo.QueryResult<ModelNumbersLottedQuery, ModelNumbersLottedQueryVariables>;
+export const ModelNumbersDocument = gql`
+    query ModelNumbers($search: String, $productId: String, $productType: ProductType) {
+  response: modelNumbers(search: $search, productId: $productId, productType: $productType) {
+    modelNumbers {
+      id
+      lotted
+      warrantyTerm
+      warrantyDescription
+      productType
+      feeWithWarranty {
+        distributor
+        endUser
+      }
+      products {
+        id
+        name
+      }
+      feeWithoutWarranty {
+        distributor
+        endUser
+      }
+      description
+    }
+    pageSize
+    success
+    errors {
+      path
+      message
+    }
+  }
+}
+    `;
+
+/**
+ * __useModelNumbersQuery__
+ *
+ * To run a query within a React component, call `useModelNumbersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useModelNumbersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useModelNumbersQuery({
+ *   variables: {
+ *      search: // value for 'search'
+ *      productId: // value for 'productId'
+ *      productType: // value for 'productType'
+ *   },
+ * });
+ */
+export function useModelNumbersQuery(baseOptions?: Apollo.QueryHookOptions<ModelNumbersQuery, ModelNumbersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ModelNumbersQuery, ModelNumbersQueryVariables>(ModelNumbersDocument, options);
+      }
+export function useModelNumbersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ModelNumbersQuery, ModelNumbersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ModelNumbersQuery, ModelNumbersQueryVariables>(ModelNumbersDocument, options);
+        }
+export type ModelNumbersQueryHookResult = ReturnType<typeof useModelNumbersQuery>;
+export type ModelNumbersLazyQueryHookResult = ReturnType<typeof useModelNumbersLazyQuery>;
+export type ModelNumbersQueryResult = Apollo.QueryResult<ModelNumbersQuery, ModelNumbersQueryVariables>;
+export const ModelNumbersSimpleDocument = gql`
+    query ModelNumbersSimple {
+  response: modelNumbers {
+    modelNumbers {
+      id
+    }
+    pageSize
+    success
+    errors {
+      path
+      message
+    }
+  }
+}
+    `;
+
+/**
+ * __useModelNumbersSimpleQuery__
+ *
+ * To run a query within a React component, call `useModelNumbersSimpleQuery` and pass it any options that fit your needs.
+ * When your component renders, `useModelNumbersSimpleQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useModelNumbersSimpleQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useModelNumbersSimpleQuery(baseOptions?: Apollo.QueryHookOptions<ModelNumbersSimpleQuery, ModelNumbersSimpleQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ModelNumbersSimpleQuery, ModelNumbersSimpleQueryVariables>(ModelNumbersSimpleDocument, options);
+      }
+export function useModelNumbersSimpleLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ModelNumbersSimpleQuery, ModelNumbersSimpleQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ModelNumbersSimpleQuery, ModelNumbersSimpleQueryVariables>(ModelNumbersSimpleDocument, options);
+        }
+export type ModelNumbersSimpleQueryHookResult = ReturnType<typeof useModelNumbersSimpleQuery>;
+export type ModelNumbersSimpleLazyQueryHookResult = ReturnType<typeof useModelNumbersSimpleLazyQuery>;
+export type ModelNumbersSimpleQueryResult = Apollo.QueryResult<ModelNumbersSimpleQuery, ModelNumbersSimpleQueryVariables>;
 export const ModelNumbersViewableDocument = gql`
     query ModelNumbersViewable {
   response: modelNumbers {
@@ -2083,6 +3982,318 @@ export function useModelNumbersViewableLazyQuery(baseOptions?: Apollo.LazyQueryH
 export type ModelNumbersViewableQueryHookResult = ReturnType<typeof useModelNumbersViewableQuery>;
 export type ModelNumbersViewableLazyQueryHookResult = ReturnType<typeof useModelNumbersViewableLazyQuery>;
 export type ModelNumbersViewableQueryResult = Apollo.QueryResult<ModelNumbersViewableQuery, ModelNumbersViewableQueryVariables>;
+export const ProductDocument = gql`
+    query Product($productId: String!) {
+  response: product(id: $productId) {
+    product {
+      id
+      name
+      description
+      modelNumbers {
+        id
+        description
+        lotted
+        warrantyTerm
+      }
+    }
+    errors {
+      path
+      message
+    }
+    success
+  }
+}
+    `;
+
+/**
+ * __useProductQuery__
+ *
+ * To run a query within a React component, call `useProductQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProductQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProductQuery({
+ *   variables: {
+ *      productId: // value for 'productId'
+ *   },
+ * });
+ */
+export function useProductQuery(baseOptions: Apollo.QueryHookOptions<ProductQuery, ProductQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ProductQuery, ProductQueryVariables>(ProductDocument, options);
+      }
+export function useProductLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ProductQuery, ProductQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ProductQuery, ProductQueryVariables>(ProductDocument, options);
+        }
+export type ProductQueryHookResult = ReturnType<typeof useProductQuery>;
+export type ProductLazyQueryHookResult = ReturnType<typeof useProductLazyQuery>;
+export type ProductQueryResult = Apollo.QueryResult<ProductQuery, ProductQueryVariables>;
+export const ProductRegistrationDocument = gql`
+    query ProductRegistration($productRegistrationId: String!) {
+  response: productRegistration(id: $productRegistrationId) {
+    productRegistration {
+      id
+      productId
+      customerId
+      customer {
+        id
+        name
+        email
+      }
+      lotted
+      serial
+      modelNumber
+      registeredOn
+    }
+    errors {
+      message
+      path
+    }
+    success
+  }
+}
+    `;
+
+/**
+ * __useProductRegistrationQuery__
+ *
+ * To run a query within a React component, call `useProductRegistrationQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProductRegistrationQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProductRegistrationQuery({
+ *   variables: {
+ *      productRegistrationId: // value for 'productRegistrationId'
+ *   },
+ * });
+ */
+export function useProductRegistrationQuery(baseOptions: Apollo.QueryHookOptions<ProductRegistrationQuery, ProductRegistrationQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ProductRegistrationQuery, ProductRegistrationQueryVariables>(ProductRegistrationDocument, options);
+      }
+export function useProductRegistrationLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ProductRegistrationQuery, ProductRegistrationQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ProductRegistrationQuery, ProductRegistrationQueryVariables>(ProductRegistrationDocument, options);
+        }
+export type ProductRegistrationQueryHookResult = ReturnType<typeof useProductRegistrationQuery>;
+export type ProductRegistrationLazyQueryHookResult = ReturnType<typeof useProductRegistrationLazyQuery>;
+export type ProductRegistrationQueryResult = Apollo.QueryResult<ProductRegistrationQuery, ProductRegistrationQueryVariables>;
+export const ProductRegistrationsDocument = gql`
+    query ProductRegistrations {
+  response: productRegistrations {
+    productRegistrations {
+      id
+      productId
+      customerId
+      customer {
+        id
+        name
+        email
+      }
+      serial
+      modelNumber
+    }
+    errors {
+      message
+      path
+    }
+    success
+  }
+}
+    `;
+
+/**
+ * __useProductRegistrationsQuery__
+ *
+ * To run a query within a React component, call `useProductRegistrationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProductRegistrationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProductRegistrationsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useProductRegistrationsQuery(baseOptions?: Apollo.QueryHookOptions<ProductRegistrationsQuery, ProductRegistrationsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ProductRegistrationsQuery, ProductRegistrationsQueryVariables>(ProductRegistrationsDocument, options);
+      }
+export function useProductRegistrationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ProductRegistrationsQuery, ProductRegistrationsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ProductRegistrationsQuery, ProductRegistrationsQueryVariables>(ProductRegistrationsDocument, options);
+        }
+export type ProductRegistrationsQueryHookResult = ReturnType<typeof useProductRegistrationsQuery>;
+export type ProductRegistrationsLazyQueryHookResult = ReturnType<typeof useProductRegistrationsLazyQuery>;
+export type ProductRegistrationsQueryResult = Apollo.QueryResult<ProductRegistrationsQuery, ProductRegistrationsQueryVariables>;
+export const ProductSymptomDocument = gql`
+    query ProductSymptom($productSymptomId: String!) {
+  response: productSymptom(id: $productSymptomId) {
+    productSymptom {
+      id
+      name
+      faultCode
+      fee
+      preApproved
+      synopsis
+      solution
+      careTip
+      associatedModelNumbers
+      attachedImages {
+        id
+        position
+        status
+        url
+      }
+    }
+    errors {
+      message
+      path
+    }
+    success
+  }
+}
+    `;
+
+/**
+ * __useProductSymptomQuery__
+ *
+ * To run a query within a React component, call `useProductSymptomQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProductSymptomQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProductSymptomQuery({
+ *   variables: {
+ *      productSymptomId: // value for 'productSymptomId'
+ *   },
+ * });
+ */
+export function useProductSymptomQuery(baseOptions: Apollo.QueryHookOptions<ProductSymptomQuery, ProductSymptomQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ProductSymptomQuery, ProductSymptomQueryVariables>(ProductSymptomDocument, options);
+      }
+export function useProductSymptomLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ProductSymptomQuery, ProductSymptomQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ProductSymptomQuery, ProductSymptomQueryVariables>(ProductSymptomDocument, options);
+        }
+export type ProductSymptomQueryHookResult = ReturnType<typeof useProductSymptomQuery>;
+export type ProductSymptomLazyQueryHookResult = ReturnType<typeof useProductSymptomLazyQuery>;
+export type ProductSymptomQueryResult = Apollo.QueryResult<ProductSymptomQuery, ProductSymptomQueryVariables>;
+export const ProductSymptomsDocument = gql`
+    query ProductSymptoms($search: String, $modelNumber: String) {
+  response: productSymptoms(search: $search, modelNumber: $modelNumber) {
+    productSymptoms {
+      id
+      name
+      faultCode
+      fee
+      preApproved
+      careTip
+      solution
+      synopsis
+      attachedImages {
+        id
+        position
+        status
+        url
+      }
+      associatedModelNumbers
+    }
+    pageSize
+    errors {
+      message
+      path
+    }
+    success
+  }
+}
+    `;
+
+/**
+ * __useProductSymptomsQuery__
+ *
+ * To run a query within a React component, call `useProductSymptomsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProductSymptomsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProductSymptomsQuery({
+ *   variables: {
+ *      search: // value for 'search'
+ *      modelNumber: // value for 'modelNumber'
+ *   },
+ * });
+ */
+export function useProductSymptomsQuery(baseOptions?: Apollo.QueryHookOptions<ProductSymptomsQuery, ProductSymptomsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ProductSymptomsQuery, ProductSymptomsQueryVariables>(ProductSymptomsDocument, options);
+      }
+export function useProductSymptomsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ProductSymptomsQuery, ProductSymptomsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ProductSymptomsQuery, ProductSymptomsQueryVariables>(ProductSymptomsDocument, options);
+        }
+export type ProductSymptomsQueryHookResult = ReturnType<typeof useProductSymptomsQuery>;
+export type ProductSymptomsLazyQueryHookResult = ReturnType<typeof useProductSymptomsLazyQuery>;
+export type ProductSymptomsQueryResult = Apollo.QueryResult<ProductSymptomsQuery, ProductSymptomsQueryVariables>;
+export const ProductsDocument = gql`
+    query Products($search: String) {
+  response: products(search: $search) {
+    products {
+      id
+      name
+      description
+    }
+    pageSize
+    success
+    errors {
+      message
+      path
+    }
+  }
+}
+    `;
+
+/**
+ * __useProductsQuery__
+ *
+ * To run a query within a React component, call `useProductsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProductsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProductsQuery({
+ *   variables: {
+ *      search: // value for 'search'
+ *   },
+ * });
+ */
+export function useProductsQuery(baseOptions?: Apollo.QueryHookOptions<ProductsQuery, ProductsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ProductsQuery, ProductsQueryVariables>(ProductsDocument, options);
+      }
+export function useProductsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ProductsQuery, ProductsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ProductsQuery, ProductsQueryVariables>(ProductsDocument, options);
+        }
+export type ProductsQueryHookResult = ReturnType<typeof useProductsQuery>;
+export type ProductsLazyQueryHookResult = ReturnType<typeof useProductsLazyQuery>;
+export type ProductsQueryResult = Apollo.QueryResult<ProductsQuery, ProductsQueryVariables>;
 export const ResetPasswordDocument = gql`
     mutation ResetPassword($password: String!) {
   response: resetPassword(password: $password) {
@@ -2313,6 +4524,194 @@ export function useRgasLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RgasQ
 export type RgasQueryHookResult = ReturnType<typeof useRgasQuery>;
 export type RgasLazyQueryHookResult = ReturnType<typeof useRgasLazyQuery>;
 export type RgasQueryResult = Apollo.QueryResult<RgasQuery, RgasQueryVariables>;
+export const UpdateCustomerDocument = gql`
+    mutation UpdateCustomer($customerInput: ExistingCustomerInput!) {
+  response: updateCustomer(customerInput: $customerInput) {
+    customer {
+      id
+      name
+      email
+    }
+    errors {
+      message
+      path
+    }
+  }
+}
+    `;
+export type UpdateCustomerMutationFn = Apollo.MutationFunction<UpdateCustomerMutation, UpdateCustomerMutationVariables>;
+
+/**
+ * __useUpdateCustomerMutation__
+ *
+ * To run a mutation, you first call `useUpdateCustomerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCustomerMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateCustomerMutation, { data, loading, error }] = useUpdateCustomerMutation({
+ *   variables: {
+ *      customerInput: // value for 'customerInput'
+ *   },
+ * });
+ */
+export function useUpdateCustomerMutation(baseOptions?: Apollo.MutationHookOptions<UpdateCustomerMutation, UpdateCustomerMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateCustomerMutation, UpdateCustomerMutationVariables>(UpdateCustomerDocument, options);
+      }
+export type UpdateCustomerMutationHookResult = ReturnType<typeof useUpdateCustomerMutation>;
+export type UpdateCustomerMutationResult = Apollo.MutationResult<UpdateCustomerMutation>;
+export type UpdateCustomerMutationOptions = Apollo.BaseMutationOptions<UpdateCustomerMutation, UpdateCustomerMutationVariables>;
+export const UpdateDistributorDocument = gql`
+    mutation UpdateDistributor($distributorInput: ExistingDistributorInput!) {
+  response: updateDistributor(distributorInput: $distributorInput) {
+    distributor {
+      id
+      name
+      domain
+    }
+    errors {
+      message
+      path
+    }
+  }
+}
+    `;
+export type UpdateDistributorMutationFn = Apollo.MutationFunction<UpdateDistributorMutation, UpdateDistributorMutationVariables>;
+
+/**
+ * __useUpdateDistributorMutation__
+ *
+ * To run a mutation, you first call `useUpdateDistributorMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateDistributorMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateDistributorMutation, { data, loading, error }] = useUpdateDistributorMutation({
+ *   variables: {
+ *      distributorInput: // value for 'distributorInput'
+ *   },
+ * });
+ */
+export function useUpdateDistributorMutation(baseOptions?: Apollo.MutationHookOptions<UpdateDistributorMutation, UpdateDistributorMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateDistributorMutation, UpdateDistributorMutationVariables>(UpdateDistributorDocument, options);
+      }
+export type UpdateDistributorMutationHookResult = ReturnType<typeof useUpdateDistributorMutation>;
+export type UpdateDistributorMutationResult = Apollo.MutationResult<UpdateDistributorMutation>;
+export type UpdateDistributorMutationOptions = Apollo.BaseMutationOptions<UpdateDistributorMutation, UpdateDistributorMutationVariables>;
+export const UpdateModelNumberLottedDocument = gql`
+    mutation UpdateModelNumberLotted($id: ID!, $lotted: Boolean!) {
+  response: updateModelNumberLotted(id: $id, lotted: $lotted) {
+    modelNumber {
+      id
+      lotted
+    }
+    errors {
+      message
+      path
+    }
+  }
+}
+    `;
+export type UpdateModelNumberLottedMutationFn = Apollo.MutationFunction<UpdateModelNumberLottedMutation, UpdateModelNumberLottedMutationVariables>;
+
+/**
+ * __useUpdateModelNumberLottedMutation__
+ *
+ * To run a mutation, you first call `useUpdateModelNumberLottedMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateModelNumberLottedMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateModelNumberLottedMutation, { data, loading, error }] = useUpdateModelNumberLottedMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      lotted: // value for 'lotted'
+ *   },
+ * });
+ */
+export function useUpdateModelNumberLottedMutation(baseOptions?: Apollo.MutationHookOptions<UpdateModelNumberLottedMutation, UpdateModelNumberLottedMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateModelNumberLottedMutation, UpdateModelNumberLottedMutationVariables>(UpdateModelNumberLottedDocument, options);
+      }
+export type UpdateModelNumberLottedMutationHookResult = ReturnType<typeof useUpdateModelNumberLottedMutation>;
+export type UpdateModelNumberLottedMutationResult = Apollo.MutationResult<UpdateModelNumberLottedMutation>;
+export type UpdateModelNumberLottedMutationOptions = Apollo.BaseMutationOptions<UpdateModelNumberLottedMutation, UpdateModelNumberLottedMutationVariables>;
+export const UpdateModelNumberDocument = gql`
+    mutation UpdateModelNumber($modelNumberInput: ModelNumberInput!) {
+  response: updateModelNumber(modelNumberInput: $modelNumberInput) {
+    modelNumber {
+      id
+      description
+      productIds
+      products {
+        id
+        name
+      }
+      productType
+      pricing {
+        cost
+        retail
+      }
+      lotted
+      warrantyTerm
+      warrantyDescription
+      feeWithWarranty {
+        distributor
+        endUser
+      }
+      feeWithoutWarranty {
+        distributor
+        endUser
+      }
+      resolutionWithWarranty
+      resolutionWithoutWarranty
+      publicNotes
+      privateNotes
+    }
+    errors {
+      message
+      path
+    }
+  }
+}
+    `;
+export type UpdateModelNumberMutationFn = Apollo.MutationFunction<UpdateModelNumberMutation, UpdateModelNumberMutationVariables>;
+
+/**
+ * __useUpdateModelNumberMutation__
+ *
+ * To run a mutation, you first call `useUpdateModelNumberMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateModelNumberMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateModelNumberMutation, { data, loading, error }] = useUpdateModelNumberMutation({
+ *   variables: {
+ *      modelNumberInput: // value for 'modelNumberInput'
+ *   },
+ * });
+ */
+export function useUpdateModelNumberMutation(baseOptions?: Apollo.MutationHookOptions<UpdateModelNumberMutation, UpdateModelNumberMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateModelNumberMutation, UpdateModelNumberMutationVariables>(UpdateModelNumberDocument, options);
+      }
+export type UpdateModelNumberMutationHookResult = ReturnType<typeof useUpdateModelNumberMutation>;
+export type UpdateModelNumberMutationResult = Apollo.MutationResult<UpdateModelNumberMutation>;
+export type UpdateModelNumberMutationOptions = Apollo.BaseMutationOptions<UpdateModelNumberMutation, UpdateModelNumberMutationVariables>;
 export const UpdateModelNumberViewableDocument = gql`
     mutation UpdateModelNumberViewable($id: ID!, $publiclyViewable: Boolean!) {
   response: updateModelNumberViewable(id: $id, publiclyViewable: $publiclyViewable) {
@@ -2354,6 +4753,141 @@ export function useUpdateModelNumberViewableMutation(baseOptions?: Apollo.Mutati
 export type UpdateModelNumberViewableMutationHookResult = ReturnType<typeof useUpdateModelNumberViewableMutation>;
 export type UpdateModelNumberViewableMutationResult = Apollo.MutationResult<UpdateModelNumberViewableMutation>;
 export type UpdateModelNumberViewableMutationOptions = Apollo.BaseMutationOptions<UpdateModelNumberViewableMutation, UpdateModelNumberViewableMutationVariables>;
+export const UpdateProductDocument = gql`
+    mutation UpdateProduct($productInput: ProductInput!) {
+  response: updateProduct(productInput: $productInput) {
+    product {
+      id
+      name
+      description
+    }
+    errors {
+      message
+      path
+    }
+  }
+}
+    `;
+export type UpdateProductMutationFn = Apollo.MutationFunction<UpdateProductMutation, UpdateProductMutationVariables>;
+
+/**
+ * __useUpdateProductMutation__
+ *
+ * To run a mutation, you first call `useUpdateProductMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateProductMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateProductMutation, { data, loading, error }] = useUpdateProductMutation({
+ *   variables: {
+ *      productInput: // value for 'productInput'
+ *   },
+ * });
+ */
+export function useUpdateProductMutation(baseOptions?: Apollo.MutationHookOptions<UpdateProductMutation, UpdateProductMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateProductMutation, UpdateProductMutationVariables>(UpdateProductDocument, options);
+      }
+export type UpdateProductMutationHookResult = ReturnType<typeof useUpdateProductMutation>;
+export type UpdateProductMutationResult = Apollo.MutationResult<UpdateProductMutation>;
+export type UpdateProductMutationOptions = Apollo.BaseMutationOptions<UpdateProductMutation, UpdateProductMutationVariables>;
+export const UpdateProductRegistrationDocument = gql`
+    mutation UpdateProductRegistration($productRegistrationInput: ExistingProductRegistrationInput!) {
+  response: updateProductRegistration(productRegistrationInput: $productRegistrationInput) {
+    success
+    productRegistration {
+      id
+      customer {
+        id
+        email
+        name
+      }
+      modelNumber
+      productId
+      customerId
+      serial
+    }
+    errors {
+      path
+      message
+    }
+  }
+}
+    `;
+export type UpdateProductRegistrationMutationFn = Apollo.MutationFunction<UpdateProductRegistrationMutation, UpdateProductRegistrationMutationVariables>;
+
+/**
+ * __useUpdateProductRegistrationMutation__
+ *
+ * To run a mutation, you first call `useUpdateProductRegistrationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateProductRegistrationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateProductRegistrationMutation, { data, loading, error }] = useUpdateProductRegistrationMutation({
+ *   variables: {
+ *      productRegistrationInput: // value for 'productRegistrationInput'
+ *   },
+ * });
+ */
+export function useUpdateProductRegistrationMutation(baseOptions?: Apollo.MutationHookOptions<UpdateProductRegistrationMutation, UpdateProductRegistrationMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateProductRegistrationMutation, UpdateProductRegistrationMutationVariables>(UpdateProductRegistrationDocument, options);
+      }
+export type UpdateProductRegistrationMutationHookResult = ReturnType<typeof useUpdateProductRegistrationMutation>;
+export type UpdateProductRegistrationMutationResult = Apollo.MutationResult<UpdateProductRegistrationMutation>;
+export type UpdateProductRegistrationMutationOptions = Apollo.BaseMutationOptions<UpdateProductRegistrationMutation, UpdateProductRegistrationMutationVariables>;
+export const UpdateProductSymptomDocument = gql`
+    mutation UpdateProductSymptom($productSymptomInput: ExistingProductSymptomInput!) {
+  response: updateProductSymptom(productSymptomInput: $productSymptomInput) {
+    productSymptom {
+      id
+      name
+      fee
+      faultCode
+      synopsis
+      solution
+      careTip
+    }
+    errors {
+      message
+      path
+    }
+  }
+}
+    `;
+export type UpdateProductSymptomMutationFn = Apollo.MutationFunction<UpdateProductSymptomMutation, UpdateProductSymptomMutationVariables>;
+
+/**
+ * __useUpdateProductSymptomMutation__
+ *
+ * To run a mutation, you first call `useUpdateProductSymptomMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateProductSymptomMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateProductSymptomMutation, { data, loading, error }] = useUpdateProductSymptomMutation({
+ *   variables: {
+ *      productSymptomInput: // value for 'productSymptomInput'
+ *   },
+ * });
+ */
+export function useUpdateProductSymptomMutation(baseOptions?: Apollo.MutationHookOptions<UpdateProductSymptomMutation, UpdateProductSymptomMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateProductSymptomMutation, UpdateProductSymptomMutationVariables>(UpdateProductSymptomDocument, options);
+      }
+export type UpdateProductSymptomMutationHookResult = ReturnType<typeof useUpdateProductSymptomMutation>;
+export type UpdateProductSymptomMutationResult = Apollo.MutationResult<UpdateProductSymptomMutation>;
+export type UpdateProductSymptomMutationOptions = Apollo.BaseMutationOptions<UpdateProductSymptomMutation, UpdateProductSymptomMutationVariables>;
 export const UpdateRgaGoodDocument = gql`
     mutation UpdateRGAGood($id: ID!, $rgaId: String!, $rgaGoodInput: RGAGoodInput!) {
   response: updateRGAGood(id: $id, rgaId: $rgaId, rgaGoodInput: $rgaGoodInput) {
@@ -2594,6 +5128,123 @@ export function useUpdateRgaStatusMutation(baseOptions?: Apollo.MutationHookOpti
 export type UpdateRgaStatusMutationHookResult = ReturnType<typeof useUpdateRgaStatusMutation>;
 export type UpdateRgaStatusMutationResult = Apollo.MutationResult<UpdateRgaStatusMutation>;
 export type UpdateRgaStatusMutationOptions = Apollo.BaseMutationOptions<UpdateRgaStatusMutation, UpdateRgaStatusMutationVariables>;
+export const UpdateUserDocument = gql`
+    mutation UpdateUser($userInput: ExistingUserInput!) {
+  response: updateUser(userInput: $userInput) {
+    user {
+      id
+      firstName
+      lastName
+      email
+    }
+    errors {
+      message
+      path
+    }
+  }
+}
+    `;
+export type UpdateUserMutationFn = Apollo.MutationFunction<UpdateUserMutation, UpdateUserMutationVariables>;
+
+/**
+ * __useUpdateUserMutation__
+ *
+ * To run a mutation, you first call `useUpdateUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUserMutation, { data, loading, error }] = useUpdateUserMutation({
+ *   variables: {
+ *      userInput: // value for 'userInput'
+ *   },
+ * });
+ */
+export function useUpdateUserMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserMutation, UpdateUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUserDocument, options);
+      }
+export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutation>;
+export type UpdateUserMutationResult = Apollo.MutationResult<UpdateUserMutation>;
+export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables>;
+export const UserDocument = gql`
+    query User($userId: String!) {
+  user(id: $userId) {
+    id
+    email
+    firstName
+    lastName
+  }
+}
+    `;
+
+/**
+ * __useUserQuery__
+ *
+ * To run a query within a React component, call `useUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useUserQuery(baseOptions: Apollo.QueryHookOptions<UserQuery, UserQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UserQuery, UserQueryVariables>(UserDocument, options);
+      }
+export function useUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserQuery, UserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UserQuery, UserQueryVariables>(UserDocument, options);
+        }
+export type UserQueryHookResult = ReturnType<typeof useUserQuery>;
+export type UserLazyQueryHookResult = ReturnType<typeof useUserLazyQuery>;
+export type UserQueryResult = Apollo.QueryResult<UserQuery, UserQueryVariables>;
+export const UsersDocument = gql`
+    query Users {
+  users {
+    id
+    firstName
+    lastName
+    email
+  }
+}
+    `;
+
+/**
+ * __useUsersQuery__
+ *
+ * To run a query within a React component, call `useUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUsersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useUsersQuery(baseOptions?: Apollo.QueryHookOptions<UsersQuery, UsersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UsersQuery, UsersQueryVariables>(UsersDocument, options);
+      }
+export function useUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UsersQuery, UsersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UsersQuery, UsersQueryVariables>(UsersDocument, options);
+        }
+export type UsersQueryHookResult = ReturnType<typeof useUsersQuery>;
+export type UsersLazyQueryHookResult = ReturnType<typeof useUsersLazyQuery>;
+export type UsersQueryResult = Apollo.QueryResult<UsersQuery, UsersQueryVariables>;
 
       export interface IntrospectionResultData {
         __schema: {

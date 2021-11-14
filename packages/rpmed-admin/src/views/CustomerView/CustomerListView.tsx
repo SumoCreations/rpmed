@@ -22,7 +22,7 @@ import {
   Toolbar,
 } from 'rpmed-ui/lib/V1'
 import { DestroyCustomerButton } from './DestroyCustomerButton'
-import { ICustomerDataShape, useCustomers } from './graphql'
+import { useCustomersQuery, Customer } from 'rpmed-schema'
 
 const { useState } = React
 
@@ -31,7 +31,7 @@ const sendTo = (p: { history: History; url: string }) => () =>
 
 interface ICustomerProps {
   history: History
-  onDelete: (customer: ICustomerDataShape) => void
+  onDelete: (customer: Customer) => void
   filterText: string
 }
 
@@ -40,22 +40,23 @@ const Customers: React.FunctionComponent<ICustomerProps> = ({
   onDelete,
   filterText,
 }) => {
-  const { customers, loading, error } = useCustomers()
+  const { data, loading, error } = useCustomersQuery()
+  const customers = data?.response.customers ?? []
   if (loading) {
     return <p>Loading...</p>
   }
   if (error) {
     return <Errors.LoadingError error={error} />
   }
-  const filterCustomer = ({ name, email, id }: ICustomerDataShape) =>
+  const filterCustomer = ({ name, email, id }: Customer) =>
     filterText.length > 0
       ? [id, name, email]
-          .map(val => val.toLowerCase().indexOf(filterText.toLowerCase()) >= 0)
-          .includes(true)
+        .map(val => (val?.toLowerCase().indexOf(filterText.toLowerCase()) ?? -1) >= 0)
+        .includes(true)
       : true
-  const onClickDelete = (customer: ICustomerDataShape) => () =>
+  const onClickDelete = (customer: Customer) => () =>
     onDelete(customer)
-  const rows = customers.filter(filterCustomer).map(p => [
+  const rows = (customers as Customer[]).filter(filterCustomer).map(p => [
     <Link to={`/admin/customers/${p.id}`} key={p.id}>
       {p.name}
     </Link>,
@@ -97,11 +98,11 @@ const Customers: React.FunctionComponent<ICustomerProps> = ({
 export const CustomerListView: React.FC<RouteComponentProps<{}>> = ({
   history,
 }) => {
-  const [productToDelete, setCustomerToDelete] = useState(
-    null as ICustomerDataShape | null
+  const [productToDelete, setCustomerToDelete] = useState<Customer | null>(
+    null
   )
   const [searchText, setSearchText] = useState('')
-  const confirmCustomerToDelete = (customer: ICustomerDataShape) =>
+  const confirmCustomerToDelete = (customer: Customer) =>
     setCustomerToDelete(customer)
   const onClickNew = () => history.push('/admin/customers/new')
   const onSearchChange: React.ChangeEventHandler = event =>

@@ -6,7 +6,7 @@ import { Card, Content, Layout, Toolbar } from 'rpmed-ui/lib/V1'
 import {
   useModelNumbersViewableQuery,
   useUpdateModelNumberViewableMutation,
-} from './graphql'
+} from 'rpmed-schema'
 import { ModelNumbersMap, ModelSelectHandlerFn } from '../ProductSymptomsView'
 
 export const ModelNumbersViewableMap: React.FC = () => {

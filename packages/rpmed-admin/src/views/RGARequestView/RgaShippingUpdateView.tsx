@@ -20,7 +20,7 @@ import {
   RgaShippingStatus,
   RgaStatus,
   ValidationError,
-} from '../../schema'
+} from 'rpmed-schema'
 import {
   Actions,
   Divider,
@@ -136,31 +136,31 @@ export const RGAShippingUpdateView: React.FC<RouteComponentProps<
             initialValues={
               rga
                 ? {
-                    notes: '',
-                    shippingUpdates: rga.goods
-                      .map(g => g as RgaGood)
-                      .map(
-                        g =>
-                          ({
-                            id: g.id,
-                            message:
-                              'Hello ${NAME}, MedLED® Lighting has processed headlight return. Please keep the following details for your records.\n\nTracking Number: ${TRACKING} (${TRACKING_URL})\nModel Number / Serial: ${MODEL} / ${SERIAL}',
-                            recipients: [
-                              g.customerEmail,
-                              rga.submittedBy,
-                            ].filter(r => r && r.length > 0),
-                            status: RgaShippingStatus.Shipped,
-                            tracking: '',
-                          } as RgaGoodShippingInput)
-                      ),
-                    status: RgaStatus.Shipping,
-                  }
+                  notes: '',
+                  shippingUpdates: rga.goods
+                    .map(g => g as RgaGood)
+                    .map(
+                      g =>
+                      ({
+                        id: g.id,
+                        message:
+                          'Hello ${NAME}, MedLED® Lighting has processed headlight return. Please keep the following details for your records.\n\nTracking Number: ${TRACKING} (${TRACKING_URL})\nModel Number / Serial: ${MODEL} / ${SERIAL}',
+                        recipients: [
+                          g.customerEmail,
+                          rga.submittedBy,
+                        ].filter(r => r && r.length > 0),
+                        status: RgaShippingStatus.Shipped,
+                        tracking: '',
+                      } as RgaGoodShippingInput)
+                    ),
+                  status: RgaStatus.Shipping,
+                }
                 : {
-                    notes: '',
-                    recipients: [],
-                    shippingUpdates: [] as RgaGoodShippingInput[],
-                    status: RgaStatus.Shipping,
-                  }
+                  notes: '',
+                  recipients: [],
+                  shippingUpdates: [] as RgaGoodShippingInput[],
+                  status: RgaStatus.Shipping,
+                }
             }
             enableReinitialize={true}
             onSubmit={handleSubmitForm}
@@ -238,7 +238,7 @@ export const RGAShippingUpdateView: React.FC<RouteComponentProps<
                               const isDelayed =
                                 values.shippingUpdates[i] &&
                                 values.shippingUpdates[i].status ===
-                                  RgaShippingStatus.Delayed
+                                RgaShippingStatus.Delayed
                               const noRecipients =
                                 (values.shippingUpdates[i].recipients || [])
                                   .length < 1

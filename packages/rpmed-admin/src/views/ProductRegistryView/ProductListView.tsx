@@ -27,7 +27,7 @@ import {
 } from 'rpmed-ui/lib/V1'
 
 import { DestroyProductButton } from './DestroyProductButton'
-import { IProductDataShape, useProducts } from './graphql'
+import { Product, useProductsQuery } from 'rpmed-schema'
 
 const { useState } = React
 
@@ -40,29 +40,30 @@ export const ProductListView: React.FC<RouteComponentProps<{}>> = ({
   const {
     loading,
     error,
-    pageSize,
-    products,
+    data,
     refetch,
     networkStatus,
-  } = useProducts()
+  } = useProductsQuery()
+  const products = (data?.response?.products ?? []) as Product[]
+  const pageSize = data?.response?.pageSize ?? 0
   const handleRefresh = () => refetch()
   const networkActive = loading || networkStatus === 4
   const [productToDelete, setProductToDelete] = useState(
-    null as IProductDataShape | null
+    null as Product | null
   )
   const [searchText, setSearchText] = useState('')
   const onClickNew = () => history.push('/admin/products/new')
   const onSearchChange: React.ChangeEventHandler = event =>
     setSearchText((event.target as HTMLInputElement).value)
 
-  const filterProduct = ({ name, description, id }: IProductDataShape) =>
+  const filterProduct = ({ name, description, id }: Product) =>
     searchText.length > 0
       ? [id, name, description]
-          .map(val => val.toLowerCase().indexOf(searchText.toLowerCase()) >= 0)
-          .includes(true)
+        .map(val => val.toLowerCase().indexOf(searchText.toLowerCase()) >= 0)
+        .includes(true)
       : true
 
-  const onClickDelete = (product: IProductDataShape) => () =>
+  const onClickDelete = (product: Product) => () =>
     setProductToDelete(product)
 
   const rows = (products || []).filter(filterProduct).map(p => [

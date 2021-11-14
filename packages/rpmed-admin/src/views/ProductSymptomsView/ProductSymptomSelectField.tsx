@@ -1,9 +1,9 @@
 import { ErrorMessage } from 'formik'
 import * as React from 'react'
 import { Box, Flex } from 'rebass'
-import { ProductSymptom } from '../../schema'
+import { ProductSymptom } from 'rpmed-schema'
 import { Form, Indicators, Input } from 'rpmed-ui/lib/V1'
-import { useProductSymptoms } from './graphql'
+import { useProductSymptomsQuery } from 'rpmed-schema'
 
 export type ProductSymptomSelectFn = (p: ProductSymptom) => void
 interface IProductSymptomSelectProps {
@@ -32,10 +32,11 @@ const SymptomResultListView: React.FC<ISymptomResultListProps> = ({
   onDismiss: dismiss,
   onSelect: select,
 }) => {
-  const { productSymptoms } = useProductSymptoms({ search, modelNumber })
+  const { data } = useProductSymptomsQuery({ variables: { search, modelNumber } })
+  const productSymptoms = (data?.response.productSymptoms ?? []) as ProductSymptom[]
   return productSymptoms ? (
     <React.Fragment>
-      {((productSymptoms || []) as ProductSymptom[])
+      {productSymptoms
         .filter(p => (ignoreIds ? !ignoreIds.includes(p.id) : true))
         .sort((a, b) => {
           return a.name > b.name ? 1 : a.name < b.name ? -1 : 0

@@ -11,7 +11,7 @@ import {
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
 import { Redirect, Route, RouteComponentProps, Switch } from 'react-router'
-import { RgaStatus } from '../../schema'
+import { RgaStatus } from 'rpmed-schema'
 import { Indicators, SecondaryNav } from 'rpmed-ui/lib/V1'
 import { ModalState } from '../Modal'
 import { useRgaCounts } from './graphql'

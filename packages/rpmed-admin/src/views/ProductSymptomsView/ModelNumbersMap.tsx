@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { Card, Heading, Indicators, Tags } from 'rpmed-ui/lib/V1'
-import { useModelNumbersSimpleQuery } from './graphql'
+import { useModelNumbersSimpleQuery } from 'rpmed-schema'
 import { Box, Flex } from 'rebass'
-import { ModelNumber } from '../../schema'
+import { ModelNumber } from 'rpmed-schema'
 
 export type ModelSelectHandlerFn = (params: {
   modelNumber: string
@@ -59,8 +59,7 @@ export const ModelNumbersMap: React.FC<IModelNumbersMapProps> = ({
   onSelectModel: handleSelectModel,
 }) => {
   const { data } = useModelNumbersSimpleQuery()
-  const modelNumbers = ((data && data.response && data.response.modelNumbers) ||
-    []) as ModelNumber[]
+  const modelNumbers = (data?.response?.modelNumbers ?? []) as ModelNumber[]
   const modelNumbersMap = modelNumbers.reduce((groups, model) => {
     const prefix = model.id.split('-')[0]
     return {

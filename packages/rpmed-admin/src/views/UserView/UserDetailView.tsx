@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
 import { RouteComponentProps } from 'react-router'
-import { ValidationError } from '../../schema'
+import { User, ValidationError } from 'rpmed-schema'
 import {
   Actions,
   Card,
@@ -13,7 +13,7 @@ import {
   Toolbar,
 } from 'rpmed-ui/lib/V1'
 import { mapDefaultValues } from '../../validations'
-import { useUpdateUser, useUser } from './graphql'
+import { useUpdateUserMutation, useUserQuery } from 'rpmed-schema'
 import { IUserFormValues, UserForm, UserFormSubmitHandler } from './UserForm'
 
 interface IUserRouterProps {
@@ -24,8 +24,9 @@ const View: React.FC<RouteComponentProps<IUserRouterProps>> = ({
   history,
   match,
 }) => {
-  const { loading, user } = useUser(match.params.userId)
-  const updateUser = useUpdateUser()
+  const { loading, data } = useUserQuery({ variables: { userId: match.params.userId ?? '' } })
+  const user = data?.user ?? {} as User
+  const [updateUser, _] = useUpdateUserMutation()
   const handleBack = () => history.push('/admin/controls/users')
   const handleSubmit: UserFormSubmitHandler = async (values, actions) => {
     const result = await updateUser({
@@ -47,7 +48,7 @@ const View: React.FC<RouteComponentProps<IUserRouterProps>> = ({
       []) as ValidationError[]
     if (errors.length > 0) {
       errors.forEach(({ path, message }) => {
-        actions.setFieldError(path, message)
+        actions.setFieldError((path as any), message)
       })
       return
     }
@@ -72,9 +73,8 @@ const View: React.FC<RouteComponentProps<IUserRouterProps>> = ({
         </Toolbar.View>
         <Card.Flat>
           <Helmet
-            title={`${
-              loading ? 'Loading User' : `${user.firstName} ${user.lastName}`
-            } - RPMed Service Admin`}
+            title={`${loading ? 'Loading User' : `${user.firstName} ${user.lastName}`
+              } - RPMed Service Admin`}
           />
           {loading ? (
             <Indicators.Spinner size="lg" />

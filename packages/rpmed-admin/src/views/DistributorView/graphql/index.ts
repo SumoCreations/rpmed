@@ -1,5 +1,0 @@
-export * from './useCreateDistributor'
-export * from './useUpdateDistributor'
-export * from './useDestroyDistributor'
-export * from './useDistributor'
-export * from './useDistributors'

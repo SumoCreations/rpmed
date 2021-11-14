@@ -24,9 +24,9 @@ import {
 } from 'rpmed-ui/lib/V1'
 import { DestroyProductRegistrationButton } from './DestroyProductRegistrationButton'
 import {
-  IProductRegistrationDataShape,
-  useProductRegistrations,
-} from './graphql'
+  ProductRegistration,
+  useProductRegistrationsQuery,
+} from 'rpmed-schema'
 
 const { useState } = React
 
@@ -35,7 +35,7 @@ const sendTo = (p: { history: History; url: string }) => () =>
 
 interface IProductRegistrationProps {
   history: History
-  onDelete: (registration: IProductRegistrationDataShape) => void
+  onDelete: (registration: ProductRegistration) => void
   filterText: string
 }
 
@@ -44,7 +44,7 @@ const ProductRegistrations: React.FunctionComponent<IProductRegistrationProps> =
   onDelete,
   filterText,
 }) => {
-  const { loading, error, data } = useProductRegistrations()
+  const { loading, error, data } = useProductRegistrationsQuery()
   if (loading) {
     return <p>Loading...</p>
   }
@@ -54,18 +54,17 @@ const ProductRegistrations: React.FunctionComponent<IProductRegistrationProps> =
   const filterProductRegistration = ({
     customer,
     id,
-  }: IProductRegistrationDataShape) =>
+  }: ProductRegistration) =>
     filterText.length > 0
       ? [id, customer.name, customer.email]
-          .map(val => val.toLowerCase().indexOf(filterText.toLowerCase()) >= 0)
-          .includes(true)
+        .map(val => (val?.toLowerCase().indexOf(filterText.toLowerCase()) ?? -1) >= 0)
+        .includes(true)
       : true
 
   const onClickDelete = (
-    productRegistration: IProductRegistrationDataShape
+    productRegistration: ProductRegistration
   ) => () => onDelete(productRegistration)
-  const productRegistrations = (get(data, 'response.productRegistrations') ||
-    []) as IProductRegistrationDataShape[]
+  const productRegistrations = (data?.response.productRegistrations ?? []) as ProductRegistration[]
   const rows = productRegistrations.filter(filterProductRegistration).map(p => [
     <Link to={`/admin/registrations/${p.id}`} key={p.id}>
       {p.id}
@@ -114,11 +113,11 @@ export const ProductRegistrationListView: React.FC<RouteComponentProps<{}>> = ({
   history,
 }) => {
   const [registrationToDelete, setProductRegistrationToDelete] = useState(
-    null as IProductRegistrationDataShape | null
+    null as ProductRegistration | null
   )
   const [searchText, setSearchText] = useState('')
   const confirmProductRegistrationToDelete = (
-    registration: IProductRegistrationDataShape
+    registration: ProductRegistration
   ) => setProductRegistrationToDelete(registration)
   const onClickNew = () => history.push('/admin/registrations/new')
   const onSearchChange: React.ChangeEventHandler = event =>

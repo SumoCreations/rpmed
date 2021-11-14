@@ -1,5 +1,0 @@
-export * from './useCreateProductRegistration'
-export * from './useUpdateProductRegistration'
-export * from './useDestroyProductRegistration'
-export * from './useProductRegistration'
-export * from './useProductRegistrations'

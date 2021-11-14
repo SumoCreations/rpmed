@@ -2,7 +2,7 @@ import {
   RgaDocument,
   RgaQuery,
   useDestroyRgaGoodMutation,
-} from '../../../schema'
+} from 'rpmed-schema'
 
 export const useDestroyRGAGood = () => {
   const [destroyRgaGood] = useDestroyRgaGoodMutation({

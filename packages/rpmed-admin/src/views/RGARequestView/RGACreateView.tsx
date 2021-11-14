@@ -4,7 +4,7 @@ import qs from 'query-string'
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
 import { RouteComponentProps } from 'react-router'
-import { ValidationError } from '../../schema'
+import { ValidationError } from 'rpmed-schema'
 import {
   Actions,
   Card,
@@ -43,7 +43,7 @@ export const RGACreateView: React.FC<RouteComponentProps> = ({ history }) => {
       []) as ValidationError[]
     if (formErrors.length > 0) {
       formErrors.forEach(({ path, message }) => {
-        actions.setFieldError(path, message)
+        actions.setFieldError((path as any), message)
       })
       return
     }

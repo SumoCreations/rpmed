@@ -46,14 +46,14 @@
     "uuid": "^3.3.2",
     "validator": "^10.11.0",
     "yup": "^0.27.0",
-    "rpmed-schema": "1.0.0"
+    "rpmed-schema": "1.0.0",
+    "rpmed-ui": "1.0.0"
   },
   "scripts": {
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",
     "eject": "react-scripts eject",
-    "schema": "graphql-codegen --config codegen.yml",
     "prettier": "prettier --config ./.prettierrc 'src/**/*.{ts,tsx}' --write"
   },
   "eslintConfig": {

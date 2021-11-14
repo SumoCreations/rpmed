@@ -11,10 +11,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Formik, FormikHelpers, FormikProps } from 'formik'
 import * as React from 'react'
 import * as Yup from 'yup'
-import { ModelNumberInput, Product } from '../../schema'
+import { ModelNumberInput, Product } from 'rpmed-schema'
 import { Form, Indicators, Input, Switch, Tags } from 'rpmed-ui/lib/V1'
 import { mapDefaultValues } from '../../validations'
-import { ModelNumberValue } from './graphql'
 import { ProductSelectField, ProductSelectFn } from './ProductSelectField'
 import {
   ProductTypeSelectField,
@@ -27,7 +26,7 @@ interface IProductName {
 }
 
 export interface IModelNumberFormValues extends ModelNumberInput {
-  [key: string]: ModelNumberValue
+  [key: string]: any
   productList: IProductName[]
 }
 

@@ -1,4 +1,4 @@
-import { useRgaQuery } from '../../../schema'
+import { useRgaQuery } from 'rpmed-schema'
 
 export const useRGA = (rgaId: string) => {
   const { loading, data, refetch, networkStatus } = useRgaQuery({

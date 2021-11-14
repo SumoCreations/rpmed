@@ -1,9 +1,8 @@
 import { ErrorMessage } from 'formik'
 import * as React from 'react'
 import { Box, Flex } from 'rebass'
-import { ModelNumber, ProductType } from '../../schema'
+import { ModelNumber, ProductType, useModelNumbersQuery } from 'rpmed-schema'
 import { Form, Indicators, Input } from 'rpmed-ui/lib/V1'
-import { useModelNumbers } from './graphql'
 
 export type ModelNumberSelectFn = Input.DropDownSelectFn<ModelNumber>
 
@@ -34,11 +33,14 @@ const Results: React.FC<IResultProps> = ({
   productType,
   search,
 }) => {
-  const { modelNumbers, loading } = useModelNumbers({
-    productId,
-    productType,
-    search,
+  const { data, loading } = useModelNumbersQuery({
+    variables: {
+      productId,
+      productType,
+      search,
+    }
   })
+  const modelNumbers = (data?.response?.modelNumbers ?? []) as ModelNumber[]
   return modelNumbers ? (
     <React.Fragment>
       {loading ? (

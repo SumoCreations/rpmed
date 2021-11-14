@@ -1,4 +1,3 @@
-import { ApolloError } from 'apollo-client'
 import { transparentize } from 'polished'
 import * as React from 'react'
 import styled from '../styled-components'
@@ -38,7 +37,7 @@ export const ErrorCode = styled.pre`
   word-wrap: break-word;
 `
 
-export const LoadingError: React.FC<{ error: ApolloError }> = ({ error }) => (
+export const LoadingError: React.FC<{ error: any }> = ({ error }) => (
   <ErrorView>
     <h2>An error prevented this page from rendering:</h2>
     <ErrorList>

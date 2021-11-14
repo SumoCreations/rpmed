@@ -4,7 +4,7 @@ import { DateTime } from 'luxon'
 import React from 'react'
 import { useHistory } from 'react-router-dom'
 import { Box, Flex } from 'rebass'
-import { Maybe, Rga, RgaStatus, RgaStatusUpdate } from '../../../schema'
+import { Maybe, Rga, RgaStatus, RgaStatusUpdate } from 'rpmed-schema'
 import {
   Actions,
   Card,

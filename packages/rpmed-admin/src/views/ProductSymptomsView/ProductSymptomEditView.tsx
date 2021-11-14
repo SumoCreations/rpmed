@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
 import { RouteComponentProps } from 'react-router'
-import { ValidationError } from '../../schema'
+import { ValidationError } from 'rpmed-schema'
 import {
   Actions,
   Card,
@@ -12,7 +12,7 @@ import {
   Layout,
   Toolbar,
 } from 'rpmed-ui/lib/V1'
-import { useProductSymptom, useUpdateProductSymptom } from './graphql'
+import { useProductSymptomQuery, useUpdateProductSymptomMutation } from 'rpmed-schema'
 import {
   ProductSymptomForm,
   ProductSymptomFormSubmitHandler,
@@ -26,8 +26,9 @@ const View: React.FunctionComponent<RouteComponentProps<
   IProductSymptomRouterProps
 >> = ({ history, match }) => {
   const symptomId = match.params.productSymptomId
-  const updateProductSymptom = useUpdateProductSymptom()
-  const { loading, productSymptom } = useProductSymptom(symptomId)
+  const [updateProductSymptom, _] = useUpdateProductSymptomMutation()
+  const { loading, data } = useProductSymptomQuery({ variables: { productSymptomId: symptomId } })
+  const productSymptom = data?.response.productSymptom
 
   const handleBack = () => history.push(`/admin/products/symptoms/${symptomId}`)
 
@@ -57,7 +58,7 @@ const View: React.FunctionComponent<RouteComponentProps<
       []) as ValidationError[]
     if (errors.length > 0) {
       errors.forEach(({ path, message }) => {
-        actions.setFieldError(path, message)
+        actions.setFieldError((path as any), message)
       })
       return
     }
@@ -79,9 +80,8 @@ const View: React.FunctionComponent<RouteComponentProps<
 
         <Card.Flat>
           <Helmet
-            title={`${
-              productSymptom ? productSymptom.name : 'Loading ProductSymptom'
-            } - RPMed Service Admin`}
+            title={`${productSymptom ? productSymptom.name : 'Loading ProductSymptom'
+              } - RPMed Service Admin`}
           />
           {loading ? (
             <Indicators.Spinner size="lg" />

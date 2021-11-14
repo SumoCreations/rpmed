@@ -4,10 +4,9 @@ import { Formik, FormikHelpers, FormikProps } from 'formik'
 import * as React from 'react'
 import * as Validation from 'rpmed-validation-schema'
 import { Form, Indicators, Input, Switch } from 'rpmed-ui/lib/V1'
-import { ProductSymptomFieldValue } from './graphql'
 
 interface IProductSymptomFormValues {
-  [key: string]: ProductSymptomFieldValue
+  [key: string]: any
   id?: string | undefined
   name?: string | undefined
   preApproved?: boolean | undefined

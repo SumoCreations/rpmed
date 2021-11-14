@@ -1,0 +1,43 @@
+query ModelNumber($modelNumberId: String!) {
+  response: modelNumber(id: $modelNumberId) {
+    modelNumber {
+      id
+      description
+      productIds
+      productType
+      products {
+        id
+        name
+      }
+      symptoms {
+        id
+        name
+        faultCode
+      }
+      lotted
+      warrantyTerm
+      warrantyDescription
+      feeWithWarranty {
+        distributor
+        endUser
+      }
+      feeWithoutWarranty {
+        distributor
+        endUser
+      }
+      pricing {
+        cost
+        retail
+      }
+      resolutionWithWarranty
+      resolutionWithoutWarranty
+      publicNotes
+      privateNotes
+    }
+    success
+    errors {
+      path
+      message
+    }
+  }
+}

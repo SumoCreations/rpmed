@@ -4,7 +4,7 @@ import get from 'lodash.get'
 import React from 'react'
 import { Box, Flex } from 'rebass'
 import { ErrorList } from 'rpmed-validation-schema'
-import { ProductType, RgaGood } from '../../../schema'
+import { ProductType, RgaGood } from 'rpmed-schema'
 import { Actions, Heading, Layout, Toolbar } from 'rpmed-ui/lib/V1'
 import { mapDefaultValues } from '../../../validations'
 import { useUpdateRGAGood } from '../graphql'
@@ -61,7 +61,7 @@ export const EditRGAGoodView: React.FC<{
     const errors = (get(result, 'data.response.errors') || []) as ErrorList
     if (errors.length > 0) {
       errors.forEach(({ path, message }) => {
-        actions.setFieldError(path, message)
+        actions.setFieldError((path as any), message)
       })
       return
     }

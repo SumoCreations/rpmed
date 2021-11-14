@@ -5,7 +5,7 @@ import * as React from 'react'
 import * as Validation from 'rpmed-validation-schema'
 import { Form, Indicators, Input } from 'rpmed-ui/lib/V1'
 
-interface ICustomerFormValues {
+export interface ICustomerFormValues {
   [key: string]: string | undefined
   id?: string | undefined
   name?: string | undefined

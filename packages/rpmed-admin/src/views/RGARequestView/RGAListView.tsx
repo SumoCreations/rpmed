@@ -6,7 +6,7 @@ import React, { useState } from 'react'
 import { Helmet } from 'react-helmet'
 import { RouteComponentProps } from 'react-router'
 import { Link } from 'react-router-dom'
-import { Rga, RgaStatus } from '../../schema'
+import { Rga, RgaStatus } from 'rpmed-schema'
 import {
   Actions,
   Card,
@@ -53,8 +53,8 @@ const RGAs: React.FunctionComponent<IRGAProps> = ({
   const filterRGA = ({ submittedBy, id }: Rga) =>
     filterText.length > 0
       ? [id, submittedBy]
-          .map(val => val.toLowerCase().indexOf(filterText.toLowerCase()) >= 0)
-          .includes(true)
+        .map(val => val.toLowerCase().indexOf(filterText.toLowerCase()) >= 0)
+        .includes(true)
       : true
 
   const rows = rgas.filter(filterRGA).map(p => [

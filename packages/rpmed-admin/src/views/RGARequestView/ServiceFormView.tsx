@@ -4,7 +4,7 @@ import { DateTime } from 'luxon'
 import React from 'react'
 import { RouteComponentProps } from 'react-router'
 import { Box, Flex } from 'rebass'
-import { Rga, RgaGood, RgaStatus, RgaStatusUpdate } from '../../schema'
+import { Rga, RgaGood, RgaStatus, RgaStatusUpdate } from 'rpmed-schema'
 import {
   Actions,
   Heading,
@@ -110,7 +110,7 @@ const Value = styled(Box)`
   font-family: 'Times', 'serif';
 `
 
-const Cell = styled(Value as any)<any>`
+const Cell = styled(Value as any) <any>`
   border-right: 1px solid #ccc;
   background: ${p => (p.selected ? p.theme.colorButtonPrimary : '#fff')};
   color: ${p =>
@@ -488,8 +488,8 @@ export const ServiceFormView: React.FC<RouteComponentProps<
 
   const good = rga
     ? rga.goods
-        .map(g => g as RgaGood)
-        .filter(g => g.id === match.params.goodId)[0]
+      .map(g => g as RgaGood)
+      .filter(g => g.id === match.params.goodId)[0]
     : null
 
   const rendering = loading || !rga || !good

@@ -6,7 +6,7 @@ import * as React from 'react'
 import { Helmet } from 'react-helmet'
 import { RouteComponentProps } from 'react-router'
 import { Link } from 'react-router-dom'
-import { User } from '../../schema'
+import { User, useUsersQuery } from 'rpmed-schema'
 import {
   Actions,
   Card,
@@ -18,7 +18,6 @@ import {
   Toolbar,
 } from 'rpmed-ui/lib/V1'
 import { DestroyUserButton } from './DestroyUserButton'
-import { useUsers } from './graphql'
 
 const { useState } = React
 
@@ -36,7 +35,8 @@ const Users: React.FunctionComponent<IUsersProps> = ({
   onDelete,
   filterText,
 }) => {
-  const { loading, users, error } = useUsers()
+  const { loading, data, error } = useUsersQuery()
+  const users = (data?.users ?? []) as User[]
   if (loading) {
     return <p>Loading...</p>
   }
@@ -47,38 +47,38 @@ const Users: React.FunctionComponent<IUsersProps> = ({
 
   const rows = !loading
     ? users
-        .filter(({ firstName, lastName, email, id }) =>
-          filterText.length > 0
-            ? [id, `${firstName} ${lastName}`, email]
-                .map(
-                  val =>
-                    val.toLowerCase().indexOf(filterText.toLowerCase()) >= 0
-                )
-                .includes(true)
-            : true
-        )
-        .map(({ id, firstName, lastName, email }) => [
-          <Link to={`/admin/controls/users/${id}`} key={id}>
-            {firstName} {lastName}
-          </Link>,
-          email,
-          id,
-          <Actions.Group key={`actions${id}`}>
-            <Actions.PrimaryInverted
-              onClick={sendTo({
-                history,
-                url: `/admin/controls/users/${id}`,
-              })}
-            >
-              <FontAwesomeIcon icon={faPencil} />
-            </Actions.PrimaryInverted>
-            <Actions.Destructive
-              onClick={onClickDelete({ id, firstName, lastName, email })}
-            >
-              <FontAwesomeIcon icon={faTrash} />
-            </Actions.Destructive>
-          </Actions.Group>,
-        ])
+      .filter(({ firstName, lastName, email, id }) =>
+        filterText.length > 0
+          ? [id, `${firstName} ${lastName}`, email]
+            .map(
+              val =>
+                val.toLowerCase().indexOf(filterText.toLowerCase()) >= 0
+            )
+            .includes(true)
+          : true
+      )
+      .map(({ id, firstName, lastName, email }) => [
+        <Link to={`/admin/controls/users/${id}`} key={id}>
+          {firstName} {lastName}
+        </Link>,
+        email,
+        id,
+        <Actions.Group key={`actions${id}`}>
+          <Actions.PrimaryInverted
+            onClick={sendTo({
+              history,
+              url: `/admin/controls/users/${id}`,
+            })}
+          >
+            <FontAwesomeIcon icon={faPencil} />
+          </Actions.PrimaryInverted>
+          <Actions.Destructive
+            onClick={onClickDelete({ id, firstName, lastName, email })}
+          >
+            <FontAwesomeIcon icon={faTrash} />
+          </Actions.Destructive>
+        </Actions.Group>,
+      ])
     : []
 
   return (

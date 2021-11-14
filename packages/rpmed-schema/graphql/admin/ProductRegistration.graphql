@@ -1,0 +1,23 @@
+query ProductRegistration($productRegistrationId: String!) {
+  response: productRegistration(id: $productRegistrationId) {
+    productRegistration {
+      id
+      productId
+      customerId
+      customer {
+        id
+        name
+        email
+      }
+      lotted
+      serial
+      modelNumber
+      registeredOn
+    }
+    errors {
+      message
+      path
+    }
+    success
+  }
+}

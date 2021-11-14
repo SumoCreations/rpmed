@@ -1,9 +1,9 @@
 import { ErrorMessage } from 'formik'
 import * as React from 'react'
 import { Box, Flex } from 'rebass'
-import { Product } from '../../schema'
+import { Product } from 'rpmed-schema'
 import { Form, Indicators, Input } from 'rpmed-ui/lib/V1'
-import { useProducts } from './graphql'
+import { useProductsQuery } from 'rpmed-schema'
 
 export type ProductSelectFn = Input.DropDownSelectFn<Product>
 
@@ -24,7 +24,8 @@ const ProductResults: React.FC<IProductResultProps> = ({
   onSelect: select,
   ignoreIds,
 }) => {
-  const { loading, products } = useProducts(search)
+  const { loading, data } = useProductsQuery({ variables: { search } })
+  const products = (data?.response?.products ?? []) as Product[]
   return !loading ? (
     <React.Fragment>
       {products

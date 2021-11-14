@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useDestroyProductSymptom } from './graphql'
+import { useDestroyProductSymptomMutation } from 'rpmed-schema'
 
 type DestroyClickHandler = () => Promise<any>
 
@@ -7,7 +7,7 @@ export const DestroyProductSymptomButton: React.FunctionComponent<{
   id: string
   children: (onClick: DestroyClickHandler) => JSX.Element
 }> = ({ id, children }) => {
-  const destroyProductSymptom = useDestroyProductSymptom()
+  const [destroyProductSymptom, _] = useDestroyProductSymptomMutation()
   const handleClick = () => destroyProductSymptom({ variables: { id } })
   return children(handleClick)
 }

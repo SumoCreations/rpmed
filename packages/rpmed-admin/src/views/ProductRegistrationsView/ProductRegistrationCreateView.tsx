@@ -7,7 +7,7 @@ import { Helmet } from 'react-helmet'
 import { RouteComponentProps } from 'react-router'
 import { ErrorList } from 'rpmed-validation-schema'
 import { Actions, Card, Content, Layout, Toolbar } from 'rpmed-ui/lib/V1'
-import { useCreateProductRegistration } from './graphql'
+import { useCreateProductRegistrationMutation } from 'rpmed-schema'
 import {
   ProductRegistrationForm,
   ProductRegistrationFormSubmitHandler,
@@ -21,7 +21,7 @@ export const ProductRegistrationCreateView: React.FC<RouteComponentProps> = ({
 }) => {
   const handleBack = () => history.push('/admin/registrations')
   const defaultValues = qs.parse(window.location.search)
-  const createProductRegistration = useCreateProductRegistration()
+  const [createProductRegistration, _] = useCreateProductRegistrationMutation()
   const handleSubmit: ProductRegistrationFormSubmitHandler = async (
     values,
     actions
@@ -40,7 +40,7 @@ export const ProductRegistrationCreateView: React.FC<RouteComponentProps> = ({
     const errors = (get(result, 'data.response.errors') || []) as ErrorList
     if (errors.length > 0) {
       errors.forEach(({ path, message }) => {
-        actions.setFieldError(path, message)
+        actions.setFieldError((path as any), message)
       })
       return false
     }

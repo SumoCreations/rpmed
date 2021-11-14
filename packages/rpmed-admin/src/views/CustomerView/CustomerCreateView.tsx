@@ -8,12 +8,12 @@ import { RouteComponentProps } from 'react-router'
 import { ErrorList } from 'rpmed-validation-schema'
 import { Actions, Card, Content, Layout, Toolbar } from 'rpmed-ui/lib/V1'
 import { CustomerForm, CustomerFormSubmitHandler } from './CustomerForm'
-import { useCreateCustomer } from './graphql'
+import { useCreateCustomerMutation } from 'rpmed-schema'
 
 export const CustomerCreateView: React.FC<RouteComponentProps> = ({
   history,
 }) => {
-  const createCustomer = useCreateCustomer()
+  const [createCustomer, _] = useCreateCustomerMutation()
   const handleBack = () => history.push('/admin/customers')
   const defaultValues = qs.parse(window.location.search)
   const handleSubmit: CustomerFormSubmitHandler = async (values, actions) => {
@@ -29,7 +29,7 @@ export const CustomerCreateView: React.FC<RouteComponentProps> = ({
     const errors = (get(result, 'data.response.errors') || []) as ErrorList
     if (errors.length > 0) {
       errors.forEach(({ path, message }) => {
-        actions.setFieldError(path, message)
+        actions.setFieldError((path as any), message)
       })
       return
     }

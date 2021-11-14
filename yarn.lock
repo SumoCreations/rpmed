@@ -15932,6 +15932,11 @@ jwt-decode@^2.2.0:
   resolved "https://registry.yarnpkg.com/jwt-decode/-/jwt-decode-2.2.0.tgz#7d86bd56679f58ce6a84704a657dd392bba81a79"
   integrity sha1-fYa9VmefWM5qhHBKZX3TkruoGnk=
 
+jwt-decode@^3.0.0:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/jwt-decode/-/jwt-decode-3.1.2.tgz#3fb319f3675a2df0c2895c8f5e9fa4b67b04ed59"
+  integrity sha512-UfpWE/VZn0iP50d8cz9NrZLM9lSWhcJ+0Gt/nm4by88UL+J1SiKN8/5dkjMmbEzwL2CAe+67GsegCbIKtbp75A==
+
 keyv@3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/keyv/-/keyv-3.0.0.tgz#44923ba39e68b12a7cec7df6c3268c031f2ef373"
@@ -20279,7 +20284,7 @@ react-side-effect@^1.1.0:
   dependencies:
     shallowequal "^1.0.1"
 
-react-simple-cookie-store@^1.0.10:
+react-simple-cookie-store@^1.0.10, react-simple-cookie-store@^1.0.12:
   version "1.0.12"
   resolved "https://registry.yarnpkg.com/react-simple-cookie-store/-/react-simple-cookie-store-1.0.12.tgz#888587fcd20e3e6b73445cad6efdb7f6a5df7a21"
   integrity sha512-uZY1I5WR+NtDqZoKYGJ+4Y7/SmczMMG9ZHG+nwm8T2UKNMzZcvF+NWoiLLxAhyj0YOH/SOD5k3rRC9BBufmHCg==
@@ -20501,7 +20506,7 @@ reduce-css-calc@^2.1.8:
     css-unit-converter "^1.1.1"
     postcss-value-parser "^3.3.0"
 
-redux-jwt-protected-middleware@^1.2.6:
+redux-jwt-protected-middleware@^1.2.6, redux-jwt-protected-middleware@^1.2.9:
   version "1.2.9"
   resolved "https://registry.yarnpkg.com/redux-jwt-protected-middleware/-/redux-jwt-protected-middleware-1.2.9.tgz#7ac5ffcf6a47a751e4052f9e8e143aa02b2eb524"
   integrity sha512-2GKEtwXe2YjRP15ptF1V04ekcQqZhDEDcGfvr8+X18+iBVePzMI8aw9vkOEM2sPtl/8wuws+UnX45S16OvcXZQ==
@@ -24059,6 +24064,11 @@ validator@^10.11.0:
   version "10.11.0"
   resolved "https://registry.yarnpkg.com/validator/-/validator-10.11.0.tgz#003108ea6e9a9874d31ccc9e5006856ccd76b228"
   integrity sha512-X/p3UZerAIsbBfN/IwahhYaBbY68EN/UQBWHtsbXGT5bfrH/p4NQzUCG1kF/rtKaNpnJ7jAu6NGTdSNtyNIXMw==
+
+validator@^13.1.17:
+  version "13.7.0"
+  resolved "https://registry.yarnpkg.com/validator/-/validator-13.7.0.tgz#4f9658ba13ba8f3d82ee881d3516489ea85c0857"
+  integrity sha512-nYXQLCBkpJ8X6ltALua9dRrZDHVYxjJ1wgskNt1lH9fzGjs3tgojGSCBjmEPwkWS1y29+DrizMTW19Pr9uB2nw==
 
 value-equal@^1.0.1:
   version "1.0.1"

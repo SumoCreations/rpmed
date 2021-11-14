@@ -1,9 +1,9 @@
 import { ErrorMessage } from 'formik'
 import * as React from 'react'
 import { Form, Input } from 'rpmed-ui/lib/V1'
-import { ICustomerDataShape, useCustomers } from './graphql'
+import { useCustomersQuery, Customer } from 'rpmed-schema'
 
-export type CustomerSelectFn = (p: ICustomerDataShape) => void
+export type CustomerSelectFn = (p: Customer) => void
 
 interface ICustomerSelectProps {
   name: string
@@ -25,19 +25,20 @@ const CustomerList: React.FC<ICustomerListProps> = ({
   onDismiss: dismiss,
   onSelect: select,
 }) => {
-  const { customers } = useCustomers(search)
+  const { data } = useCustomersQuery({ variables: { search } })
+  const customers = data?.response.customers ?? []
   return (
     <React.Fragment>
       {customers.map(c => {
         const onClick: React.MouseEventHandler = e => {
           e.stopPropagation()
-          select(c)
+          select(c as Customer)
           dismiss()
         }
         return (
           <Input.AutocompleteSuggestion
-            key={`CustomerSearchResult${c.id}`}
-            displayName={`${c.name} (${c.email})`}
+            key={`CustomerSearchResult${c?.id}`}
+            displayName={`${c?.name} (${c?.email})`}
             onClick={onClick}
           />
         )

@@ -7,7 +7,7 @@ import { Helmet } from 'react-helmet'
 import { RouteComponentProps } from 'react-router'
 import { Link } from 'react-router-dom'
 import { Flex } from 'rebass'
-import { ProductSymptom } from '../../schema'
+import { ProductSymptom, useLinkSymptomToModelNumberMutation } from 'rpmed-schema'
 import {
   Actions,
   Card,
@@ -25,11 +25,10 @@ import {
   Toolbar,
 } from 'rpmed-ui/lib/V1'
 import {
-  GQL as SymptomQL,
   ProductSymptomSelectField,
   ProductSymptomSelectFn,
 } from '../ProductSymptomsView'
-import { useModelNumber } from './graphql'
+import { useModelNumberQuery } from 'rpmed-schema'
 
 const { useState } = React
 
@@ -42,7 +41,7 @@ const View: React.FunctionComponent<RouteComponentProps<
 >> = ({ history, match }) => {
   const [associatedSymptoms, setAssociatedSymptoms] = useState([] as string[])
   const [symptomToRemove, setSymptomToRemove] = useState(null as string | null)
-  const linkSymptomToModelNumber = SymptomQL.useLinkSymptomToModelNumber()
+  const [linkSymptomToModelNumber, _] = useLinkSymptomToModelNumberMutation()
   const onSelectSymptom: ProductSymptomSelectFn = async symptom => {
     setAssociatedSymptoms([...associatedSymptoms, symptom.id])
     await linkSymptomToModelNumber({
@@ -63,9 +62,9 @@ const View: React.FunctionComponent<RouteComponentProps<
   const handleDeleteSymptom = (symptom: string) => () =>
     setSymptomToRemove(symptom)
 
-  const { loading, refetch, modelNumber, error } = useModelNumber(
-    match.params.modelNumberId
+  const { loading, refetch, data, error } = useModelNumberQuery({ variables: { modelNumberId: match.params.modelNumberId } }
   )
+  const modelNumber = data?.response?.modelNumber
   if (error) {
     return (
       <Card.Flat>
@@ -73,7 +72,7 @@ const View: React.FunctionComponent<RouteComponentProps<
       </Card.Flat>
     )
   }
-  const rows = ((modelNumber.symptoms as ProductSymptom[]) || []).map(
+  const rows = ((modelNumber?.symptoms as ProductSymptom[]) || []).map(
     symptom => [
       <Link to={`/admin/products/symptoms/${symptom.id}`} key={symptom.id}>
         {symptom.faultCode}
@@ -130,9 +129,8 @@ const View: React.FunctionComponent<RouteComponentProps<
           <Grid.Col span={16}>
             <Card.Flat>
               <Helmet
-                title={`${
-                  loading ? 'Loading Model Number' : modelNumber.id
-                } - RPMed Service Admin`}
+                title={`${loading ? 'Loading Model Number' : modelNumber?.id
+                  } - RPMed Service Admin`}
               />
               {loading ? (
                 <Indicators.Spinner size="lg" />
@@ -140,17 +138,17 @@ const View: React.FunctionComponent<RouteComponentProps<
                 <React.Fragment>
                   <Grid.Row>
                     <Grid.Col span={16}>
-                      <Heading.Title>{modelNumber.id}</Heading.Title>
+                      <Heading.Title>{modelNumber?.id}</Heading.Title>
                     </Grid.Col>
                     <Grid.Col span={16}>
                       <Tags.List>
-                        <Tags.Primary>{modelNumber.productType}</Tags.Primary>
-                        {modelNumber.products?.map(p =>
+                        <Tags.Primary>{modelNumber?.productType}</Tags.Primary>
+                        {modelNumber?.products?.map(p =>
                           p ? (
                             <Tags.Secondary key={p.id}>{p.name}</Tags.Secondary>
                           ) : null
                         )}
-                        {modelNumber.lotted ? (
+                        {modelNumber?.lotted ? (
                           <Tags.Secondary>Lotted</Tags.Secondary>
                         ) : null}
                       </Tags.List>
@@ -162,20 +160,20 @@ const View: React.FunctionComponent<RouteComponentProps<
                   <Grid.Row>
                     <Grid.Col span={8}>
                       <Heading.Label>Description</Heading.Label>
-                      <p>{modelNumber.description}</p>
+                      <p>{modelNumber?.description}</p>
                     </Grid.Col>
                     <Grid.Col span={8}>
                       <Heading.Label>Warranty</Heading.Label>
                       <p>
-                        {modelNumber.warrantyTerm} months /{' '}
-                        {modelNumber.warrantyDescription}
+                        {modelNumber?.warrantyTerm} months /{' '}
+                        {modelNumber?.warrantyDescription}
                       </p>
                     </Grid.Col>
                   </Grid.Row>
                   <Grid.Row>
                     <Grid.Col span={8}>
                       <Heading.Label>Public Notes</Heading.Label>
-                      <p>{modelNumber.publicNotes}</p>
+                      <p>{modelNumber?.publicNotes}</p>
                     </Grid.Col>
                     <Grid.Col span={8}>
                       <Heading.Label>Warranty Resolution</Heading.Label>
@@ -184,14 +182,14 @@ const View: React.FunctionComponent<RouteComponentProps<
                           {modelNumber?.feeWithWarranty?.distributor ?? 'RFQ'}/
                           {modelNumber?.feeWithWarranty?.endUser ?? 'RFQ'}
                         </strong>{' '}
-                        - {modelNumber.resolutionWithWarranty}
+                        - {modelNumber?.resolutionWithWarranty}
                       </p>
                     </Grid.Col>
                   </Grid.Row>
                   <Grid.Row>
                     <Grid.Col span={8}>
                       <Heading.Label>Private Notes</Heading.Label>
-                      <p>{modelNumber.privateNotes}</p>
+                      <p>{modelNumber?.privateNotes}</p>
                     </Grid.Col>
                     <Grid.Col span={8}>
                       <Heading.Label>Resolution w/o Warranty</Heading.Label>
@@ -201,7 +199,7 @@ const View: React.FunctionComponent<RouteComponentProps<
                             'RFQ'}
                           /{modelNumber?.feeWithoutWarranty?.endUser ?? 'RFQ'}
                         </strong>{' '}
-                        - {modelNumber.resolutionWithoutWarranty}
+                        - {modelNumber?.resolutionWithoutWarranty}
                       </p>
                     </Grid.Col>
                   </Grid.Row>
@@ -238,7 +236,7 @@ const View: React.FunctionComponent<RouteComponentProps<
                               label="Troubleshooting Symptom"
                               placeholder="Select a Symptom"
                               name="productSymptom"
-                              ignoreIds={(modelNumber.symptoms || []).map(
+                              ignoreIds={(modelNumber?.symptoms || []).map(
                                 s => (s as ProductSymptom).id
                               )}
                             />
@@ -264,7 +262,7 @@ const View: React.FunctionComponent<RouteComponentProps<
                   <Divider.Light />
                 </Grid.Col>
                 <Grid.Col span={16}>
-                  {(modelNumber.symptoms || []).length > 0 ? (
+                  {(modelNumber?.symptoms || []).length > 0 ? (
                     <Data.Table
                       columnContentTypes={['text', 'text', 'numeric']}
                       initialSortColumnIndex={0}

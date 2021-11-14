@@ -1,0 +1,13 @@
+mutation CreateCustomer($customerInput: NewCustomerInput!) {
+  response: createCustomer(customerInput: $customerInput) {
+    customer {
+      id
+      name
+      email
+    }
+    errors {
+      message
+      path
+    }
+  }
+}

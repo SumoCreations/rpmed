@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
 import { RequiredString } from 'rpmed-validation-schema'
 import * as Yup from 'yup'
-import { useResetPasswordMutation } from '../../schema'
+import { useResetPasswordMutation } from 'rpmed-schema'
 import { ICredentials, login, updateSession } from '../../session'
 import { Form, Indicators, Input } from 'rpmed-ui/lib/V1'
 

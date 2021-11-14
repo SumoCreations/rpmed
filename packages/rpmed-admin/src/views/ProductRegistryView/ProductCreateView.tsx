@@ -7,7 +7,7 @@ import { Helmet } from 'react-helmet'
 import { RouteComponentProps } from 'react-router'
 import { ErrorList } from 'rpmed-validation-schema'
 import { Actions, Card, Content, Layout, Toolbar } from 'rpmed-ui/lib/V1'
-import { useCreateProduct } from './graphql'
+import { useCreateProductMutation } from 'rpmed-schema'
 import { ProductForm, ProductFormSubmitHandler } from './ProductForm'
 
 export const ProductCreateView: React.FC<RouteComponentProps> = ({
@@ -15,7 +15,7 @@ export const ProductCreateView: React.FC<RouteComponentProps> = ({
 }) => {
   const handleBack = () => history.push('/admin/products')
   const defaultValues = qs.parse(window.location.search)
-  const createProduct = useCreateProduct()
+  const [createProduct, _] = useCreateProductMutation()
   const handleSubmit: ProductFormSubmitHandler = async (values, actions) => {
     const result = await createProduct({
       variables: {
@@ -29,7 +29,7 @@ export const ProductCreateView: React.FC<RouteComponentProps> = ({
     const errors = (get(result, 'data.response.errors') || []) as ErrorList
     if (errors.length > 0) {
       errors.forEach(({ path, message }) => {
-        actions.setFieldError(path, message)
+        actions.setFieldError((path as any), message)
       })
       return
     }

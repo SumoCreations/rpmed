@@ -2,7 +2,7 @@ import {
   RgaDocument,
   RgaQuery,
   useCreateRgaGoodMutation,
-} from '../../../schema'
+} from 'rpmed-schema'
 
 export const useCreateRGAGood = () => {
   const [createRGAGood] = useCreateRgaGoodMutation({

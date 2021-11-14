@@ -13,7 +13,7 @@ import {
   Layout,
   Toolbar,
 } from 'rpmed-ui/lib/V1'
-import { IProductDataShape, useProduct, useUpdateProduct } from './graphql'
+import { Product, ProductInput, useProductQuery, useUpdateProductMutation } from 'rpmed-schema'
 import { ProductForm, ProductFormSubmitHandler } from './ProductForm'
 
 interface IProductRouterProps {
@@ -23,11 +23,15 @@ interface IProductRouterProps {
 const View: React.FunctionComponent<RouteComponentProps<
   IProductRouterProps
 >> = ({ history, match }) => {
-  const updateProduct = useUpdateProduct()
-  const { loading, product: extendedProduct } = useProduct(
-    match.params.productId
-  )
-  const { modelNumber, ...product } = extendedProduct
+  const [updateProduct, _] = useUpdateProductMutation()
+  const { loading, data } = useProductQuery({
+    variables: {
+      productId:
+        match.params.productId
+    }
+  })
+  const extendedProduct = (data?.response?.product ?? {}) as Product
+  const { modelNumbers, ...product } = extendedProduct
   const handleBack = () => history.push('/admin/products')
   const handleSubmit: ProductFormSubmitHandler = async (values, actions) => {
     const result = await updateProduct({
@@ -43,7 +47,7 @@ const View: React.FunctionComponent<RouteComponentProps<
     const errors = (get(result, 'data.response.errors') || []) as ErrorList
     if (errors.length > 0) {
       errors.forEach(({ path, message }) => {
-        actions.setFieldError(path, message)
+        actions.setFieldError((path as any), message)
       })
       return
     }
@@ -63,13 +67,12 @@ const View: React.FunctionComponent<RouteComponentProps<
         </Toolbar.View>
         <Card.Flat>
           <Helmet
-            title={`${
-              loading ? 'Loading Product' : product.name
-            } - RPMed Service Admin`}
+            title={`${loading ? 'Loading Product' : product.name
+              } - RPMed Service Admin`}
           />
           {loading ? <Indicators.Spinner size="lg" /> : <h2>{product.name}</h2>}
           <ProductForm
-            initialValues={product as IProductDataShape}
+            initialValues={product as ProductInput}
             onSubmit={handleSubmit}
           />
         </Card.Flat>

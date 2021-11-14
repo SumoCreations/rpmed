@@ -14,7 +14,7 @@ import React, { useState } from 'react'
 import { Helmet } from 'react-helmet'
 import { RouteComponentProps } from 'react-router'
 import { Link } from 'react-router-dom'
-import { ModelNumber, ProductType } from '../../schema'
+import { ModelNumber, ProductType } from 'rpmed-schema'
 import {
   Actions,
   Card,
@@ -29,7 +29,7 @@ import {
   Toolbar,
 } from 'rpmed-ui/lib/V1'
 import { DestroyModelNumberButton } from './DestroyModelNumberButton'
-import { useModelNumbers } from './graphql'
+import { useModelNumbersQuery } from 'rpmed-schema'
 import { ProductSelectField, ProductSelectFn } from './ProductSelectField'
 import {
   ProductTypeSelectField,
@@ -55,11 +55,11 @@ const ModelNumbersList: React.FunctionComponent<IModelNumberProps> = ({
   const filterModelNumber = ({ description, id }: ModelNumber) =>
     filterText.length > 0
       ? [id, description]
-          .map(
-            val =>
-              val?.toLowerCase().indexOf(filterText.toLowerCase()) ?? -1 >= 0
-          )
-          .includes(true)
+        .map(
+          val =>
+            val?.toLowerCase().indexOf(filterText.toLowerCase()) ?? -1 >= 0
+        )
+        .includes(true)
       : true
 
   const onClickDelete = (modelNumber: ModelNumber) => () =>
@@ -67,44 +67,44 @@ const ModelNumbersList: React.FunctionComponent<IModelNumberProps> = ({
 
   const rows = modelNumbers
     ? modelNumbers.filter(filterModelNumber).map(model => [
-        <Link to={`/admin/products/modelNumbers/${model.id}`} key={model.id}>
-          {model.id}
-        </Link>,
-        model.description,
-        model.lotted ? 'YES' : 'NO',
-        `${model.warrantyTerm} mo`,
-        <Actions.Group key={`actions${model.id}`}>
-          <Actions.Primary
-            onClick={sendTo({
-              history,
-              url: `/admin/products/modelNumbers/${model.id}`,
-            })}
-          >
-            <FontAwesomeIcon icon={faEye} />
-          </Actions.Primary>
-          <Actions.Primary
-            onClick={sendTo({
-              history,
-              url: `/admin/products/modelNumbers/edit/${model.id}`,
-            })}
-          >
-            <FontAwesomeIcon icon={faPencil} />
-          </Actions.Primary>
-          <Actions.Primary
-            onClick={sendTo({
-              history,
-              url: `/admin/products/modelNumbers/new?${qs.stringify({
-                ...model,
-              })}`,
-            })}
-          >
-            <FontAwesomeIcon icon={faCopy} />
-          </Actions.Primary>
-          <Actions.Destructive onClick={onClickDelete(model)}>
-            <FontAwesomeIcon icon={faTrash} />
-          </Actions.Destructive>
-        </Actions.Group>,
-      ])
+      <Link to={`/admin/products/modelNumbers/${model.id}`} key={model.id}>
+        {model.id}
+      </Link>,
+      model.description,
+      model.lotted ? 'YES' : 'NO',
+      `${model.warrantyTerm} mo`,
+      <Actions.Group key={`actions${model.id}`}>
+        <Actions.Primary
+          onClick={sendTo({
+            history,
+            url: `/admin/products/modelNumbers/${model.id}`,
+          })}
+        >
+          <FontAwesomeIcon icon={faEye} />
+        </Actions.Primary>
+        <Actions.Primary
+          onClick={sendTo({
+            history,
+            url: `/admin/products/modelNumbers/edit/${model.id}`,
+          })}
+        >
+          <FontAwesomeIcon icon={faPencil} />
+        </Actions.Primary>
+        <Actions.Primary
+          onClick={sendTo({
+            history,
+            url: `/admin/products/modelNumbers/new?${qs.stringify({
+              ...model,
+            })}`,
+          })}
+        >
+          <FontAwesomeIcon icon={faCopy} />
+        </Actions.Primary>
+        <Actions.Destructive onClick={onClickDelete(model)}>
+          <FontAwesomeIcon icon={faTrash} />
+        </Actions.Destructive>
+      </Actions.Group>,
+    ])
     : []
 
   return (
@@ -138,10 +138,11 @@ export const ModelNumberListView: React.FC<RouteComponentProps<{}>> = ({
     loading,
     error,
     networkStatus,
-    modelNumbers,
-    pageSize,
+    data,
     refetch,
-  } = useModelNumbers({ productId, productType })
+  } = useModelNumbersQuery({ variables: { productId, productType } })
+  const modelNumbers = data?.response?.modelNumbers
+  const pageSize = data?.response?.pageSize ?? 0
   const handleRefresh = () => refetch()
   const networkActive = loading || networkStatus === 4
   const handleSelectProduct: ProductSelectFn = p => {
@@ -243,7 +244,7 @@ export const ModelNumberListView: React.FC<RouteComponentProps<{}>> = ({
                   history={history}
                   onDelete={confirmModelNumberToDelete}
                   filterText={searchText}
-                  modelNumbers={modelNumbers}
+                  modelNumbers={(modelNumbers ?? []) as ModelNumber[]}
                 />
               )}
             </Grid.Col>

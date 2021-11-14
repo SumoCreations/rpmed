@@ -1,0 +1,14 @@
+query Customer($customerId: String!) {
+  response: customer(id: $customerId) {
+    customer {
+      id
+      name
+      email
+    }
+    errors {
+      message
+      path
+    }
+    success
+  }
+}

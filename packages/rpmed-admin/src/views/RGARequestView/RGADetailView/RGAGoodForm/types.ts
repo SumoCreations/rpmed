@@ -1,6 +1,6 @@
 import { FormikHelpers } from 'formik'
 import React from 'react'
-import { FeeStructure, ProductType } from '../../../../schema'
+import { FeeStructure, ProductType } from 'rpmed-schema'
 import { Input } from 'rpmed-ui/lib/V1'
 
 export interface IRGAGoodFormProps {

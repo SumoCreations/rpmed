@@ -16,8 +16,9 @@ import {
 import {
   DistributorForm,
   DistributorFormSubmitHandler,
+  IDistributorFormValues,
 } from './DistributorForm'
-import { useDistributor, useUpdateDistributor } from './graphql'
+import { useDistributorQuery, useUpdateDistributorMutation } from 'rpmed-schema'
 
 interface IDistributorRouterProps {
   distributorId: string
@@ -27,8 +28,9 @@ const View: React.FunctionComponent<RouteComponentProps<
   IDistributorRouterProps
 >> = ({ history, match }) => {
   const handleBack = () => history.push('/admin/distributors')
-  const { distributor, loading } = useDistributor(match.params.distributorId)
-  const updateDistributor = useUpdateDistributor()
+  const { data, loading } = useDistributorQuery({ variables: { distributorId: match.params.distributorId } })
+  const distributor = data?.response.distributor
+  const [updateDistributor, _] = useUpdateDistributorMutation()
   const handleSubmit: DistributorFormSubmitHandler = async (
     values,
     actions
@@ -36,9 +38,9 @@ const View: React.FunctionComponent<RouteComponentProps<
     const result = await updateDistributor({
       variables: {
         distributorInput: {
-          domain: values.domain || '',
-          id: distributor.id,
-          name: values.name || '',
+          domain: values.domain ?? '',
+          id: distributor?.id ?? '',
+          name: values.name ?? '',
         },
       },
     })
@@ -46,7 +48,7 @@ const View: React.FunctionComponent<RouteComponentProps<
     const errors = (get(result, 'data.response.errors') || []) as ErrorList
     if (errors.length > 0) {
       errors.forEach(({ path, message }) => {
-        actions.setFieldError(path, message)
+        actions.setFieldError((path as any), message)
       })
       return
     }
@@ -66,16 +68,16 @@ const View: React.FunctionComponent<RouteComponentProps<
         </Toolbar.View>
         <Card.Flat>
           <Helmet
-            title={`${distributor.name ||
+            title={`${distributor?.name ||
               'Loading Distributor'} - RPMed Service Admin`}
           />
           {loading ? (
             <Indicators.Spinner size="lg" />
           ) : (
-            <h2>{distributor.name}</h2>
+            <h2>{distributor?.name}</h2>
           )}
           <DistributorForm
-            initialValues={distributor}
+            initialValues={distributor as IDistributorFormValues}
             onSubmit={handleSubmit}
           />
         </Card.Flat>

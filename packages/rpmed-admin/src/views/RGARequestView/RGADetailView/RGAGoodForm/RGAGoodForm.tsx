@@ -1,7 +1,7 @@
 import { Formik } from 'formik'
 import React, { useState } from 'react'
 import * as Validation from 'rpmed-validation-schema'
-import { FeeStructure, ModelNumber } from '../../../../schema'
+import { FeeStructure, ModelNumber } from 'rpmed-schema'
 import { Form, Heading } from 'rpmed-ui/lib/V1'
 import {
   ModelNumberSelectFn,

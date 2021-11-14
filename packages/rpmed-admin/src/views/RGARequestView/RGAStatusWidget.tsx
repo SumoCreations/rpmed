@@ -8,7 +8,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react'
 import { Flex } from 'rebass'
-import { RgaStatus } from '../../schema'
+import { RgaStatus } from 'rpmed-schema'
 import { styled, remCalc } from 'rpmed-ui/lib/V1'
 
 interface IDetailViewProps {
