@@ -47,6 +47,7 @@ export const LoginForm: React.FC<{ onSubmit: LoginFormSubmitHandler }> = ({
       const cannotSubmit =
         isSubmitting && !process.env.REACT_APP_DISABLE_CAPTCHA && !hasToken
       console.log(errors)
+      console.log(process.env, process.env.REACT_APP_DISABLE_CAPTCHA)
       return (
         <Form.Form onSubmit={handleSubmit}>
           <FormField

@@ -77,7 +77,7 @@ const View: React.FunctionComponent<RouteComponentProps<
             <h2>{distributor?.name}</h2>
           )}
           <DistributorForm
-            initialValues={distributor as IDistributorFormValues}
+            initialValues={(distributor ?? {}) as IDistributorFormValues}
             onSubmit={handleSubmit}
           />
         </Card.Flat>

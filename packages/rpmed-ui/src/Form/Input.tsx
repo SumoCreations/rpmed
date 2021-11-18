@@ -57,6 +57,9 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     forwardedRef
   ) => {
     const controlledValues = value ? { value } : {}
+    if (onChange) {
+      console.log("onChange", onChange, name)
+    }
     return (
       <input
         name={name}

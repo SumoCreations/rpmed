@@ -37,14 +37,20 @@ interface IProductRegistrationProps {
   history: History
   onDelete: (registration: ProductRegistration) => void
   filterText: string
+  registrations: ProductRegistration[]
+  loading?: boolean
+  error?: any
 }
 
 const ProductRegistrations: React.FunctionComponent<IProductRegistrationProps> = ({
   history,
   onDelete,
   filterText,
+  registrations,
+  loading,
+  error
 }) => {
-  const { loading, error, data } = useProductRegistrationsQuery()
+
   if (loading) {
     return <p>Loading...</p>
   }
@@ -64,8 +70,7 @@ const ProductRegistrations: React.FunctionComponent<IProductRegistrationProps> =
   const onClickDelete = (
     productRegistration: ProductRegistration
   ) => () => onDelete(productRegistration)
-  const productRegistrations = (data?.response.productRegistrations ?? []) as ProductRegistration[]
-  const rows = productRegistrations.filter(filterProductRegistration).map(p => [
+  const rows = registrations.filter(filterProductRegistration).map(p => [
     <Link to={`/admin/registrations/${p.id}`} key={p.id}>
       {p.id}
     </Link>,
@@ -112,6 +117,8 @@ const ProductRegistrations: React.FunctionComponent<IProductRegistrationProps> =
 export const ProductRegistrationListView: React.FC<RouteComponentProps<{}>> = ({
   history,
 }) => {
+  const { loading, error, data, refetch } = useProductRegistrationsQuery({ fetchPolicy: "network-only" })
+  const registrations = (data?.response.productRegistrations ?? []) as ProductRegistration[]
   const [registrationToDelete, setProductRegistrationToDelete] = useState(
     null as ProductRegistration | null
   )
@@ -147,6 +154,9 @@ export const ProductRegistrationListView: React.FC<RouteComponentProps<{}>> = ({
             history={history}
             onDelete={confirmProductRegistrationToDelete}
             filterText={searchText}
+            loading={loading}
+            error={error}
+            registrations={registrations}
           />
         </Card.Flat>
       </Content>
@@ -154,8 +164,9 @@ export const ProductRegistrationListView: React.FC<RouteComponentProps<{}>> = ({
         <DestroyProductRegistrationButton id={registrationToDelete.id}>
           {deleteProductRegistration => {
             const onDismiss = () => setProductRegistrationToDelete(null)
-            const onConfirm = () => {
-              deleteProductRegistration()
+            const onConfirm = async () => {
+              await deleteProductRegistration()
+              refetch()
               onDismiss()
             }
             return (

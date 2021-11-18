@@ -404,6 +404,10 @@ export type Mutation = {
   updateRGAGood: RgaGoodMutationOutput;
   /** Removes an existing RGA good. */
   destroyRGAGood: RgaGoodMutationOutput;
+  /** Creates a new page. */
+  makePage: PageMutationOutput;
+  /** Removes an existing page. */
+  destroyPage: PageMutationOutput;
 };
 
 
@@ -630,6 +634,18 @@ export type MutationDestroyRgaGoodArgs = {
   rgaId: Scalars['String'];
 };
 
+
+/** The root mutation for the schema. */
+export type MutationMakePageArgs = {
+  pageInput: PageInput;
+};
+
+
+/** The root mutation for the schema. */
+export type MutationDestroyPageArgs = {
+  id: Scalars['String'];
+};
+
 /** A set of fields used to create or update a customer. */
 export type NewCustomerInput = {
   /** The email of the customer. */
@@ -701,6 +717,21 @@ export type NewUserInput = {
   lastName: Scalars['String'];
 };
 
+/** A page on the customer service portal. */
+export type Page = {
+  __typename?: 'Page';
+  /** The unique identifier for this page */
+  id: Scalars['ID'];
+  /** The title of the page. */
+  title?: Maybe<Scalars['String']>;
+  /** The slug of the page. */
+  slug?: Maybe<Scalars['String']>;
+  /** The seo keywords of the page. */
+  keywords?: Maybe<Scalars['String']>;
+  /** The description of the page. */
+  description?: Maybe<Scalars['String']>;
+};
+
 /** Provides essential pagination info for a connection (or paginated request) */
 export type PageInfo = {
   __typename?: 'PageInfo';
@@ -728,6 +759,48 @@ export type PageInfoHasNextPagesArgs = {
 /** Provides essential pagination info for a connection (or paginated request) */
 export type PageInfoHasPreviousPagesArgs = {
   amount: Scalars['Int'];
+};
+
+/** A set of fields used to create or update a page. */
+export type PageInput = {
+  /** The id of the customer associated to the page. */
+  id?: Maybe<Scalars['ID']>;
+  /** The id of the customer associated to the page. */
+  title: Scalars['String'];
+  /** The slug of the page. */
+  slug: Scalars['String'];
+  /** The meta keywords of the page for SEO purposes. */
+  keywords?: Maybe<Scalars['String']>;
+  /** The page description for SEO purposes. */
+  description?: Maybe<Scalars['String']>;
+};
+
+/** The result of a mutation applied to a page. */
+export type PageMutationOutput = {
+  __typename?: 'PageMutationOutput';
+  /** The resulting page if the operation was successful. */
+  page?: Maybe<Page>;
+  /** Any validation errors encountered while running the mutation. */
+  errors?: Maybe<Array<Maybe<ValidationError>>>;
+  /** A simple boolean indicating whether or not the operation was successful. */
+  success: Scalars['Boolean'];
+};
+
+/** The result of a query for a page or pages. */
+export type PageQueryOutput = {
+  __typename?: 'PageQueryOutput';
+  /** The resulting page if the operation was successful. */
+  page?: Maybe<Page>;
+  /** The resulting pages if the operation was successful and multiple results were returned. */
+  pages?: Maybe<Array<Maybe<Page>>>;
+  /** The size of the paginated results. */
+  pageSize?: Maybe<Scalars['Int']>;
+  /** This key can be used to continue querying paginated results. */
+  lastEvaluatedKey?: Maybe<Scalars['String']>;
+  /** Any validation errors encountered while running the mutation. */
+  errors?: Maybe<Array<Maybe<ValidationError>>>;
+  /** A simple boolean indicating whether or not the operation was successful. */
+  success: Scalars['Boolean'];
 };
 
 /** A description of a pagination destination to fetch additional paginated results. */
@@ -966,6 +1039,10 @@ export type Query = {
   rgaCount: RgaStatusCountOutput;
   /** A specific RGA in the system via ID. */
   rga: RgaQueryOutput;
+  /** All pages in the system */
+  pages: PageQueryOutput;
+  /** A specific page in the system via ID. */
+  page: PageQueryOutput;
 };
 
 
@@ -1055,6 +1132,12 @@ export type QueryRgasArgs = {
 /** The root query for the schema. */
 export type QueryRgaArgs = {
   id: Scalars['String'];
+};
+
+
+/** The root query for the schema. */
+export type QueryPageArgs = {
+  id: Scalars['ID'];
 };
 
 /** A Request Goods Authorization. */
@@ -1803,6 +1886,26 @@ export type DestroyModelNumberMutation = (
   ) }
 );
 
+export type DestroyPageMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DestroyPageMutation = (
+  { __typename?: 'Mutation' }
+  & { response: (
+    { __typename?: 'PageMutationOutput' }
+    & Pick<PageMutationOutput, 'success'>
+    & { page?: Maybe<(
+      { __typename?: 'Page' }
+      & Pick<Page, 'id' | 'title' | 'keywords' | 'description' | 'slug'>
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'path' | 'message'>
+    )>>> }
+  ) }
+);
+
 export type DestroyProductMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
@@ -1967,6 +2070,26 @@ export type LinkSymptomToModelNumberMutation = (
   ) }
 );
 
+export type MakePageMutationVariables = Exact<{
+  pageInput: PageInput;
+}>;
+
+
+export type MakePageMutation = (
+  { __typename?: 'Mutation' }
+  & { response: (
+    { __typename?: 'PageMutationOutput' }
+    & Pick<PageMutationOutput, 'success'>
+    & { page?: Maybe<(
+      { __typename?: 'Page' }
+      & Pick<Page, 'id' | 'title' | 'keywords' | 'description' | 'slug'>
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'path' | 'message'>
+    )>>> }
+  ) }
+);
+
 export type ModelNumberQueryVariables = Exact<{
   modelNumberId: Scalars['String'];
 }>;
@@ -2087,6 +2210,44 @@ export type ModelNumbersViewableQuery = (
       & Pick<ValidationError, 'path' | 'message'>
     )>>> }
   )> }
+);
+
+export type PageQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type PageQuery = (
+  { __typename?: 'Query' }
+  & { response: (
+    { __typename?: 'PageQueryOutput' }
+    & Pick<PageQueryOutput, 'success'>
+    & { page?: Maybe<(
+      { __typename?: 'Page' }
+      & Pick<Page, 'id' | 'title' | 'keywords' | 'description' | 'slug'>
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'path' | 'message'>
+    )>>> }
+  ) }
+);
+
+export type PagesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type PagesQuery = (
+  { __typename?: 'Query' }
+  & { response: (
+    { __typename?: 'PageQueryOutput' }
+    & Pick<PageQueryOutput, 'success'>
+    & { pages?: Maybe<Array<Maybe<(
+      { __typename?: 'Page' }
+      & Pick<Page, 'id' | 'title' | 'keywords' | 'description' | 'slug'>
+    )>>>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'path' | 'message'>
+    )>>> }
+  ) }
 );
 
 export type ProductQueryVariables = Exact<{
@@ -3350,6 +3511,50 @@ export function useDestroyModelNumberMutation(baseOptions?: Apollo.MutationHookO
 export type DestroyModelNumberMutationHookResult = ReturnType<typeof useDestroyModelNumberMutation>;
 export type DestroyModelNumberMutationResult = Apollo.MutationResult<DestroyModelNumberMutation>;
 export type DestroyModelNumberMutationOptions = Apollo.BaseMutationOptions<DestroyModelNumberMutation, DestroyModelNumberMutationVariables>;
+export const DestroyPageDocument = gql`
+    mutation DestroyPage($id: String!) {
+  response: destroyPage(id: $id) {
+    page {
+      id
+      title
+      keywords
+      description
+      slug
+    }
+    success
+    errors {
+      path
+      message
+    }
+  }
+}
+    `;
+export type DestroyPageMutationFn = Apollo.MutationFunction<DestroyPageMutation, DestroyPageMutationVariables>;
+
+/**
+ * __useDestroyPageMutation__
+ *
+ * To run a mutation, you first call `useDestroyPageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDestroyPageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [destroyPageMutation, { data, loading, error }] = useDestroyPageMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDestroyPageMutation(baseOptions?: Apollo.MutationHookOptions<DestroyPageMutation, DestroyPageMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DestroyPageMutation, DestroyPageMutationVariables>(DestroyPageDocument, options);
+      }
+export type DestroyPageMutationHookResult = ReturnType<typeof useDestroyPageMutation>;
+export type DestroyPageMutationResult = Apollo.MutationResult<DestroyPageMutation>;
+export type DestroyPageMutationOptions = Apollo.BaseMutationOptions<DestroyPageMutation, DestroyPageMutationVariables>;
 export const DestroyProductDocument = gql`
     mutation DestroyProduct($id: ID!) {
   response: destroyProduct(id: $id) {
@@ -3719,6 +3924,50 @@ export function useLinkSymptomToModelNumberMutation(baseOptions?: Apollo.Mutatio
 export type LinkSymptomToModelNumberMutationHookResult = ReturnType<typeof useLinkSymptomToModelNumberMutation>;
 export type LinkSymptomToModelNumberMutationResult = Apollo.MutationResult<LinkSymptomToModelNumberMutation>;
 export type LinkSymptomToModelNumberMutationOptions = Apollo.BaseMutationOptions<LinkSymptomToModelNumberMutation, LinkSymptomToModelNumberMutationVariables>;
+export const MakePageDocument = gql`
+    mutation MakePage($pageInput: PageInput!) {
+  response: makePage(pageInput: $pageInput) {
+    page {
+      id
+      title
+      keywords
+      description
+      slug
+    }
+    success
+    errors {
+      path
+      message
+    }
+  }
+}
+    `;
+export type MakePageMutationFn = Apollo.MutationFunction<MakePageMutation, MakePageMutationVariables>;
+
+/**
+ * __useMakePageMutation__
+ *
+ * To run a mutation, you first call `useMakePageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMakePageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [makePageMutation, { data, loading, error }] = useMakePageMutation({
+ *   variables: {
+ *      pageInput: // value for 'pageInput'
+ *   },
+ * });
+ */
+export function useMakePageMutation(baseOptions?: Apollo.MutationHookOptions<MakePageMutation, MakePageMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<MakePageMutation, MakePageMutationVariables>(MakePageDocument, options);
+      }
+export type MakePageMutationHookResult = ReturnType<typeof useMakePageMutation>;
+export type MakePageMutationResult = Apollo.MutationResult<MakePageMutation>;
+export type MakePageMutationOptions = Apollo.BaseMutationOptions<MakePageMutation, MakePageMutationVariables>;
 export const ModelNumberDocument = gql`
     query ModelNumber($modelNumberId: String!) {
   response: modelNumber(id: $modelNumberId) {
@@ -3982,6 +4231,97 @@ export function useModelNumbersViewableLazyQuery(baseOptions?: Apollo.LazyQueryH
 export type ModelNumbersViewableQueryHookResult = ReturnType<typeof useModelNumbersViewableQuery>;
 export type ModelNumbersViewableLazyQueryHookResult = ReturnType<typeof useModelNumbersViewableLazyQuery>;
 export type ModelNumbersViewableQueryResult = Apollo.QueryResult<ModelNumbersViewableQuery, ModelNumbersViewableQueryVariables>;
+export const PageDocument = gql`
+    query Page($id: ID!) {
+  response: page(id: $id) {
+    page {
+      id
+      title
+      keywords
+      description
+      slug
+    }
+    success
+    errors {
+      path
+      message
+    }
+  }
+}
+    `;
+
+/**
+ * __usePageQuery__
+ *
+ * To run a query within a React component, call `usePageQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePageQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function usePageQuery(baseOptions: Apollo.QueryHookOptions<PageQuery, PageQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PageQuery, PageQueryVariables>(PageDocument, options);
+      }
+export function usePageLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PageQuery, PageQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PageQuery, PageQueryVariables>(PageDocument, options);
+        }
+export type PageQueryHookResult = ReturnType<typeof usePageQuery>;
+export type PageLazyQueryHookResult = ReturnType<typeof usePageLazyQuery>;
+export type PageQueryResult = Apollo.QueryResult<PageQuery, PageQueryVariables>;
+export const PagesDocument = gql`
+    query Pages {
+  response: pages {
+    pages {
+      id
+      title
+      keywords
+      description
+      slug
+    }
+    success
+    errors {
+      path
+      message
+    }
+  }
+}
+    `;
+
+/**
+ * __usePagesQuery__
+ *
+ * To run a query within a React component, call `usePagesQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePagesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePagesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function usePagesQuery(baseOptions?: Apollo.QueryHookOptions<PagesQuery, PagesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PagesQuery, PagesQueryVariables>(PagesDocument, options);
+      }
+export function usePagesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PagesQuery, PagesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PagesQuery, PagesQueryVariables>(PagesDocument, options);
+        }
+export type PagesQueryHookResult = ReturnType<typeof usePagesQuery>;
+export type PagesLazyQueryHookResult = ReturnType<typeof usePagesLazyQuery>;
+export type PagesQueryResult = Apollo.QueryResult<PagesQuery, PagesQueryVariables>;
 export const ProductDocument = gql`
     query Product($productId: String!) {
   response: product(id: $productId) {
@@ -5381,6 +5721,8 @@ export type ResolversTypes = {
   RGAStatusUpdate: ResolverTypeWrapper<RgaStatusUpdate>;
   UpdateProfile: ResolverTypeWrapper<UpdateProfile>;
   RGAStatusCountOutput: ResolverTypeWrapper<RgaStatusCountOutput>;
+  PageQueryOutput: ResolverTypeWrapper<PageQueryOutput>;
+  Page: ResolverTypeWrapper<Page>;
   Mutation: ResolverTypeWrapper<{}>;
   NewCustomerInput: NewCustomerInput;
   CustomerMutationOutput: ResolverTypeWrapper<CustomerMutationOutput>;
@@ -5414,6 +5756,8 @@ export type ResolversTypes = {
   RGAShippingStatus: RgaShippingStatus;
   RGAGoodInput: RgaGoodInput;
   RGAGoodMutationOutput: ResolverTypeWrapper<RgaGoodMutationOutput>;
+  PageInput: PageInput;
+  PageMutationOutput: ResolverTypeWrapper<PageMutationOutput>;
   ConnectionPayload: ConnectionPayload;
   PageInfo: ResolverTypeWrapper<PageInfo>;
   PaginationEntry: ResolverTypeWrapper<PaginationEntry>;
@@ -5450,6 +5794,8 @@ export type ResolversParentTypes = {
   RGAStatusUpdate: RgaStatusUpdate;
   UpdateProfile: UpdateProfile;
   RGAStatusCountOutput: RgaStatusCountOutput;
+  PageQueryOutput: PageQueryOutput;
+  Page: Page;
   Mutation: {};
   NewCustomerInput: NewCustomerInput;
   CustomerMutationOutput: CustomerMutationOutput;
@@ -5482,6 +5828,8 @@ export type ResolversParentTypes = {
   RGAGoodShippingInput: RgaGoodShippingInput;
   RGAGoodInput: RgaGoodInput;
   RGAGoodMutationOutput: RgaGoodMutationOutput;
+  PageInput: PageInput;
+  PageMutationOutput: PageMutationOutput;
   ConnectionPayload: ConnectionPayload;
   PageInfo: PageInfo;
   PaginationEntry: PaginationEntry;
@@ -5640,6 +5988,17 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createRGAGood?: Resolver<ResolversTypes['RGAGoodMutationOutput'], ParentType, ContextType, RequireFields<MutationCreateRgaGoodArgs, 'rgaId' | 'rgaGoodInput'>>;
   updateRGAGood?: Resolver<ResolversTypes['RGAGoodMutationOutput'], ParentType, ContextType, RequireFields<MutationUpdateRgaGoodArgs, 'id' | 'rgaId' | 'rgaGoodInput'>>;
   destroyRGAGood?: Resolver<ResolversTypes['RGAGoodMutationOutput'], ParentType, ContextType, RequireFields<MutationDestroyRgaGoodArgs, 'id' | 'rgaId'>>;
+  makePage?: Resolver<ResolversTypes['PageMutationOutput'], ParentType, ContextType, RequireFields<MutationMakePageArgs, 'pageInput'>>;
+  destroyPage?: Resolver<ResolversTypes['PageMutationOutput'], ParentType, ContextType, RequireFields<MutationDestroyPageArgs, 'id'>>;
+};
+
+export type PageResolvers<ContextType = any, ParentType extends ResolversParentTypes['Page'] = ResolversParentTypes['Page']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  slug?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  keywords?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type PageInfoResolvers<ContextType = any, ParentType extends ResolversParentTypes['PageInfo'] = ResolversParentTypes['PageInfo']> = {
@@ -5649,6 +6008,23 @@ export type PageInfoResolvers<ContextType = any, ParentType extends ResolversPar
   hasPreviousPages?: Resolver<Array<Maybe<ResolversTypes['PaginationEntry']>>, ParentType, ContextType, RequireFields<PageInfoHasPreviousPagesArgs, 'amount'>>;
   startCursor?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   endCursor?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PageMutationOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['PageMutationOutput'] = ResolversParentTypes['PageMutationOutput']> = {
+  page?: Resolver<Maybe<ResolversTypes['Page']>, ParentType, ContextType>;
+  errors?: Resolver<Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>, ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PageQueryOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['PageQueryOutput'] = ResolversParentTypes['PageQueryOutput']> = {
+  page?: Resolver<Maybe<ResolversTypes['Page']>, ParentType, ContextType>;
+  pages?: Resolver<Maybe<Array<Maybe<ResolversTypes['Page']>>>, ParentType, ContextType>;
+  pageSize?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  lastEvaluatedKey?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  errors?: Resolver<Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>, ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -5771,6 +6147,8 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   rgas?: Resolver<ResolversTypes['RGAQueryOutput'], ParentType, ContextType, RequireFields<QueryRgasArgs, never>>;
   rgaCount?: Resolver<ResolversTypes['RGAStatusCountOutput'], ParentType, ContextType>;
   rga?: Resolver<ResolversTypes['RGAQueryOutput'], ParentType, ContextType, RequireFields<QueryRgaArgs, 'id'>>;
+  pages?: Resolver<ResolversTypes['PageQueryOutput'], ParentType, ContextType>;
+  page?: Resolver<ResolversTypes['PageQueryOutput'], ParentType, ContextType, RequireFields<QueryPageArgs, 'id'>>;
 };
 
 export type RgaResolvers<ContextType = any, ParentType extends ResolversParentTypes['RGA'] = ResolversParentTypes['RGA']> = {
@@ -5937,7 +6315,10 @@ export type Resolvers<ContextType = any> = {
   ModelNumberQueryOutput?: ModelNumberQueryOutputResolvers<ContextType>;
   ModelNumberSymptomDetail?: ModelNumberSymptomDetailResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
+  Page?: PageResolvers<ContextType>;
   PageInfo?: PageInfoResolvers<ContextType>;
+  PageMutationOutput?: PageMutationOutputResolvers<ContextType>;
+  PageQueryOutput?: PageQueryOutputResolvers<ContextType>;
   PaginationEntry?: PaginationEntryResolvers<ContextType>;
   Pricing?: PricingResolvers<ContextType>;
   Product?: ProductResolvers<ContextType>;

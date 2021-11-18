@@ -8,6 +8,7 @@ import * as productSymptoms from './productSymptoms'
 import * as rgas from './rgas'
 import * as uploads from './uploads'
 import * as users from './users'
+import * as pages from "./pages"
 
 export const schemas = [
   base,
@@ -19,6 +20,7 @@ export const schemas = [
   users,
   uploads,
   rgas,
+  pages
 ]
 
 export const schema = makeExecutableSchema({

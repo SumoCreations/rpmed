@@ -31,18 +31,18 @@ const DISABLED_STYLES = 'opacity-50 cursor-not-allowed'
 export const backgroundStyles = (appearance?: ButtonAppearance) => {
   switch (appearance) {
     case 'primary':
-      return 'bg-accent-default text-white'
+      return 'bg-button text-white'
     case 'secondary':
       return 'bg-white border-2 border-primary-default text-primary-default'
     case 'destructive':
       return 'bg-red-600 text-white'
     case 'accent':
-      return 'bg-primary-default text-white'
+      return 'bg-primary text-white'
     case 'custom':
     case 'link':
       return ''
     default:
-      return 'bg-accent-default text-white'
+      return 'bg-button text-white'
   }
 }
 

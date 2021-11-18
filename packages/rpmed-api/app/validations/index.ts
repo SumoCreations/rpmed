@@ -15,3 +15,4 @@ export * from './rgaGoodValidations'
 export * from './stringValidations'
 export * from './userValidations'
 export * from './validate'
+export * from "./pageValidation"

@@ -33,15 +33,19 @@ interface ICustomerProps {
   history: History
   onDelete: (customer: Customer) => void
   filterText: string
+  loading?: boolean
+  error?: any
+  customers: Customer[]
 }
 
 const Customers: React.FunctionComponent<ICustomerProps> = ({
   history,
   onDelete,
   filterText,
+  loading,
+  customers,
+  error
 }) => {
-  const { data, loading, error } = useCustomersQuery()
-  const customers = data?.response.customers ?? []
   if (loading) {
     return <p>Loading...</p>
   }
@@ -98,6 +102,8 @@ const Customers: React.FunctionComponent<ICustomerProps> = ({
 export const CustomerListView: React.FC<RouteComponentProps<{}>> = ({
   history,
 }) => {
+  const { data, loading, error, refetch } = useCustomersQuery({ fetchPolicy: "network-only" })
+  const customers = (data?.response.customers ?? []) as Customer[]
   const [productToDelete, setCustomerToDelete] = useState<Customer | null>(
     null
   )
@@ -132,6 +138,9 @@ export const CustomerListView: React.FC<RouteComponentProps<{}>> = ({
             history={history}
             onDelete={confirmCustomerToDelete}
             filterText={searchText}
+            customers={customers}
+            loading={loading}
+            error={error}
           />
         </Card.Flat>
       </Content>
@@ -139,8 +148,9 @@ export const CustomerListView: React.FC<RouteComponentProps<{}>> = ({
         <DestroyCustomerButton id={productToDelete.id}>
           {deleteCustomer => {
             const onDismiss = () => setCustomerToDelete(null)
-            const onConfirm = () => {
-              deleteCustomer()
+            const onConfirm = async () => {
+              await deleteCustomer()
+              await refetch()
               onDismiss()
             }
             return (

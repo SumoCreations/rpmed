@@ -1,0 +1,16 @@
+query Page($id: ID!) {
+  response: page(id: $id) {
+    page {
+      id
+      title
+      keywords
+      description
+      slug
+    }
+    success
+    errors {
+      path
+      message
+    }
+  }
+}

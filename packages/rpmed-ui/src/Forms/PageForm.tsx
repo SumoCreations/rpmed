@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react'
+import { kebabCase } from "lodash"
 import { Button, TextField, Fields } from '../Form'
 import { AbsoluteOverlay } from '../Indicators'
 import { useForm } from 'react-hook-form'
@@ -11,23 +12,27 @@ import {
 } from '@sumocreations/forms'
 import { camelCase } from 'lodash'
 import { ErrorList } from '../Form/ErrorList'
+import { TextAreaField } from '..'
 
-export type LoginFormValues = {
-  email: string
-  password: string
+export type PageFormValues = {
+  slug: string
+  description: string
+  keywords: string
+  title: string
 }
 
 const schema = yup.object({
-  email: yup.string().required('cannot be blank'),
-  password: yup.string().required('cannot be blank'),
+  title: yup.string().required('cannot be blank'),
+  slug: yup.string().required('cannot be blank'),
+  keywords: yup.string(),
+  description: yup.string(),
 })
 
-export interface LoginFormProps extends FormProps<LoginFormValues> {
+export interface PageFormProps extends FormProps<PageFormValues> {
   loading?: boolean
-  hasAgreedToTerms?: (agreed: boolean) => void
 }
 
-export const LoginForm: React.FC<LoginFormProps> = ({
+export const PageForm: React.FC<PageFormProps> = ({
   onSubmit: externalSubmitHandler,
   loading,
   defaultValues,
@@ -38,20 +43,30 @@ export const LoginForm: React.FC<LoginFormProps> = ({
     register,
     formState: { errors: formErrors },
     setError,
+    setValue,
     reset,
-  } = useForm<LoginFormValues>({
+    watch
+  } = useForm<PageFormValues>({
     resolver: yupResolver(schema),
     mode: 'onBlur',
   })
 
-  useDefaultValueListener<LoginFormValues>(defaultValues, reset)
+  const [slug] = watch(["slug"])
+
+  useEffect(() => {
+    const formatted = kebabCase(slug)
+    if (slug?.substr(-1) === " ") { return }
+    if (formatted && formatted.length > 0 && formatted !== slug) { setValue("slug", formatted) }
+  }, [slug, setValue])
+
+  useDefaultValueListener<PageFormValues>(defaultValues, reset)
 
   const handleFormSubmit = handleSubmit(async (data) => {
     const { errors = {} } = (await externalSubmitHandler(data)) ?? {}
     const keys = Object.keys(errors)
     if (keys.length) {
       keys.map((key) =>
-        setError(camelCase(key) as keyof LoginFormValues, {
+        setError(camelCase(key) as keyof PageFormValues, {
           message: errors[key],
         })
       )
@@ -68,23 +83,34 @@ export const LoginForm: React.FC<LoginFormProps> = ({
     <form onSubmit={handleFormSubmit} className="relative">
       <Fields register={register} errors={formErrors} grow className="pb-2">
         <TextField
-          name="email"
-          label="Email"
-          type="text"
-          placeholder="Email Address"
+          name="title"
+          label="Title"
+          placeholder="Page Title"
           ref={field}
           className="w-full"
         />
         <TextField
-          name="password"
-          label="Password"
-          placeholder="Password"
-          type="password"
+          name="slug"
+          label="Slug"
+          placeholder="url-slug"
+          type="text"
+          className="w-full"
+        />
+        <TextAreaField
+          name="keywords"
+          label="Keywords"
+          placeholder="any, keywords, used, for, seo, purporses"
+          className="w-full"
+        />
+        <TextAreaField
+          name="description"
+          label="Description"
+          placeholder="A page description used for SEO purposes."
           className="w-full"
         />
         <ErrorList errors={formErrors as ErrorMap} />
         <Button type="submit" className="mt-2 w-full">
-          {submitTitle ?? 'Login'}
+          {submitTitle ?? 'Save Page'}
         </Button>
       </Fields>
       {loading ? <AbsoluteOverlay /> : null}

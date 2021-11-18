@@ -66,20 +66,19 @@ export const Fields: React.FC<FieldsProps> = ({
         >
           {child?.props?.name || child?.props?.nested
             ? React.createElement(child.type, {
-                ...{
-                  ...child.props,
-                  register,
-                  errors,
-                  key: `child${child.type}${index}${child?.props?.name ?? ''}`,
-                  ...(child?.props?.name ? register(child?.props?.name) : {}),
-                },
-              })
+              ...{
+                ...child.props,
+                errors,
+                key: `child${child.type}${index}${child?.props?.name ?? ''}`,
+                ...(child?.props?.name ? register(child?.props?.name) : {}),
+              },
+            })
             : React.createElement(child.type, {
-                ...{
-                  ...child.props,
-                  key: `child${child.type}${index}`,
-                },
-              })}
+              ...{
+                ...child.props,
+                key: `child${child.type}${index}`,
+              },
+            })}
         </li>
       ) : null
     )}

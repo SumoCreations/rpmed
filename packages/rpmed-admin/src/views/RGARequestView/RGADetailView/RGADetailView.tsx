@@ -69,13 +69,14 @@ const View: React.FunctionComponent<RouteComponentProps<IRGARouterProps>> = ({
     setSearch({ deleteId: good.id }, true)
   }
   const handleDismissDelete = () => setSearch({ deleteId: null })
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     if (!search.deleteId) {
       return
     }
-    destroyRGAGood({
+    await destroyRGAGood({
       variables: { id: search.deleteId, rgaId: match.params.rgaId },
     })
+    await refetch()
     handleDismissDelete()
   }
   const handleStatusUpdate = (status: RgaStatus) => {
