@@ -16,3 +16,4 @@ export * from './stringValidations'
 export * from './userValidations'
 export * from './validate'
 export * from "./pageValidation"
+export * from "./documentValidation"

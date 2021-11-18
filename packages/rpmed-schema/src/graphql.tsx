@@ -146,6 +146,67 @@ export type DistributorQueryOutput = {
   success: Scalars['Boolean'];
 };
 
+/** A document on the customer service portal. */
+export type Document = {
+  __typename?: 'Document';
+  /** The unique identifier for this document */
+  id: Scalars['ID'];
+  /** The title of the document. */
+  title?: Maybe<Scalars['String']>;
+  /** The slug of the document. */
+  slug?: Maybe<Scalars['String']>;
+  /** The seo keywords of the document. */
+  keywords?: Maybe<Scalars['String']>;
+  /** The url to download this document. */
+  url?: Maybe<Scalars['String']>;
+  /** The description of the document. */
+  description?: Maybe<Scalars['String']>;
+};
+
+/** A set of fields used to create or update a document. */
+export type DocumentInput = {
+  /** The id of the customer associated to the document. */
+  id?: Maybe<Scalars['ID']>;
+  /** The id of the customer associated to the document. */
+  title: Scalars['String'];
+  /** The slug of the document. */
+  slug: Scalars['String'];
+  /** The meta keywords of the document for SEO purposes. */
+  keywords?: Maybe<Scalars['String']>;
+  /** The S3 file key to generate the download url for the file. */
+  fileKey?: Maybe<Scalars['String']>;
+  /** The document description for SEO purposes. */
+  description?: Maybe<Scalars['String']>;
+};
+
+/** The result of a mutation applied to a document. */
+export type DocumentMutationOutput = {
+  __typename?: 'DocumentMutationOutput';
+  /** The resulting document if the operation was successful. */
+  document?: Maybe<Document>;
+  /** Any validation errors encountered while running the mutation. */
+  errors?: Maybe<Array<Maybe<ValidationError>>>;
+  /** A simple boolean indicating whether or not the operation was successful. */
+  success: Scalars['Boolean'];
+};
+
+/** The result of a query for a document or documents. */
+export type DocumentQueryOutput = {
+  __typename?: 'DocumentQueryOutput';
+  /** The resulting document if the operation was successful. */
+  document?: Maybe<Document>;
+  /** The resulting documents if the operation was successful and multiple results were returned. */
+  documents?: Maybe<Array<Maybe<Document>>>;
+  /** The size of the paginated results. */
+  documentSize?: Maybe<Scalars['Int']>;
+  /** This key can be used to continue querying paginated results. */
+  lastEvaluatedKey?: Maybe<Scalars['String']>;
+  /** Any validation errors encountered while running the mutation. */
+  errors?: Maybe<Array<Maybe<ValidationError>>>;
+  /** A simple boolean indicating whether or not the operation was successful. */
+  success: Scalars['Boolean'];
+};
+
 /** A set of fields used to create or update a customer. */
 export type ExistingCustomerInput = {
   id: Scalars['ID'];
@@ -408,6 +469,10 @@ export type Mutation = {
   makePage: PageMutationOutput;
   /** Removes an existing page. */
   destroyPage: PageMutationOutput;
+  /** Creates a new document. */
+  makeDocument: DocumentMutationOutput;
+  /** Removes an existing document. */
+  destroyDocument: DocumentMutationOutput;
 };
 
 
@@ -643,6 +708,18 @@ export type MutationMakePageArgs = {
 
 /** The root mutation for the schema. */
 export type MutationDestroyPageArgs = {
+  id: Scalars['String'];
+};
+
+
+/** The root mutation for the schema. */
+export type MutationMakeDocumentArgs = {
+  documentInput: DocumentInput;
+};
+
+
+/** The root mutation for the schema. */
+export type MutationDestroyDocumentArgs = {
   id: Scalars['String'];
 };
 
@@ -1043,6 +1120,10 @@ export type Query = {
   pages: PageQueryOutput;
   /** A specific page in the system via ID. */
   page: PageQueryOutput;
+  /** All documents in the system */
+  documents: DocumentQueryOutput;
+  /** A specific document in the system via ID. */
+  document: DocumentQueryOutput;
 };
 
 
@@ -1137,6 +1218,12 @@ export type QueryRgaArgs = {
 
 /** The root query for the schema. */
 export type QueryPageArgs = {
+  id: Scalars['ID'];
+};
+
+
+/** The root query for the schema. */
+export type QueryDocumentArgs = {
   id: Scalars['ID'];
 };
 
@@ -1867,6 +1954,26 @@ export type DestroyCustomerMutation = (
   ) }
 );
 
+export type DestroyDocumentMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DestroyDocumentMutation = (
+  { __typename?: 'Mutation' }
+  & { response: (
+    { __typename?: 'DocumentMutationOutput' }
+    & Pick<DocumentMutationOutput, 'success'>
+    & { document?: Maybe<(
+      { __typename?: 'Document' }
+      & Pick<Document, 'id' | 'title' | 'keywords' | 'description' | 'slug'>
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'path' | 'message'>
+    )>>> }
+  ) }
+);
+
 export type DestroyModelNumberMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
@@ -2041,6 +2148,44 @@ export type DistributorsQuery = (
   ) }
 );
 
+export type DocumentQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DocumentQuery = (
+  { __typename?: 'Query' }
+  & { response: (
+    { __typename?: 'DocumentQueryOutput' }
+    & Pick<DocumentQueryOutput, 'success'>
+    & { document?: Maybe<(
+      { __typename?: 'Document' }
+      & Pick<Document, 'id' | 'title' | 'keywords' | 'description' | 'slug'>
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'path' | 'message'>
+    )>>> }
+  ) }
+);
+
+export type DocumentsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type DocumentsQuery = (
+  { __typename?: 'Query' }
+  & { response: (
+    { __typename?: 'DocumentQueryOutput' }
+    & Pick<DocumentQueryOutput, 'success'>
+    & { documents?: Maybe<Array<Maybe<(
+      { __typename?: 'Document' }
+      & Pick<Document, 'id' | 'title' | 'keywords' | 'description' | 'slug'>
+    )>>>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'path' | 'message'>
+    )>>> }
+  ) }
+);
+
 export type LinkSymptomToModelNumberMutationVariables = Exact<{
   modelNumber: Scalars['String'];
   symptomId: Scalars['String'];
@@ -2066,6 +2211,26 @@ export type LinkSymptomToModelNumberMutation = (
     )>, errors?: Maybe<Array<Maybe<(
       { __typename?: 'ValidationError' }
       & Pick<ValidationError, 'message' | 'path'>
+    )>>> }
+  ) }
+);
+
+export type MakeDocumentMutationVariables = Exact<{
+  documentInput: DocumentInput;
+}>;
+
+
+export type MakeDocumentMutation = (
+  { __typename?: 'Mutation' }
+  & { response: (
+    { __typename?: 'DocumentMutationOutput' }
+    & Pick<DocumentMutationOutput, 'success'>
+    & { document?: Maybe<(
+      { __typename?: 'Document' }
+      & Pick<Document, 'id' | 'title' | 'keywords' | 'description' | 'slug'>
+    )>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'path' | 'message'>
     )>>> }
   ) }
 );
@@ -3472,6 +3637,50 @@ export function useDestroyCustomerMutation(baseOptions?: Apollo.MutationHookOpti
 export type DestroyCustomerMutationHookResult = ReturnType<typeof useDestroyCustomerMutation>;
 export type DestroyCustomerMutationResult = Apollo.MutationResult<DestroyCustomerMutation>;
 export type DestroyCustomerMutationOptions = Apollo.BaseMutationOptions<DestroyCustomerMutation, DestroyCustomerMutationVariables>;
+export const DestroyDocumentDocument = gql`
+    mutation DestroyDocument($id: String!) {
+  response: destroyDocument(id: $id) {
+    document {
+      id
+      title
+      keywords
+      description
+      slug
+    }
+    success
+    errors {
+      path
+      message
+    }
+  }
+}
+    `;
+export type DestroyDocumentMutationFn = Apollo.MutationFunction<DestroyDocumentMutation, DestroyDocumentMutationVariables>;
+
+/**
+ * __useDestroyDocumentMutation__
+ *
+ * To run a mutation, you first call `useDestroyDocumentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDestroyDocumentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [destroyDocumentMutation, { data, loading, error }] = useDestroyDocumentMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDestroyDocumentMutation(baseOptions?: Apollo.MutationHookOptions<DestroyDocumentMutation, DestroyDocumentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DestroyDocumentMutation, DestroyDocumentMutationVariables>(DestroyDocumentDocument, options);
+      }
+export type DestroyDocumentMutationHookResult = ReturnType<typeof useDestroyDocumentMutation>;
+export type DestroyDocumentMutationResult = Apollo.MutationResult<DestroyDocumentMutation>;
+export type DestroyDocumentMutationOptions = Apollo.BaseMutationOptions<DestroyDocumentMutation, DestroyDocumentMutationVariables>;
 export const DestroyModelNumberDocument = gql`
     mutation destroyModelNumber($id: ID!) {
   response: destroyModelNumber(id: $id) {
@@ -3872,6 +4081,97 @@ export function useDistributorsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type DistributorsQueryHookResult = ReturnType<typeof useDistributorsQuery>;
 export type DistributorsLazyQueryHookResult = ReturnType<typeof useDistributorsLazyQuery>;
 export type DistributorsQueryResult = Apollo.QueryResult<DistributorsQuery, DistributorsQueryVariables>;
+export const DocumentDocument = gql`
+    query Document($id: ID!) {
+  response: document(id: $id) {
+    document {
+      id
+      title
+      keywords
+      description
+      slug
+    }
+    success
+    errors {
+      path
+      message
+    }
+  }
+}
+    `;
+
+/**
+ * __useDocumentQuery__
+ *
+ * To run a query within a React component, call `useDocumentQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDocumentQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDocumentQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDocumentQuery(baseOptions: Apollo.QueryHookOptions<DocumentQuery, DocumentQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<DocumentQuery, DocumentQueryVariables>(DocumentDocument, options);
+      }
+export function useDocumentLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DocumentQuery, DocumentQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<DocumentQuery, DocumentQueryVariables>(DocumentDocument, options);
+        }
+export type DocumentQueryHookResult = ReturnType<typeof useDocumentQuery>;
+export type DocumentLazyQueryHookResult = ReturnType<typeof useDocumentLazyQuery>;
+export type DocumentQueryResult = Apollo.QueryResult<DocumentQuery, DocumentQueryVariables>;
+export const DocumentsDocument = gql`
+    query Documents {
+  response: documents {
+    documents {
+      id
+      title
+      keywords
+      description
+      slug
+    }
+    success
+    errors {
+      path
+      message
+    }
+  }
+}
+    `;
+
+/**
+ * __useDocumentsQuery__
+ *
+ * To run a query within a React component, call `useDocumentsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDocumentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDocumentsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useDocumentsQuery(baseOptions?: Apollo.QueryHookOptions<DocumentsQuery, DocumentsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<DocumentsQuery, DocumentsQueryVariables>(DocumentsDocument, options);
+      }
+export function useDocumentsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DocumentsQuery, DocumentsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<DocumentsQuery, DocumentsQueryVariables>(DocumentsDocument, options);
+        }
+export type DocumentsQueryHookResult = ReturnType<typeof useDocumentsQuery>;
+export type DocumentsLazyQueryHookResult = ReturnType<typeof useDocumentsLazyQuery>;
+export type DocumentsQueryResult = Apollo.QueryResult<DocumentsQuery, DocumentsQueryVariables>;
 export const LinkSymptomToModelNumberDocument = gql`
     mutation LinkSymptomToModelNumber($modelNumber: String!, $symptomId: String!, $linked: Boolean!) {
   response: linkSymptomToModel(modelNumber: $modelNumber, symptomId: $symptomId, linked: $linked) {
@@ -3924,6 +4224,50 @@ export function useLinkSymptomToModelNumberMutation(baseOptions?: Apollo.Mutatio
 export type LinkSymptomToModelNumberMutationHookResult = ReturnType<typeof useLinkSymptomToModelNumberMutation>;
 export type LinkSymptomToModelNumberMutationResult = Apollo.MutationResult<LinkSymptomToModelNumberMutation>;
 export type LinkSymptomToModelNumberMutationOptions = Apollo.BaseMutationOptions<LinkSymptomToModelNumberMutation, LinkSymptomToModelNumberMutationVariables>;
+export const MakeDocumentDocument = gql`
+    mutation MakeDocument($documentInput: DocumentInput!) {
+  response: makeDocument(documentInput: $documentInput) {
+    document {
+      id
+      title
+      keywords
+      description
+      slug
+    }
+    success
+    errors {
+      path
+      message
+    }
+  }
+}
+    `;
+export type MakeDocumentMutationFn = Apollo.MutationFunction<MakeDocumentMutation, MakeDocumentMutationVariables>;
+
+/**
+ * __useMakeDocumentMutation__
+ *
+ * To run a mutation, you first call `useMakeDocumentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMakeDocumentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [makeDocumentMutation, { data, loading, error }] = useMakeDocumentMutation({
+ *   variables: {
+ *      documentInput: // value for 'documentInput'
+ *   },
+ * });
+ */
+export function useMakeDocumentMutation(baseOptions?: Apollo.MutationHookOptions<MakeDocumentMutation, MakeDocumentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<MakeDocumentMutation, MakeDocumentMutationVariables>(MakeDocumentDocument, options);
+      }
+export type MakeDocumentMutationHookResult = ReturnType<typeof useMakeDocumentMutation>;
+export type MakeDocumentMutationResult = Apollo.MutationResult<MakeDocumentMutation>;
+export type MakeDocumentMutationOptions = Apollo.BaseMutationOptions<MakeDocumentMutation, MakeDocumentMutationVariables>;
 export const MakePageDocument = gql`
     mutation MakePage($pageInput: PageInput!) {
   response: makePage(pageInput: $pageInput) {
@@ -5723,6 +6067,8 @@ export type ResolversTypes = {
   RGAStatusCountOutput: ResolverTypeWrapper<RgaStatusCountOutput>;
   PageQueryOutput: ResolverTypeWrapper<PageQueryOutput>;
   Page: ResolverTypeWrapper<Page>;
+  DocumentQueryOutput: ResolverTypeWrapper<DocumentQueryOutput>;
+  Document: ResolverTypeWrapper<Document>;
   Mutation: ResolverTypeWrapper<{}>;
   NewCustomerInput: NewCustomerInput;
   CustomerMutationOutput: ResolverTypeWrapper<CustomerMutationOutput>;
@@ -5758,6 +6104,8 @@ export type ResolversTypes = {
   RGAGoodMutationOutput: ResolverTypeWrapper<RgaGoodMutationOutput>;
   PageInput: PageInput;
   PageMutationOutput: ResolverTypeWrapper<PageMutationOutput>;
+  DocumentInput: DocumentInput;
+  DocumentMutationOutput: ResolverTypeWrapper<DocumentMutationOutput>;
   ConnectionPayload: ConnectionPayload;
   PageInfo: ResolverTypeWrapper<PageInfo>;
   PaginationEntry: ResolverTypeWrapper<PaginationEntry>;
@@ -5796,6 +6144,8 @@ export type ResolversParentTypes = {
   RGAStatusCountOutput: RgaStatusCountOutput;
   PageQueryOutput: PageQueryOutput;
   Page: Page;
+  DocumentQueryOutput: DocumentQueryOutput;
+  Document: Document;
   Mutation: {};
   NewCustomerInput: NewCustomerInput;
   CustomerMutationOutput: CustomerMutationOutput;
@@ -5830,6 +6180,8 @@ export type ResolversParentTypes = {
   RGAGoodMutationOutput: RgaGoodMutationOutput;
   PageInput: PageInput;
   PageMutationOutput: PageMutationOutput;
+  DocumentInput: DocumentInput;
+  DocumentMutationOutput: DocumentMutationOutput;
   ConnectionPayload: ConnectionPayload;
   PageInfo: PageInfo;
   PaginationEntry: PaginationEntry;
@@ -5894,6 +6246,33 @@ export type DistributorQueryOutputResolvers<ContextType = any, ParentType extend
   distributor?: Resolver<Maybe<ResolversTypes['Distributor']>, ParentType, ContextType>;
   distributors?: Resolver<Maybe<Array<Maybe<ResolversTypes['Distributor']>>>, ParentType, ContextType>;
   pageSize?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  lastEvaluatedKey?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  errors?: Resolver<Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>, ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DocumentResolvers<ContextType = any, ParentType extends ResolversParentTypes['Document'] = ResolversParentTypes['Document']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  slug?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  keywords?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DocumentMutationOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['DocumentMutationOutput'] = ResolversParentTypes['DocumentMutationOutput']> = {
+  document?: Resolver<Maybe<ResolversTypes['Document']>, ParentType, ContextType>;
+  errors?: Resolver<Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>, ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DocumentQueryOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['DocumentQueryOutput'] = ResolversParentTypes['DocumentQueryOutput']> = {
+  document?: Resolver<Maybe<ResolversTypes['Document']>, ParentType, ContextType>;
+  documents?: Resolver<Maybe<Array<Maybe<ResolversTypes['Document']>>>, ParentType, ContextType>;
+  documentSize?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   lastEvaluatedKey?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   errors?: Resolver<Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>, ParentType, ContextType>;
   success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
@@ -5990,6 +6369,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   destroyRGAGood?: Resolver<ResolversTypes['RGAGoodMutationOutput'], ParentType, ContextType, RequireFields<MutationDestroyRgaGoodArgs, 'id' | 'rgaId'>>;
   makePage?: Resolver<ResolversTypes['PageMutationOutput'], ParentType, ContextType, RequireFields<MutationMakePageArgs, 'pageInput'>>;
   destroyPage?: Resolver<ResolversTypes['PageMutationOutput'], ParentType, ContextType, RequireFields<MutationDestroyPageArgs, 'id'>>;
+  makeDocument?: Resolver<ResolversTypes['DocumentMutationOutput'], ParentType, ContextType, RequireFields<MutationMakeDocumentArgs, 'documentInput'>>;
+  destroyDocument?: Resolver<ResolversTypes['DocumentMutationOutput'], ParentType, ContextType, RequireFields<MutationDestroyDocumentArgs, 'id'>>;
 };
 
 export type PageResolvers<ContextType = any, ParentType extends ResolversParentTypes['Page'] = ResolversParentTypes['Page']> = {
@@ -6149,6 +6530,8 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   rga?: Resolver<ResolversTypes['RGAQueryOutput'], ParentType, ContextType, RequireFields<QueryRgaArgs, 'id'>>;
   pages?: Resolver<ResolversTypes['PageQueryOutput'], ParentType, ContextType>;
   page?: Resolver<ResolversTypes['PageQueryOutput'], ParentType, ContextType, RequireFields<QueryPageArgs, 'id'>>;
+  documents?: Resolver<ResolversTypes['DocumentQueryOutput'], ParentType, ContextType>;
+  document?: Resolver<ResolversTypes['DocumentQueryOutput'], ParentType, ContextType, RequireFields<QueryDocumentArgs, 'id'>>;
 };
 
 export type RgaResolvers<ContextType = any, ParentType extends ResolversParentTypes['RGA'] = ResolversParentTypes['RGA']> = {
@@ -6309,6 +6692,9 @@ export type Resolvers<ContextType = any> = {
   Distributor?: DistributorResolvers<ContextType>;
   DistributorMutationOutput?: DistributorMutationOutputResolvers<ContextType>;
   DistributorQueryOutput?: DistributorQueryOutputResolvers<ContextType>;
+  Document?: DocumentResolvers<ContextType>;
+  DocumentMutationOutput?: DocumentMutationOutputResolvers<ContextType>;
+  DocumentQueryOutput?: DocumentQueryOutputResolvers<ContextType>;
   FeeStructure?: FeeStructureResolvers<ContextType>;
   ModelNumber?: ModelNumberResolvers<ContextType>;
   ModelNumberMutationOutput?: ModelNumberMutationOutputResolvers<ContextType>;
