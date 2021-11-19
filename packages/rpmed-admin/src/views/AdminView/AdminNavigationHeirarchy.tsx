@@ -104,7 +104,7 @@ const AdminNavigationHeirarchyComponent: React.FC<RouteComponentProps<{}>> = ({
             {
               icon: faSitemap,
               name: 'Sitemap CMS',
-              onClick: goto('/admin/sitemap'),
+              onClick: goto('/admin/sitemap/pages'),
             },
           ],
         },

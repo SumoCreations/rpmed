@@ -3,16 +3,18 @@ import * as React from 'react'
 import { Redirect, Route, RouteComponentProps, Switch } from 'react-router'
 import { SecondaryNav } from 'rpmed-ui/lib/V1'
 import { ModalState } from '../Modal'
-import { UserIndexView } from '../UserView'
+import { DocumentListView } from './DocumentListView'
 import { PageListView } from './PageListView'
 import { faFile } from '@fortawesome/pro-regular-svg-icons'
 import { CreatePageView } from './CreatePageView'
+import { CreateDocumentView } from './CreateDocumentView'
 import { EditPageView } from './EditPageView'
+import { EditDocumentView } from "./EditDocumentView"
 
 const checkPath = (path: string, test: string): boolean => path.indexOf(test) > 0
 
 const View: React.FC<RouteComponentProps<{}>> = ({ history, location }) => {
-  const RedirectToMenu = () => <Redirect to="/admin/sitemap/menu" />
+  const RedirectToPages = () => <Redirect to="/admin/sitemap/pages" />
   return (
     <SecondaryNav.View icon={faSitemap} title="Sitemap" data={[{
       icon: faSitemap,
@@ -28,9 +30,12 @@ const View: React.FC<RouteComponentProps<{}>> = ({ history, location }) => {
     {
       icon: faFile,
       label: "Documents",
+      onClick: () => {
+        history.push('/admin/sitemap/documents')
+      },
       selected: checkPath(
         location.pathname,
-        'products/modelNumbers/viewable/map'
+        'sitemap/documents'
       ),
     }]}>
       <ModalState location={location} history={history}>
@@ -39,7 +44,7 @@ const View: React.FC<RouteComponentProps<{}>> = ({ history, location }) => {
             <Switch location={mState.location}>
               <Route
                 path="/admin/sitemap/"
-                component={RedirectToMenu}
+                component={RedirectToPages}
                 exact={true}
               />
               <Route
@@ -57,7 +62,21 @@ const View: React.FC<RouteComponentProps<{}>> = ({ history, location }) => {
                 component={EditPageView}
                 exact={true}
               />
-              <Route path="/admin/sitemap/users" component={UserIndexView} />
+              <Route
+                path="/admin/sitemap/documents"
+                component={DocumentListView}
+                exact={true}
+              />
+              <Route
+                path="/admin/sitemap/documents/new"
+                component={CreateDocumentView}
+                exact={true}
+              />
+              <Route
+                path="/admin/sitemap/documents/:id"
+                component={EditDocumentView}
+                exact={true}
+              />
             </Switch>
           </React.Fragment>
         )}

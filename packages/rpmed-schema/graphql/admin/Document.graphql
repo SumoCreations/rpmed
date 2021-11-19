@@ -6,6 +6,8 @@ query Document($id: ID!) {
       keywords
       description
       slug
+      fileKey
+      url
     }
     success
     errors {

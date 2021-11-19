@@ -6,6 +6,8 @@ mutation MakeDocument($documentInput: DocumentInput!) {
       keywords
       description
       slug
+      fileKey
+      url
     }
     success
     errors {

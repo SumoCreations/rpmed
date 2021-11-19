@@ -41,7 +41,7 @@ export const Thumbnail = React.forwardRef<HTMLLIElement, ThumbnailProps>(
       ref={ref}
       className={clsx(
         'border-4',
-        primary ? 'border-accent-default' : 'border-primary-dark'
+        primary ? 'border-button' : 'border-primary'
       )}
       style={{
         minWidth: 110,

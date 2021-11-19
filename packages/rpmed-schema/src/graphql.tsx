@@ -159,6 +159,8 @@ export type Document = {
   keywords?: Maybe<Scalars['String']>;
   /** The url to download this document. */
   url?: Maybe<Scalars['String']>;
+  /** The file key as stored on AWS. */
+  fileKey?: Maybe<Scalars['String']>;
   /** The description of the document. */
   description?: Maybe<Scalars['String']>;
 };
@@ -1857,6 +1859,26 @@ export type CreateRgaMutation = (
   ) }
 );
 
+export type CreateUploadsMutationVariables = Exact<{
+  uploadInput: UploadInput;
+}>;
+
+
+export type CreateUploadsMutation = (
+  { __typename?: 'Mutation' }
+  & { response: (
+    { __typename?: 'UploadMutationOutput' }
+    & Pick<UploadMutationOutput, 'success'>
+    & { uploads?: Maybe<Array<Maybe<(
+      { __typename?: 'UploadURL' }
+      & Pick<UploadUrl, 'id' | 'url'>
+    )>>>, errors?: Maybe<Array<Maybe<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'message' | 'path'>
+    )>>> }
+  ) }
+);
+
 export type CreateUserMutationVariables = Exact<{
   userInput: NewUserInput;
 }>;
@@ -2160,7 +2182,7 @@ export type DocumentQuery = (
     & Pick<DocumentQueryOutput, 'success'>
     & { document?: Maybe<(
       { __typename?: 'Document' }
-      & Pick<Document, 'id' | 'title' | 'keywords' | 'description' | 'slug'>
+      & Pick<Document, 'id' | 'title' | 'keywords' | 'description' | 'slug' | 'fileKey' | 'url'>
     )>, errors?: Maybe<Array<Maybe<(
       { __typename?: 'ValidationError' }
       & Pick<ValidationError, 'path' | 'message'>
@@ -2227,7 +2249,7 @@ export type MakeDocumentMutation = (
     & Pick<DocumentMutationOutput, 'success'>
     & { document?: Maybe<(
       { __typename?: 'Document' }
-      & Pick<Document, 'id' | 'title' | 'keywords' | 'description' | 'slug'>
+      & Pick<Document, 'id' | 'title' | 'keywords' | 'description' | 'slug' | 'fileKey' | 'url'>
     )>, errors?: Maybe<Array<Maybe<(
       { __typename?: 'ValidationError' }
       & Pick<ValidationError, 'path' | 'message'>
@@ -3425,6 +3447,47 @@ export function useCreateRgaMutation(baseOptions?: Apollo.MutationHookOptions<Cr
 export type CreateRgaMutationHookResult = ReturnType<typeof useCreateRgaMutation>;
 export type CreateRgaMutationResult = Apollo.MutationResult<CreateRgaMutation>;
 export type CreateRgaMutationOptions = Apollo.BaseMutationOptions<CreateRgaMutation, CreateRgaMutationVariables>;
+export const CreateUploadsDocument = gql`
+    mutation CreateUploads($uploadInput: UploadInput!) {
+  response: createUploads(uploadInput: $uploadInput) {
+    uploads {
+      id
+      url
+    }
+    success
+    errors {
+      message
+      path
+    }
+  }
+}
+    `;
+export type CreateUploadsMutationFn = Apollo.MutationFunction<CreateUploadsMutation, CreateUploadsMutationVariables>;
+
+/**
+ * __useCreateUploadsMutation__
+ *
+ * To run a mutation, you first call `useCreateUploadsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateUploadsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createUploadsMutation, { data, loading, error }] = useCreateUploadsMutation({
+ *   variables: {
+ *      uploadInput: // value for 'uploadInput'
+ *   },
+ * });
+ */
+export function useCreateUploadsMutation(baseOptions?: Apollo.MutationHookOptions<CreateUploadsMutation, CreateUploadsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateUploadsMutation, CreateUploadsMutationVariables>(CreateUploadsDocument, options);
+      }
+export type CreateUploadsMutationHookResult = ReturnType<typeof useCreateUploadsMutation>;
+export type CreateUploadsMutationResult = Apollo.MutationResult<CreateUploadsMutation>;
+export type CreateUploadsMutationOptions = Apollo.BaseMutationOptions<CreateUploadsMutation, CreateUploadsMutationVariables>;
 export const CreateUserDocument = gql`
     mutation CreateUser($userInput: NewUserInput!) {
   response: createUser(userInput: $userInput) {
@@ -4090,6 +4153,8 @@ export const DocumentDocument = gql`
       keywords
       description
       slug
+      fileKey
+      url
     }
     success
     errors {
@@ -4233,6 +4298,8 @@ export const MakeDocumentDocument = gql`
       keywords
       description
       slug
+      fileKey
+      url
     }
     success
     errors {
@@ -6258,6 +6325,7 @@ export type DocumentResolvers<ContextType = any, ParentType extends ResolversPar
   slug?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   keywords?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  fileKey?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };

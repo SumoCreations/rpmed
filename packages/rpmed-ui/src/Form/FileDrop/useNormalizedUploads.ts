@@ -53,8 +53,8 @@ const filterPreviews = (previews: FilePreview[]) =>
       (a.position ?? 0) < (b.position ?? 0)
         ? -1
         : (a.position ?? 0) > (b.position ?? 0)
-        ? 1
-        : 0
+          ? 1
+          : 0
     )
 
 export const useNormalizedUploads = ({
@@ -194,9 +194,11 @@ export const useNormalizedUploads = ({
         (c) => typeof c.uploadUrl === 'string' && c.file
       )
 
+      console.log("uploadableFiles", uploadableFiles)
+
       setUploads(
         uploadableFiles.reduce(
-          (p, c) => ({
+          (_, c) => ({
             ...uploads,
             [c.id]: FileUpload(
               c.id,

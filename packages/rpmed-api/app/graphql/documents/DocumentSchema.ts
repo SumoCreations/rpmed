@@ -26,6 +26,10 @@ export const DocumentTypeDef = gql`
     """
     url: String
     """
+    The file key as stored on AWS.
+    """
+    fileKey: String
+    """
     The description of the document.
     """
     description: String

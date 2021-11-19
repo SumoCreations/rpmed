@@ -62,7 +62,7 @@ export const AttachmentList: React.FC<AttachmentListProps> = ({
   }, [dropzone.fileRejections])
 
   return (
-    <div className="rounded bg-white border border-primary-dark p-2 flex-col w-full">
+    <div className="rounded bg-white border border-primary p-2 flex-col w-full">
       <div
         {...(dropzone.getRootProps() as any)}
         className={concatStyles([

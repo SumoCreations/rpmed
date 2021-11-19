@@ -3966,6 +3966,18 @@
             "deprecationReason": null
           },
           {
+            "name": "fileKey",
+            "description": "The file key as stored on AWS.",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "description",
             "description": "The description of the document.",
             "args": [],

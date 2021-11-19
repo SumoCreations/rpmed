@@ -83,7 +83,7 @@ export const Sendable: React.FC<SendableProps & SendableProps> = ({
           visible={deleteVisible}
           verticallyCentered={listMode}
         >
-          <FontAwesomeIcon icon={faTrash} />
+          <FontAwesomeIcon icon={faTrash} className="m-auto" />
         </PreviewAction>
       ) : (
         <span />

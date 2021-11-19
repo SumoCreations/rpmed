@@ -1,5 +1,5 @@
 import clsx from "clsx"
-import React, { Children } from "react"
+import React from "react"
 
 export interface PreviewActionProps {
   primary?: boolean
@@ -17,10 +17,12 @@ export const PreviewAction: React.FC<PreviewActionProps> = ({
   children,
   verticallyCentered,
   visible,
+  onClick: handleClick
 }) => (
   <button
+    onClick={handleClick}
     className={clsx(
-      "absolute flex rounded-full text-white text-center z-10 text-small",
+      "absolute flex rounded-full text-white text-center z-10 text-small bg-button",
       verticallyCentered && "-mt-2",
       visible ? "opacity-100" : "opacity-0"
     )}
