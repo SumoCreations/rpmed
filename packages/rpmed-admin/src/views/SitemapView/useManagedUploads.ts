@@ -1,30 +1,36 @@
-import { useState } from "react"
-import { FilePreview, FileToEndpointFn, HandleAssociatedFileUpdateFn } from "rpmed-ui"
+import { useState } from 'react'
+import {
+  FilePreview,
+  FileToEndpointFn,
+  HandleAssociatedFileUpdateFn,
+} from 'rpmed-ui'
 import { useCreateUploadsMutation } from 'rpmed-schema'
 import { v4 as uuid } from 'uuid'
 
 export const useManagedUploads = () => {
   const [createUploads, _] = useCreateUploadsMutation()
-  const handleCreateEndpoints: FileToEndpointFn = async (files) => {
+  const handleCreateEndpoints: FileToEndpointFn = async files => {
+    const keys = files.map(f => [...f.name.split('.')].join('.'))
     const { data } = await createUploads({
       variables: {
         uploadInput: {
-          keys: files.map(f => f.name.split(".").reduce((a, c, i) => `${a}${i === 0 ? uuid() : `.${c}`}`, ""))
-        }
-      }
+          keys,
+        },
+      },
     })
-    const endpoints = data?.response.uploads?.map((d, i) => ({
-      uploadUrl: d?.url ?? "",
-      downloadUrl: d?.id ?? "",
-      id: files[i].name
-    })) ?? []
+    const endpoints =
+      data?.response.uploads?.map((d, i) => ({
+        uploadUrl: d?.url ?? '',
+        downloadUrl: d?.id ?? '',
+        id: keys[i],
+      })) ?? []
     return endpoints
   }
 
   const [previews, setPreviews] = useState<FilePreview[]>([])
-  const handleAttachedFile: HandleAssociatedFileUpdateFn = async (files) => {
+  const handleAttachedFile: HandleAssociatedFileUpdateFn = async files => {
     setPreviews(
-      files.map((f) => ({
+      files.map(f => ({
         ...f,
         id: f.id,
         position: f.position,
