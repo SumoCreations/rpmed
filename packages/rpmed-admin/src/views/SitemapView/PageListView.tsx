@@ -20,9 +20,10 @@ import {
   Modal,
   Toolbar,
 } from 'rpmed-ui/lib/V1'
-import { AbsoluteOverlay } from "rpmed-ui"
+import { AbsoluteOverlay } from 'rpmed-ui'
 import { Page, usePagesQuery } from 'rpmed-schema'
-import { DestroyPageButton } from "./DestroyPageButton"
+import { DestroyPageButton } from './DestroyPageButton'
+import { faEye } from '@fortawesome/pro-regular-svg-icons'
 
 const { useState } = React
 
@@ -36,12 +37,11 @@ interface IPageProps {
 const sendTo = (p: { history: History; url: string }) => () =>
   p.history.push(p.url)
 
-
 const Pages: React.FunctionComponent<IPageProps> = ({
   onDelete,
   filterText,
   pages,
-  error
+  error,
 }) => {
   const history = useHistory()
 
@@ -52,12 +52,14 @@ const Pages: React.FunctionComponent<IPageProps> = ({
   const filterPage = ({ title, slug }: Page) =>
     filterText.length > 0
       ? [title, slug]
-        .map(val => (val?.toLowerCase().indexOf(filterText.toLowerCase()) ?? -1) >= 0)
-        .includes(true)
+          .map(
+            val =>
+              (val?.toLowerCase().indexOf(filterText.toLowerCase()) ?? -1) >= 0
+          )
+          .includes(true)
       : true
 
-  const onClickDelete = (product: Page) => () =>
-    onDelete(product)
+  const onClickDelete = (product: Page) => () => onDelete(product)
 
   const rows = pages?.filter(filterPage).map(p => [
     <Link to={`/admin/sitemap/pages/${p.id}`} key={p.id}>
@@ -67,6 +69,11 @@ const Pages: React.FunctionComponent<IPageProps> = ({
     <Actions.Group key={`actions${p.id}`}>
       <Actions.Primary
         onClick={sendTo({ history, url: `/admin/sitemap/pages/${p.id}` })}
+      >
+        <FontAwesomeIcon icon={faEye} />
+      </Actions.Primary>
+      <Actions.Primary
+        onClick={sendTo({ history, url: `/admin/sitemap/pages/${p.id}/edit` })}
       >
         <FontAwesomeIcon icon={faPencil} />
       </Actions.Primary>
@@ -98,14 +105,13 @@ const Pages: React.FunctionComponent<IPageProps> = ({
 export const PageListView: React.FC = () => {
   const [deleting, setDeleting] = useState(false)
   const history = useHistory()
-  const { loading, error, data, refetch } = usePagesQuery({ fetchPolicy: "network-only" })
+  const { loading, error, data, refetch } = usePagesQuery({
+    fetchPolicy: 'network-only',
+  })
   const pages = (data?.response.pages ?? []) as Page[]
-  const [pageToDelete, setPageToDelete] = useState(
-    null as Page | null
-  )
+  const [pageToDelete, setPageToDelete] = useState(null as Page | null)
   const [searchText, setSearchText] = useState('')
-  const confirmPageToDelete = (product: Page) =>
-    setPageToDelete(product)
+  const confirmPageToDelete = (product: Page) => setPageToDelete(product)
   const onClickNew = () => history.push('/admin/sitemap/pages/new')
   const onSearchChange: React.ChangeEventHandler = event =>
     setSearchText((event.target as HTMLInputElement).value)
@@ -136,7 +142,6 @@ export const PageListView: React.FC = () => {
             filterText={searchText}
             pages={pages}
             error={error}
-
           />
         </Card.Flat>
       </Content>
