@@ -1,10 +1,9 @@
 import { Document } from '../../../../models'
 import { ErrorDocumentNotFound } from '../documentErrors'
-import { DocumentQueryOutput } from "rpmed-schema"
-export const document = async (
-  _,
-  args
-): Promise<DocumentQueryOutput> => {
+import { DocumentQueryOutput } from 'rpmed-schema'
+import { getDownloadUrl } from 'api-utils'
+
+export const document = async (_, args): Promise<DocumentQueryOutput> => {
   try {
     const result = await Document.find(args.id)
     if (!result) {
@@ -13,9 +12,15 @@ export const document = async (
         success: false,
       }
     }
+    const url = await getDownloadUrl(
+      result.fileKey,
+      process.env.ATTACHED_IMAGES_BUCKET,
+      true
+    )
     return {
       document: {
         ...Document.output(result),
+        url,
       },
       success: true,
     }
@@ -24,8 +29,7 @@ export const document = async (
       errors: [
         {
           path: '_',
-          message:
-            e.localizedMessage || 'Could not retrieve document',
+          message: e.localizedMessage || 'Could not retrieve document',
         },
       ],
       success: false,
