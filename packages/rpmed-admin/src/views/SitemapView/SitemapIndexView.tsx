@@ -9,35 +9,38 @@ import { faFile } from '@fortawesome/pro-regular-svg-icons'
 import { CreatePageView } from './CreatePageView'
 import { CreateDocumentView } from './CreateDocumentView'
 import { EditPageView } from './EditPageView'
-import { EditDocumentView } from "./EditDocumentView"
+import { EditDocumentView } from './EditDocumentView'
+import { ShowDocumentView } from './ShowDocumentView'
+import { ShowPageView } from './ShowPageView'
 
-const checkPath = (path: string, test: string): boolean => path.indexOf(test) > 0
+const checkPath = (path: string, test: string): boolean =>
+  path.indexOf(test) > 0
 
 const View: React.FC<RouteComponentProps<{}>> = ({ history, location }) => {
   const RedirectToPages = () => <Redirect to="/admin/sitemap/pages" />
   return (
-    <SecondaryNav.View icon={faSitemap} title="Sitemap" data={[{
-      icon: faSitemap,
-      label: 'Pages',
-      onClick: () => {
-        history.push('/admin/sitemap/pages')
-      },
-      selected: checkPath(
-        location.pathname,
-        'sitemap/pages'
-      ),
-    },
-    {
-      icon: faFile,
-      label: "Documents",
-      onClick: () => {
-        history.push('/admin/sitemap/documents')
-      },
-      selected: checkPath(
-        location.pathname,
-        'sitemap/documents'
-      ),
-    }]}>
+    <SecondaryNav.View
+      icon={faSitemap}
+      title="Sitemap"
+      data={[
+        {
+          icon: faSitemap,
+          label: 'Pages',
+          onClick: () => {
+            history.push('/admin/sitemap/pages')
+          },
+          selected: checkPath(location.pathname, 'sitemap/pages'),
+        },
+        {
+          icon: faFile,
+          label: 'Documents',
+          onClick: () => {
+            history.push('/admin/sitemap/documents')
+          },
+          selected: checkPath(location.pathname, 'sitemap/documents'),
+        },
+      ]}
+    >
       <ModalState location={location} history={history}>
         {mState => (
           <React.Fragment>
@@ -59,6 +62,11 @@ const View: React.FC<RouteComponentProps<{}>> = ({ history, location }) => {
               />
               <Route
                 path="/admin/sitemap/pages/:id"
+                component={ShowPageView}
+                exact={true}
+              />
+              <Route
+                path="/admin/sitemap/pages/:id/edit"
                 component={EditPageView}
                 exact={true}
               />
@@ -74,6 +82,11 @@ const View: React.FC<RouteComponentProps<{}>> = ({ history, location }) => {
               />
               <Route
                 path="/admin/sitemap/documents/:id"
+                component={ShowDocumentView}
+                exact={true}
+              />
+              <Route
+                path="/admin/sitemap/documents/:id/edit"
                 component={EditDocumentView}
                 exact={true}
               />
