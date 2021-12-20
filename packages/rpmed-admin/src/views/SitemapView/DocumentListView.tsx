@@ -20,9 +20,10 @@ import {
   Modal,
   Toolbar,
 } from 'rpmed-ui/lib/V1'
-import { AbsoluteOverlay } from "rpmed-ui"
+import { AbsoluteOverlay } from 'rpmed-ui'
 import { Document, useDocumentsQuery } from 'rpmed-schema'
-import { DestroyDocumentButton } from "./DestroyDocumentButton"
+import { DestroyDocumentButton } from './DestroyDocumentButton'
+import { faEye } from '@fortawesome/pro-regular-svg-icons'
 
 const { useState } = React
 
@@ -36,12 +37,11 @@ interface IDocumentProps {
 const sendTo = (p: { history: History; url: string }) => () =>
   p.history.push(p.url)
 
-
 const Documents: React.FunctionComponent<IDocumentProps> = ({
   onDelete,
   filterText,
   documents,
-  error
+  error,
 }) => {
   const history = useHistory()
 
@@ -52,12 +52,14 @@ const Documents: React.FunctionComponent<IDocumentProps> = ({
   const filterDocument = ({ title, slug }: Document) =>
     filterText.length > 0
       ? [title, slug]
-        .map(val => (val?.toLowerCase().indexOf(filterText.toLowerCase()) ?? -1) >= 0)
-        .includes(true)
+          .map(
+            val =>
+              (val?.toLowerCase().indexOf(filterText.toLowerCase()) ?? -1) >= 0
+          )
+          .includes(true)
       : true
 
-  const onClickDelete = (product: Document) => () =>
-    onDelete(product)
+  const onClickDelete = (product: Document) => () => onDelete(product)
 
   const rows = documents?.filter(filterDocument).map(p => [
     <Link to={`/admin/sitemap/documents/${p.id}`} key={p.id}>
@@ -66,7 +68,18 @@ const Documents: React.FunctionComponent<IDocumentProps> = ({
     p.slug,
     <Actions.Group key={`actions${p.id}`}>
       <Actions.Primary
-        onClick={sendTo({ history, url: `/admin/sitemap/documents/${p.id}` })}
+        onClick={sendTo({
+          history,
+          url: `/admin/sitemap/documents/${p.id}`,
+        })}
+      >
+        <FontAwesomeIcon icon={faEye} />
+      </Actions.Primary>
+      <Actions.Primary
+        onClick={sendTo({
+          history,
+          url: `/admin/sitemap/documents/${p.id}/edit`,
+        })}
       >
         <FontAwesomeIcon icon={faPencil} />
       </Actions.Primary>
@@ -98,11 +111,11 @@ const Documents: React.FunctionComponent<IDocumentProps> = ({
 export const DocumentListView: React.FC = () => {
   const [deleting, setDeleting] = useState(false)
   const history = useHistory()
-  const { loading, error, data, refetch } = useDocumentsQuery({ fetchPolicy: "network-only" })
+  const { loading, error, data, refetch } = useDocumentsQuery({
+    fetchPolicy: 'network-only',
+  })
   const documents = (data?.response.documents ?? []) as Document[]
-  const [pageToDelete, setDocumentToDelete] = useState(
-    null as Document | null
-  )
+  const [pageToDelete, setDocumentToDelete] = useState(null as Document | null)
   const [searchText, setSearchText] = useState('')
   const confirmDocumentToDelete = (product: Document) =>
     setDocumentToDelete(product)
@@ -136,7 +149,6 @@ export const DocumentListView: React.FC = () => {
             filterText={searchText}
             documents={documents}
             error={error}
-
           />
         </Card.Flat>
       </Content>
