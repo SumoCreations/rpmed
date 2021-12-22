@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactSelect from 'react-select'
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 export interface SelectOption {
   id: string
@@ -48,6 +49,14 @@ export const Select = React.forwardRef<any, SelectProps>(
           defaultValue={defaultValue}
           getOptionLabel={(option: SelectOption) => option.name}
           getOptionValue={(option: SelectOption) => option.id}
+          formatOptionLabel={(option: SelectOption) => (
+            <>
+              {option.icon ? (
+                <FontAwesomeIcon icon={option.icon} className="mr-2" />
+              ) : null}
+              <span>{option.name}</span>
+            </>
+          )}
           placeholder={placeholder}
           className="client__multi__select_container w-full"
           classNamePrefix="client__multi__select"

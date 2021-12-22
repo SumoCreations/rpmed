@@ -44,9 +44,8 @@ export const ShowDocumentView: React.FC = ({}) => {
           </Toolbar.Item>
         </Toolbar.View>
         <Card.Flat>
-          <h2 className="text-lg font-bold">
-            Viewing Document: {existingDocument?.title}
-          </h2>
+          <h2 className="text-sm font-bold">Viewing Document:</h2>
+          <h2 className="text-lg font-bold">{existingDocument?.title}</h2>
           <div className="flex">
             <div className="flex flex-col flex-grow w-1/2 border-r border-gray-200 mr-2 relative">
               {loading ? <AbsoluteOverlay /> : null}

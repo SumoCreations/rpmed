@@ -1,11 +1,11 @@
-import React, { useRef } from "react"
-import { useDrag, useDrop, DropTargetMonitor } from "react-dnd"
-import { XYCoord } from "dnd-core"
+import React, { useRef } from 'react'
+import { useDrag, useDrop, DropTargetMonitor } from 'react-dnd'
+import { XYCoord } from 'dnd-core'
 
 /**
  * Used to infer which dimension to utilize when to detecting sorting.
  */
-type SortDirection = "vertical" | "horizontal"
+type SortDirection = 'vertical' | 'horizontal'
 
 export type OnSortCallback = (
   dragId: string,
@@ -125,7 +125,7 @@ export const Sortable: React.FC<SortableProps> = ({
 
         // Dragging right or down
         if (
-          dragIndex < hoverIndex && sortDirection === "horizontal"
+          dragIndex < hoverIndex && sortDirection === 'horizontal'
             ? hoverClient.x < hoverMiddle.x
             : hoverClient.y < hoverMiddle.y
         ) {
@@ -134,7 +134,7 @@ export const Sortable: React.FC<SortableProps> = ({
 
         // Dragging left or up
         if (
-          dragIndex > hoverIndex && sortDirection === "horizontal"
+          dragIndex > hoverIndex && sortDirection === 'horizontal'
             ? hoverClient.x > hoverMiddle.x
             : hoverClient.y > hoverMiddle.y
         ) {
@@ -151,19 +151,22 @@ export const Sortable: React.FC<SortableProps> = ({
         monitor.getItem<SortableProps>().index = hoverIndex
       },
     }),
-    [disabled, index]
+    [disabled, index, onSort]
   )
 
-  const [{ isDragging }, drag] = useDrag(() => ({
-    type,
-    item: { type, id, index, onSort, onFinishSort, disabled },
-    end: (dropResult?: SortableProps) => {
-      dropResult?.onFinishSort()
-    },
-    collect: (monitor: any) => ({
-      isDragging: monitor.isDragging(),
+  const [{ isDragging }, drag] = useDrag(
+    () => ({
+      type,
+      item: { type, id, index, onSort, onFinishSort, disabled },
+      end: (dropResult?: SortableProps) => {
+        dropResult?.onFinishSort()
+      },
+      collect: (monitor: any) => ({
+        isDragging: monitor.isDragging(),
+      }),
     }),
-  }))
+    [onFinishSort]
+  )
 
   // Hook up the drag and drop actions to a reference of
   // our container object.

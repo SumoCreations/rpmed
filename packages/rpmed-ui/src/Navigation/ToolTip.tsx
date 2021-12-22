@@ -39,7 +39,7 @@ const HIDDEN_LEFT = `${LEFT} opacity-0 -translate-x-1`
 const HIDDEN_RIGHT = `${RIGHT} opacity-0 translate-x-1`
 
 const BASE_TOOLTIP =
-  'bg-accent-default px-2 text-xs text-white rounded-full whitespace-nowrap not-italic'
+  'bg-primary px-2 text-xs text-white rounded-full whitespace-nowrap not-italic'
 const SHORTCUT = 'font-semibold opacity-75'
 
 const containerClass = ({

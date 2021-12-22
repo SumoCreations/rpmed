@@ -45,14 +45,22 @@ const Template: Story<SortableProps> = (args) => {
   const onSort: OnSortCallback = useCallback(
     (_, dragIndex, hoverIndex) => {
       const dragCard = cards[dragIndex]
-      setCards(
-        update(cards, {
-          $splice: [
-            [dragIndex, 1],
-            [hoverIndex, 0, dragCard],
-          ],
-        })
+      const updates = update(cards, {
+        $splice: [
+          [dragIndex, 1],
+          [hoverIndex, 0, dragCard],
+        ],
+      })
+      console.log(
+        'dragCard',
+        dragCard.text,
+        `${dragIndex} -> ${hoverIndex}`,
+        'cards',
+        cards.map((c) => c.text),
+        'updates',
+        updates.map((c) => c.text)
       )
+      setCards(updates)
     },
     [cards, setCards]
   )
