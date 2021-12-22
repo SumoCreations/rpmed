@@ -18,7 +18,7 @@ export const DistributorCreateView: React.FC<RouteComponentProps> = ({
 }) => {
   const handleBack = () => history.push('/admin/distributors')
   const defaultValues = qs.parse(window.location.search)
-  const [createDistributor, _] = useCreateDistributorMutation()
+  const [createDistributor] = useCreateDistributorMutation()
   const handleSubmit: DistributorFormSubmitHandler = async (
     values,
     actions
@@ -35,7 +35,7 @@ export const DistributorCreateView: React.FC<RouteComponentProps> = ({
     const errors = (get(result, 'data.response.errors') || []) as ErrorList
     if (errors.length > 0) {
       errors.forEach(({ path, message }) => {
-        actions.setFieldError((path as any), message)
+        actions.setFieldError(path as any, message)
       })
       return
     }

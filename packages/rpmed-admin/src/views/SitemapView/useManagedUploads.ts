@@ -5,10 +5,9 @@ import {
   HandleAssociatedFileUpdateFn,
 } from 'rpmed-ui'
 import { useCreateUploadsMutation } from 'rpmed-schema'
-import { v4 as uuid } from 'uuid'
 
 export const useManagedUploads = () => {
-  const [createUploads, _] = useCreateUploadsMutation()
+  const [createUploads] = useCreateUploadsMutation()
   const handleCreateEndpoints: FileToEndpointFn = async files => {
     const keys = files.map(f => [...f.name.split('.')].join('.'))
     const { data } = await createUploads({

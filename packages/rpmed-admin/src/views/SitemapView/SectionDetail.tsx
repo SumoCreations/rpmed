@@ -1,9 +1,8 @@
 import React, { useRef, useEffect, useCallback } from 'react'
-import { Button, IconButton, OnSortCallback, Sortable } from 'rpmed-ui'
+import { IconButton, OnSortCallback, Sortable } from 'rpmed-ui'
 import {
   faPlus,
   faTrash,
-  faGripLines,
   faChevronCircleUp,
   faChevronCircleDown,
 } from '@fortawesome/pro-regular-svg-icons'
@@ -108,7 +107,7 @@ export const SectionDetail: React.FC<SectionProps> = ({
     if (!isEqual(items, externalItems)) {
       handleItemsChanged?.(id, items)
     }
-  }, [items])
+  }, [items, externalItems, handleItemsChanged, id])
 
   return (
     <section

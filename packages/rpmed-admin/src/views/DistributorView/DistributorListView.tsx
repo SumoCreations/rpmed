@@ -6,7 +6,6 @@ import {
 } from '@fortawesome/pro-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { History } from 'history'
-import get from 'lodash.get'
 import qs from 'query-string'
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
@@ -45,7 +44,7 @@ const Distributors: React.FunctionComponent<IDistributorProps> = ({
   filterText,
   loading,
   distributors,
-  error
+  error,
 }) => {
   if (loading) {
     return <p>Loading...</p>
@@ -57,12 +56,14 @@ const Distributors: React.FunctionComponent<IDistributorProps> = ({
   const filterDistributor = ({ name, domain, id }: Distributor) =>
     filterText.length > 0
       ? [id, name, domain]
-        .map(val => (val?.toLowerCase().indexOf(filterText.toLowerCase()) ?? -1) >= 0)
-        .includes(true)
+          .map(
+            val =>
+              (val?.toLowerCase().indexOf(filterText.toLowerCase()) ?? -1) >= 0
+          )
+          .includes(true)
       : true
 
-  const onClickDelete = (product: Distributor) => () =>
-    onDelete(product)
+  const onClickDelete = (product: Distributor) => () => onDelete(product)
 
   const rows = distributors?.filter(filterDistributor).map(p => [
     <Link to={`/admin/distributors/${p.id}`} key={p.id}>

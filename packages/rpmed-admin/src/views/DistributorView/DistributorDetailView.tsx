@@ -28,9 +28,11 @@ const View: React.FunctionComponent<RouteComponentProps<
   IDistributorRouterProps
 >> = ({ history, match }) => {
   const handleBack = () => history.push('/admin/distributors')
-  const { data, loading } = useDistributorQuery({ variables: { distributorId: match.params.distributorId } })
+  const { data, loading } = useDistributorQuery({
+    variables: { distributorId: match.params.distributorId },
+  })
   const distributor = data?.response.distributor
-  const [updateDistributor, _] = useUpdateDistributorMutation()
+  const [updateDistributor] = useUpdateDistributorMutation()
   const handleSubmit: DistributorFormSubmitHandler = async (
     values,
     actions
@@ -48,7 +50,7 @@ const View: React.FunctionComponent<RouteComponentProps<
     const errors = (get(result, 'data.response.errors') || []) as ErrorList
     if (errors.length > 0) {
       errors.forEach(({ path, message }) => {
-        actions.setFieldError((path as any), message)
+        actions.setFieldError(path as any, message)
       })
       return
     }

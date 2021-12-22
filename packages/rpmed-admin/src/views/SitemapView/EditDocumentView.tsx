@@ -14,7 +14,7 @@ import {
 import { useManagedUploads } from './useManagedUploads'
 import { faEye } from '@fortawesome/pro-regular-svg-icons'
 
-export const EditDocumentView: React.FC = ({}) => {
+export const EditDocumentView: React.FC = () => {
   const {
     handleAttachedFile,
     handleCreateEndpoints,
@@ -82,7 +82,7 @@ export const EditDocumentView: React.FC = ({}) => {
         },
       ])
     }
-  }, [existingDocument, setPreviews, setDefaultFileKey])
+  }, [existingDocument, setPreviews, setDefaultFileKey, defaultFileKey, url])
 
   return (
     <Layout.Layout>

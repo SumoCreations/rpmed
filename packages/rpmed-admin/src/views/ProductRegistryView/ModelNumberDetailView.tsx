@@ -7,7 +7,10 @@ import { Helmet } from 'react-helmet'
 import { RouteComponentProps } from 'react-router'
 import { Link } from 'react-router-dom'
 import { Flex } from 'rebass'
-import { ProductSymptom, useLinkSymptomToModelNumberMutation } from 'rpmed-schema'
+import {
+  ProductSymptom,
+  useLinkSymptomToModelNumberMutation,
+} from 'rpmed-schema'
 import {
   Actions,
   Card,
@@ -41,7 +44,7 @@ const View: React.FunctionComponent<RouteComponentProps<
 >> = ({ history, match }) => {
   const [associatedSymptoms, setAssociatedSymptoms] = useState([] as string[])
   const [symptomToRemove, setSymptomToRemove] = useState(null as string | null)
-  const [linkSymptomToModelNumber, _] = useLinkSymptomToModelNumberMutation()
+  const [linkSymptomToModelNumber] = useLinkSymptomToModelNumberMutation()
   const onSelectSymptom: ProductSymptomSelectFn = async symptom => {
     setAssociatedSymptoms([...associatedSymptoms, symptom.id])
     await linkSymptomToModelNumber({
@@ -62,8 +65,9 @@ const View: React.FunctionComponent<RouteComponentProps<
   const handleDeleteSymptom = (symptom: string) => () =>
     setSymptomToRemove(symptom)
 
-  const { loading, refetch, data, error } = useModelNumberQuery({ variables: { modelNumberId: match.params.modelNumberId } }
-  )
+  const { loading, refetch, data, error } = useModelNumberQuery({
+    variables: { modelNumberId: match.params.modelNumberId },
+  })
   const modelNumber = data?.response?.modelNumber
   if (error) {
     return (
@@ -129,8 +133,9 @@ const View: React.FunctionComponent<RouteComponentProps<
           <Grid.Col span={16}>
             <Card.Flat>
               <Helmet
-                title={`${loading ? 'Loading Model Number' : modelNumber?.id
-                  } - RPMed Service Admin`}
+                title={`${
+                  loading ? 'Loading Model Number' : modelNumber?.id
+                } - RPMed Service Admin`}
               />
               {loading ? (
                 <Indicators.Spinner size="lg" />

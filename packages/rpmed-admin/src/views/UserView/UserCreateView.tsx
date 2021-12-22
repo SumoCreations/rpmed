@@ -10,7 +10,7 @@ import { useCreateUserMutation } from 'rpmed-schema'
 import { UserForm, UserFormSubmitHandler } from './UserForm'
 
 export const UserCreateView: React.FC<RouteComponentProps> = ({ history }) => {
-  const [createUser, _] = useCreateUserMutation()
+  const [createUser] = useCreateUserMutation()
   const handleBack = () => history.push('/admin/controls/users')
   const handleSubmit: UserFormSubmitHandler = async (values, actions) => {
     const result = await createUser({
@@ -27,7 +27,7 @@ export const UserCreateView: React.FC<RouteComponentProps> = ({ history }) => {
     const errors = (get(result, 'data.response.errors') || []) as ErrorList
     if (errors.length > 0) {
       errors.forEach(({ path, message }) => {
-        actions.setFieldError((path as any), message)
+        actions.setFieldError(path as any, message)
       })
       return
     }

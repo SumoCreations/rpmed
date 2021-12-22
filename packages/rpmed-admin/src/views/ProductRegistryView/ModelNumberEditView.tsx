@@ -29,8 +29,10 @@ export const ModelNumberEditView: React.FC<RouteComponentProps<
 >> = ({ match, history }) => {
   const handleBack = () =>
     history.push(`/admin/products/modelNumbers/${match.params.modelNumberId}`)
-  const [updateModelNumber, _] = useUpdateModelNumberMutation()
-  const { loading, data } = useModelNumberQuery({ variables: { modelNumberId: match.params.modelNumberId ?? '' } })
+  const [updateModelNumber] = useUpdateModelNumberMutation()
+  const { loading, data } = useModelNumberQuery({
+    variables: { modelNumberId: match.params.modelNumberId ?? '' },
+  })
   const modelNumber = data?.response?.modelNumber
   const handleSubmit: ModelNumberFormSubmitHandler = async (
     values,
@@ -60,12 +62,12 @@ export const ModelNumberEditView: React.FC<RouteComponentProps<
       const errors = (get(result, 'data.response.errors') || []) as ErrorList
       if (errors.length > 0) {
         errors.forEach(({ path, message }) => {
-          actions.setFieldError((path as any), message)
+          actions.setFieldError(path as any, message)
         })
         return
       }
       history.push(`/admin/products/modelNumbers/${modelNumber?.id}`)
-    } catch (e: any) {
+    } catch (e) {
       actions.setSubmitting(false)
       actions.setFieldError('_', e?.message)
     }
@@ -84,8 +86,9 @@ export const ModelNumberEditView: React.FC<RouteComponentProps<
         </Toolbar.View>
         <Card.Flat>
           <Helmet
-            title={`${loading ? 'Loading Product' : modelNumber?.id
-              } - RPMed Service Admin`}
+            title={`${
+              loading ? 'Loading Product' : modelNumber?.id
+            } - RPMed Service Admin`}
           />
           {loading ? (
             <Indicators.Spinner size="lg" />

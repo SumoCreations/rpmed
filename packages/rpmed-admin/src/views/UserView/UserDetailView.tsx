@@ -24,9 +24,11 @@ const View: React.FC<RouteComponentProps<IUserRouterProps>> = ({
   history,
   match,
 }) => {
-  const { loading, data } = useUserQuery({ variables: { userId: match.params.userId ?? '' } })
-  const user = data?.user ?? {} as User
-  const [updateUser, _] = useUpdateUserMutation()
+  const { loading, data } = useUserQuery({
+    variables: { userId: match.params.userId ?? '' },
+  })
+  const user = data?.user ?? ({} as User)
+  const [updateUser] = useUpdateUserMutation()
   const handleBack = () => history.push('/admin/controls/users')
   const handleSubmit: UserFormSubmitHandler = async (values, actions) => {
     const result = await updateUser({
@@ -48,7 +50,7 @@ const View: React.FC<RouteComponentProps<IUserRouterProps>> = ({
       []) as ValidationError[]
     if (errors.length > 0) {
       errors.forEach(({ path, message }) => {
-        actions.setFieldError((path as any), message)
+        actions.setFieldError(path as any, message)
       })
       return
     }
@@ -73,8 +75,9 @@ const View: React.FC<RouteComponentProps<IUserRouterProps>> = ({
         </Toolbar.View>
         <Card.Flat>
           <Helmet
-            title={`${loading ? 'Loading User' : `${user.firstName} ${user.lastName}`
-              } - RPMed Service Admin`}
+            title={`${
+              loading ? 'Loading User' : `${user.firstName} ${user.lastName}`
+            } - RPMed Service Admin`}
           />
           {loading ? (
             <Indicators.Spinner size="lg" />

@@ -7,7 +7,7 @@ export const DestroyProductSymptomButton: React.FunctionComponent<{
   id: string
   children: (onClick: DestroyClickHandler) => JSX.Element
 }> = ({ id, children }) => {
-  const [destroyProductSymptom, _] = useDestroyProductSymptomMutation()
+  const [destroyProductSymptom] = useDestroyProductSymptomMutation()
   const handleClick = () => destroyProductSymptom({ variables: { id } })
   return children(handleClick)
 }

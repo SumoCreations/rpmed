@@ -10,7 +10,7 @@ import { AsyncSubmitHandler, FormErrors } from '@sumocreations/forms'
 import { useMakeDocumentMutation } from 'rpmed-schema'
 import { useManagedUploads } from './useManagedUploads'
 
-export const CreateDocumentView: React.FC = ({}) => {
+export const CreateDocumentView: React.FC = () => {
   const {
     handleAttachedFile,
     handleCreateEndpoints,

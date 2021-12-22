@@ -8,7 +8,7 @@ import { useHistory, useParams } from 'react-router-dom'
 import { Document, useDocumentQuery } from 'rpmed-schema'
 import { faPencil } from '@fortawesome/pro-regular-svg-icons'
 
-export const ShowDocumentView: React.FC = ({}) => {
+export const ShowDocumentView: React.FC = () => {
   const history = useHistory()
   const { id } = useParams<{ id: string }>()
   const { data: existingDocumentData, loading } = useDocumentQuery({
@@ -59,6 +59,7 @@ export const ShowDocumentView: React.FC = ({}) => {
             {url ? (
               <iframe
                 src={url ?? 'https://example.com'}
+                title={existingDocument?.title ?? 'Document Preview'}
                 className="flex flex-grow w-1/2 h-96"
               />
             ) : (

@@ -9,10 +9,10 @@ export const DestroyModelNumberButton: React.FunctionComponent<{
   productId: string | null
   productType: string | null
 }> = ({ id, children, productType, productId }) => {
-  const [destroyModelNumber, _] = useDestroyModelNumberMutation({
+  const [destroyModelNumber] = useDestroyModelNumberMutation({
     variables: {
-      id: productId ?? ''
-    }
+      id: productId ?? '',
+    },
   })
   const handleClick = () => destroyModelNumber({ variables: { id } })
   return children(handleClick)

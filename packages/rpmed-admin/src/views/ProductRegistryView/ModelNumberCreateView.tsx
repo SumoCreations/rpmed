@@ -20,7 +20,7 @@ export const ModelNumberCreateView: React.FC<RouteComponentProps> = ({
   history,
   location,
 }) => {
-  const [createModelNumber, _] = useCreateModelNumberMutation()
+  const [createModelNumber] = useCreateModelNumberMutation()
   const handleBack = () => history.push('/admin/products/modelNumbers')
   const queryValues = qs.parse(location.search) as IModelNumberFormValues
   const handleSubmit: ModelNumberFormSubmitHandler = async (
@@ -39,7 +39,7 @@ export const ModelNumberCreateView: React.FC<RouteComponentProps> = ({
     const errors = (get(result, 'data.response.errors') || []) as ErrorList
     if (errors.length > 0) {
       errors.forEach(({ path, message }) => {
-        actions.setFieldError((path as any), message)
+        actions.setFieldError(path as any, message)
       })
       console.log(errors)
       return

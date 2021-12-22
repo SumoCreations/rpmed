@@ -21,7 +21,7 @@ export const ProductRegistrationCreateView: React.FC<RouteComponentProps> = ({
 }) => {
   const handleBack = () => history.push('/admin/registrations')
   const defaultValues = qs.parse(window.location.search)
-  const [createProductRegistration, _] = useCreateProductRegistrationMutation()
+  const [createProductRegistration] = useCreateProductRegistrationMutation()
   const handleSubmit: ProductRegistrationFormSubmitHandler = async (
     values,
     actions
@@ -40,7 +40,7 @@ export const ProductRegistrationCreateView: React.FC<RouteComponentProps> = ({
     const errors = (get(result, 'data.response.errors') || []) as ErrorList
     if (errors.length > 0) {
       errors.forEach(({ path, message }) => {
-        actions.setFieldError((path as any), message)
+        actions.setFieldError(path as any, message)
       })
       return false
     }

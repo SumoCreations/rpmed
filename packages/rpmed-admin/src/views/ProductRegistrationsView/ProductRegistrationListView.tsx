@@ -6,7 +6,6 @@ import {
 } from '@fortawesome/pro-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { History } from 'history'
-import get from 'lodash.get'
 import qs from 'query-string'
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
@@ -23,10 +22,7 @@ import {
   Toolbar,
 } from 'rpmed-ui/lib/V1'
 import { DestroyProductRegistrationButton } from './DestroyProductRegistrationButton'
-import {
-  ProductRegistration,
-  useProductRegistrationsQuery,
-} from 'rpmed-schema'
+import { ProductRegistration, useProductRegistrationsQuery } from 'rpmed-schema'
 
 const { useState } = React
 
@@ -48,28 +44,26 @@ const ProductRegistrations: React.FunctionComponent<IProductRegistrationProps> =
   filterText,
   registrations,
   loading,
-  error
+  error,
 }) => {
-
   if (loading) {
     return <p>Loading...</p>
   }
   if (error) {
     return <Errors.LoadingError error={error} />
   }
-  const filterProductRegistration = ({
-    customer,
-    id,
-  }: ProductRegistration) =>
+  const filterProductRegistration = ({ customer, id }: ProductRegistration) =>
     filterText.length > 0
       ? [id, customer.name, customer.email]
-        .map(val => (val?.toLowerCase().indexOf(filterText.toLowerCase()) ?? -1) >= 0)
-        .includes(true)
+          .map(
+            val =>
+              (val?.toLowerCase().indexOf(filterText.toLowerCase()) ?? -1) >= 0
+          )
+          .includes(true)
       : true
 
-  const onClickDelete = (
-    productRegistration: ProductRegistration
-  ) => () => onDelete(productRegistration)
+  const onClickDelete = (productRegistration: ProductRegistration) => () =>
+    onDelete(productRegistration)
   const rows = registrations.filter(filterProductRegistration).map(p => [
     <Link to={`/admin/registrations/${p.id}`} key={p.id}>
       {p.id}
@@ -117,8 +111,11 @@ const ProductRegistrations: React.FunctionComponent<IProductRegistrationProps> =
 export const ProductRegistrationListView: React.FC<RouteComponentProps<{}>> = ({
   history,
 }) => {
-  const { loading, error, data, refetch } = useProductRegistrationsQuery({ fetchPolicy: "network-only" })
-  const registrations = (data?.response.productRegistrations ?? []) as ProductRegistration[]
+  const { loading, error, data, refetch } = useProductRegistrationsQuery({
+    fetchPolicy: 'network-only',
+  })
+  const registrations = (data?.response.productRegistrations ??
+    []) as ProductRegistration[]
   const [registrationToDelete, setProductRegistrationToDelete] = useState(
     null as ProductRegistration | null
   )

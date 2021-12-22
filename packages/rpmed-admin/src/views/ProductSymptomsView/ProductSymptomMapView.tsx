@@ -31,7 +31,7 @@ export const ProductSymptomMapView: React.FC = () => {
     refetch,
     ProductFilters,
   } = useProductFilters({ searchText })
-  const [linkSymptomToModelNumber, _] = useLinkSymptomToModelNumberMutation()
+  const [linkSymptomToModelNumber] = useLinkSymptomToModelNumberMutation()
   const networkActive = loading || networkStatus === 4
   const handleRefresh = () => refetch()
   const onClickNew = () => history.push('/admin/products/symptoms/new')

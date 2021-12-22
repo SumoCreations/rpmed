@@ -4,18 +4,17 @@ import * as React from 'react'
 import { Helmet } from 'react-helmet'
 import { RouteComponentProps } from 'react-router'
 import {
-  ProductSymptom, AttachedImage,
+  ProductSymptom,
+  AttachedImage,
   useAttachImagesToSymptomMutation,
   useLinkSymptomToModelNumberMutation,
   useProductSymptomQuery,
-  UploadStatus,
 } from 'rpmed-schema'
 import {
   Actions,
   Card,
   Content,
   Divider,
-  Form,
   Grid,
   Heading,
   Indicators,
@@ -25,7 +24,7 @@ import {
 } from 'rpmed-ui/lib/V1'
 import { ModelNumbersMap, ModelSelectHandlerFn } from './ModelNumbersMap'
 import { AssociatedPhotos } from './AssociatedPhotosView'
-import { FilePreview, FileUploadStatus } from 'rpmed-ui'
+import { FilePreview } from 'rpmed-ui'
 
 interface IProductSymptomRouterProps {
   productSymptomId: string
@@ -119,7 +118,7 @@ const AssociatedModelsList: React.FC<IAssociatedModelListProps> = ({
   productSymptomId,
   associatedModelNumbers,
 }) => {
-  const [linkSymptomToModelNumber, _] = useLinkSymptomToModelNumberMutation()
+  const [linkSymptomToModelNumber] = useLinkSymptomToModelNumberMutation()
   const hasModel = (model: string) =>
     (associatedModelNumbers || ([] as string[])).includes(model)
   const handleSelectModel: ModelSelectHandlerFn = async ({
@@ -168,9 +167,11 @@ interface ISymptomPhotoListProps {
 const SymptomPhotoList: React.FC<ISymptomPhotoListProps> = ({
   productSymptomId,
 }) => {
-  const { data } = useProductSymptomQuery({ variables: { productSymptomId: productSymptomId ?? '' } })
+  const { data } = useProductSymptomQuery({
+    variables: { productSymptomId: productSymptomId ?? '' },
+  })
   const productSymptom = data?.response.productSymptom
-  const [attachImages, _] = useAttachImagesToSymptomMutation()
+  const [attachImages] = useAttachImagesToSymptomMutation()
   const handleUpdate = async (filePreviews: FilePreview[]) => {
     await attachImages({
       variables: {
@@ -192,9 +193,9 @@ const SymptomPhotoList: React.FC<ISymptomPhotoListProps> = ({
 const View: React.FunctionComponent<RouteComponentProps<
   IProductSymptomRouterProps
 >> = ({ history, match }) => {
-  const { loading, data } = useProductSymptomQuery(
-    { variables: { productSymptomId: match.params.productSymptomId ?? '' } }
-  )
+  const { loading, data } = useProductSymptomQuery({
+    variables: { productSymptomId: match.params.productSymptomId ?? '' },
+  })
   const productSymptom = data?.response.productSymptom
   const handleBack = () => history.push('/admin/products/symptoms')
   const onClickEdit = () =>

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useDestroyCustomerMutation } from "rpmed-schema"
+import { useDestroyCustomerMutation } from 'rpmed-schema'
 
 type DestroyClickHandler = () => Promise<any>
 
@@ -7,7 +7,7 @@ export const DestroyCustomerButton: React.FunctionComponent<{
   id: string
   children: (onClick: DestroyClickHandler) => JSX.Element
 }> = ({ id, children }) => {
-  const [destroyCustomer, _] = useDestroyCustomerMutation()
+  const [destroyCustomer] = useDestroyCustomerMutation()
   const handleClick = () =>
     destroyCustomer({
       variables: { id },

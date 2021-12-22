@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { IconButton, Select, Dialog, Icon } from 'rpmed-ui'
 import { SectionItem as SectionItemType } from './types'
 import * as icons from '@fortawesome/pro-regular-svg-icons'
@@ -32,15 +32,19 @@ export const SectionItem: React.FC<SectionItemProps> = ({
   const { data: pagesData } = usePagesQuery()
   const [confirm, setConfirm] = useState(false)
   const [iconQuery, setIconQuery] = useState('')
-  const fromProps = {
-    name,
-    description,
-    type,
-    target,
-    icon,
-    id,
-    position,
-  }
+  const fromProps = useMemo(
+    () => ({
+      name,
+      description,
+      type,
+      target,
+      icon,
+      id,
+      position,
+    }),
+    [name, description, type, target, icon, id, position]
+  )
+
   const [values, setValues] = useState<SectionItemType>({
     ...fromProps,
   })
@@ -50,7 +54,7 @@ export const SectionItem: React.FC<SectionItemProps> = ({
     if (!isEqual(fromProps, update)) {
       handleChange?.(update)
     }
-  }, [values, handleChange])
+  }, [values, handleChange, fromProps, position])
 
   return (
     <ul className="flex flex-col relative">

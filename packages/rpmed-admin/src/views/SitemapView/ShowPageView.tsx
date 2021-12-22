@@ -18,7 +18,7 @@ import { SectionDetail } from './SectionDetail'
 import { Section, SectionItem } from './types'
 import { isEqual, omit } from 'lodash'
 
-export const ShowPageView: React.FC = ({}) => {
+export const ShowPageView: React.FC = () => {
   const history = useHistory()
   const { id } = useParams<{ id: string }>()
   const handleBack = () => {

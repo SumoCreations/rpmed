@@ -13,7 +13,11 @@ import {
   Layout,
   Toolbar,
 } from 'rpmed-ui/lib/V1'
-import { CustomerForm, CustomerFormSubmitHandler, ICustomerFormValues } from './CustomerForm'
+import {
+  CustomerForm,
+  CustomerFormSubmitHandler,
+  ICustomerFormValues,
+} from './CustomerForm'
 import { useCustomerQuery, useUpdateCustomerMutation } from 'rpmed-schema'
 
 interface ICustomerRouterProps {
@@ -23,16 +27,18 @@ interface ICustomerRouterProps {
 const View: React.FunctionComponent<RouteComponentProps<
   ICustomerRouterProps
 >> = ({ history, match }) => {
-  const [updateCustomer, _] = useUpdateCustomerMutation()
+  const [updateCustomer] = useUpdateCustomerMutation()
   const handleBack = () => history.push('/admin/customers')
-  const { data, loading } = useCustomerQuery({ variables: { customerId: match.params.customerId } })
+  const { data, loading } = useCustomerQuery({
+    variables: { customerId: match.params.customerId },
+  })
   const customer = data?.response.customer
   const handleSubmit: CustomerFormSubmitHandler = async (values, actions) => {
     const result = await updateCustomer({
       variables: {
         customerInput: {
           email: values.email ?? '',
-          id: customer?.id ?? "",
+          id: customer?.id ?? '',
           name: values.name ?? '',
         },
       },
@@ -41,7 +47,7 @@ const View: React.FunctionComponent<RouteComponentProps<
     const errors = (get(result, 'data.response.errors') || []) as ErrorList
     if (errors.length > 0) {
       errors.forEach(({ path, message }) => {
-        actions.setFieldError((path as any), message)
+        actions.setFieldError(path as any, message)
       })
       return
     }
@@ -66,7 +72,10 @@ const View: React.FunctionComponent<RouteComponentProps<
           ) : (
             <h2>{customer?.name}</h2>
           )}
-          <CustomerForm initialValues={customer as ICustomerFormValues} onSubmit={handleSubmit} />
+          <CustomerForm
+            initialValues={customer as ICustomerFormValues}
+            onSubmit={handleSubmit}
+          />
         </Card.Flat>
       </Content>
     </Layout.Layout>

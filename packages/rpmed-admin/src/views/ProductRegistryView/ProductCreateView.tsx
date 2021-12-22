@@ -15,7 +15,7 @@ export const ProductCreateView: React.FC<RouteComponentProps> = ({
 }) => {
   const handleBack = () => history.push('/admin/products')
   const defaultValues = qs.parse(window.location.search)
-  const [createProduct, _] = useCreateProductMutation()
+  const [createProduct] = useCreateProductMutation()
   const handleSubmit: ProductFormSubmitHandler = async (values, actions) => {
     const result = await createProduct({
       variables: {
@@ -29,7 +29,7 @@ export const ProductCreateView: React.FC<RouteComponentProps> = ({
     const errors = (get(result, 'data.response.errors') || []) as ErrorList
     if (errors.length > 0) {
       errors.forEach(({ path, message }) => {
-        actions.setFieldError((path as any), message)
+        actions.setFieldError(path as any, message)
       })
       return
     }

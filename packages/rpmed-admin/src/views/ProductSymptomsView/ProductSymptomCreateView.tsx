@@ -16,7 +16,7 @@ import {
 export const ProductSymptomCreateView: React.FC<RouteComponentProps> = ({
   history,
 }) => {
-  const [createProductSymptom, _] = useCreateProductSymptomMutation()
+  const [createProductSymptom] = useCreateProductSymptomMutation()
   const handleBack = () => history.push('/admin/products/symptoms')
   const handleSubmit: ProductSymptomFormSubmitHandler = async (
     values,
@@ -39,7 +39,7 @@ export const ProductSymptomCreateView: React.FC<RouteComponentProps> = ({
     const errors = (get(result, 'data.response.errors') || []) as ErrorList
     if (errors.length > 0) {
       errors.forEach(({ path, message }) => {
-        actions.setFieldError((path as any), message)
+        actions.setFieldError(path as any, message)
       })
       return
     }

@@ -9,7 +9,7 @@ import { AsyncSubmitHandler, FormErrors } from '@sumocreations/forms'
 import { Page, useMakePageMutation, usePageQuery } from 'rpmed-schema'
 import { faEye } from '@fortawesome/pro-regular-svg-icons'
 
-export const EditPageView: React.FC = ({}) => {
+export const EditPageView: React.FC = () => {
   const history = useHistory()
   const [loading, setLoading] = useState(false)
   const { id } = useParams<{ id: string }>()

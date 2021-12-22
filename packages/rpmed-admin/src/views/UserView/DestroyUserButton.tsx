@@ -7,7 +7,7 @@ export const DestroyUserButton: React.FC<{
   id: string
   children: (onClick: DestroyClickHandler) => JSX.Element
 }> = ({ id, children }) => {
-  const [destroyUser, _] = useDestroyUserMutation()
+  const [destroyUser] = useDestroyUserMutation()
   const handleClick = () => destroyUser({ variables: { id } })
   return children(handleClick)
 }

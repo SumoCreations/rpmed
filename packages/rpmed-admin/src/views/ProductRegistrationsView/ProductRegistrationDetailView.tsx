@@ -13,11 +13,14 @@ import {
   Layout,
   Toolbar,
 } from 'rpmed-ui/lib/V1'
-import { useProductRegistrationQuery, useUpdateProductRegistrationMutation } from 'rpmed-schema'
+import {
+  useProductRegistrationQuery,
+  useUpdateProductRegistrationMutation,
+} from 'rpmed-schema'
 import {
   ProductRegistrationForm,
   ProductRegistrationFormSubmitHandler,
-  IProductRegistrationFormValues
+  IProductRegistrationFormValues,
 } from './ProductRegistrationForm'
 
 interface IProductRegistrationRouterProps {
@@ -28,14 +31,12 @@ const View: React.FunctionComponent<RouteComponentProps<
   IProductRegistrationRouterProps
 >> = ({ history, match }) => {
   const handleBack = () => history.push('/admin/registrations')
-  const [updateProductRegistration, _] = useUpdateProductRegistrationMutation()
+  const [updateProductRegistration] = useUpdateProductRegistrationMutation()
   const { loading, data } = useProductRegistrationQuery({
     variables: {
-      productRegistrationId:
-        match.params.productRegistrationId
-    }
-  }
-  )
+      productRegistrationId: match.params.productRegistrationId,
+    },
+  })
   const productRegistration = data?.response.productRegistration
   const initialValues = {
     customerId: productRegistration?.customerId,
@@ -69,7 +70,7 @@ const View: React.FunctionComponent<RouteComponentProps<
     const errors = (get(result, 'data.response.errors') || []) as ErrorList
     if (errors.length > 0) {
       errors.forEach(({ path, message }) => {
-        actions.setFieldError((path as any), message)
+        actions.setFieldError(path as any, message)
       })
       return
     }
