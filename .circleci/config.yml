@@ -143,7 +143,7 @@ jobs:
       - install-monorepo
       - build-monorepo
 
-  test_epc_api:
+  test_rpmed_api:
     executor:
       name: node/default
       tag: '12.18.0'
@@ -151,7 +151,7 @@ jobs:
       - checkout
       - install-dynamodb
       - test-workspace:
-          workspace: 'epc-api'
+          workspace: 'rpmed-api'
 
   test_rpmed_admin:
     executor:
@@ -178,7 +178,7 @@ jobs:
           aws-access-key-id: AWS_ACCESS_KEY_ID
           aws-region: AWS_ACCESS_DEFAULT_REGION
       - run:
-          command: cd packages/epc-api && serverless deploy -s $STAGE
+          command: cd packages/rpmed-api && serverless deploy -s $STAGE
           name: deploy
 
   deploy_rpmed_admin:
