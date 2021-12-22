@@ -136,7 +136,7 @@ jobs:
   build:
     executor:
       name: node/default
-      tag: '14'
+      tag: '14.18.1'
     steps:
       - checkout
       - setup-environment
@@ -146,7 +146,7 @@ jobs:
   test_rpmed_api:
     executor:
       name: node/default
-      tag: '14'
+      tag: '14.18.1'
     steps:
       - checkout
       - install-dynamodb
@@ -156,7 +156,7 @@ jobs:
   test_rpmed_admin:
     executor:
       name: node/default
-      tag: '14'
+      tag: '14.18.1'
     steps:
       - test-workspace:
           workspace: 'rpmed-admin'
@@ -164,7 +164,7 @@ jobs:
   deploy_rpmed_api:
     executor:
       name: node/default
-      tag: '14'
+      tag: '14.18.1'
     steps:
       - checkout
       - setup-environment
