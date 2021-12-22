@@ -1,10 +1,7 @@
 import { Page } from '../../../../models'
 import * as Validation from '../../../../validations'
-import {
-  ErrorPageWithSlugAlreadyExists,
-  ErrorPageInvalid,
-} from '../pageErrors'
-import { PageInput, PageMutationOutput } from "rpmed-schema"
+import { ErrorPageWithSlugAlreadyExists, ErrorPageInvalid } from '../pageErrors'
+import { PageInput, PageMutationOutput } from 'rpmed-schema'
 
 export const makePage = async (
   _: any,
@@ -17,6 +14,8 @@ export const makePage = async (
   } catch (e) {
     return { errors: Validation.formatError(e), success: false }
   }
+  console.log('PAGE INPUT:')
+  console.log(pageInput)
 
   const { id, slug } = pageInput
   const existingPage = await Page.findBySlug(slug)
@@ -28,10 +27,10 @@ export const makePage = async (
   }
 
   try {
-    const page = await Page.make({ ...pageInput as any })
+    const page = await Page.make({ ...(pageInput as any) })
     return { page: Page.output(page), success: true }
   } catch (e) {
-    console.log("PAGE MAKE ERROR!")
+    console.log('PAGE MAKE ERROR!')
     console.log(e)
     return { success: false, errors: [ErrorPageInvalid] }
   }

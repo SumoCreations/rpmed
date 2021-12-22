@@ -1,7 +1,7 @@
 interface Entity {
   name: string
   position: number
-  uuid: string
+  id: string
 }
 
 export interface Section extends Entity {

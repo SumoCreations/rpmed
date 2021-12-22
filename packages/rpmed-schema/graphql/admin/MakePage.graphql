@@ -6,6 +6,20 @@ mutation MakePage($pageInput: PageInput!) {
       keywords
       description
       slug
+      sections {
+        id
+        name
+        position
+        items {
+          id
+          name
+          position
+          icon
+          url
+          target
+          type
+        }
+      }
     }
     success
     errors {

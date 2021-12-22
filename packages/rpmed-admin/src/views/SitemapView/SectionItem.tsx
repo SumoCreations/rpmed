@@ -19,7 +19,7 @@ export interface SectionItemProps extends SectionItemType {
 
 export const SectionItem: React.FC<SectionItemProps> = ({
   name,
-  uuid,
+  id,
   description,
   type,
   target,
@@ -38,7 +38,7 @@ export const SectionItem: React.FC<SectionItemProps> = ({
     type,
     target,
     icon,
-    uuid,
+    id,
     position,
   }
   const [values, setValues] = useState<SectionItemType>({
@@ -48,19 +48,16 @@ export const SectionItem: React.FC<SectionItemProps> = ({
   useEffect(() => {
     const update = { ...values, position }
     if (!isEqual(fromProps, update)) {
-      console.log(JSON.stringify(fromProps), '!==', JSON.stringify(update))
       handleChange?.(update)
     }
   }, [values, handleChange])
-
-  console.log('SectionItem', uuid, 'Rendered')
 
   return (
     <ul className="flex flex-col relative">
       <Dialog
         title="Are you sure?"
         message="Are you sure you want to delete this item?"
-        onConfirm={() => handleDelete?.(uuid)}
+        onConfirm={() => handleDelete?.(id)}
         onClose={() => setConfirm(false)}
         onCancel={() => setConfirm(false)}
         open={confirm}
@@ -76,7 +73,7 @@ export const SectionItem: React.FC<SectionItemProps> = ({
                 <li className="flex">
                   <input
                     value={values.name}
-                    name={`item-name-${uuid}`}
+                    name={`item-name-${id}`}
                     placeholder="Item Name"
                     className="text-xs font-bold border border-gray-200 rounded-sm px-2 py-1"
                     onChange={e => {
@@ -95,7 +92,7 @@ export const SectionItem: React.FC<SectionItemProps> = ({
                 <li className="mb-2 pb-1 w-full">
                   <input
                     value={values.description}
-                    name={`item-description-${uuid}`}
+                    name={`item-description-${id}`}
                     placeholder="Item Description"
                     className="text-xs w-full border p-1 border-gray-200 rounded-sm"
                     onChange={e => {
@@ -110,7 +107,7 @@ export const SectionItem: React.FC<SectionItemProps> = ({
       </li>
       <li className="py-2 border-t border-b mb-2">
         <Select
-          name={`item-target-${uuid}`}
+          name={`item-target-${id}`}
           value={values.icon}
           options={iconOptions
             .filter(i =>
@@ -130,7 +127,7 @@ export const SectionItem: React.FC<SectionItemProps> = ({
       </li>
       <li>
         <Select
-          name={`item-type-${uuid}`}
+          name={`item-type-${id}`}
           value={values.type}
           options={[
             { id: 'url', icon: icons.faGlobe, name: 'URL' },
@@ -160,7 +157,7 @@ export const SectionItem: React.FC<SectionItemProps> = ({
         ) : null}
         {values.type === 'document' ? (
           <Select
-            name={`item-target-${uuid}`}
+            name={`item-target-${id}`}
             value={values.target}
             options={
               documentsData?.response.documents?.map(d => ({
@@ -175,7 +172,7 @@ export const SectionItem: React.FC<SectionItemProps> = ({
         ) : null}
         {values.type === 'page' ? (
           <Select
-            name={`item-target-${uuid}`}
+            name={`item-target-${id}`}
             value={values.target}
             options={
               pagesData?.response.pages?.map(d => ({
@@ -190,7 +187,7 @@ export const SectionItem: React.FC<SectionItemProps> = ({
         ) : null}
         {values.type === 'tool' ? (
           <Select
-            name={`item-target-${uuid}`}
+            name={`item-target-${id}`}
             value={values.target}
             options={[
               { id: 'batteryRecycling', name: 'Recycling Form' },
@@ -199,8 +196,8 @@ export const SectionItem: React.FC<SectionItemProps> = ({
               { id: 'productRegistration', name: 'Registration Form' },
               { id: 'troubleshooting', name: 'Troubleshooting' },
             ]}
-            onSelect={id => {
-              setValues({ ...values, target: id as any })
+            onSelect={selectedId => {
+              setValues({ ...values, target: selectedId as any })
             }}
           />
         ) : null}

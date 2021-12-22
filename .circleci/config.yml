@@ -1,85 +1,306 @@
-# Javascript Node CircleCI 2.0 configuration file
+# Javascript Node CircleCI 2.1 configuration file
 #
-# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+# Check https://circleci.com/docs/2.1/language-javascript/ for more details
 #
-version: 2
-jobs:
-  build:
-    docker:
-      - image: circleci/node:8.10
-      - image: circleci/dynamodb
-
-    working_directory: ~/repo
-
+orbs:
+  aws-cli: circleci/aws-cli@1.3.0
+  heroku: circleci/heroku@1.2.2
+  node: circleci/node@4.1.0
+  serverless-framework: circleci/serverless-framework@1.0.1
+version: 2.1
+commands:
+  setup-environment:
     steps:
-      - checkout
-
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
-
       - run:
-          name: Installing Dependencies
+          name: Configure build variables
           command: |
-            npm install
+            case $CIRCLE_BRANCH in
 
+              staging)
+                echo 'export STAGE="staging"' >> $BASH_ENV
+                echo 'export ADMIN_REPO="rpmed-service-admin-staging"' >> $BASH_ENV
+                echo 'export REACT_APP_STAGE="staging"' >> $BASH_ENV
+                ;;
+
+              master)
+                echo 'export STAGE="prod"' >> $BASH_ENV
+                echo 'export ADMIN_REPO="rpmed-service-admin"' >> $BASH_ENV
+                echo 'export REACT_APP_STAGE="prod"' >> $BASH_ENV
+                ;;
+
+              *)
+                echo 'export STAGE="dev"' >> $BASH_ENV
+                echo 'export ADMIN_REPO="rpmed-service-admin-dev"' >> $BASH_ENV
+                echo 'export REACT_APP_STAGE="dev"' >> $BASH_ENV
+                ;;
+            esac
+
+  install-monorepo:
+    steps:
+      - restore-packages
+      - run: |
+          npm config set "@fortawesome:registry" https://npm.fontawesome.com/ && \
+          npm config set "//npm.fontawesome.com/:_authToken" $FONT_AWESOME_TOKEN
+      - run: |
+          yarn install --network-concurrency 1
       - save_cache:
           paths:
             - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
+            - packages/api-auth/node_modules
+            - packages/api-email/node_modules
+            - packages/api-models/node_modules
+            - packages/api-utils/node_modules
+            - packages/rpmed-api/node_modules
+            - packages/rpmed-schema/node_modules
+            - packages/rpmed-admin/node_modules
+            - packages/rpmed-ui/node_modules
+            - packages/session/node_modules
+            - packages/utils/node_modules
+          key: v1-packages-{{ .Branch }}-{{ .Revision }}
 
+  restore-monorepo:
+    steps:
+      # Download pre-existing build from cache
+      - restore_cache:
+          keys:
+            - v1-builds-{{ .Branch }}-{{ .Revision }}
+
+  restore-packages:
+    steps:
+      # Download pre-existing build from cache
+      - restore_cache:
+          keys:
+            - v1-packages-{{ .Branch }}-{{ .Revision }}
+
+  install-dynamodb:
+    steps:
       - run:
-          name: Install Serverless CLI
+          name: Switch to US mirror for faster performances
+          command: sudo sed -i 's/\/\/archive.ubuntu.com/\/\/us.archive.ubuntu.com/g' /etc/apt/sources.list
+      - run:
+          name: Add openjdk-r PPA
           command: |
-            sudo npm i -g serverless
+            sudo add-apt-repository ppa:openjdk-r/ppa
+            sudo apt-get update
+      - run:
+          name: Install JRE
+          command: sudo apt-get install default-jre
+      - run:
+          name: Download DynamoDB Local
+          command: wget https://s3.us-west-2.amazonaws.com/dynamodb-local/dynamodb_local_latest.zip
+      - run:
+          name: Unzip latest
+          command: unzip dynamodb_local_latest.zip
 
-      # run tests!
-      - run: npm run test
+  build-monorepo:
+    steps:
+      - run:
+          name: Bootstrap Project
+          command: yarn build
+      - run:
+          name: Build Admin Client
+          command: yarn workspace rpmed-admin build
+      - save_cache:
+          paths:
+            - packages/api-auth/lib
+            - packages/api-auth/lib
+            - packages/api-email/lib
+            - packages/api-models/lib
+            - packages/api-utils/lib
+            - packages/rpmed-api/lib
+            - packages/rpmed-schema/lib
+            - packages/rpmed-admin/lib
+            - packages/rpmed-ui/lib
+            - packages/session/lib
+            - packages/utils/lib
+          key: v1-builds-{{ .Branch }}-{{ .Revision }}
 
-  deploy:
-    docker:
-      - image: circleci/node:8.10
-    working_directory: ~/repo
+  test-workspace:
+    parameters:
+      workspace:
+        description: The workspace to test
+        type: string
+        default: epc-client
     steps:
       - checkout
-      - type: add-ssh-keys
-      - restore_cache:
-          key: v1-dependencies-{{ checksum "package.json" }}
+      - restore-monorepo
+      - install-monorepo
       - run:
-          name: Install Serverless CLI
-          command: |
-            sudo npm i -g serverless
-      - type: deploy
-        name: 'Deploy via Serverless'
-        command: |
-          serverless config credentials --provider aws --key $AWS_ACCESS_KEY_ID --secret $AWS_SECRET_ACCESS_KEY --profile rpmed-serverless
+          name: Rebuild dependencies with CommonJS
+          command: yarn build-test
+      - run:
+          command: yarn workspace << parameters.workspace >> test
+          name: Run YARN tests
 
-          if [ "${CIRCLE_BRANCH}" == "master" ]; then
-            serverless deploy --stage prod --conceal
-          fi
+jobs:
+  build:
+    executor:
+      name: node/default
+      tag: '12.18.0'
+    steps:
+      - checkout
+      - setup-environment
+      - install-monorepo
+      - build-monorepo
 
-          if [ "${CIRCLE_BRANCH}" == "staging" ]; then
-            serverless deploy --stage staging --conceal
-          fi
+  test_epc_api:
+    executor:
+      name: node/default
+      tag: '12.18.0'
+    steps:
+      - checkout
+      - install-dynamodb
+      - test-workspace:
+          workspace: 'epc-api'
 
-          if [ "${CIRCLE_BRANCH}" == "develop" ]; then
-            serverless deploy --stage dev --conceal
-          fi
+  test_rpmed_admin:
+    executor:
+      name: node/default
+      tag: '12.18.0'
+    steps:
+      - test-workspace:
+          workspace: 'rpmed-admin'
+
+  deploy_rpmed_api:
+    executor:
+      name: node/default
+      tag: '12.18.0'
+    steps:
+      - checkout
+      - setup-environment
+      - restore-monorepo
+      - install-monorepo
+      - run: |
+          sudo npm install serverless@1.61.3 -g
+      - aws-cli/setup:
+          profile-name: rpmed-serverless
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-region: AWS_ACCESS_DEFAULT_REGION
+      - run:
+          command: cd packages/epc-api && serverless deploy -s $STAGE
+          name: deploy
+
+  deploy_rpmed_admin:
+    executor:
+      name: heroku/default
+    steps:
+      - checkout
+      - setup-environment
+      - heroku/install
+      - heroku/deploy-via-git:
+          app-name: $ADMIN_REPO
 
 workflows:
-  version: 2
-  build-deploy:
+  build_and_deploy:
     jobs:
       - build
-      - deploy:
+      - test_rpmed_api:
+          requires:
+            - build
+      - deploy_rpmed_api:
           requires:
             - build
           filters:
             branches:
               only:
-                - master
-                - staging
                 - develop
+                - staging
+                - main
+      - test_rpmed_admin:
+          requires:
+            - build
+      - deploy_rpmed_admin:
+          requires:
+            - test_rpmed_admin
+          filters:
+            branches:
+              only:
+                - develop
+                - staging
+                - main
+# # Javascript Node CircleCI 2.0 configuration file
+# #
+# # Check https://circleci.com/docs/2.0/language-javascript/ for more details
+# #
+# version: 2
+# jobs:
+#   build:
+#     docker:
+#       - image: circleci/node:8.10
+#       - image: circleci/dynamodb
+
+#     working_directory: ~/repo
+
+#     steps:
+#       - checkout
+
+#       # Download and cache dependencies
+#       - restore_cache:
+#           keys:
+#             - v1-dependencies-{{ checksum "package.json" }}
+#             # fallback to using the latest cache if no exact match is found
+#             - v1-dependencies-
+
+#       - run:
+#           name: Installing Dependencies
+#           command: |
+#             npm install
+
+#       - save_cache:
+#           paths:
+#             - node_modules
+#           key: v1-dependencies-{{ checksum "package.json" }}
+
+#       - run:
+#           name: Install Serverless CLI
+#           command: |
+#             sudo npm i -g serverless
+
+#       # run tests!
+#       - run: npm run test
+
+#   deploy-api:
+#     docker:
+#       - image: circleci/node:8.10
+#     working_directory: ~/repo
+#     steps:
+#       - checkout
+#       - type: add-ssh-keys
+#       - restore_cache:
+#           key: v1-dependencies-{{ checksum "package.json" }}
+#       - run:
+#           name: Install Serverless CLI
+#           command: |
+#             sudo npm i -g serverless
+#       - type: deploy
+#         name: 'Deploy via Serverless'
+#         command: |
+#           serverless config credentials --provider aws --key $AWS_ACCESS_KEY_ID --secret $AWS_SECRET_ACCESS_KEY --profile rpmed-serverless
+
+#           if [ "${CIRCLE_BRANCH}" == "master" ]; then
+#             serverless deploy --stage prod --conceal
+#           fi
+
+#           if [ "${CIRCLE_BRANCH}" == "staging" ]; then
+#             serverless deploy --stage staging --conceal
+#           fi
+
+#           if [ "${CIRCLE_BRANCH}" == "develop" ]; then
+#             serverless deploy --stage dev --conceal
+#           fi
+
+# workflows:
+#   version: 2
+#   build-deploy:
+#     jobs:
+#       - build
+#       - deploy-api:
+#           requires:
+#             - build
+#           filters:
+#             branches:
+#               only:
+#                 - master
+#                 - staging
+#                 - develop

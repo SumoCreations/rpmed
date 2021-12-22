@@ -1,14 +1,22 @@
 import { faChevronLeft, faPencil } from '@fortawesome/pro-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Helmet } from 'react-helmet'
-import { Actions, Card, Content, Layout, Toolbar } from 'rpmed-ui/lib/V1'
+import {
+  Actions,
+  Card,
+  Content,
+  Indicators,
+  Layout,
+  Toolbar,
+} from 'rpmed-ui/lib/V1'
 import { AbsoluteOverlay, Button } from 'rpmed-ui'
 import { useHistory, useParams } from 'react-router-dom'
-import { Page, usePageQuery } from 'rpmed-schema'
+import { Page, useMakePageMutation, usePageQuery } from 'rpmed-schema'
 import { v4 as uuid } from 'uuid'
 import { SectionDetail } from './SectionDetail'
 import { Section, SectionItem } from './types'
+import { isEqual, omit } from 'lodash'
 
 export const ShowPageView: React.FC = ({}) => {
   const history = useHistory()
@@ -22,32 +30,60 @@ export const ShowPageView: React.FC = ({}) => {
 
   const [initialSections, setInitialSections] = useState<Section[]>([])
 
+  const [makePage, { loading: postingPage }] = useMakePageMutation()
   const { data: existingPageData, loading } = usePageQuery({
     variables: { id },
   })
   const page = existingPageData?.response.page ?? ({} as Page)
 
   const [sections, setSections] = useState([] as Section[])
+
+  const [hasPersistedContent, setPersistedContent] = useState(false)
+  useEffect(() => {
+    const existingSections = existingPageData?.response.page?.sections
+    if (hasPersistedContent || !existingSections) {
+      return
+    }
+    if (!isEqual(sections, existingSections)) {
+      setSections(
+        existingSections.map(
+          s =>
+            ({
+              ...(omit(s, ['items', '__typename']) as Section),
+              items: s?.items?.map(i => ({
+                ...(omit(i, ['__typename']) as SectionItem),
+              })),
+            } as Section)
+        )
+      )
+      setPersistedContent(true)
+    }
+  }, [
+    setSections,
+    sections,
+    existingPageData,
+    hasPersistedContent,
+    setPersistedContent,
+  ])
+
   const handleNewSection: React.MouseEventHandler = e => {
     e.preventDefault()
     setSections([
       ...sections,
-      { name: '', position: sections.length, uuid: uuid(), items: [] },
+      { name: '', position: sections.length, id: uuid(), items: [] },
     ])
   }
 
-  const handleDeleteSection = (uuid: string) => () => {
+  const handleDeleteSection = (id: string) => () => {
     setSections(
-      sections
-        .filter(s => s.uuid !== uuid)
-        .sort((a, b) => a.position - b.position)
+      sections.filter(s => s.id !== id).sort((a, b) => a.position - b.position)
     )
   }
 
-  const handleSectionEdit = (uuid: string) => (name: string) => {
+  const handleSectionEdit = (id: string) => (name: string) => {
     setSections(
       sections.map(s => {
-        if (s.uuid === uuid) {
+        if (s.id === id) {
           return { ...s, name }
         }
         return s
@@ -74,9 +110,9 @@ export const ShowPageView: React.FC = ({}) => {
     }
   }
 
-  const handleSectionItemsChanged = (uuid: string, items: SectionItem[]) => {
+  const handleSectionItemsChanged = (id: string, items: SectionItem[]) => {
     const update = sections.map(s => {
-      if (s.uuid === uuid) {
+      if (s.id === id) {
         return { ...s, items }
       } else {
         return s
@@ -89,12 +125,35 @@ export const ShowPageView: React.FC = ({}) => {
 
   const handleSave = () => {
     setInitialSections(sections)
+    makePage({
+      variables: {
+        pageInput: {
+          id: page.id,
+          title: page.title ?? '',
+          slug: page.slug ?? '',
+          keywords: page.keywords ?? '',
+          description: page.description ?? '',
+          sections: sections.map(s => ({
+            id: s.id,
+            name: s.name,
+            position: s.position,
+            items: s.items.map(i => ({
+              id: i.id,
+              target: i.target,
+              description: i.description,
+              type: i.type,
+              icon: i.icon,
+              name: i.name,
+              position: i.position,
+            })) as SectionItem[],
+          })),
+        },
+      },
+    })
   }
 
-  const hasChanged =
-    JSON.stringify(sections) !== JSON.stringify(initialSections)
+  const hasChanged = !isEqual(sections, initialSections)
 
-  console.log('ShowPageView', 'Rendered')
   return (
     <Layout.Layout>
       <Helmet title={`${page.title} - RPMed Service Admin`} />
@@ -135,33 +194,40 @@ export const ShowPageView: React.FC = ({}) => {
             .sort((a, b) => a.position - b.position)
             .map(section => (
               <SectionDetail
-                key={section.uuid}
+                key={section.id}
                 {...section}
-                onDelete={handleDeleteSection(section.uuid)}
-                onNameChange={handleSectionEdit(section.uuid)}
+                onDelete={handleDeleteSection(section.id)}
+                onNameChange={handleSectionEdit(section.id)}
                 onPositionChange={handlePositionChange}
                 onItemsChanged={handleSectionItemsChanged}
               />
             ))}
-          <div className="fixed bottom-0 left-0 w-screen bg-white bg-opacity-50 flex px-4 py-2">
-            <Button
-              className="ml-auto mr-2"
-              appearance="primary"
+          <div className="flex rounded border-2 border-gray-200 border-dotted p-4">
+            <button
+              className="m-auto text-md text-center font-bold rounded p-8 bg-gray-100"
               onClick={handleNewSection}
             >
-              Add Section{' '}
-            </Button>
-            <Button
-              disabled={!hasChanged}
-              appearance="primary"
-              onClick={handleSave}
-            >
-              Save
-            </Button>
+              Click here to add a new section
+            </button>
           </div>
-          <code>{JSON.stringify(sections)}</code>
         </Card.Flat>
       </Content>
+      <div className="fixed bottom-0 left-0 w-screen bg-white bg-opacity-50 flex px-4 py-2">
+        <Button
+          className="ml-auto mr-2"
+          appearance="primary"
+          onClick={handleNewSection}
+        >
+          Add Section{' '}
+        </Button>
+        <Button
+          disabled={!hasChanged || postingPage}
+          appearance="primary"
+          onClick={handleSave}
+        >
+          {postingPage ? <Indicators.Spinner /> : 'Save'}
+        </Button>
+      </div>
     </Layout.Layout>
   )
 }

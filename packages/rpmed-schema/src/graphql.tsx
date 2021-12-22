@@ -809,6 +809,8 @@ export type Page = {
   keywords?: Maybe<Scalars['String']>;
   /** The description of the page. */
   description?: Maybe<Scalars['String']>;
+  /** The sections of content on the page. */
+  sections?: Maybe<Array<Maybe<Section>>>;
 };
 
 /** Provides essential pagination info for a connection (or paginated request) */
@@ -852,6 +854,8 @@ export type PageInput = {
   keywords?: Maybe<Scalars['String']>;
   /** The page description for SEO purposes. */
   description?: Maybe<Scalars['String']>;
+  /** The sections of content on the page. */
+  sections?: Maybe<Array<Maybe<SectionInput>>>;
 };
 
 /** The result of a mutation applied to a page. */
@@ -1584,6 +1588,70 @@ export type RgaStatusUpdate = {
   updatedOn?: Maybe<Scalars['String']>;
 };
 
+/** A section of content that can appear on a page. */
+export type Section = {
+  __typename?: 'Section';
+  /** The unique identifier for this page */
+  id: Scalars['ID'];
+  /** The name/title of the section. */
+  name?: Maybe<Scalars['String']>;
+  /** The order this section should appear. */
+  position?: Maybe<Scalars['Int']>;
+  /** The items in this section. */
+  items?: Maybe<Array<Maybe<SectionItem>>>;
+};
+
+/** A section of content that can appear on a page. */
+export type SectionInput = {
+  /** The unique identifier for this page */
+  id: Scalars['ID'];
+  /** The name/title of the section. */
+  name?: Maybe<Scalars['String']>;
+  /** The order this section should appear. */
+  position?: Maybe<Scalars['Int']>;
+  /** The items in this section. */
+  items?: Maybe<Array<Maybe<SectionItemInput>>>;
+};
+
+/** A content item that can appear within a section on a page. */
+export type SectionItem = {
+  __typename?: 'SectionItem';
+  /** The unique identifier for this page */
+  id: Scalars['ID'];
+  /** The icon of the item. */
+  icon?: Maybe<Scalars['String']>;
+  /** The name/title of the item. */
+  name?: Maybe<Scalars['String']>;
+  /** The description of this item. */
+  description?: Maybe<Scalars['String']>;
+  /** The type of content this item points to. */
+  type?: Maybe<Scalars['String']>;
+  /** The target url or content ID of this item. */
+  target?: Maybe<Scalars['String']>;
+  /** The resulting URL this item will point to.. */
+  url?: Maybe<Scalars['String']>;
+  /** The order this item should appear. */
+  position?: Maybe<Scalars['Int']>;
+};
+
+/** A content item that can appear within a section on a page. */
+export type SectionItemInput = {
+  /** The unique identifier for this page */
+  id: Scalars['ID'];
+  /** The icon of the item. */
+  icon?: Maybe<Scalars['String']>;
+  /** The name/title of the item. */
+  name?: Maybe<Scalars['String']>;
+  /** The description of this item. */
+  description?: Maybe<Scalars['String']>;
+  /** The type of content this item points to. */
+  type?: Maybe<Scalars['String']>;
+  /** The target url or content ID of this item. */
+  target?: Maybe<Scalars['String']>;
+  /** The order this item should appear. */
+  position?: Maybe<Scalars['Int']>;
+};
+
 export type UpdateProfile = {
   __typename?: 'UpdateProfile';
   /** The id of the user who made the update. */
@@ -2270,6 +2338,14 @@ export type MakePageMutation = (
     & { page?: Maybe<(
       { __typename?: 'Page' }
       & Pick<Page, 'id' | 'title' | 'keywords' | 'description' | 'slug'>
+      & { sections?: Maybe<Array<Maybe<(
+        { __typename?: 'Section' }
+        & Pick<Section, 'id' | 'name' | 'position'>
+        & { items?: Maybe<Array<Maybe<(
+          { __typename?: 'SectionItem' }
+          & Pick<SectionItem, 'id' | 'name' | 'position' | 'icon' | 'url' | 'target' | 'type'>
+        )>>> }
+      )>>> }
     )>, errors?: Maybe<Array<Maybe<(
       { __typename?: 'ValidationError' }
       & Pick<ValidationError, 'path' | 'message'>
@@ -2412,6 +2488,14 @@ export type PageQuery = (
     & { page?: Maybe<(
       { __typename?: 'Page' }
       & Pick<Page, 'id' | 'title' | 'keywords' | 'description' | 'slug'>
+      & { sections?: Maybe<Array<Maybe<(
+        { __typename?: 'Section' }
+        & Pick<Section, 'id' | 'name' | 'position'>
+        & { items?: Maybe<Array<Maybe<(
+          { __typename?: 'SectionItem' }
+          & Pick<SectionItem, 'id' | 'name' | 'description' | 'position' | 'icon' | 'url' | 'target' | 'type'>
+        )>>> }
+      )>>> }
     )>, errors?: Maybe<Array<Maybe<(
       { __typename?: 'ValidationError' }
       & Pick<ValidationError, 'path' | 'message'>
@@ -4344,6 +4428,20 @@ export const MakePageDocument = gql`
       keywords
       description
       slug
+      sections {
+        id
+        name
+        position
+        items {
+          id
+          name
+          position
+          icon
+          url
+          target
+          type
+        }
+      }
     }
     success
     errors {
@@ -4651,6 +4749,21 @@ export const PageDocument = gql`
       keywords
       description
       slug
+      sections {
+        id
+        name
+        position
+        items {
+          id
+          name
+          description
+          position
+          icon
+          url
+          target
+          type
+        }
+      }
     }
     success
     errors {
@@ -6134,6 +6247,8 @@ export type ResolversTypes = {
   RGAStatusCountOutput: ResolverTypeWrapper<RgaStatusCountOutput>;
   PageQueryOutput: ResolverTypeWrapper<PageQueryOutput>;
   Page: ResolverTypeWrapper<Page>;
+  Section: ResolverTypeWrapper<Section>;
+  SectionItem: ResolverTypeWrapper<SectionItem>;
   DocumentQueryOutput: ResolverTypeWrapper<DocumentQueryOutput>;
   Document: ResolverTypeWrapper<Document>;
   Mutation: ResolverTypeWrapper<{}>;
@@ -6170,6 +6285,8 @@ export type ResolversTypes = {
   RGAGoodInput: RgaGoodInput;
   RGAGoodMutationOutput: ResolverTypeWrapper<RgaGoodMutationOutput>;
   PageInput: PageInput;
+  SectionInput: SectionInput;
+  SectionItemInput: SectionItemInput;
   PageMutationOutput: ResolverTypeWrapper<PageMutationOutput>;
   DocumentInput: DocumentInput;
   DocumentMutationOutput: ResolverTypeWrapper<DocumentMutationOutput>;
@@ -6211,6 +6328,8 @@ export type ResolversParentTypes = {
   RGAStatusCountOutput: RgaStatusCountOutput;
   PageQueryOutput: PageQueryOutput;
   Page: Page;
+  Section: Section;
+  SectionItem: SectionItem;
   DocumentQueryOutput: DocumentQueryOutput;
   Document: Document;
   Mutation: {};
@@ -6246,6 +6365,8 @@ export type ResolversParentTypes = {
   RGAGoodInput: RgaGoodInput;
   RGAGoodMutationOutput: RgaGoodMutationOutput;
   PageInput: PageInput;
+  SectionInput: SectionInput;
+  SectionItemInput: SectionItemInput;
   PageMutationOutput: PageMutationOutput;
   DocumentInput: DocumentInput;
   DocumentMutationOutput: DocumentMutationOutput;
@@ -6447,6 +6568,7 @@ export type PageResolvers<ContextType = any, ParentType extends ResolversParentT
   slug?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   keywords?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  sections?: Resolver<Maybe<Array<Maybe<ResolversTypes['Section']>>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -6711,6 +6833,26 @@ export type RgaStatusUpdateResolvers<ContextType = any, ParentType extends Resol
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type SectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Section'] = ResolversParentTypes['Section']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  position?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  items?: Resolver<Maybe<Array<Maybe<ResolversTypes['SectionItem']>>>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SectionItemResolvers<ContextType = any, ParentType extends ResolversParentTypes['SectionItem'] = ResolversParentTypes['SectionItem']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  icon?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  target?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  position?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type UpdateProfileResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateProfile'] = ResolversParentTypes['UpdateProfile']> = {
   id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -6792,6 +6934,8 @@ export type Resolvers<ContextType = any> = {
   RGAQueryOutput?: RgaQueryOutputResolvers<ContextType>;
   RGAStatusCountOutput?: RgaStatusCountOutputResolvers<ContextType>;
   RGAStatusUpdate?: RgaStatusUpdateResolvers<ContextType>;
+  Section?: SectionResolvers<ContextType>;
+  SectionItem?: SectionItemResolvers<ContextType>;
   UpdateProfile?: UpdateProfileResolvers<ContextType>;
   UploadMutationOutput?: UploadMutationOutputResolvers<ContextType>;
   UploadURL?: UploadUrlResolvers<ContextType>;

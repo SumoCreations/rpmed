@@ -10,6 +10,7 @@
   },
   "scripts": {
     "build": "./scripts/bootstrap.build",
+    "build-test": "./scripts/test.build",
     "build-storybook": "yarn workspace utils build && yarn workspace epc-schema build && yarn workspace ui build-tailwind:purged && yarn workspace ui build-storybook --output-dir ../../storybook-static",
     "heroku-postbuild": "./scripts/heroku.build",
     "prettier": "npx prettier --write packages/*/src/**/*.{js,md,ts,tsx}"

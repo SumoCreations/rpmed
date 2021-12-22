@@ -3794,6 +3794,200 @@
             },
             "isDeprecated": false,
             "deprecationReason": null
+          },
+          {
+            "name": "sections",
+            "description": "The sections of content on the page.",
+            "args": [],
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "Section",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "Section",
+        "description": "A section of content that can appear on a page.",
+        "fields": [
+          {
+            "name": "id",
+            "description": "The unique identifier for this page",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "ID",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "name",
+            "description": "The name/title of the section.",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "position",
+            "description": "The order this section should appear.",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "items",
+            "description": "The items in this section.",
+            "args": [],
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "SectionItem",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "SectionItem",
+        "description": "A content item that can appear within a section on a page.",
+        "fields": [
+          {
+            "name": "id",
+            "description": "The unique identifier for this page",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "ID",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "icon",
+            "description": "The icon of the item.",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "name",
+            "description": "The name/title of the item.",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "description",
+            "description": "The description of this item.",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "type",
+            "description": "The type of content this item points to.",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "target",
+            "description": "The target url or content ID of this item.",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "url",
+            "description": "The resulting URL this item will point to..",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "position",
+            "description": "The order this item should appear.",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
           }
         ],
         "inputFields": null,
@@ -7751,6 +7945,164 @@
             "type": {
               "kind": "SCALAR",
               "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "sections",
+            "description": "The sections of content on the page.",
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "INPUT_OBJECT",
+                "name": "SectionInput",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "SectionInput",
+        "description": "A section of content that can appear on a page.",
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "id",
+            "description": "The unique identifier for this page",
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "ID",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "name",
+            "description": "The name/title of the section.",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "position",
+            "description": "The order this section should appear.",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "items",
+            "description": "The items in this section.",
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "INPUT_OBJECT",
+                "name": "SectionItemInput",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "SectionItemInput",
+        "description": "A content item that can appear within a section on a page.",
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "id",
+            "description": "The unique identifier for this page",
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "ID",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "icon",
+            "description": "The icon of the item.",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "name",
+            "description": "The name/title of the item.",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "description",
+            "description": "The description of this item.",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "type",
+            "description": "The type of content this item points to.",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "target",
+            "description": "The target url or content ID of this item.",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "position",
+            "description": "The order this item should appear.",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
               "ofType": null
             },
             "defaultValue": null

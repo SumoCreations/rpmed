@@ -25,7 +25,7 @@ export interface SectionProps extends Section {
 }
 
 export const SectionDetail: React.FC<SectionProps> = ({
-  uuid,
+  id,
   name,
   position,
   items: externalItems,
@@ -43,7 +43,7 @@ export const SectionDetail: React.FC<SectionProps> = ({
       {
         name: '',
         position: items.length,
-        uuid: uuidv4(),
+        id: uuidv4(),
         target: '',
         type: 'url',
         description: '',
@@ -93,12 +93,12 @@ export const SectionDetail: React.FC<SectionProps> = ({
   const handleChangedItem = useCallback(
     (item: SectionItemType) => {
       if (
-        isEqual(
+        !isEqual(
           item,
-          items.find(i => i.uuid === item.uuid)
+          items.find(i => i.id === item.id)
         )
       ) {
-        setItems(items.map(i => (i.uuid === item.uuid ? item : i)))
+        setItems(items.map(i => (i.id === item.id ? item : i)))
       }
     },
     [setItems, items]
@@ -106,17 +106,14 @@ export const SectionDetail: React.FC<SectionProps> = ({
 
   useEffect(() => {
     if (!isEqual(items, externalItems)) {
-      console.log('changed', items)
-      handleItemsChanged?.(uuid, items)
+      handleItemsChanged?.(id, items)
     }
   }, [items])
-
-  console.log('SectionDetail', uuid, 'Rendered')
 
   return (
     <section
       className="border border-gray-200 rounded my-2 pt-2 flex flex-col relative"
-      key={uuid}
+      key={id}
     >
       <header className="flex">
         <div className="ml-2 flex">
@@ -138,7 +135,7 @@ export const SectionDetail: React.FC<SectionProps> = ({
           ref={inputEl}
           value={name}
           placeholder="Section Name"
-          name={`section-${uuid}`}
+          name={`section-${id}`}
           className="flex-grow border-gray-400 border rounded-sm mx-2 px-2 py-1"
           onChange={e => {
             handleNameChange?.(e.target.value)
@@ -186,18 +183,18 @@ export const SectionDetail: React.FC<SectionProps> = ({
           <Sortable
             sortDirection="horizontal"
             index={index}
-            id={item.uuid}
+            id={item.id}
             type="SECTION_ITEM"
             onSort={onSort}
             onFinishSort={onFinishSort}
-            key={item.uuid}
+            key={item.id}
           >
-            <div key={item.uuid} className="p-1">
+            <div key={item.id} className="p-1">
               <div className="rounded border border-gray-200 bg-white shadow-sm p-2">
                 <SectionItem
                   {...item}
-                  onDelete={uuid => {
-                    setItems(items.filter(i => i.uuid !== uuid))
+                  onDelete={id => {
+                    setItems(items.filter(i => i.id !== id))
                   }}
                   onChange={handleChangedItem}
                 />
