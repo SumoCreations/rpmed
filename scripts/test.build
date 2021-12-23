@@ -23,6 +23,4 @@ fi
   yarn workspace api-auth build-test
   yarn workspace api-models build-test
   yarn workspace api-email build-test
-  yarn workspace rpmed-ui build-test
-  yarn workspace rpmed-admin build-test
 )
