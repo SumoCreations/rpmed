@@ -57,6 +57,10 @@ export interface SortableProps extends SortableCallbacks {
    * If an item is disabled it cannot be a drop target.
    */
   disabled?: boolean
+  /**
+   * Any tailwind classes to apply to the wrapping div.
+   */
+  className?: string
 }
 
 /**
@@ -73,6 +77,7 @@ export const Sortable: React.FC<SortableProps> = ({
   accept = type,
   children,
   sortDirection,
+  className,
   disabled = false,
 }) => {
   const ref = useRef<HTMLDivElement>(null)
@@ -173,7 +178,11 @@ export const Sortable: React.FC<SortableProps> = ({
   drag(drop(ref))
 
   return (
-    <div ref={ref} style={{ opacity: isDragging ? 0.5 : 1 }}>
+    <div
+      ref={ref}
+      style={{ opacity: isDragging ? 0.5 : 1 }}
+      className={className}
+    >
       {children}
     </div>
   )
