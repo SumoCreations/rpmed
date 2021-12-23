@@ -1,0 +1,8 @@
+query User($userId: String!) {
+  user(id: $userId) {
+    id
+    email
+    firstName
+    lastName
+  }
+}

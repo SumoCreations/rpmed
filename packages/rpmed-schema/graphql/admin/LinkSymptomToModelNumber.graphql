@@ -1,0 +1,30 @@
+mutation LinkSymptomToModelNumber(
+  $modelNumber: String!
+  $symptomId: String!
+  $linked: Boolean!
+) {
+  response: linkSymptomToModel(
+    modelNumber: $modelNumber
+    symptomId: $symptomId
+    linked: $linked
+  ) {
+    success
+    productSymptom {
+      id
+      name
+      associatedModelNumbers
+    }
+    modelNumber {
+      id
+      symptoms {
+        id
+        faultCode
+        name
+      }
+    }
+    errors {
+      message
+      path
+    }
+  }
+}

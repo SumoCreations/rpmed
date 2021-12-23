@@ -1,0 +1,25 @@
+mutation UpdateProductRegistration(
+  $productRegistrationInput: ExistingProductRegistrationInput!
+) {
+  response: updateProductRegistration(
+    productRegistrationInput: $productRegistrationInput
+  ) {
+    success
+    productRegistration {
+      id
+      customer {
+        id
+        email
+        name
+      }
+      modelNumber
+      productId
+      customerId
+      serial
+    }
+    errors {
+      path
+      message
+    }
+  }
+}

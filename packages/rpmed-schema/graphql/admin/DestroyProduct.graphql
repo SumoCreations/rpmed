@@ -1,0 +1,13 @@
+mutation DestroyProduct($id: ID!) {
+  response: destroyProduct(id: $id) {
+    product {
+      id
+      name
+      description
+    }
+    errors {
+      message
+      path
+    }
+  }
+}

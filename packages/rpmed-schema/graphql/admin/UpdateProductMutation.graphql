@@ -1,0 +1,13 @@
+mutation UpdateProduct($productInput: ProductInput!) {
+  response: updateProduct(productInput: $productInput) {
+    product {
+      id
+      name
+      description
+    }
+    errors {
+      message
+      path
+    }
+  }
+}

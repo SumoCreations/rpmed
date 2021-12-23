@@ -11,3 +11,5 @@ jspm_packages
 /.vscode
 .DS_Store
 report.*.json
+
+lib

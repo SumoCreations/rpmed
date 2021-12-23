@@ -11,3 +11,5 @@ export * from './rga'
 export * from './rgaGood'
 export * from './temporaryAccessToken'
 export * from './connection'
+export * from "./page"
+export * from "./document"

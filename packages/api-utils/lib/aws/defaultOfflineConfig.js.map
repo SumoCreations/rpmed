@@ -1,1 +1,0 @@
-{"version":3,"file":"defaultOfflineConfig.js","sourceRoot":"","sources":["../../src/aws/defaultOfflineConfig.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AACH,MAAM,CAAC,MAAM,oBAAoB,GAAG;IAClC,WAAW,EAAE,kBAAkB;IAC/B,MAAM,EAAE,WAAW;IACnB,eAAe,EAAE,sCAAsC;CACxD,CAAA"}

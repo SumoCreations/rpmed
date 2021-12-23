@@ -1,0 +1,16 @@
+mutation DestroyPage($id: String!) {
+  response: destroyPage(id: $id) {
+    page {
+      id
+      title
+      keywords
+      description
+      slug
+    }
+    success
+    errors {
+      path
+      message
+    }
+  }
+}

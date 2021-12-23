@@ -1,0 +1,13 @@
+query ModelNumbersSimple {
+  response: modelNumbers {
+    modelNumbers {
+      id
+    }
+    pageSize
+    success
+    errors {
+      path
+      message
+    }
+  }
+}

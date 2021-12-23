@@ -1,0 +1,14 @@
+mutation destroyUser($id: String!) {
+  response: destroyUser(id: $id) {
+    user {
+      id
+      firstName
+      lastName
+      email
+    }
+    errors {
+      message
+      path
+    }
+  }
+}

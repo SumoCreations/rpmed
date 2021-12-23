@@ -1,0 +1,14 @@
+query ModelNumbersLotted {
+  response: modelNumbers {
+    modelNumbers {
+      id
+      lotted
+    }
+    pageSize
+    success
+    errors {
+      path
+      message
+    }
+  }
+}

@@ -1,0 +1,28 @@
+#!/bin/sh -e
+
+usage() {
+  echo "OVERVIEW: Build all workspace packages in order of dependencies."
+  exit
+}
+
+if [ "$1" = '-h' ] || [ "$1" = '--help' ]; then
+  usage
+fi
+
+(
+  PROJECT_ROOT="$(cd $(dirname $0)/..; pwd)"
+
+  cd $PROJECT_ROOT
+  echo "[BOOTSTRAP]: Installing workspace dependencies"
+  yarn install
+  echo "[BOOTSTRAP]: Compiling packages..."
+  yarn workspace utils build
+  yarn workspace session build
+  yarn workspace rpmed-schema build
+  yarn workspace api-utils build
+  yarn workspace api-auth build
+  yarn workspace api-models build
+  yarn workspace api-email build
+  yarn workspace rpmed-ui build
+  yarn workspace rpmed-admin build
+)

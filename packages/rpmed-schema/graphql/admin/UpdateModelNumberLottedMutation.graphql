@@ -1,0 +1,12 @@
+mutation UpdateModelNumberLotted($id: ID!, $lotted: Boolean!) {
+  response: updateModelNumberLotted(id: $id, lotted: $lotted) {
+    modelNumber {
+      id
+      lotted
+    }
+    errors {
+      message
+      path
+    }
+  }
+}

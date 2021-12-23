@@ -1,0 +1,16 @@
+query Pages {
+  response: pages {
+    pages {
+      id
+      title
+      keywords
+      description
+      slug
+    }
+    success
+    errors {
+      path
+      message
+    }
+  }
+}

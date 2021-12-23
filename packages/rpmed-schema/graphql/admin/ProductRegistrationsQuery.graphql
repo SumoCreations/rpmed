@@ -1,0 +1,21 @@
+query ProductRegistrations {
+  response: productRegistrations {
+    productRegistrations {
+      id
+      productId
+      customerId
+      customer {
+        id
+        name
+        email
+      }
+      serial
+      modelNumber
+    }
+    errors {
+      message
+      path
+    }
+    success
+  }
+}

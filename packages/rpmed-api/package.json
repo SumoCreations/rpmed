@@ -1,5 +1,5 @@
 {
-  "name": "rpmed-service-api",
+  "name": "rpmed-api",
   "version": "1.0.0",
   "description": "A serverless GraphQL API for the RPMed Customer Service Portal.",
   "main": "app/index.json",
@@ -37,7 +37,8 @@
     "serverless-plugin-graphiql": "^0.3.0",
     "uuid": "^3.3.2",
     "validator": "^10.11.0",
-    "yup": "^0.27.0"
+    "yup": "^0.27.0",
+    "rpmed-schema": "1.0.0"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^1.7.0",

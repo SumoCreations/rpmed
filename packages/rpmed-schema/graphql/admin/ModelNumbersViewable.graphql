@@ -1,0 +1,14 @@
+query ModelNumbersViewable {
+  response: modelNumbers {
+    modelNumbers {
+      id
+      publiclyViewable
+    }
+    pageSize
+    success
+    errors {
+      path
+      message
+    }
+  }
+}

@@ -1,0 +1,37 @@
+mutation DestroyRGAGood($id: ID!, $rgaId: String!) {
+  response: destroyRGAGood(id: $id, rgaId: $rgaId) {
+    rgaId
+    rgaGood {
+      modelNumber
+      serial
+      id
+      warrantied
+      faultCode
+      status
+      symptomId
+      symptomDescription
+      customerId
+      customerEmail
+      customerName
+      customerPhone
+      customerStreet
+      customerStreet2
+      customerZip
+      customerCity
+      customerState
+      customerCountry
+      customerSpecialty
+      notes
+      rma
+      po
+      additionalComments
+      datePurchased
+      disposition
+    }
+    errors {
+      message
+      path
+    }
+    success
+  }
+}

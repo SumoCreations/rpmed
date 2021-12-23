@@ -1,0 +1,13 @@
+mutation CreateUploads($uploadInput: UploadInput!) {
+  response: createUploads(uploadInput: $uploadInput) {
+    uploads {
+      id
+      url
+    }
+    success
+    errors {
+      message
+      path
+    }
+  }
+}

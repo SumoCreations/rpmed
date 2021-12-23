@@ -1,0 +1,14 @@
+mutation CreateUser($userInput: NewUserInput!) {
+  response: createUser(userInput: $userInput) {
+    user {
+      id
+      firstName
+      lastName
+      email
+    }
+    errors {
+      message
+      path
+    }
+  }
+}

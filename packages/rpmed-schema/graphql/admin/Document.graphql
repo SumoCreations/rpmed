@@ -1,0 +1,18 @@
+query Document($id: ID!) {
+  response: document(id: $id) {
+    document {
+      id
+      title
+      keywords
+      description
+      slug
+      fileKey
+      url
+    }
+    success
+    errors {
+      path
+      message
+    }
+  }
+}

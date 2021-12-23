@@ -1,0 +1,11 @@
+mutation DestroyProductRegistration($id: String!) {
+  response: destroyProductRegistration(id: $id) {
+    productRegistration {
+      id
+    }
+    errors {
+      message
+      path
+    }
+  }
+}
