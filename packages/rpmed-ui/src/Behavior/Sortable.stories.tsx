@@ -23,7 +23,7 @@ const Template: Story<SortableProps> = (args) => {
     {
       index: 0,
       text: 'Doug Cholewa',
-      color: 'bg-accent-default',
+      color: 'bg-accent',
     },
     {
       index: 1,

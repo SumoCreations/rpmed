@@ -53,7 +53,7 @@ const borderForAlignment = (alignment: SideBarAlignment) =>
 
 const colorsForAppearance = (appearance: SideBarAppearance) =>
   appearance === 'navigator'
-    ? 'border-gray-300 bg-primary-default'
+    ? 'border-gray-300 bg-primary'
     : 'border-gray-300 bg-gray-100'
 
 export const SideBar: FC<SideBarProps> = ({

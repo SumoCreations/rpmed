@@ -44,7 +44,7 @@ const BASE_TAB = (args: TabStyleArgs) =>
 const DEFAULT_TAB = (args: TabStyleArgs) =>
   `${BASE_TAB(args)} bg-gray-200 hover:bg-gray-300`
 const SELECTED_TAB = (args: TabStyleArgs) =>
-  `${BASE_TAB(args)} bg-primary-default hover:bg-primary-default`
+  `${BASE_TAB(args)} bg-primary hover:bg-primary`
 
 export const Tab: FC<TabProps> = ({
   icon,

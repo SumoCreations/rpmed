@@ -25,7 +25,7 @@ export interface ButtonProps {
 
 const BUTTON_STYLES =
   'rounded font-semibold text-sm text-center uppercase px-5 py-3 w-auto'
-const LINK_STYLES = 'flex font-semibold text-primary-default underline'
+const LINK_STYLES = 'flex font-semibold text-primary underline'
 const DISABLED_STYLES = 'opacity-50 cursor-not-allowed'
 
 export const backgroundStyles = (appearance?: ButtonAppearance) => {
@@ -33,7 +33,7 @@ export const backgroundStyles = (appearance?: ButtonAppearance) => {
     case 'primary':
       return 'bg-button text-white'
     case 'secondary':
-      return 'bg-white border-2 border-primary-default text-primary-default'
+      return 'bg-white border-2 border-primary text-primary'
     case 'destructive':
       return 'bg-red-600 text-white'
     case 'accent':

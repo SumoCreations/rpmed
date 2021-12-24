@@ -43,7 +43,7 @@ const CONTAINER_STYLES = 'flex flex-col'
 const ICON_WRAPPER_STYLES = 'absolute inset-y-0 flex text-contentAreaBorder'
 const ICON_STYLES = 'm-auto text-gray-500'
 const WRAPPER_STYLES = 'relative flex flex-grow flex-wrap'
-const REQUIRED_STYLES = 'text-accent-default text-xs mx-2 my-auto'
+const REQUIRED_STYLES = 'text-accent text-xs mx-2 my-auto'
 
 const getGrowStyle = (grow?: boolean) => (grow ? 'flex-grow' : '')
 const getDisabledStyle = (disabled?: boolean) => (disabled ? 'opacity-75' : '')

@@ -1,8 +1,13 @@
-// tailwind.config.js
 module.exports = {
-  purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
+  content: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
   darkMode: 'media', // or 'media' or 'class'
   theme: {
+    inset: {
+      0: 0,
+      auto: 'auto',
+      '1/2': '50%',
+      100: '100%',
+    },
     extend: {
       colors: {
         body: '#3b3a3d',

@@ -5,8 +5,8 @@ import { LoginForm, LoginFormValues } from '../Forms'
 const styles = {
   container: 'flex flex-row h-screen w-screen',
   content: 'flex-shrink-0 flex-grow py-4 px-8',
-  accentOne: 'w-0 sm:w-4 lg:w-1/4 bg-primary-default',
-  accentTwo: 'w-0 sm:w-8 lg:w-1/3 bg-accent-default',
+  accentOne: 'w-0 sm:w-4 lg:w-1/4 bg-primary',
+  accentTwo: 'w-0 sm:w-8 lg:w-1/3 bg-accent',
 }
 
 export interface LoginScreenProps {}

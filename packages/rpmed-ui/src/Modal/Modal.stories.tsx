@@ -18,8 +18,8 @@ const Template: Story<ModalProps> = (args) => {
   return (
     <>
       <Modal {...args} open={open} onClose={handleClose}>
-        <form>
-          <Fields grow>
+        <form className="pb-2">
+          <Fields grow register={() => {}}>
             <TextField
               label="Customer Name"
               name="name"

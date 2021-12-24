@@ -2,7 +2,7 @@ import React from 'react'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { DndProvider } from 'react-dnd'
 import { addDecorator } from '@storybook/react'
-import '../src/scss/tailwind.scss'
+import '../src/scss/tailwind.css'
 
 export const parameters = {
   actions: { argTypesRegex: '^on[A-Z].*' },

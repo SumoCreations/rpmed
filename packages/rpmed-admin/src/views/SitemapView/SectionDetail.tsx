@@ -172,7 +172,7 @@ export const SectionDetail: React.FC<SectionProps> = ({
             </a>
           </p>
           <button
-            className="bg-button rounded text-sm font-bold text-white py-1 px-2 ml-auto my-1 mr-1"
+            className="bg-button rounded text-sm font-bold text-white px-2 ml-auto my-1 mr-1"
             onClick={handleAddItem}
           >
             <FontAwesomeIcon icon={faPlus} /> Add an Item

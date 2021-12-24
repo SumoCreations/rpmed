@@ -17,8 +17,8 @@ export interface IconProps {
 
 const BASE_ICON = 'flex m-auto'
 const DEFAULT_ICON = `${BASE_ICON} text-current`
-const PRIMARY_ICON = `${BASE_ICON} text-accent-default`
-const SECONDARY_ICON = `${BASE_ICON} text-primary-default hover:text-primary-dark`
+const PRIMARY_ICON = `${BASE_ICON} text-accent`
+const SECONDARY_ICON = `${BASE_ICON} text-primary hover:text-primary-dark`
 const NEGATIVE_ICON = `${BASE_ICON} text-white`
 
 const classForMode = (mode?: IconRendererMode) => {

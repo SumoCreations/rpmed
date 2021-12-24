@@ -22,7 +22,7 @@ export const Secondary = Template.bind({})
 Secondary.args = { mode: 'secondary', icon: faPlus, label: 'New' }
 
 const DarkTemplate: Story<IconButtonProps> = (args) => (
-  <div className="bg-primary-default p-10 flex">
+  <div className="bg-primary p-10 flex">
     <IconButton {...args} />
   </div>
 )

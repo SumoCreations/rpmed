@@ -51,5 +51,5 @@ export const Custom = Template.bind({})
 Custom.args = {
   appearance: 'custom',
   className:
-    'border-gray-100 border-2 text-primary-default shadow-md px-3 py-1 font-light rounded-full',
+    'border-gray-100 border-2 text-primary shadow-md px-3 py-1 font-light rounded-full',
 }

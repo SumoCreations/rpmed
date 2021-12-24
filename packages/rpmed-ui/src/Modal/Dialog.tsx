@@ -1,6 +1,6 @@
-import React from "react"
-import { Button, ButtonGroup } from ".."
-import { Modal, ModalProps } from "./Modal"
+import React from 'react'
+import { Button, ButtonGroup } from '..'
+import { Modal, ModalProps } from './Modal'
 
 export interface DialogProps extends ModalProps {
   cancelLabel?: string
@@ -10,7 +10,7 @@ export interface DialogProps extends ModalProps {
   onConfirm: () => void
 }
 
-const MESSAGE_STYLES = "text-md px-2 mb-4"
+const MESSAGE_STYLES = 'text-md px-2 mb-4'
 
 export const Dialog: React.FC<DialogProps> = ({
   children,
@@ -28,14 +28,18 @@ export const Dialog: React.FC<DialogProps> = ({
         {handleCancel ? (
           <Button
             appearance="secondary"
-            className="w-full"
+            className="w-full flex-grow"
             onClick={handleCancel}
           >
-            {cancelLabel ?? "Cancel"}
+            {cancelLabel ?? 'Cancel'}
           </Button>
         ) : null}
-        <Button appearance="primary" className="w-full" onClick={handleConfirm}>
-          {confirmLabel ?? "Confirm"}
+        <Button
+          appearance="primary"
+          className="w-full flex-grow"
+          onClick={handleConfirm}
+        >
+          {confirmLabel ?? 'Confirm'}
         </Button>
       </ButtonGroup>
     </Modal>

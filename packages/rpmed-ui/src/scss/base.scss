@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind forms;
+@tailwind utilities;
 
 .client__multi__select_container {
   .client__multi__select__control {
@@ -20,5 +21,3 @@
     @apply text-gray-300;
   }
 }
-
-@tailwind utilities;

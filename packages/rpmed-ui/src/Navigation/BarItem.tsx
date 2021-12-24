@@ -62,13 +62,13 @@ export interface BarItemProps {
 }
 
 const BUTTON_ITEM =
-  'relative text-primary-default border border-primary-default text-xs lg:text-sm px-1 lg:px-2 my-auto h-8 xl:h-10 first:rounded-l-lg first:border-r-0 last:rounded-r-lg last:border-l-0 hover:bg-gray-200'
+  'relative text-primary border border-primary text-xs lg:text-sm px-1 lg:px-2 my-auto h-8 xl:h-10 first:rounded-l-lg first:border-r-0 last:rounded-r-lg last:border-l-0 hover:bg-gray-200'
 const BASE_ITEM =
   'outline-none active:outline-none border-0 my-auto h-8 w-8 lg:w-10 lg:h-10 hover:bg-gray-200 rounded-full relative transition ease-out duration-200 flex-shrink-0'
 const DISABLED_ITEM = `opacity-50 cursor-not-allowed pointer-events-none`
 const NEGATIVE_INDICATED_ITEM = `${BASE_ITEM} bg-gray-200 hover:bg-gray-300`
-const PRIMARY_INDICATED_ITEM = `${BASE_ITEM} bg-accent-default hover:bg-accent-default-dark`
-const SECONDARY_INDICATED_ITEM = `${BASE_ITEM} bg-primary-default hover:bg-primary-dark`
+const PRIMARY_INDICATED_ITEM = `${BASE_ITEM} bg-accent hover:bg-accent-dark`
+const SECONDARY_INDICATED_ITEM = `${BASE_ITEM} bg-primary hover:bg-primary-dark`
 
 const styleForItem = ({
   indicated,

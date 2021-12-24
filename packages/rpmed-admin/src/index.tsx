@@ -1,9 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
-import './bootstrap-reboot.css'
 import * as serviceWorker from './serviceWorker'
 import './index.css'
+import 'rpmed-ui/lib/rpmed-ui.scss'
 
 ReactDOM.render(<App />, document.getElementById('root'))
 

@@ -2,7 +2,7 @@ import React from 'react'
 import clsx from 'clsx'
 
 const BAR_HEADER_STYLE = `flex flex-col mx-1 my-auto`
-const PRIMARY_HEADER_STYLE = 'font-bold text-primary-default text-sm'
+const PRIMARY_HEADER_STYLE = 'font-bold text-primary text-sm'
 const SECONDARY_HEADER_STYLE = 'font-body text-rose-darkest text-xs -mt-1'
 
 export interface BarHeaderProps {
