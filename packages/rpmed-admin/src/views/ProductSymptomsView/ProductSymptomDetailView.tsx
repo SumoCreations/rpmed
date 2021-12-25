@@ -225,7 +225,7 @@ const View: React.FunctionComponent<RouteComponentProps<
         <Grid.Row>
           <Grid.Col span={16}>
             <SymptomDetailView
-              productSymptom={productSymptom || ({} as ProductSymptom)}
+              productSymptom={(productSymptom || {}) as ProductSymptom}
               loading={loading}
             />
           </Grid.Col>
