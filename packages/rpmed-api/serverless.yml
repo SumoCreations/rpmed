@@ -1,5 +1,5 @@
-service:
-  name: rpmed-service-api
+service: rpmed-service-api
+variablesResolutionMode: 20210326
 
 plugins:
   - serverless-webpack
@@ -20,9 +20,9 @@ custom:
     seed:
       dev:
         sources:
-          - table: ${self:service}-${opt:stage, self:provider.stage}-resources
+          - table: ${self:service}-${opt:stage}-resources
             sources: [./seed/resources.json]
-          - table: ${self:service}-${opt:stage, self:provider.stage}-users-lookup
+          - table: ${self:service}-${opt:stage}-users-lookup
             sources: [./seed/usersLookup.json]
   adminEmail:
     dev: jim@sumocreations.com
@@ -41,12 +41,12 @@ custom:
     staging: false
     prod: false
   customDomain:
-    domainName: ${self:custom.domain.${opt:stage, self:provider.stage}}
+    domainName: ${self:custom.domain.${opt:stage}}
     basePath: ''
-    stage: ${opt:stage, self:provider.stage}
+    stage: ${opt:stage}
     createRoute53Record: true
-  generatedDocumentsBucket: ${self:service}-${opt:stage, self:provider.stage}-generated-documents
-  backgroundJobTopic: '${self:service}-${opt:stage, self:provider.stage}-sns-background-job'
+  generatedDocumentsBucket: ${self:service}-${opt:stage}-generated-documents
+  backgroundJobTopic: '${self:service}-${opt:stage}-sns-background-job'
   backgroundJobTopicTopicArn:
     dev:
       {
@@ -90,30 +90,31 @@ provider:
   runtime: nodejs12.x
   profile: rpmed-serverless
   region: us-west-2
+  lambdaHashingVersion: '20201221'
   environment:
-    ADMIN_EMAIL: ${self:custom.adminEmail.${opt:stage, self:provider.stage}}
+    ADMIN_EMAIL: ${self:custom.adminEmail.${opt:stage}}
     ACCESS_TOKEN_LIFESPAN: 5m
     REFRESH_TOKEN_LIFESPAN: 7d
     SALT_ROUNDS: 10
-    APOLLO_INTROSPECTION: ${self:custom.apolloIntrospection.${opt:stage, self:provider.stage}}
-    CLIENT_DOMAIN: ${self:custom.clientDomain.${opt:stage, self:provider.stage}}
+    APOLLO_INTROSPECTION: ${self:custom.apolloIntrospection.${opt:stage}}
+    CLIENT_DOMAIN: ${self:custom.clientDomain.${opt:stage}}
     RECAPTCHA_KEY: 6LdOqZoUAAAAAJ79IuWa4mU57Urnd-N6oxP4XhiR
     OAUTH_SIGNATURE: 'Ph$2\@!Rq<ev_W;:N(2+>Bwxez$3?;9~srf*nxiVJLz:lw7Djgs(Q/UhwmZ@"YLi<'
-    ATTACHED_IMAGES_BUCKET: ${self:service}-${opt:stage, self:provider.stage}-attached-images
+    ATTACHED_IMAGES_BUCKET: ${self:service}-${opt:stage}-attached-images
     GENERATED_DOCUMENTS_BUCKET: ${self:custom.generatedDocumentsBucket}
-    DYNAMODB_RESOURCES_TABLE: ${self:service}-${opt:stage, self:provider.stage}-resources
+    DYNAMODB_RESOURCES_TABLE: ${self:service}-${opt:stage}-resources
     DYNAMODB_RESOURCES_GSI_1: GSI_1
     DYNAMODB_RESOURCES_GSI_2: GSI_2
-    DYNAMODB_USER_LOOKUP_TABLE: ${self:service}-${opt:stage, self:provider.stage}-users-lookup
-    DYNAMODB_TOKEN_LOOKUP_TABLE: ${self:service}-${opt:stage, self:provider.stage}-tokens-lookup
+    DYNAMODB_USER_LOOKUP_TABLE: ${self:service}-${opt:stage}-users-lookup
+    DYNAMODB_TOKEN_LOOKUP_TABLE: ${self:service}-${opt:stage}-tokens-lookup
     SES_SOURCE_ARN: arn:aws:ses:us-west-2:426380452104:identity/rpmed-apps.com
-    PDF_RENDER_TOPIC_ARN: ${cf:rpmed-puppeteer-${opt:stage, self:provider.stage}.RenderTopicExport}
-    SNS_EXECUTE_BACKGROUND_JOB: ${self:custom.backgroundJobTopicTopicArn.${opt:stage, self:provider.stage}}
+    PDF_RENDER_TOPIC_ARN: ${cf:rpmed-puppeteer-${opt:stage}.RenderTopicExport}
+    SNS_EXECUTE_BACKGROUND_JOB: ${self:custom.backgroundJobTopicTopicArn.${opt:stage}}
   iamRoleStatements:
     - Effect: Allow
       Action:
         - sns:Publish
-      Resource: ${cf:rpmed-puppeteer-${opt:stage, self:provider.stage}.RenderTopicExport}
+      Resource: ${cf:rpmed-puppeteer-${opt:stage}.RenderTopicExport}
     - Effect: Allow
       Action:
         - sns:DeleteEndpoint
@@ -145,7 +146,7 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
         - dynamodb:BatchGetItem
-      Resource: 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:service}-${opt:stage, self:provider.stage}-*'
+      Resource: 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:service}-${opt:stage}-*'
 
 functions:
   graphql:
