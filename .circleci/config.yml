@@ -185,7 +185,7 @@ jobs:
           aws-access-key-id: AWS_ACCESS_KEY_ID
           aws-region: AWS_ACCESS_DEFAULT_REGION
       - run:
-          command: cd packages/rpmed-api && serverless deploy -s $STAGE
+          command: cd packages/rpmed-api && yarn run serverless deploy -s $STAGE
           name: deploy
 
   deploy_rpmed_admin:
