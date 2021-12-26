@@ -157,7 +157,13 @@ jobs:
     executor:
       name: node/default
       tag: '16.13.1'
+    resource_class: xlarge
     steps:
+      - aws-cli/setup:
+          profile-name: rpmed-serverless
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-region: AWS_ACCESS_DEFAULT_REGION
       - test-workspace:
           workspace: 'rpmed-admin'
 
