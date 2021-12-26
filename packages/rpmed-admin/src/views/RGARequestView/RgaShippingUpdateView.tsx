@@ -54,7 +54,7 @@ const validationSchema = Yup.object().shape({
   shippingUpdates: Yup.array(
     Yup.object().shape({
       carrier: Yup.string().when('status', {
-        is: s => s === RgaShippingStatus.Shipped,
+        is: (s: RgaShippingStatus) => s === RgaShippingStatus.Shipped,
         then: Yup.string().required('cannot be blank'),
       }),
       message: Yup.string().when(['status', 'recipients'], {
@@ -62,12 +62,12 @@ const validationSchema = Yup.object().shape({
         then: Yup.string().required('cannot be blank'),
       }),
       recipients: Yup.array(RequiredEmail()).when('status', {
-        is: s => s === RgaShippingStatus.Shipped,
+        is: (s: RgaShippingStatus) => s === RgaShippingStatus.Shipped,
         then: Yup.array(RequiredEmail()).min(1),
       }),
       status: Yup.string().required('cannot be blank'),
       tracking: Yup.string().when('status', {
-        is: s => s === RgaShippingStatus.Shipped,
+        is: (s: RgaShippingStatus) => s === RgaShippingStatus.Shipped,
         then: Yup.string().required('cannot be blank'),
       }),
     })
@@ -136,31 +136,31 @@ export const RGAShippingUpdateView: React.FC<RouteComponentProps<
             initialValues={
               rga
                 ? {
-                  notes: '',
-                  shippingUpdates: rga.goods
-                    .map(g => g as RgaGood)
-                    .map(
-                      g =>
-                      ({
-                        id: g.id,
-                        message:
-                          'Hello ${NAME}, MedLED® Lighting has processed headlight return. Please keep the following details for your records.\n\nTracking Number: ${TRACKING} (${TRACKING_URL})\nModel Number / Serial: ${MODEL} / ${SERIAL}',
-                        recipients: [
-                          g.customerEmail,
-                          rga.submittedBy,
-                        ].filter(r => r && r.length > 0),
-                        status: RgaShippingStatus.Shipped,
-                        tracking: '',
-                      } as RgaGoodShippingInput)
-                    ),
-                  status: RgaStatus.Shipping,
-                }
+                    notes: '',
+                    shippingUpdates: rga.goods
+                      .map(g => g as RgaGood)
+                      .map(
+                        g =>
+                          ({
+                            id: g.id,
+                            message:
+                              'Hello ${NAME}, MedLED® Lighting has processed headlight return. Please keep the following details for your records.\n\nTracking Number: ${TRACKING} (${TRACKING_URL})\nModel Number / Serial: ${MODEL} / ${SERIAL}',
+                            recipients: [
+                              g.customerEmail,
+                              rga.submittedBy,
+                            ].filter(r => r && r.length > 0),
+                            status: RgaShippingStatus.Shipped,
+                            tracking: '',
+                          } as RgaGoodShippingInput)
+                      ),
+                    status: RgaStatus.Shipping,
+                  }
                 : {
-                  notes: '',
-                  recipients: [],
-                  shippingUpdates: [] as RgaGoodShippingInput[],
-                  status: RgaStatus.Shipping,
-                }
+                    notes: '',
+                    recipients: [],
+                    shippingUpdates: [] as RgaGoodShippingInput[],
+                    status: RgaStatus.Shipping,
+                  }
             }
             enableReinitialize={true}
             onSubmit={handleSubmitForm}
@@ -238,7 +238,7 @@ export const RGAShippingUpdateView: React.FC<RouteComponentProps<
                               const isDelayed =
                                 values.shippingUpdates[i] &&
                                 values.shippingUpdates[i].status ===
-                                RgaShippingStatus.Delayed
+                                  RgaShippingStatus.Delayed
                               const noRecipients =
                                 (values.shippingUpdates[i].recipients || [])
                                   .length < 1
