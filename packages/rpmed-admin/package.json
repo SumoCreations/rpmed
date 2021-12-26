@@ -93,5 +93,16 @@
     "@types/uuid": "^3.4.5",
     "@types/validator": "^10.9.0",
     "@types/yup": "^0.29.13"
+  },
+  "jest": {
+    "transformIgnorePatterns": [
+      "^.+\\.module\\.(css|sass|scss)$",
+      "/node_modules/(?!(@sumocreations/forms|rpmed-validation-schema)/)"
+    ],
+    "moduleNameMapper": {
+      "\\.(css|less)$": "identity-obj-proxy",
+      "^react-native$": "react-native-web",
+      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
+    }
   }
 }
