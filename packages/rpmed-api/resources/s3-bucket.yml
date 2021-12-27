@@ -59,4 +59,4 @@ Outputs:
     Value:
       Ref: GeneratedDocumentsBucket
     Export:
-      Name: GeneratedDocumentsBucket${opt:stage, self:provider.stage}
+      Name: GeneratedDocumentsBucket${opt:stage, "dev"}

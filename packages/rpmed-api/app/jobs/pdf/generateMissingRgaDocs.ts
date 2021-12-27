@@ -1,6 +1,6 @@
 import { dispatch } from '../dispatch'
-
-import { RGA, RGAGood, ConnectedQuery, IRGA } from '../../models'
+import { ConnectedQuery } from 'api-models'
+import { RGA, RGAGood, IRGA } from '../../models'
 import { PdfJobParams } from './types'
 import { BackgroundJob } from '../types'
 

@@ -13,8 +13,12 @@ module.exports = {
   entry: entries,
   devtool: 'source-map',
   resolve: {
-    extensions: ['.js', '.jsx', '.json', '.ts', '.tsx'],
+    extensions: ['.ts', '.tsx', '.mjs', '.json', '.js', '.jsx'],
+    // plugins: [PnpWebpackPlugin],
   },
+  // resolveLoader: {
+  //   plugins: [PnpWebpackPlugin.moduleLoader(module)],
+  // },
   output: {
     libraryTarget: 'commonjs',
     path: path.join(__dirname, '.webpack'),
@@ -40,7 +44,7 @@ module.exports = {
       // all files with a `.ts` or `.tsx` extension will be handled by `ts-loader`
       {
         test: /\.tsx?$/,
-        loader: 'ts-loader',
+        loader: require.resolve('ts-loader'),
         options: {
           // disable type checker - we will use it in fork plugin
           transpileOnly: true,

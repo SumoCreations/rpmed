@@ -1,4 +1,4 @@
-import { connectedQuery } from './connection'
+import { connectedQuery } from 'api-models'
 import { padStart } from 'lodash'
 import { DateTime } from 'luxon'
 import { RgaStatus } from '../schema'
