@@ -1,5 +1,5 @@
 require('dotenv').config()
-const tables = {
+module.exports = {
   tables: [
     {
       AttributeDefinitions: [
@@ -178,13 +178,5 @@ const tables = {
       ],
       TableName: process.env.DYNAMODB_USER_LOOKUP_TABLE,
     },
-    // etc
   ],
 }
-
-console.log(
-  'Creating tables:',
-  tables.tables.map(s => s.TableName)
-)
-
-module.exports = tables
