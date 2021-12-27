@@ -1,4 +1,5 @@
 import { ApolloServer } from 'apollo-server-lambda'
+import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core'
 import { schema } from './graphql'
 
 import { localeFromLanguage } from './locales'
@@ -27,17 +28,16 @@ const server = new ApolloServer({
     return response
   },
   introspection: process.env.APOLLO_INTROSPECTION === 'true' ? true : false,
-  playground: {
-    settings: {
-      'editor.theme': 'light',
-    },
-  },
+  plugins: [
+    ApolloServerPluginLandingPageGraphQLPlayground({
+      settings: {
+        'editor.theme': 'dark',
+      },
+    }),
+  ],
   schema,
 })
 
 export const graphqlHandler = server.createHandler({
-  cors: {
-    credentials: true,
-    origin: true,
-  },
+  expressGetMiddlewareOptions: { cors: true },
 })
