@@ -13,3 +13,4 @@ jspm_packages
 report.*.json
 
 lib
+/packages/rpmed-api/.env

@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "@sentry/node": "^5.27.3",
-    "@sentry/tracing": "^5.27.3"
+    "@sentry/tracing": "^5.27.3",
+    "aws-sdk": "^2.1048.0"
   }
 }
