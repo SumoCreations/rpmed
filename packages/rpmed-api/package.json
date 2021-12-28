@@ -9,16 +9,17 @@
     "test": "npm run jestInline",
     "start": "npm run dynamo & serverless offline start -s dev",
     "lint": "tslint -p tsconfig.json",
-    "schema": "graphql-codegen --config codegen.yml",
     "startDynamo": "docker run --name dynamoLocal -d -p 8000:8000 amazon/dynamodb-local",
     "stopDynamo": "docker stop dynamoLocal; docker rm dynamoLocal",
     "dynamo": "npm run stopDynamo; npm run startDynamo",
-    "prettier": "prettier --config ./.prettierrc 'app/**/*.{ts,tsx}' --write"
+    "prettier": "prettier --config ./.prettierrc 'app/**/*.{ts,tsx}' --write",
+    "buildSchema": "ts-node ./app/graphql/mergeSchema.ts"
   },
   "files": [
     "app/**/*"
   ],
   "dependencies": {
+    "@graphql-tools/load-files": "^6.5.3",
     "apollo-server-lambda": "^3.5.0",
     "bcryptjs": "^2.4.3",
     "dotenv": "^10.0.0",
@@ -78,6 +79,7 @@
     "source-map-support": "^0.5.6",
     "ts-jest": "^27.1.2",
     "ts-loader": "^4.2.0",
+    "ts-node": "^10.4.0",
     "tslint": "^5.14.0",
     "tslint-config-prettier": "^1.18.0",
     "typescript": "^4.0.5",

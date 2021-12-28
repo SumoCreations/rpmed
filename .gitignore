@@ -14,3 +14,4 @@ report.*.json
 
 lib
 .env
+/packages/rpmed-api/schema.graphql

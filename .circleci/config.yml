@@ -32,6 +32,7 @@ commands:
                 echo 'export STAGE="dev"' >> $BASH_ENV
                 echo 'export ADMIN_REPO="rpmed-service-admin-dev"' >> $BASH_ENV
                 echo 'export REACT_APP_STAGE="dev"' >> $BASH_ENV
+                echo 'export APOLLO_KEY="service:RPMed-Dev:yH3UUaP7dqiagbDtt_h5Pg"' >> $BASH_ENV
                 ;;
             esac
 
@@ -187,6 +188,12 @@ jobs:
           aws-secret-access-key: AWS_SECRET_ACCESS_KEY
           aws-access-key-id: AWS_ACCESS_KEY_ID
           aws-region: AWS_ACCESS_DEFAULT_REGION
+      - run:
+          command: curl -sSL https://rover.apollo.dev/nix/latest | sh
+          name: Install Rover
+      - run: |
+          yarn workspace rpmed-api buildSchema
+          rover graph publish RPMed-Dev@current --schema packages/rpmed-api/schema.graphql
       - run:
           command: cd packages/rpmed-api && yarn run serverless deploy -s $STAGE
           name: deploy
