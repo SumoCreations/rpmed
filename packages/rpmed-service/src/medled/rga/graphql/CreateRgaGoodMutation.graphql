@@ -1,0 +1,42 @@
+mutation CreateRGAGood($rgaId: String!, $rgaGoodInput: RGAGoodInput!) {
+  response: createRGAGood(rgaId: $rgaId, rgaGoodInput: $rgaGoodInput) {
+    rgaId
+    rgaGood {
+      id
+      rgaId
+      customerId
+      customerEmail
+      customerName
+      customerPhone
+      customerStreet
+      customerStreet2
+      customerZip
+      customerCity
+      customerState
+      customerCountry
+      faultCode
+      serial
+      lotted
+      preApproved
+      productId
+      productName
+      productType
+      symptomId
+      symptomDescription
+      symptomSolution
+      symptomSynopsis
+      modelNumber
+      po
+      rma
+      warrantied
+      warrantyTerm
+      warrantyDescription
+      notes
+    }
+    errors {
+      message
+      path
+    }
+    success
+  }
+}

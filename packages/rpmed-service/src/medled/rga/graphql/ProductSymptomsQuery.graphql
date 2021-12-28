@@ -1,0 +1,26 @@
+query ProductSymptoms($search: String, $modelNumber: String) {
+  response: productSymptoms(search: $search, modelNumber: $modelNumber) {
+    productSymptoms {
+      id
+      name
+      faultCode
+      fee
+      preApproved
+      careTip
+      solution
+      synopsis
+      attachedImages {
+        id
+        position
+        status
+        url
+      }
+    }
+    pageSize
+    errors {
+      message
+      path
+    }
+    success
+  }
+}

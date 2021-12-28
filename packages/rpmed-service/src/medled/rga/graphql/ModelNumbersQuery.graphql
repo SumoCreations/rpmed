@@ -1,0 +1,39 @@
+query ModelNumbers(
+  $search: String
+  $productId: String
+  $productType: ProductType
+) {
+  response: modelNumbers(
+    search: $search
+    productId: $productId
+    productType: $productType
+    public: true
+  ) {
+    modelNumbers {
+      id
+      lotted
+      warrantyTerm
+      warrantyDescription
+      productType
+      feeWithWarranty {
+        distributor
+        endUser
+      }
+      products {
+        id
+        name
+      }
+      feeWithoutWarranty {
+        distributor
+        endUser
+      }
+      description
+    }
+    pageSize
+    success
+    errors {
+      path
+      message
+    }
+  }
+}

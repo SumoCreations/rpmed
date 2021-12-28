@@ -1,0 +1,89 @@
+{
+  "name": "rpmed-service",
+  "version": "0.1.0",
+  "private": true,
+  "proxy": "https://dev-api.rpmed-apps.com",
+  "dependencies": {
+    "@apollo/react-hooks": "^3.1.5",
+    "@fortawesome/fontawesome-svg-core": "^1.2.34",
+    "@fortawesome/pro-light-svg-icons": "^5.15.2",
+    "@fortawesome/pro-regular-svg-icons": "^5.15.2",
+    "@fortawesome/pro-solid-svg-icons": "^5.15.2",
+    "@fortawesome/react-fontawesome": "^0.1.14",
+    "@types/lodash.debounce": "^4.0.6",
+    "@types/lodash.get": "^4.4.6",
+    "@types/query-string": "^6.3.0",
+    "@types/rebass": "^4.0.8",
+    "@apollo/client": "3.5.6",
+    "escape-string-regexp": "^1.0.5",
+    "formik": "^2.2.6",
+    "lodash.debounce": "^4.0.8",
+    "lodash.get": "^4.4.2",
+    "polished": "^3.7.1",
+    "prettier": "^1.19.1",
+    "query-string": "^6.14.1",
+    "@testing-library/jest-dom": "^5.16.1",
+    "@testing-library/react": "^12.1.2",
+    "@testing-library/user-event": "^13.5.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-scripts": "5.0.0",
+    "web-vitals": "^2.1.2",
+    "react-google-recaptcha": "^1.0.5",
+    "react-helmet": "6.1.0",
+    "react-redux": "^6.0.0",
+    "react-router": "^5.2.0",
+    "react-router-dom": "^5.2.0",
+    "rebass": "^4.0.7",
+    "redux": "^4.0.5",
+    "redux-thunk": "^2.3.0",
+    "styled-components": "^4.4.1",
+    "validator": "^10.11.0",
+    "yup": "^0.32.11",
+    "rpmed-schema": "1.0.0",
+    "rpmed-ui": "1.0.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "prettier": "prettier --config ./.prettierrc 'src/**/*.{ts,tsx}' --write",
+    "import": "node ./csv-import.js"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "devDependencies": {
+    "@types/jest": "^24.0.11",
+    "@types/react": "^17.0.3",
+    "@types/react-dom": "^17.0.2",
+    "@types/react-fontawesome": "^1.6.4",
+    "@types/react-google-recaptcha": "^0.10.2",
+    "@types/react-helmet": "^5.0.16",
+    "@types/react-redux": "^6.0.11",
+    "@types/react-router": "^5.1.12",
+    "@types/react-router-dom": "^5.1.7",
+    "@types/validator": "^10.9.0",
+    "@types/yup": "^0.29.13",
+    "csv-parse": "^4.15.3",
+    "typescript": "^4.0.5"
+  },
+  "jest": {
+    "transformIgnorePatterns": [
+      "^.+\\.module\\.(css|sass|scss)$",
+      "/node_modules/(?!(@sumocreations/forms|rpmed-validation-schema|api-models|api-utils)/)"
+    ],
+    "moduleNameMapper": {
+      "\\.(css|less)$": "identity-obj-proxy",
+      "^react-native$": "react-native-web",
+      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
+    }
+  }
+}
