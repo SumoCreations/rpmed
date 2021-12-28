@@ -45,6 +45,10 @@ custom:
     dev: true
     staging: false
     prod: false
+  apolloVariant:
+    dev: dev
+    staging: staging
+    prod: current
   customDomain:
     domainName: ${self:custom.domain.${opt:stage, "dev"}}
     basePath: ''
@@ -97,9 +101,9 @@ provider:
   region: us-west-2
   lambdaHashingVersion: '20201221'
   environment:
-    APOLLO_KEY: service:RPMed-Dev:yH3UUaP7dqiagbDtt_h5Pg
-    APOLLO_GRAPH_ID: RPMed-Dev
-    APOLLO_GRAPH_VARIANT: current
+    APOLLO_KEY: service:RPMed-API:jAyBkz50LpxvPcXuP_b97g
+    APOLLO_GRAPH_ID: RPMed-API
+    APOLLO_GRAPH_VARIANT: ${self:custom.apolloVariant.${opt:stage, 'dev'}}
     APOLLO_SCHEMA_REPORTING: true
     ADMIN_EMAIL: ${self:custom.adminEmail.${opt:stage, 'dev'}}
     ACCESS_TOKEN_LIFESPAN: 5m

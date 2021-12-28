@@ -13,7 +13,7 @@
     "stopDynamo": "docker stop dynamoLocal; docker rm dynamoLocal",
     "dynamo": "npm run stopDynamo; npm run startDynamo",
     "prettier": "prettier --config ./.prettierrc 'app/**/*.{ts,tsx}' --write",
-    "buildSchema": "ts-node ./app/graphql/mergeSchema.ts"
+    "publishSchema": "ts-node ./app/graphql/mergeSchema.ts && rover graph publish $APOLLO_GRAPH_ID@$APOLLO_GRAPH_VARIANT --schema ./schema.graphql"
   },
   "files": [
     "app/**/*"
@@ -38,6 +38,7 @@
     "yup": "^0.27.0"
   },
   "devDependencies": {
+    "@apollo/rover": "^0.4.1",
     "@aws-sdk/client-dynamodb": "^3.45.0",
     "@aws-sdk/types": "^3.40.0",
     "@graphql-codegen/cli": "^1.7.0",
