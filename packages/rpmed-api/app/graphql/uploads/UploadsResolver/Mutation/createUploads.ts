@@ -1,4 +1,4 @@
-import { getS3Client, getUploadsBucket } from 'api-utils'
+import { getS3Client } from 'api-utils'
 import { ErrorList } from '../../../../validations'
 
 interface IUploadInput {
@@ -22,7 +22,7 @@ const s3 = getS3Client()
 const getUploadURL = (key: string): Promise<IUpload> =>
   new Promise((resolve, reject) => {
     const params = {
-      Bucket: getUploadsBucket(),
+      Bucket: process.env.ATTACHED_IMAGES_BUCKET,
       Key: key,
     }
     s3.getSignedUrl('putObject', params, (err, data) => {
