@@ -1,5 +1,6 @@
 import { v4 as uuid } from 'uuid'
-import { filterBlankAttributes, getDynamoClient } from '../util'
+import { getDynamoClient } from 'api-utils'
+import { filterBlankAttributes } from 'utils'
 
 /**
  * Dynamo DB Model:
@@ -44,19 +45,15 @@ export interface Document extends DocumentBase {
   indexSortKey: string // slug
 }
 
-export interface DocumentInput extends DocumentBase { }
+export interface DocumentInput extends DocumentBase {}
 
-export interface DocumentOutput extends DocumentBase {
-}
+export interface DocumentOutput extends DocumentBase {}
 
 /**
  * Creates or updates an existing Document model in the database provided the supplied input is valid.
  * @param input The identifying input to assign to the Document.
  */
-const make = async ({
-  id,
-  ...document
-}: DocumentInput): Promise<Document> => {
+const make = async ({ id, ...document }: DocumentInput): Promise<Document> => {
   const existing = await find(id)
   const partitionKey = id ?? uuid()
   const documentAttributes: Document = {
@@ -65,7 +62,7 @@ const make = async ({
     id: partitionKey,
     indexSortKey: document.slug,
     partitionKey,
-    sortKey: `${SECONDARY_KEY}`
+    sortKey: `${SECONDARY_KEY}`,
   }
   console.log(documentAttributes)
   const params = {
@@ -88,7 +85,9 @@ const make = async ({
  * Retreives a specific document by uuid.
  * @param id The UUID used to look up the document.
  */
-const find = async (id?: string | null | undefined): Promise<Document | null> => {
+const find = async (
+  id?: string | null | undefined
+): Promise<Document | null> => {
   if (!id) {
     return null
   }
@@ -110,11 +109,12 @@ const find = async (id?: string | null | undefined): Promise<Document | null> =>
 const findBySlug = async (slug: string): Promise<Document | null> => {
   const searchParams = {
     ExpressionAttributeValues: {
-      ":sortKey": SECONDARY_KEY,
-      ":indexSortKey": slug
+      ':sortKey': SECONDARY_KEY,
+      ':indexSortKey': slug,
     },
     IndexName: 'GSI_1',
-    KeyConditionExpression: 'sortKey = :sortKey AND indexSortKey = :indexSortKey',
+    KeyConditionExpression:
+      'sortKey = :sortKey AND indexSortKey = :indexSortKey',
     TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.query(searchParams).promise()
@@ -134,9 +134,10 @@ const all = async (): Promise<DocumentOutput[]> => {
     TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.query(searchParams).promise()
-  return (result.Items ? (result.Items as Document[]).map(output) : []) as DocumentOutput[]
+  return (result.Items
+    ? (result.Items as Document[]).map(output)
+    : []) as DocumentOutput[]
 }
-
 
 /**
  * Deletes a document.
@@ -175,7 +176,7 @@ const output = ({
   indexSortKey,
   ...document
 }: Document): DocumentOutput => ({
-  ...document
+  ...document,
 })
 
 export const Document = {
@@ -185,5 +186,5 @@ export const Document = {
   find,
   make,
   findBySlug,
-  output
+  output,
 }

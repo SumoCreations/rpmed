@@ -2,8 +2,8 @@ import { connectedQuery } from 'api-models'
 import { padStart } from 'lodash'
 import { DateTime } from 'luxon'
 import { RgaStatus } from '../schema'
-import { filterBlankAttributes, getDynamoClient } from '../util'
-
+import { getDynamoClient } from 'api-utils'
+import { filterBlankAttributes } from 'utils'
 /**
  * Dynamo DB Model:
  * RGA

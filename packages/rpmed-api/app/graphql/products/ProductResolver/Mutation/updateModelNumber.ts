@@ -1,5 +1,5 @@
 import { IModelNumberInput, ModelNumber, Product } from '../../../../models'
-import { generateMutationError } from '../../../../util'
+import { generateMutationError } from 'api-utils'
 import * as Validation from '../../../../validations'
 import {
   ErrorModelNumberIDDoesNotExist,

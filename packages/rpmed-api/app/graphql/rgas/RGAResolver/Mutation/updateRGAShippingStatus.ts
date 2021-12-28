@@ -11,7 +11,7 @@ import {
   RgaShippingStatus,
   RgaStatus,
 } from '../../../../schema'
-import { generateMutationError } from '../../../../util'
+import { generateMutationError } from 'api-utils'
 import * as Validation from '../../../../validations'
 import {
   ErrorRGAWithIDDoesNotExist,

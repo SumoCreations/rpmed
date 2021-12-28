@@ -1,6 +1,7 @@
 import { v4 as uuid } from 'uuid'
-import { filterBlankAttributes, getDynamoClient } from '../util'
+import { getDynamoClient } from 'api-utils'
 import { IModelNumberOutput, ModelNumber } from './modelNumber'
+import { filterBlankAttributes } from 'utils'
 
 /**
  * Dynamo DB Model:

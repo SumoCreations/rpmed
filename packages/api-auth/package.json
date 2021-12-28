@@ -17,6 +17,7 @@
     "extends": "react-app"
   },
   "dependencies": {
+    "aws-sdk": "^2.1048.0",
     "bcryptjs": "^2.4.3"
   },
   "devDependencies": {

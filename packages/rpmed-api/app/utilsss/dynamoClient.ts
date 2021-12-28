@@ -8,9 +8,9 @@ import { isOffline } from './isOffline'
 export const getDynamoClient = () =>
   isOffline()
     ? new AWS.DynamoDB.DocumentClient({
-        accessKeyId: 'MOCK_ACCESS_KEY_ID',
+        accessKeyId: 'access-key',
         endpoint: 'http://localhost:8000',
-        region: 'localhost',
-        secretAccessKey: 'MOCK_SECRET_ACCESS_KEY',
+        region: 'local-env',
+        secretAccessKey: 'secret-key',
       })
     : new AWS.DynamoDB.DocumentClient()

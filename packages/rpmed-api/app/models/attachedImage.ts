@@ -1,4 +1,4 @@
-import { getS3Client, getUploadsBucket } from '../util'
+import { getS3Client } from 'api-utils'
 
 const s3 = getS3Client()
 
@@ -21,7 +21,7 @@ export interface IAttachedImageOutput extends IAttachedImage {
 const getDownloadUrl = (key: string): Promise<string> =>
   new Promise((resolve, reject) => {
     const params = {
-      Bucket: getUploadsBucket(),
+      Bucket: process.env.ATTACHED_IMAGES_BUCKET,
       Key: key,
     }
     s3.getSignedUrl('getObject', params, (err, data) => {

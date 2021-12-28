@@ -1,4 +1,4 @@
-import { getSNSClient } from '../../util'
+import { getSNSClient } from 'api-utils'
 import { RGAGood } from '../../models'
 import { RgaStatus } from '../../schema'
 import { PdfJobParams, RGAGoodDocumentType } from './types'

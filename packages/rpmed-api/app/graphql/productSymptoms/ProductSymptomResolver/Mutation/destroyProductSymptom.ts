@@ -1,5 +1,5 @@
 import { ProductSymptom } from '../../../../models'
-import { generateMutationError } from '../../../../util'
+import { generateMutationError } from 'api-utils'
 import {
   ErrorProductSymptomCouldNotBeDestroyed,
   ErrorProductSymptomWithIDDoesNotExist,

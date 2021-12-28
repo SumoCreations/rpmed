@@ -1,5 +1,5 @@
 import { RGA } from '../../../../models'
-import { generateMutationError } from '../../../../util'
+import { generateMutationError } from 'api-utils'
 import * as Validation from '../../../../validations'
 import { IRGAMutationOutput } from './rgaMutationTypes'
 
@@ -24,6 +24,12 @@ export const updateRGA: UpdateRGAMutation = async (_, { rgaInput }) => {
     return generateMutationError(Validation.formatError(e))
   }
   const existing = await RGA.find(rgaInput.id)
+  if (!existing) {
+    return {
+      errors: [{ path: 'id', message: `RGA ${rgaInput.id} does not exist` }],
+      success: false,
+    }
+  }
   const rga = await RGA.update({
     ...existing,
     id: rgaInput.id,

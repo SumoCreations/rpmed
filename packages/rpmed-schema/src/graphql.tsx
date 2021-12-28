@@ -17,173 +17,38 @@ export type Scalars = {
   Float: number;
 };
 
-/** The root query for the schema. */
-export type Query = {
-  __typename?: 'Query';
-  /** A specific customer in the system via ID. */
-  customer: CustomerQueryOutput;
-  /** All customers in the system */
-  customers: CustomerQueryOutput;
-  /** A specific distributor in the system via ID. */
-  distributor: DistributorQueryOutput;
-  /** All distributors in the system */
-  distributors: DistributorQueryOutput;
-  /** A specific document in the system via ID. */
-  document: DocumentQueryOutput;
-  /** All documents in the system */
-  documents: DocumentQueryOutput;
-  info?: Maybe<Scalars['String']>;
-  /** A specific model number in the system via ID. */
-  modelNumber?: Maybe<ModelNumberQueryOutput>;
-  /** All product variants in the system. */
-  modelNumbers?: Maybe<ModelNumberQueryOutput>;
-  /** A specific page in the system via ID. */
-  page: PageQueryOutput;
-  /** All pages in the system */
-  pages: PageQueryOutput;
-  /** A specific product in the system via ID. */
-  product?: Maybe<ProductQueryOutput>;
-  /** A specific registration in the system via ID. */
-  productRegistration: ProductRegistrationQueryOutput;
-  /** All registrations in the system */
-  productRegistrations: ProductRegistrationQueryOutput;
-  /** All products in the system. */
-  products?: Maybe<ProductQueryOutput>;
-  /** A specific symptom in the system via ID. */
-  productSymptom: ProductSymptomQueryOutput;
-  /** All symptoms in the system */
-  productSymptoms: ProductSymptomQueryOutput;
-  /** A specific RGA in the system via ID. */
-  rga: RgaQueryOutput;
-  /** Query the total for any filtered output. */
-  rgaCount: RgaStatusCountOutput;
-  /** All RGAs in the system */
-  rgas: RgaQueryOutput;
-  /** A specific user in the system via ID. */
-  user?: Maybe<User>;
-  /** All users in the system */
-  users?: Maybe<Array<Maybe<User>>>;
-  /** A specific user in the system via email address. */
-  userWithEmail?: Maybe<User>;
-  version: Scalars['String'];
-};
-
-
-/** The root query for the schema. */
-export type QueryCustomerArgs = {
-  id: Scalars['String'];
-};
-
-
-/** The root query for the schema. */
-export type QueryCustomersArgs = {
-  search?: InputMaybe<Scalars['String']>;
-};
-
-
-/** The root query for the schema. */
-export type QueryDistributorArgs = {
-  id: Scalars['String'];
-};
-
-
-/** The root query for the schema. */
-export type QueryDocumentArgs = {
+/** An image that can be associated to any another type. */
+export type AttachedImage = {
+  __typename?: 'AttachedImage';
+  /** The unique ID or Key on AWS S3 representing the image. */
   id: Scalars['ID'];
+  /** The user defined sort priority for the attached image. */
+  position: Scalars['Int'];
+  /** The current upload status of the image regarding its availability on S3. */
+  status: UploadStatus;
+  /** A pre-signed url to fetch this image from S3. */
+  url?: Maybe<Scalars['String']>;
 };
 
-
-/** The root query for the schema. */
-export type QueryModelNumberArgs = {
-  id: Scalars['String'];
-};
-
-
-/** The root query for the schema. */
-export type QueryModelNumbersArgs = {
-  productId?: InputMaybe<Scalars['String']>;
-  productType?: InputMaybe<ProductType>;
-  public?: InputMaybe<Scalars['Boolean']>;
-  search?: InputMaybe<Scalars['String']>;
-  symptom?: InputMaybe<Scalars['String']>;
-};
-
-
-/** The root query for the schema. */
-export type QueryPageArgs = {
+export type AttachedImageInput = {
   id: Scalars['ID'];
+  position: Scalars['Int'];
+  status?: InputMaybe<UploadStatus>;
 };
 
-
-/** The root query for the schema. */
-export type QueryProductArgs = {
-  id: Scalars['String'];
-};
-
-
-/** The root query for the schema. */
-export type QueryProductRegistrationArgs = {
-  id: Scalars['String'];
-};
-
-
-/** The root query for the schema. */
-export type QueryProductsArgs = {
-  search?: InputMaybe<Scalars['String']>;
-};
-
-
-/** The root query for the schema. */
-export type QueryProductSymptomArgs = {
-  id: Scalars['String'];
-};
-
-
-/** The root query for the schema. */
-export type QueryProductSymptomsArgs = {
-  modelNumber?: InputMaybe<Scalars['String']>;
-  search?: InputMaybe<Scalars['String']>;
-};
-
-
-/** The root query for the schema. */
-export type QueryRgaArgs = {
-  id: Scalars['String'];
-};
-
-
-/** The root query for the schema. */
-export type QueryRgasArgs = {
-  status?: InputMaybe<RgaStatus>;
-};
-
-
-/** The root query for the schema. */
-export type QueryUserArgs = {
-  id: Scalars['String'];
-};
-
-
-/** The root query for the schema. */
-export type QueryUserWithEmailArgs = {
-  email: Scalars['String'];
-};
-
-/** The result of a query for a customer or customers. */
-export type CustomerQueryOutput = {
-  __typename?: 'CustomerQueryOutput';
-  /** The resulting customer if the operation was successful. */
-  customer?: Maybe<Customer>;
-  /** The resulting customers if the operation was successful and multiple results were returned. */
-  customers?: Maybe<Array<Maybe<Customer>>>;
-  /** Any validation errors encountered while running the mutation. */
-  errors?: Maybe<Array<Maybe<ValidationError>>>;
-  /** This key can be used to continue querying paginated results. */
-  lastEvaluatedKey?: Maybe<Scalars['String']>;
-  /** The size of the paginated results. */
-  pageSize?: Maybe<Scalars['Int']>;
-  /** A simple boolean indicating whether or not the operation was successful. */
-  success: Scalars['Boolean'];
+/**
+ * Used as an argument on any query incorporating the relay connection spec
+ * to orchestrate paginated results
+ */
+export type ConnectionPayload = {
+  /** The id of the item to fetch forward pagination. Use with first. */
+  after?: InputMaybe<Scalars['ID']>;
+  /** The id of the item to fetch backward pagination. Use with last. */
+  before?: InputMaybe<Scalars['ID']>;
+  /** A limit when performing forward pagination. */
+  first?: InputMaybe<Scalars['Int']>;
+  /** A limit when performing backward pagination. */
+  last?: InputMaybe<Scalars['Int']>;
 };
 
 /** A customer of Riverpoint Medical. */
@@ -215,22 +80,24 @@ export type Customer = {
   zip?: Maybe<Scalars['String']>;
 };
 
-/** A validation error that provides details for an unsuccesful mutation or query. */
-export type ValidationError = {
-  __typename?: 'ValidationError';
-  /** A brief description of why the specified attribute failed validation. */
-  message: Scalars['String'];
-  /** A path indicating the attribute that failed validation. */
-  path: Scalars['String'];
+/** The result of a mutation applied to a customer. */
+export type CustomerMutationOutput = {
+  __typename?: 'CustomerMutationOutput';
+  /** The resulting customer if the operation was successful. */
+  customer?: Maybe<Customer>;
+  /** Any validation errors encountered while running the mutation. */
+  errors?: Maybe<Array<Maybe<ValidationError>>>;
+  /** A simple boolean indicating whether or not the operation was successful. */
+  success: Scalars['Boolean'];
 };
 
-/** The result of a query for a distributor or distributors. */
-export type DistributorQueryOutput = {
-  __typename?: 'DistributorQueryOutput';
-  /** The resulting distributor if the operation was successful. */
-  distributor?: Maybe<Distributor>;
-  /** The resulting distributors if the operation was successful and multiple results were returned. */
-  distributors?: Maybe<Array<Maybe<Distributor>>>;
+/** The result of a query for a customer or customers. */
+export type CustomerQueryOutput = {
+  __typename?: 'CustomerQueryOutput';
+  /** The resulting customer if the operation was successful. */
+  customer?: Maybe<Customer>;
+  /** The resulting customers if the operation was successful and multiple results were returned. */
+  customers?: Maybe<Array<Maybe<Customer>>>;
   /** Any validation errors encountered while running the mutation. */
   errors?: Maybe<Array<Maybe<ValidationError>>>;
   /** This key can be used to continue querying paginated results. */
@@ -252,19 +119,30 @@ export type Distributor = {
   name?: Maybe<Scalars['String']>;
 };
 
-/** The result of a query for a document or documents. */
-export type DocumentQueryOutput = {
-  __typename?: 'DocumentQueryOutput';
-  /** The resulting document if the operation was successful. */
-  document?: Maybe<Document>;
-  /** The resulting documents if the operation was successful and multiple results were returned. */
-  documents?: Maybe<Array<Maybe<Document>>>;
-  /** The size of the paginated results. */
-  documentSize?: Maybe<Scalars['Int']>;
+/** The result of a mutation applied to a distributor. */
+export type DistributorMutationOutput = {
+  __typename?: 'DistributorMutationOutput';
+  /** The resulting distributor if the operation was successful. */
+  distributor?: Maybe<Distributor>;
+  /** Any validation errors encountered while running the mutation. */
+  errors?: Maybe<Array<Maybe<ValidationError>>>;
+  /** A simple boolean indicating whether or not the operation was successful. */
+  success: Scalars['Boolean'];
+};
+
+/** The result of a query for a distributor or distributors. */
+export type DistributorQueryOutput = {
+  __typename?: 'DistributorQueryOutput';
+  /** The resulting distributor if the operation was successful. */
+  distributor?: Maybe<Distributor>;
+  /** The resulting distributors if the operation was successful and multiple results were returned. */
+  distributors?: Maybe<Array<Maybe<Distributor>>>;
   /** Any validation errors encountered while running the mutation. */
   errors?: Maybe<Array<Maybe<ValidationError>>>;
   /** This key can be used to continue querying paginated results. */
   lastEvaluatedKey?: Maybe<Scalars['String']>;
+  /** The size of the paginated results. */
+  pageSize?: Maybe<Scalars['Int']>;
   /** A simple boolean indicating whether or not the operation was successful. */
   success: Scalars['Boolean'];
 };
@@ -288,6 +166,206 @@ export type Document = {
   url?: Maybe<Scalars['String']>;
 };
 
+/** A set of fields used to create or update a document. */
+export type DocumentInput = {
+  /** The document description for SEO purposes. */
+  description?: InputMaybe<Scalars['String']>;
+  /** The S3 file key to generate the download url for the file. */
+  fileKey?: InputMaybe<Scalars['String']>;
+  /** The id of the customer associated to the document. */
+  id?: InputMaybe<Scalars['ID']>;
+  /** The meta keywords of the document for SEO purposes. */
+  keywords?: InputMaybe<Scalars['String']>;
+  /** The slug of the document. */
+  slug: Scalars['String'];
+  /** The id of the customer associated to the document. */
+  title: Scalars['String'];
+};
+
+/** The result of a mutation applied to a document. */
+export type DocumentMutationOutput = {
+  __typename?: 'DocumentMutationOutput';
+  /** The resulting document if the operation was successful. */
+  document?: Maybe<Document>;
+  /** Any validation errors encountered while running the mutation. */
+  errors?: Maybe<Array<Maybe<ValidationError>>>;
+  /** A simple boolean indicating whether or not the operation was successful. */
+  success: Scalars['Boolean'];
+};
+
+/** The result of a query for a document or documents. */
+export type DocumentQueryOutput = {
+  __typename?: 'DocumentQueryOutput';
+  /** The resulting document if the operation was successful. */
+  document?: Maybe<Document>;
+  /** The size of the paginated results. */
+  documentSize?: Maybe<Scalars['Int']>;
+  /** The resulting documents if the operation was successful and multiple results were returned. */
+  documents?: Maybe<Array<Maybe<Document>>>;
+  /** Any validation errors encountered while running the mutation. */
+  errors?: Maybe<Array<Maybe<ValidationError>>>;
+  /** This key can be used to continue querying paginated results. */
+  lastEvaluatedKey?: Maybe<Scalars['String']>;
+  /** A simple boolean indicating whether or not the operation was successful. */
+  success: Scalars['Boolean'];
+};
+
+/** A set of fields used to create or update a customer. */
+export type ExistingCustomerInput = {
+  email: Scalars['String'];
+  id: Scalars['ID'];
+  name?: InputMaybe<Scalars['String']>;
+};
+
+/** A set of fields used to create or update a distributor. */
+export type ExistingDistributorInput = {
+  domain: Scalars['String'];
+  id: Scalars['ID'];
+  name?: InputMaybe<Scalars['String']>;
+};
+
+/** A set of fields used to create or update a registration. */
+export type ExistingProductRegistrationInput = {
+  /** The id of the customer associated to the registration. */
+  customerId: Scalars['String'];
+  id: Scalars['ID'];
+  /** The model number for representing the specific product configuration being registered. */
+  modelNumber: Scalars['String'];
+  /** The date the product was registered. */
+  registeredOn: Scalars['String'];
+  /** The serial number associate to the product if it is lotted. */
+  serial?: InputMaybe<Scalars['String']>;
+};
+
+/** A set of fields used to create or update a symptom. */
+export type ExistingProductSymptomInput = {
+  careTip?: InputMaybe<Scalars['String']>;
+  faultCode?: InputMaybe<Scalars['String']>;
+  fee?: InputMaybe<Scalars['Boolean']>;
+  id: Scalars['ID'];
+  name?: InputMaybe<Scalars['String']>;
+  preApproved?: InputMaybe<Scalars['Boolean']>;
+  solution?: InputMaybe<Scalars['String']>;
+  synopsis?: InputMaybe<Scalars['String']>;
+};
+
+/** A set of fields used to update certain aspects of an RGA. */
+export type ExistingRgaInput = {
+  /** The id of the RGA. */
+  id: Scalars['String'];
+  /** The preferred shipping speed assigned to return this request to the customer. */
+  shippingSpeed: Scalars['String'];
+};
+
+/** A set of fields used to create or update a user. */
+export type ExistingUserInput = {
+  email: Scalars['String'];
+  firstName: Scalars['String'];
+  id: Scalars['ID'];
+  lastName: Scalars['String'];
+  password?: InputMaybe<Scalars['String']>;
+};
+
+/** Pricing for fees associated to a repair. */
+export type FeeStructure = {
+  __typename?: 'FeeStructure';
+  /** Internal cost pricing for distributors. */
+  distributor?: Maybe<Scalars['String']>;
+  /** Public pricing for end users. */
+  endUser?: Maybe<Scalars['String']>;
+};
+
+/** Pricing for fees associated to a repair. */
+export type FeeStructureInput = {
+  /** Internal cost pricing for distributors. */
+  distributor?: InputMaybe<Scalars['String']>;
+  /** Public pricing for end users. */
+  endUser?: InputMaybe<Scalars['String']>;
+};
+
+export type ModelNumber = {
+  __typename?: 'ModelNumber';
+  /** A brief description of this product variant. */
+  description?: Maybe<Scalars['String']>;
+  /** How much will it cost to service this item if it is covered by a warranty. */
+  feeWithWarranty?: Maybe<FeeStructure>;
+  /** How much will it cost to service this item if it is not covered by a warranty. */
+  feeWithoutWarranty?: Maybe<FeeStructure>;
+  /** The model number identifying a product variant. */
+  id: Scalars['ID'];
+  /** If a product is lotted it has a class of serial numbers associated to it. */
+  lotted?: Maybe<Scalars['Boolean']>;
+  /** Pricing for this specific model. */
+  pricing?: Maybe<Pricing>;
+  /** Any internal notes for employess when servicing this model variation. */
+  privateNotes?: Maybe<Scalars['String']>;
+  /** The ids of the product(s) this variant can be associated with. */
+  productIds?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** The high level category for this model number. */
+  productType?: Maybe<ProductType>;
+  /** The product(s) this variant can be associated with. */
+  products?: Maybe<Array<Maybe<Product>>>;
+  /** Any public notes related to servicing this model variation. */
+  publicNotes?: Maybe<Scalars['String']>;
+  /** If a product model is not publicly viewableit will not show up on forms for a customer. */
+  publiclyViewable?: Maybe<Scalars['Boolean']>;
+  /** How issues will be resolved if this item is covered by a warranty. */
+  resolutionWithWarranty?: Maybe<Scalars['String']>;
+  /** How issues will be resolved if this item is not covered by a warranty. */
+  resolutionWithoutWarranty?: Maybe<Scalars['String']>;
+  /** A list of all associated symptoms related to this model number. */
+  symptoms?: Maybe<Array<Maybe<ProductSymptom>>>;
+  /** A description of the warranty that applies to this model. */
+  warrantyDescription?: Maybe<Scalars['String']>;
+  /** The length of the warranty that applies to this model in months. */
+  warrantyTerm?: Maybe<Scalars['Int']>;
+};
+
+/** Describes a model number to be created or updated. */
+export type ModelNumberInput = {
+  /** A brief description of this product variant. */
+  description?: InputMaybe<Scalars['String']>;
+  /** How much will it cost to service this item if it is covered by a warranty. */
+  feeWithWarranty?: InputMaybe<FeeStructureInput>;
+  /** How much will it cost to service this item if it is not covered by a warranty. */
+  feeWithoutWarranty?: InputMaybe<FeeStructureInput>;
+  /** The model number identifying a product variant. */
+  id: Scalars['ID'];
+  /** If a product is lotted it has a class of serial numbers associated to it. */
+  lotted?: InputMaybe<Scalars['Boolean']>;
+  /** Pricing for this specific model. */
+  pricing?: InputMaybe<PricingInput>;
+  /** Any internal notes for employess when servicing this model variation. */
+  privateNotes?: InputMaybe<Scalars['String']>;
+  /** The ids of the products this variant belongs to. */
+  productIds?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** The high level category type this product belongs to. */
+  productType?: InputMaybe<ProductType>;
+  /** Any public notes related to servicing this model variation. */
+  publicNotes?: InputMaybe<Scalars['String']>;
+  /** If a product model is not publicly viewable it will not show up on forms for a customer. */
+  publiclyViewable?: InputMaybe<Scalars['Boolean']>;
+  /** How issues will be resolved if this item is covered by a warranty. */
+  resolutionWithWarranty?: InputMaybe<Scalars['String']>;
+  /** How issues will be resolved if this item is not covered by a warranty. */
+  resolutionWithoutWarranty?: InputMaybe<Scalars['String']>;
+  /** A description of the warranty that applies to this model. */
+  warrantyDescription?: InputMaybe<Scalars['String']>;
+  /** The length of the warranty that applies to this model in months. */
+  warrantyTerm?: InputMaybe<Scalars['Int']>;
+};
+
+/** The result of a mutation applied to a ModelNumber. */
+export type ModelNumberMutationOutput = {
+  __typename?: 'ModelNumberMutationOutput';
+  /** Any validation errors encountered while running the mutation. */
+  errors?: Maybe<Array<Maybe<ValidationError>>>;
+  /** The resulting model if the operation was successful. */
+  modelNumber?: Maybe<ModelNumber>;
+  /** A simple boolean indicating whether or not the operation was successful. */
+  success: Scalars['Boolean'];
+};
+
 /** The result of a query for a modelNumber or modelNumbers. */
 export type ModelNumberQueryOutput = {
   __typename?: 'ModelNumberQueryOutput';
@@ -305,130 +383,6 @@ export type ModelNumberQueryOutput = {
   success: Scalars['Boolean'];
 };
 
-export type ModelNumber = {
-  __typename?: 'ModelNumber';
-  /** A brief description of this product variant. */
-  description?: Maybe<Scalars['String']>;
-  /** How much will it cost to service this item if it is not covered by a warranty. */
-  feeWithoutWarranty?: Maybe<FeeStructure>;
-  /** How much will it cost to service this item if it is covered by a warranty. */
-  feeWithWarranty?: Maybe<FeeStructure>;
-  /** The model number identifying a product variant. */
-  id: Scalars['ID'];
-  /** If a product is lotted it has a class of serial numbers associated to it. */
-  lotted?: Maybe<Scalars['Boolean']>;
-  /** Pricing for this specific model. */
-  pricing?: Maybe<Pricing>;
-  /** Any internal notes for employess when servicing this model variation. */
-  privateNotes?: Maybe<Scalars['String']>;
-  /** The ids of the product(s) this variant can be associated with. */
-  productIds?: Maybe<Array<Maybe<Scalars['String']>>>;
-  /** The product(s) this variant can be associated with. */
-  products?: Maybe<Array<Maybe<Product>>>;
-  /** The high level category for this model number. */
-  productType?: Maybe<ProductType>;
-  /** If a product model is not publicly viewableit will not show up on forms for a customer. */
-  publiclyViewable?: Maybe<Scalars['Boolean']>;
-  /** Any public notes related to servicing this model variation. */
-  publicNotes?: Maybe<Scalars['String']>;
-  /** How issues will be resolved if this item is not covered by a warranty. */
-  resolutionWithoutWarranty?: Maybe<Scalars['String']>;
-  /** How issues will be resolved if this item is covered by a warranty. */
-  resolutionWithWarranty?: Maybe<Scalars['String']>;
-  /** A list of all associated symptoms related to this model number. */
-  symptoms?: Maybe<Array<Maybe<ProductSymptom>>>;
-  /** A description of the warranty that applies to this model. */
-  warrantyDescription?: Maybe<Scalars['String']>;
-  /** The length of the warranty that applies to this model in months. */
-  warrantyTerm?: Maybe<Scalars['Int']>;
-};
-
-/** Pricing for fees associated to a repair. */
-export type FeeStructure = {
-  __typename?: 'FeeStructure';
-  /** Internal cost pricing for distributors. */
-  distributor?: Maybe<Scalars['String']>;
-  /** Public pricing for end users. */
-  endUser?: Maybe<Scalars['String']>;
-};
-
-/** Pricing for a product model variant. */
-export type Pricing = {
-  __typename?: 'Pricing';
-  /** Internal cost pricing for distributors. */
-  cost?: Maybe<Scalars['String']>;
-  /** Public pricing for end users. */
-  retail?: Maybe<Scalars['String']>;
-};
-
-/** A registered user object from API. Could be a customer, admin, or partner account. */
-export type Product = {
-  __typename?: 'Product';
-  /** A brief description of this product. */
-  description: Scalars['String'];
-  /** The unique identifier for this product */
-  id: Scalars['ID'];
-  /** All available variations or configurations of this product. */
-  modelNumbers?: Maybe<Array<Maybe<ModelNumber>>>;
-  /** The name of this product. */
-  name: Scalars['String'];
-};
-
-/** Denotes the high level category for this product. */
-export enum ProductType {
-  /** An accessory to a headlight. */
-  Accessory = 'ACCESSORY',
-  /** A dedicated family of headlight. */
-  Headlight = 'HEADLIGHT'
-}
-
-/** A troubleshooting symptom for a product. */
-export type ProductSymptom = {
-  __typename?: 'ProductSymptom';
-  /** A list of all associated model numbers related to this symptom. */
-  associatedModelNumbers: Array<Maybe<Scalars['String']>>;
-  /** An array of attached images hosted via AWS S3. */
-  attachedImages?: Maybe<Array<Maybe<AttachedImage>>>;
-  /** A hint or maintenance tip to prevent the symptom. */
-  careTip?: Maybe<Scalars['String']>;
-  /** An official code used to identify this symptom. */
-  faultCode?: Maybe<Scalars['String']>;
-  /** Indicates if there is an associated fee for servicing this issue. */
-  fee: Scalars['Boolean'];
-  /** The unique identifier for this symptom */
-  id: Scalars['ID'];
-  /** The resulting symptoms if the operation was successful and multiple results were returned. */
-  modelNumbers?: Maybe<Array<Maybe<ModelNumberSymptomDetail>>>;
-  /** The actual name of the symptom. */
-  name: Scalars['String'];
-  /** Indicates whether or not this is a pre-approved repair regardless of warranty. */
-  preApproved: Scalars['Boolean'];
-  /** A solution to resolve the symptom. */
-  solution?: Maybe<Scalars['String']>;
-  /** A description of the symptom and/or it's cause in detail. */
-  synopsis?: Maybe<Scalars['String']>;
-};
-
-/** An image that can be associated to any another type. */
-export type AttachedImage = {
-  __typename?: 'AttachedImage';
-  /** The unique ID or Key on AWS S3 representing the image. */
-  id: Scalars['ID'];
-  /** The user defined sort priority for the attached image. */
-  position: Scalars['Int'];
-  /** The current upload status of the image regarding its availability on S3. */
-  status: UploadStatus;
-  /** A pre-signed url to fetch this image from S3. */
-  url?: Maybe<Scalars['String']>;
-};
-
-/** Indicates whether or not an image is currently transferring, available, or even deleted. */
-export enum UploadStatus {
-  Available = 'AVAILABLE',
-  Deleted = 'DELETED',
-  Pending = 'PENDING'
-}
-
 /** A subset of the model number type */
 export type ModelNumberSymptomDetail = {
   __typename?: 'ModelNumberSymptomDetail';
@@ -438,402 +392,6 @@ export type ModelNumberSymptomDetail = {
   productId: Scalars['String'];
   /** All associated symptoms related to this model number. */
   symptoms: Array<Maybe<ProductSymptom>>;
-};
-
-/** The result of a query for a page or pages. */
-export type PageQueryOutput = {
-  __typename?: 'PageQueryOutput';
-  /** Any validation errors encountered while running the mutation. */
-  errors?: Maybe<Array<Maybe<ValidationError>>>;
-  /** This key can be used to continue querying paginated results. */
-  lastEvaluatedKey?: Maybe<Scalars['String']>;
-  /** The resulting page if the operation was successful. */
-  page?: Maybe<Page>;
-  /** The resulting pages if the operation was successful and multiple results were returned. */
-  pages?: Maybe<Array<Maybe<Page>>>;
-  /** The size of the paginated results. */
-  pageSize?: Maybe<Scalars['Int']>;
-  /** A simple boolean indicating whether or not the operation was successful. */
-  success: Scalars['Boolean'];
-};
-
-/** A page on the customer service portal. */
-export type Page = {
-  __typename?: 'Page';
-  /** The description of the page. */
-  description?: Maybe<Scalars['String']>;
-  /** The unique identifier for this page */
-  id: Scalars['ID'];
-  /** The seo keywords of the page. */
-  keywords?: Maybe<Scalars['String']>;
-  /** The sections of content on the page. */
-  sections?: Maybe<Array<Maybe<Section>>>;
-  /** The slug of the page. */
-  slug?: Maybe<Scalars['String']>;
-  /** The title of the page. */
-  title?: Maybe<Scalars['String']>;
-};
-
-/** A section of content that can appear on a page. */
-export type Section = {
-  __typename?: 'Section';
-  /** The unique identifier for this page */
-  id: Scalars['ID'];
-  /** The items in this section. */
-  items?: Maybe<Array<Maybe<SectionItem>>>;
-  /** The name/title of the section. */
-  name?: Maybe<Scalars['String']>;
-  /** The order this section should appear. */
-  position?: Maybe<Scalars['Int']>;
-};
-
-/** A content item that can appear within a section on a page. */
-export type SectionItem = {
-  __typename?: 'SectionItem';
-  /** The description of this item. */
-  description?: Maybe<Scalars['String']>;
-  /** The icon of the item. */
-  icon?: Maybe<Scalars['String']>;
-  /** The unique identifier for this page */
-  id: Scalars['ID'];
-  /** The name/title of the item. */
-  name?: Maybe<Scalars['String']>;
-  /** The order this item should appear. */
-  position?: Maybe<Scalars['Int']>;
-  /** The target url or content ID of this item. */
-  target?: Maybe<Scalars['String']>;
-  /** The type of content this item points to. */
-  type?: Maybe<Scalars['String']>;
-  /** The resulting URL this item will point to.. */
-  url?: Maybe<Scalars['String']>;
-};
-
-/** The result of a query for a product or products. */
-export type ProductQueryOutput = {
-  __typename?: 'ProductQueryOutput';
-  /** Any validation errors encountered while running the mutation. */
-  errors?: Maybe<Array<Maybe<ValidationError>>>;
-  /** This key can be used to continue querying paginated results. */
-  lastEvaluatedKey?: Maybe<Scalars['String']>;
-  /** The size of the paginated results. */
-  pageSize?: Maybe<Scalars['Int']>;
-  /** The resulting product if the operation was successful. */
-  product?: Maybe<Product>;
-  /** The resulting products if the operation was successful and multiple results were returned. */
-  products?: Maybe<Array<Maybe<Product>>>;
-  /** A simple boolean indicating whether or not the operation was successful. */
-  success: Scalars['Boolean'];
-};
-
-/** The result of a query for a registration or registrations. */
-export type ProductRegistrationQueryOutput = {
-  __typename?: 'ProductRegistrationQueryOutput';
-  /** Any validation errors encountered while running the mutation. */
-  errors?: Maybe<Array<Maybe<ValidationError>>>;
-  /** This key can be used to continue querying paginated results. */
-  lastEvaluatedKey?: Maybe<Scalars['String']>;
-  /** The size of the paginated results. */
-  pageSize?: Maybe<Scalars['Int']>;
-  /** The resulting registration if the operation was successful. */
-  productRegistration?: Maybe<ProductRegistration>;
-  /** The resulting registrations if the operation was successful and multiple results were returned. */
-  productRegistrations?: Maybe<Array<Maybe<ProductRegistration>>>;
-  /** A simple boolean indicating whether or not the operation was successful. */
-  success: Scalars['Boolean'];
-};
-
-/** A troubleshooting registration for a product. */
-export type ProductRegistration = {
-  __typename?: 'ProductRegistration';
-  /** The customer profile associated to the registration. */
-  customer: Customer;
-  /** The id of the customer the product has been registered. */
-  customerId: Scalars['String'];
-  /** The unique identifier for this registration */
-  id: Scalars['ID'];
-  /** Indicates whether or not the registration belongs to a lotted model number. */
-  lotted?: Maybe<Scalars['Boolean']>;
-  /** The the model number of the product that has been registered. */
-  modelNumber: Scalars['String'];
-  /** The id of the product that has been registered. */
-  productId: Scalars['String'];
-  /** The date the product was registered. */
-  registeredOn: Scalars['String'];
-  /** The serial number associated to the product if applicable. */
-  serial?: Maybe<Scalars['String']>;
-};
-
-/** The result of a query for a symptom or symptoms. */
-export type ProductSymptomQueryOutput = {
-  __typename?: 'ProductSymptomQueryOutput';
-  /** Any validation errors encountered while running the mutation. */
-  errors?: Maybe<Array<Maybe<ValidationError>>>;
-  /** This key can be used to continue querying paginated results. */
-  lastEvaluatedKey?: Maybe<Scalars['String']>;
-  /** The size of the paginated results. */
-  pageSize?: Maybe<Scalars['Int']>;
-  /** The resulting symptom if the operation was successful. */
-  productSymptom?: Maybe<ProductSymptom>;
-  /** The resulting symptoms if the operation was successful and multiple results were returned. */
-  productSymptoms?: Maybe<Array<Maybe<ProductSymptom>>>;
-  /** A simple boolean indicating whether or not the operation was successful. */
-  success: Scalars['Boolean'];
-};
-
-
-/** The result of a query for a symptom or symptoms. */
-export type ProductSymptomQueryOutputProductSymptomsArgs = {
-  modelNumber?: InputMaybe<Scalars['String']>;
-};
-
-/** The result of a query for a RGA or RGAs. */
-export type RgaQueryOutput = {
-  __typename?: 'RGAQueryOutput';
-  /** Any validation errors encountered while running the mutation. */
-  errors?: Maybe<Array<Maybe<ValidationError>>>;
-  /** This key can be used to continue querying paginated results. */
-  lastEvaluatedKey?: Maybe<Scalars['String']>;
-  /** The size of the paginated results. */
-  pageSize?: Maybe<Scalars['Int']>;
-  /** The resulting RGA if the operation was successful. */
-  rga?: Maybe<Rga>;
-  /** The resulting RGAs if the operation was successful and multiple results were returned. */
-  rgas?: Maybe<Array<Maybe<Rga>>>;
-  /** A simple boolean indicating whether or not the operation was successful. */
-  success: Scalars['Boolean'];
-};
-
-/** A Request Goods Authorization. */
-export type Rga = {
-  __typename?: 'RGA';
-  /** The distributor associated to the the RGA. */
-  distributor: Distributor;
-  /** The goods associated to the the RGA. */
-  goods: Array<Maybe<RgaGood>>;
-  /** The unique identifier for this RGA. */
-  id: Scalars['ID'];
-  /** The preferred shipping speed assigned to return this request to the customer. */
-  shippingSpeed?: Maybe<Scalars['String']>;
-  /** The current state of the request. */
-  status: RgaStatus;
-  /** A log of all updates to this RGAs status. */
-  statusLog?: Maybe<Array<Maybe<RgaStatusUpdate>>>;
-  /** The email address of the user whom submitted the RGA. */
-  submittedBy: Scalars['String'];
-  /** The date the RGA was submitted. */
-  submittedOn: Scalars['String'];
-};
-
-/** A good associated to a particular RGA. */
-export type RgaGood = {
-  __typename?: 'RGAGood';
-  /** Any additional comments for the service letter. */
-  additionalComments?: Maybe<Scalars['String']>;
-  /** The carrier used to transport the return shipment. */
-  carrier?: Maybe<RgaShippingCarrier>;
-  /** The city of the address for the customer this good belongs to. */
-  customerCity?: Maybe<Scalars['String']>;
-  /** The country of the address for the customer this good belongs to. */
-  customerCountry?: Maybe<Scalars['String']>;
-  /** The email of the customer this good belongs to - it will be automatically registered if it hasn't already been. */
-  customerEmail?: Maybe<Scalars['String']>;
-  /** The id of the customer if the product has been registered to a user. */
-  customerId?: Maybe<Scalars['String']>;
-  /** A URL to download a generated PDF of the associated customerletter. */
-  customerLetterUrl?: Maybe<Scalars['String']>;
-  /** The name of the customer this good belongs to - it will be automatically registered if it hasn't already been. */
-  customerName?: Maybe<Scalars['String']>;
-  /** The phone number of the customer this good belongs to. */
-  customerPhone?: Maybe<Scalars['String']>;
-  /** The specialty of the customer this good belongs to - it will be automatically registered if it hasn't already been. */
-  customerSpecialty?: Maybe<Scalars['String']>;
-  /** The state of the address for the customer this good belongs to. */
-  customerState?: Maybe<Scalars['String']>;
-  /** The street address for the customer this good belongs to. */
-  customerStreet?: Maybe<Scalars['String']>;
-  /** The street address (line 2) for the customer this good belongs to. */
-  customerStreet2?: Maybe<Scalars['String']>;
-  /** The zip of the address for the customer this good belongs to. */
-  customerZip?: Maybe<Scalars['String']>;
-  /** The original date of purchase if known. */
-  datePurchased?: Maybe<Scalars['String']>;
-  /** The disposition of the good after evaluation. */
-  disposition?: Maybe<Scalars['String']>;
-  /** The fault code associated to the prescribed symptom. */
-  faultCode?: Maybe<Scalars['String']>;
-  /** The unique serial number or uuid associated to the good. */
-  id: Scalars['ID'];
-  /** Indicates whether or not the model was considered to be lotted. */
-  lotted?: Maybe<Scalars['Boolean']>;
-  /** The model number for representing the specific product configuration for this good. */
-  modelNumber?: Maybe<Scalars['String']>;
-  /** A new serial number if the unit was replaced. */
-  newSerial?: Maybe<Scalars['String']>;
-  /** Any additional notes about this good specifically.. */
-  notes?: Maybe<Scalars['String']>;
-  /** The associated PO from our distributor / partner's records. */
-  po?: Maybe<Scalars['String']>;
-  /** Indicates whether or not the resolution for the symptom was a pre-approved repair. */
-  preApproved?: Maybe<Scalars['Boolean']>;
-  /** Indicates the product family this good. */
-  productId?: Maybe<Scalars['String']>;
-  /** Indicates the name of product family this good. */
-  productName?: Maybe<Scalars['String']>;
-  /** Indicates the product type for this good. */
-  productType?: Maybe<ProductType>;
-  /** The proposed resolution the issue affecting this good. */
-  resolution?: Maybe<Scalars['String']>;
-  /** The fee involved for resolving this issue. */
-  resolutionFee?: Maybe<FeeStructure>;
-  /** The RGA this good is assigned to. */
-  rgaId: Scalars['String'];
-  /** The associated RMA from our distributor / partner's records. */
-  rma?: Maybe<Scalars['String']>;
-  /** The serial number unique to this good if lotted. If left blank and not lotted a uuid will be generated. */
-  serial?: Maybe<Scalars['String']>;
-  /** A URL to download a generated PDF of the associated service form. */
-  serviceFormUrl?: Maybe<Scalars['String']>;
-  /** The unique service id for this good. */
-  serviceId?: Maybe<Scalars['String']>;
-  /** The preferred shipping speed assigned to return this good to the customer. */
-  shippingSpeed?: Maybe<Scalars['String']>;
-  /** Indicates whether or not an SSD is applicable to this good. */
-  ssd?: Maybe<Scalars['Boolean']>;
-  /** The current status of the good. */
-  status?: Maybe<RgaGoodStatus>;
-  /** The current description of the symptom. */
-  symptomDescription?: Maybe<Scalars['String']>;
-  /** The symptom / reason this product is being returned. */
-  symptomId?: Maybe<Scalars['String']>;
-  /** The solution for associated symptom. */
-  symptomSolution?: Maybe<Scalars['String']>;
-  /** The synopsis of the associated symptom. */
-  symptomSynopsis?: Maybe<Scalars['String']>;
-  /** The tracking number associated to the return shipment. */
-  tracking?: Maybe<Scalars['String']>;
-  /** Indicates whether or not this product is currently under warranty. */
-  warrantied?: Maybe<Scalars['Boolean']>;
-  /** Indicates the details of the associated products warranty. */
-  warrantyDescription?: Maybe<Scalars['String']>;
-  /** Indicates the number of months the associated product was warrantied for. */
-  warrantyTerm?: Maybe<Scalars['Int']>;
-};
-
-/** Indicates the shipping carrier used to transport a good associated to an RGA. */
-export enum RgaShippingCarrier {
-  /** DHL as a shipping carrier. */
-  Dhl = 'DHL',
-  /** FedEx as a shipping carrier. */
-  Fedex = 'FEDEX',
-  /** Another shipping carrier not fully supported by the system. */
-  Other = 'OTHER',
-  /** UPS as a shipping carrier. */
-  Ups = 'UPS'
-}
-
-/** The current status of a given good belonging to an RGA. */
-export enum RgaGoodStatus {
-  /** The good was removed from the request at some point. */
-  Archived = 'ARCHIVED',
-  /** Indicates a good has been delayed from shipping. */
-  Delayed = 'DELAYED',
-  /** The good is considered valid and part of the request. */
-  Valid = 'VALID'
-}
-
-/** Defines a state a given RGA could be in. */
-export enum RgaStatus {
-  /** RPMED team is assessing the contents of the package. */
-  Assessing = 'ASSESSING',
-  /**
-   * The customer has confirmed the goods associated to the request and
-   * RPMED is awaiting the delivery of the customer's package.
-   */
-  AwaitingArrival = 'AWAITING_ARRIVAL',
-  /**
-   * The request was canceled at any point during the process. Notes may
-   * may be added for further explanation.
-   */
-  Canceled = 'CANCELED',
-  /** The request is complete and no further notes / changes can be made. */
-  Closed = 'CLOSED',
-  /**
-   * Indicates the RGA may have partially shipped but still has some pending
-   * items that have been delayed.
-   */
-  Delayed = 'DELAYED',
-  /**
-   * An RGA number has been issued to the distributor but the customer
-   * has not completed or shipped the package.
-   */
-  Issued = 'ISSUED',
-  /** RPMED team is making any necessary repairs. */
-  Repairing = 'REPAIRING',
-  /** RPMED team has shipped the package back to the customer. */
-  Shipping = 'SHIPPING'
-}
-
-/** A description of a status update for a given RGA. */
-export type RgaStatusUpdate = {
-  __typename?: 'RGAStatusUpdate';
-  /** Any notes describing what happened to the request during this update. */
-  notes?: Maybe<Scalars['String']>;
-  /** The new status the request was assigned. */
-  status?: Maybe<RgaStatus>;
-  /** Details about who made this update. */
-  updatedBy?: Maybe<UpdateProfile>;
-  /** An ISO string representing when this update occurred. */
-  updatedOn?: Maybe<Scalars['String']>;
-};
-
-export type UpdateProfile = {
-  __typename?: 'UpdateProfile';
-  /** The email address of the user who made the update. */
-  email?: Maybe<Scalars['String']>;
-  /** The id of the user who made the update. */
-  id?: Maybe<Scalars['String']>;
-  /** The name of the user who made the update. */
-  name?: Maybe<Scalars['String']>;
-};
-
-/** A list of totals for any given rga status. */
-export type RgaStatusCountOutput = {
-  __typename?: 'RGAStatusCountOutput';
-  /** Count of all RGAs currently being assessed. */
-  assessing?: Maybe<Scalars['Int']>;
-  /** Count of all RGAs awaiting arrival. */
-  awaitingArrival?: Maybe<Scalars['Int']>;
-  /** Count of all canceled RGAs. */
-  canceled?: Maybe<Scalars['Int']>;
-  /** Count of all closed RGAs. */
-  closed?: Maybe<Scalars['Int']>;
-  /** Count of all RGAs that have delayed items. */
-  delayed?: Maybe<Scalars['Int']>;
-  /** Any validation errors encountered while running the mutation. */
-  errors?: Maybe<Array<Maybe<ValidationError>>>;
-  /** Count of all issued RGAs that may not have been shipped. */
-  issued?: Maybe<Scalars['Int']>;
-  /** Count of all received RGAs that have not yet been assessed. */
-  received?: Maybe<Scalars['Int']>;
-  /** Count of all RGAs currently being repaired. */
-  repairing?: Maybe<Scalars['Int']>;
-  /** Count of all RGAs being shipped back to customers. */
-  shipping?: Maybe<Scalars['Int']>;
-  /** A simple boolean indicating whether or not the operation was successful. */
-  success: Scalars['Boolean'];
-};
-
-/** A registered user object from API. Could be a customer, admin, or partner account. */
-export type User = {
-  __typename?: 'User';
-  /** The email address for this user. */
-  email: Scalars['String'];
-  /** The actual first name of the user. */
-  firstName?: Maybe<Scalars['String']>;
-  /** The unique identifier for this user */
-  id: Scalars['ID'];
-  /** The actual last name of the user. */
-  lastName?: Maybe<Scalars['String']>;
 };
 
 /** The root mutation for the schema. */
@@ -1168,25 +726,6 @@ export type MutationUpdateUserArgs = {
   userInput: ExistingUserInput;
 };
 
-export type AttachedImageInput = {
-  id: Scalars['ID'];
-  position: Scalars['Int'];
-  status?: InputMaybe<UploadStatus>;
-};
-
-/** The result of a mutation applied to a symptom. */
-export type ProductSymptomMutationOutput = {
-  __typename?: 'ProductSymptomMutationOutput';
-  /** Any validation errors encountered while running the mutation. */
-  errors?: Maybe<Array<Maybe<ValidationError>>>;
-  /** The resulting details for the associated model number if am association operation was successful. */
-  modelNumber?: Maybe<ModelNumberSymptomDetail>;
-  /** The resulting symptom if the operation was successful. */
-  productSymptom?: Maybe<ProductSymptom>;
-  /** A simple boolean indicating whether or not the operation was successful. */
-  success: Scalars['Boolean'];
-};
-
 /** A set of fields used to create or update a customer. */
 export type NewCustomerInput = {
   /** The city of the address for the customer. */
@@ -1211,114 +750,10 @@ export type NewCustomerInput = {
   zip?: InputMaybe<Scalars['String']>;
 };
 
-/** The result of a mutation applied to a customer. */
-export type CustomerMutationOutput = {
-  __typename?: 'CustomerMutationOutput';
-  /** The resulting customer if the operation was successful. */
-  customer?: Maybe<Customer>;
-  /** Any validation errors encountered while running the mutation. */
-  errors?: Maybe<Array<Maybe<ValidationError>>>;
-  /** A simple boolean indicating whether or not the operation was successful. */
-  success: Scalars['Boolean'];
-};
-
 /** A set of fields used to create or update a distributor. */
 export type NewDistributorInput = {
   domain: Scalars['String'];
   name?: InputMaybe<Scalars['String']>;
-};
-
-/** The result of a mutation applied to a distributor. */
-export type DistributorMutationOutput = {
-  __typename?: 'DistributorMutationOutput';
-  /** The resulting distributor if the operation was successful. */
-  distributor?: Maybe<Distributor>;
-  /** Any validation errors encountered while running the mutation. */
-  errors?: Maybe<Array<Maybe<ValidationError>>>;
-  /** A simple boolean indicating whether or not the operation was successful. */
-  success: Scalars['Boolean'];
-};
-
-/** Describes a model number to be created or updated. */
-export type ModelNumberInput = {
-  /** A brief description of this product variant. */
-  description?: InputMaybe<Scalars['String']>;
-  /** How much will it cost to service this item if it is not covered by a warranty. */
-  feeWithoutWarranty?: InputMaybe<FeeStructureInput>;
-  /** How much will it cost to service this item if it is covered by a warranty. */
-  feeWithWarranty?: InputMaybe<FeeStructureInput>;
-  /** The model number identifying a product variant. */
-  id: Scalars['ID'];
-  /** If a product is lotted it has a class of serial numbers associated to it. */
-  lotted?: InputMaybe<Scalars['Boolean']>;
-  /** Pricing for this specific model. */
-  pricing?: InputMaybe<PricingInput>;
-  /** Any internal notes for employess when servicing this model variation. */
-  privateNotes?: InputMaybe<Scalars['String']>;
-  /** The ids of the products this variant belongs to. */
-  productIds?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  /** The high level category type this product belongs to. */
-  productType?: InputMaybe<ProductType>;
-  /** If a product model is not publicly viewable it will not show up on forms for a customer. */
-  publiclyViewable?: InputMaybe<Scalars['Boolean']>;
-  /** Any public notes related to servicing this model variation. */
-  publicNotes?: InputMaybe<Scalars['String']>;
-  /** How issues will be resolved if this item is not covered by a warranty. */
-  resolutionWithoutWarranty?: InputMaybe<Scalars['String']>;
-  /** How issues will be resolved if this item is covered by a warranty. */
-  resolutionWithWarranty?: InputMaybe<Scalars['String']>;
-  /** A description of the warranty that applies to this model. */
-  warrantyDescription?: InputMaybe<Scalars['String']>;
-  /** The length of the warranty that applies to this model in months. */
-  warrantyTerm?: InputMaybe<Scalars['Int']>;
-};
-
-/** Pricing for fees associated to a repair. */
-export type FeeStructureInput = {
-  /** Internal cost pricing for distributors. */
-  distributor?: InputMaybe<Scalars['String']>;
-  /** Public pricing for end users. */
-  endUser?: InputMaybe<Scalars['String']>;
-};
-
-/** Pricing for a product model variant. */
-export type PricingInput = {
-  /** Internal cost pricing for distributors. */
-  cost?: InputMaybe<Scalars['String']>;
-  /** Public pricing for end users. */
-  retail?: InputMaybe<Scalars['String']>;
-};
-
-/** The result of a mutation applied to a ModelNumber. */
-export type ModelNumberMutationOutput = {
-  __typename?: 'ModelNumberMutationOutput';
-  /** Any validation errors encountered while running the mutation. */
-  errors?: Maybe<Array<Maybe<ValidationError>>>;
-  /** The resulting model if the operation was successful. */
-  modelNumber?: Maybe<ModelNumber>;
-  /** A simple boolean indicating whether or not the operation was successful. */
-  success: Scalars['Boolean'];
-};
-
-/** Describes a product to be created or updated. */
-export type ProductInput = {
-  /** A brief description of this product. */
-  description: Scalars['String'];
-  /** The unique identifier for this product */
-  id?: InputMaybe<Scalars['ID']>;
-  /** The name of this product. */
-  name: Scalars['String'];
-};
-
-/** The result of a mutation applied to a Product. */
-export type ProductMutationOutput = {
-  __typename?: 'ProductMutationOutput';
-  /** Any validation errors encountered while running the mutation. */
-  errors?: Maybe<Array<Maybe<ValidationError>>>;
-  /** The resulting model if the operation was successful. */
-  product?: Maybe<Product>;
-  /** A simple boolean indicating whether or not the operation was successful. */
-  success: Scalars['Boolean'];
 };
 
 /** A set of fields used to create or update a registration. */
@@ -1331,17 +766,6 @@ export type NewProductRegistrationInput = {
   registeredOn: Scalars['String'];
   /** The serial number associate to the product if it is lotted. */
   serial?: InputMaybe<Scalars['String']>;
-};
-
-/** The result of a mutation applied to a registration. */
-export type ProductRegistrationMutationOutput = {
-  __typename?: 'ProductRegistrationMutationOutput';
-  /** Any validation errors encountered while running the mutation. */
-  errors?: Maybe<Array<Maybe<ValidationError>>>;
-  /** The resulting registration if the operation was successful. */
-  productRegistration?: Maybe<ProductRegistration>;
-  /** A simple boolean indicating whether or not the operation was successful. */
-  success: Scalars['Boolean'];
 };
 
 /** A set of fields used to create or update a symptom. */
@@ -1365,15 +789,565 @@ export type NewRgaInput = {
   submittedOn: Scalars['String'];
 };
 
-/** The result of a mutation applied to a RGA. */
-export type RgaMutationOutput = {
-  __typename?: 'RGAMutationOutput';
+/** A set of fields used to create or update a user. */
+export type NewUserInput = {
+  email: Scalars['String'];
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+  password: Scalars['String'];
+};
+
+/** A page on the customer service portal. */
+export type Page = {
+  __typename?: 'Page';
+  /** The description of the page. */
+  description?: Maybe<Scalars['String']>;
+  /** The unique identifier for this page */
+  id: Scalars['ID'];
+  /** The seo keywords of the page. */
+  keywords?: Maybe<Scalars['String']>;
+  /** The sections of content on the page. */
+  sections?: Maybe<Array<Maybe<Section>>>;
+  /** The slug of the page. */
+  slug?: Maybe<Scalars['String']>;
+  /** The title of the page. */
+  title?: Maybe<Scalars['String']>;
+};
+
+/** Provides essential pagination info for a connection (or paginated request) */
+export type PageInfo = {
+  __typename?: 'PageInfo';
+  /** The cursor representing the id of the last item in the connection result. */
+  endCursor: Scalars['ID'];
+  /** Indicates whether or not there is a next page after this connection result. */
+  hasNextPage: Scalars['Boolean'];
+  /** Returns any available pages after to the current set based on the limit. */
+  hasNextPages: Array<Maybe<PaginationEntry>>;
+  /** Indicates whether or not there is a previous page before this connection result. */
+  hasPreviousPage: Scalars['Boolean'];
+  /** Returns any available pages prior to the current set based on the limit. */
+  hasPreviousPages: Array<Maybe<PaginationEntry>>;
+  /** The cursor representing the id of the first item in the connection result. */
+  startCursor: Scalars['ID'];
+};
+
+
+/** Provides essential pagination info for a connection (or paginated request) */
+export type PageInfoHasNextPagesArgs = {
+  amount: Scalars['Int'];
+};
+
+
+/** Provides essential pagination info for a connection (or paginated request) */
+export type PageInfoHasPreviousPagesArgs = {
+  amount: Scalars['Int'];
+};
+
+/** A set of fields used to create or update a page. */
+export type PageInput = {
+  /** The page description for SEO purposes. */
+  description?: InputMaybe<Scalars['String']>;
+  /** The id of the customer associated to the page. */
+  id?: InputMaybe<Scalars['ID']>;
+  /** The meta keywords of the page for SEO purposes. */
+  keywords?: InputMaybe<Scalars['String']>;
+  /** The sections of content on the page. */
+  sections?: InputMaybe<Array<InputMaybe<SectionInput>>>;
+  /** The slug of the page. */
+  slug: Scalars['String'];
+  /** The id of the customer associated to the page. */
+  title: Scalars['String'];
+};
+
+/** The result of a mutation applied to a page. */
+export type PageMutationOutput = {
+  __typename?: 'PageMutationOutput';
   /** Any validation errors encountered while running the mutation. */
   errors?: Maybe<Array<Maybe<ValidationError>>>;
-  /** The resulting RGA if the operation was successful. */
-  rga?: Maybe<Rga>;
+  /** The resulting page if the operation was successful. */
+  page?: Maybe<Page>;
   /** A simple boolean indicating whether or not the operation was successful. */
   success: Scalars['Boolean'];
+};
+
+/** The result of a query for a page or pages. */
+export type PageQueryOutput = {
+  __typename?: 'PageQueryOutput';
+  /** Any validation errors encountered while running the mutation. */
+  errors?: Maybe<Array<Maybe<ValidationError>>>;
+  /** This key can be used to continue querying paginated results. */
+  lastEvaluatedKey?: Maybe<Scalars['String']>;
+  /** The resulting page if the operation was successful. */
+  page?: Maybe<Page>;
+  /** The size of the paginated results. */
+  pageSize?: Maybe<Scalars['Int']>;
+  /** The resulting pages if the operation was successful and multiple results were returned. */
+  pages?: Maybe<Array<Maybe<Page>>>;
+  /** A simple boolean indicating whether or not the operation was successful. */
+  success: Scalars['Boolean'];
+};
+
+/** A description of a pagination destination to fetch additional paginated results. */
+export type PaginationEntry = {
+  __typename?: 'PaginationEntry';
+  /** The id of the entry to use for the pagination request. */
+  cursor: Scalars['ID'];
+};
+
+/** Pricing for a product model variant. */
+export type Pricing = {
+  __typename?: 'Pricing';
+  /** Internal cost pricing for distributors. */
+  cost?: Maybe<Scalars['String']>;
+  /** Public pricing for end users. */
+  retail?: Maybe<Scalars['String']>;
+};
+
+/** Pricing for a product model variant. */
+export type PricingInput = {
+  /** Internal cost pricing for distributors. */
+  cost?: InputMaybe<Scalars['String']>;
+  /** Public pricing for end users. */
+  retail?: InputMaybe<Scalars['String']>;
+};
+
+/** A registered user object from API. Could be a customer, admin, or partner account. */
+export type Product = {
+  __typename?: 'Product';
+  /** A brief description of this product. */
+  description: Scalars['String'];
+  /** The unique identifier for this product */
+  id: Scalars['ID'];
+  /** All available variations or configurations of this product. */
+  modelNumbers?: Maybe<Array<Maybe<ModelNumber>>>;
+  /** The name of this product. */
+  name: Scalars['String'];
+};
+
+/** Describes a product to be created or updated. */
+export type ProductInput = {
+  /** A brief description of this product. */
+  description: Scalars['String'];
+  /** The unique identifier for this product */
+  id?: InputMaybe<Scalars['ID']>;
+  /** The name of this product. */
+  name: Scalars['String'];
+};
+
+/** The result of a mutation applied to a Product. */
+export type ProductMutationOutput = {
+  __typename?: 'ProductMutationOutput';
+  /** Any validation errors encountered while running the mutation. */
+  errors?: Maybe<Array<Maybe<ValidationError>>>;
+  /** The resulting model if the operation was successful. */
+  product?: Maybe<Product>;
+  /** A simple boolean indicating whether or not the operation was successful. */
+  success: Scalars['Boolean'];
+};
+
+/** The result of a query for a product or products. */
+export type ProductQueryOutput = {
+  __typename?: 'ProductQueryOutput';
+  /** Any validation errors encountered while running the mutation. */
+  errors?: Maybe<Array<Maybe<ValidationError>>>;
+  /** This key can be used to continue querying paginated results. */
+  lastEvaluatedKey?: Maybe<Scalars['String']>;
+  /** The size of the paginated results. */
+  pageSize?: Maybe<Scalars['Int']>;
+  /** The resulting product if the operation was successful. */
+  product?: Maybe<Product>;
+  /** The resulting products if the operation was successful and multiple results were returned. */
+  products?: Maybe<Array<Maybe<Product>>>;
+  /** A simple boolean indicating whether or not the operation was successful. */
+  success: Scalars['Boolean'];
+};
+
+/** A troubleshooting registration for a product. */
+export type ProductRegistration = {
+  __typename?: 'ProductRegistration';
+  /** The customer profile associated to the registration. */
+  customer: Customer;
+  /** The id of the customer the product has been registered. */
+  customerId: Scalars['String'];
+  /** The unique identifier for this registration */
+  id: Scalars['ID'];
+  /** Indicates whether or not the registration belongs to a lotted model number. */
+  lotted?: Maybe<Scalars['Boolean']>;
+  /** The the model number of the product that has been registered. */
+  modelNumber: Scalars['String'];
+  /** The id of the product that has been registered. */
+  productId: Scalars['String'];
+  /** The date the product was registered. */
+  registeredOn: Scalars['String'];
+  /** The serial number associated to the product if applicable. */
+  serial?: Maybe<Scalars['String']>;
+};
+
+/** The result of a mutation applied to a registration. */
+export type ProductRegistrationMutationOutput = {
+  __typename?: 'ProductRegistrationMutationOutput';
+  /** Any validation errors encountered while running the mutation. */
+  errors?: Maybe<Array<Maybe<ValidationError>>>;
+  /** The resulting registration if the operation was successful. */
+  productRegistration?: Maybe<ProductRegistration>;
+  /** A simple boolean indicating whether or not the operation was successful. */
+  success: Scalars['Boolean'];
+};
+
+/** The result of a query for a registration or registrations. */
+export type ProductRegistrationQueryOutput = {
+  __typename?: 'ProductRegistrationQueryOutput';
+  /** Any validation errors encountered while running the mutation. */
+  errors?: Maybe<Array<Maybe<ValidationError>>>;
+  /** This key can be used to continue querying paginated results. */
+  lastEvaluatedKey?: Maybe<Scalars['String']>;
+  /** The size of the paginated results. */
+  pageSize?: Maybe<Scalars['Int']>;
+  /** The resulting registration if the operation was successful. */
+  productRegistration?: Maybe<ProductRegistration>;
+  /** The resulting registrations if the operation was successful and multiple results were returned. */
+  productRegistrations?: Maybe<Array<Maybe<ProductRegistration>>>;
+  /** A simple boolean indicating whether or not the operation was successful. */
+  success: Scalars['Boolean'];
+};
+
+/** A troubleshooting symptom for a product. */
+export type ProductSymptom = {
+  __typename?: 'ProductSymptom';
+  /** A list of all associated model numbers related to this symptom. */
+  associatedModelNumbers: Array<Maybe<Scalars['String']>>;
+  /** An array of attached images hosted via AWS S3. */
+  attachedImages?: Maybe<Array<Maybe<AttachedImage>>>;
+  /** A hint or maintenance tip to prevent the symptom. */
+  careTip?: Maybe<Scalars['String']>;
+  /** An official code used to identify this symptom. */
+  faultCode?: Maybe<Scalars['String']>;
+  /** Indicates if there is an associated fee for servicing this issue. */
+  fee: Scalars['Boolean'];
+  /** The unique identifier for this symptom */
+  id: Scalars['ID'];
+  /** The resulting symptoms if the operation was successful and multiple results were returned. */
+  modelNumbers?: Maybe<Array<Maybe<ModelNumberSymptomDetail>>>;
+  /** The actual name of the symptom. */
+  name: Scalars['String'];
+  /** Indicates whether or not this is a pre-approved repair regardless of warranty. */
+  preApproved: Scalars['Boolean'];
+  /** A solution to resolve the symptom. */
+  solution?: Maybe<Scalars['String']>;
+  /** A description of the symptom and/or it's cause in detail. */
+  synopsis?: Maybe<Scalars['String']>;
+};
+
+/** The result of a mutation applied to a symptom. */
+export type ProductSymptomMutationOutput = {
+  __typename?: 'ProductSymptomMutationOutput';
+  /** Any validation errors encountered while running the mutation. */
+  errors?: Maybe<Array<Maybe<ValidationError>>>;
+  /** The resulting details for the associated model number if am association operation was successful. */
+  modelNumber?: Maybe<ModelNumberSymptomDetail>;
+  /** The resulting symptom if the operation was successful. */
+  productSymptom?: Maybe<ProductSymptom>;
+  /** A simple boolean indicating whether or not the operation was successful. */
+  success: Scalars['Boolean'];
+};
+
+/** The result of a query for a symptom or symptoms. */
+export type ProductSymptomQueryOutput = {
+  __typename?: 'ProductSymptomQueryOutput';
+  /** Any validation errors encountered while running the mutation. */
+  errors?: Maybe<Array<Maybe<ValidationError>>>;
+  /** This key can be used to continue querying paginated results. */
+  lastEvaluatedKey?: Maybe<Scalars['String']>;
+  /** The size of the paginated results. */
+  pageSize?: Maybe<Scalars['Int']>;
+  /** The resulting symptom if the operation was successful. */
+  productSymptom?: Maybe<ProductSymptom>;
+  /** The resulting symptoms if the operation was successful and multiple results were returned. */
+  productSymptoms?: Maybe<Array<Maybe<ProductSymptom>>>;
+  /** A simple boolean indicating whether or not the operation was successful. */
+  success: Scalars['Boolean'];
+};
+
+
+/** The result of a query for a symptom or symptoms. */
+export type ProductSymptomQueryOutputProductSymptomsArgs = {
+  modelNumber?: InputMaybe<Scalars['String']>;
+};
+
+/** Denotes the high level category for this product. */
+export enum ProductType {
+  /** An accessory to a headlight. */
+  Accessory = 'ACCESSORY',
+  /** A dedicated family of headlight. */
+  Headlight = 'HEADLIGHT'
+}
+
+/** The root query for the schema. */
+export type Query = {
+  __typename?: 'Query';
+  /** A specific customer in the system via ID. */
+  customer: CustomerQueryOutput;
+  /** All customers in the system */
+  customers: CustomerQueryOutput;
+  /** A specific distributor in the system via ID. */
+  distributor: DistributorQueryOutput;
+  /** All distributors in the system */
+  distributors: DistributorQueryOutput;
+  /** A specific document in the system via ID. */
+  document: DocumentQueryOutput;
+  /** All documents in the system */
+  documents: DocumentQueryOutput;
+  info?: Maybe<Scalars['String']>;
+  /** A specific model number in the system via ID. */
+  modelNumber?: Maybe<ModelNumberQueryOutput>;
+  /** All product variants in the system. */
+  modelNumbers?: Maybe<ModelNumberQueryOutput>;
+  /** A specific page in the system via ID. */
+  page: PageQueryOutput;
+  /** All pages in the system */
+  pages: PageQueryOutput;
+  /** A specific product in the system via ID. */
+  product?: Maybe<ProductQueryOutput>;
+  /** A specific registration in the system via ID. */
+  productRegistration: ProductRegistrationQueryOutput;
+  /** All registrations in the system */
+  productRegistrations: ProductRegistrationQueryOutput;
+  /** A specific symptom in the system via ID. */
+  productSymptom: ProductSymptomQueryOutput;
+  /** All symptoms in the system */
+  productSymptoms: ProductSymptomQueryOutput;
+  /** All products in the system. */
+  products?: Maybe<ProductQueryOutput>;
+  /** A specific RGA in the system via ID. */
+  rga: RgaQueryOutput;
+  /** Query the total for any filtered output. */
+  rgaCount: RgaStatusCountOutput;
+  /** All RGAs in the system */
+  rgas: RgaQueryOutput;
+  /** A specific user in the system via ID. */
+  user?: Maybe<User>;
+  /** A specific user in the system via email address. */
+  userWithEmail?: Maybe<User>;
+  /** All users in the system */
+  users?: Maybe<Array<Maybe<User>>>;
+  version: Scalars['String'];
+};
+
+
+/** The root query for the schema. */
+export type QueryCustomerArgs = {
+  id: Scalars['String'];
+};
+
+
+/** The root query for the schema. */
+export type QueryCustomersArgs = {
+  search?: InputMaybe<Scalars['String']>;
+};
+
+
+/** The root query for the schema. */
+export type QueryDistributorArgs = {
+  id: Scalars['String'];
+};
+
+
+/** The root query for the schema. */
+export type QueryDocumentArgs = {
+  id: Scalars['ID'];
+};
+
+
+/** The root query for the schema. */
+export type QueryModelNumberArgs = {
+  id: Scalars['String'];
+};
+
+
+/** The root query for the schema. */
+export type QueryModelNumbersArgs = {
+  productId?: InputMaybe<Scalars['String']>;
+  productType?: InputMaybe<ProductType>;
+  public?: InputMaybe<Scalars['Boolean']>;
+  search?: InputMaybe<Scalars['String']>;
+  symptom?: InputMaybe<Scalars['String']>;
+};
+
+
+/** The root query for the schema. */
+export type QueryPageArgs = {
+  id: Scalars['ID'];
+};
+
+
+/** The root query for the schema. */
+export type QueryProductArgs = {
+  id: Scalars['String'];
+};
+
+
+/** The root query for the schema. */
+export type QueryProductRegistrationArgs = {
+  id: Scalars['String'];
+};
+
+
+/** The root query for the schema. */
+export type QueryProductSymptomArgs = {
+  id: Scalars['String'];
+};
+
+
+/** The root query for the schema. */
+export type QueryProductSymptomsArgs = {
+  modelNumber?: InputMaybe<Scalars['String']>;
+  search?: InputMaybe<Scalars['String']>;
+};
+
+
+/** The root query for the schema. */
+export type QueryProductsArgs = {
+  search?: InputMaybe<Scalars['String']>;
+};
+
+
+/** The root query for the schema. */
+export type QueryRgaArgs = {
+  id: Scalars['String'];
+};
+
+
+/** The root query for the schema. */
+export type QueryRgasArgs = {
+  status?: InputMaybe<RgaStatus>;
+};
+
+
+/** The root query for the schema. */
+export type QueryUserArgs = {
+  id: Scalars['String'];
+};
+
+
+/** The root query for the schema. */
+export type QueryUserWithEmailArgs = {
+  email: Scalars['String'];
+};
+
+/** A Request Goods Authorization. */
+export type Rga = {
+  __typename?: 'RGA';
+  /** The distributor associated to the the RGA. */
+  distributor: Distributor;
+  /** The goods associated to the the RGA. */
+  goods: Array<Maybe<RgaGood>>;
+  /** The unique identifier for this RGA. */
+  id: Scalars['ID'];
+  /** The preferred shipping speed assigned to return this request to the customer. */
+  shippingSpeed?: Maybe<Scalars['String']>;
+  /** The current state of the request. */
+  status: RgaStatus;
+  /** A log of all updates to this RGAs status. */
+  statusLog?: Maybe<Array<Maybe<RgaStatusUpdate>>>;
+  /** The email address of the user whom submitted the RGA. */
+  submittedBy: Scalars['String'];
+  /** The date the RGA was submitted. */
+  submittedOn: Scalars['String'];
+};
+
+/** A good associated to a particular RGA. */
+export type RgaGood = {
+  __typename?: 'RGAGood';
+  /** Any additional comments for the service letter. */
+  additionalComments?: Maybe<Scalars['String']>;
+  /** The carrier used to transport the return shipment. */
+  carrier?: Maybe<RgaShippingCarrier>;
+  /** The city of the address for the customer this good belongs to. */
+  customerCity?: Maybe<Scalars['String']>;
+  /** The country of the address for the customer this good belongs to. */
+  customerCountry?: Maybe<Scalars['String']>;
+  /** The email of the customer this good belongs to - it will be automatically registered if it hasn't already been. */
+  customerEmail?: Maybe<Scalars['String']>;
+  /** The id of the customer if the product has been registered to a user. */
+  customerId?: Maybe<Scalars['String']>;
+  /** A URL to download a generated PDF of the associated customerletter. */
+  customerLetterUrl?: Maybe<Scalars['String']>;
+  /** The name of the customer this good belongs to - it will be automatically registered if it hasn't already been. */
+  customerName?: Maybe<Scalars['String']>;
+  /** The phone number of the customer this good belongs to. */
+  customerPhone?: Maybe<Scalars['String']>;
+  /** The specialty of the customer this good belongs to - it will be automatically registered if it hasn't already been. */
+  customerSpecialty?: Maybe<Scalars['String']>;
+  /** The state of the address for the customer this good belongs to. */
+  customerState?: Maybe<Scalars['String']>;
+  /** The street address for the customer this good belongs to. */
+  customerStreet?: Maybe<Scalars['String']>;
+  /** The street address (line 2) for the customer this good belongs to. */
+  customerStreet2?: Maybe<Scalars['String']>;
+  /** The zip of the address for the customer this good belongs to. */
+  customerZip?: Maybe<Scalars['String']>;
+  /** The original date of purchase if known. */
+  datePurchased?: Maybe<Scalars['String']>;
+  /** The disposition of the good after evaluation. */
+  disposition?: Maybe<Scalars['String']>;
+  /** The fault code associated to the prescribed symptom. */
+  faultCode?: Maybe<Scalars['String']>;
+  /** The unique serial number or uuid associated to the good. */
+  id: Scalars['ID'];
+  /** Indicates whether or not the model was considered to be lotted. */
+  lotted?: Maybe<Scalars['Boolean']>;
+  /** The model number for representing the specific product configuration for this good. */
+  modelNumber?: Maybe<Scalars['String']>;
+  /** A new serial number if the unit was replaced. */
+  newSerial?: Maybe<Scalars['String']>;
+  /** Any additional notes about this good specifically.. */
+  notes?: Maybe<Scalars['String']>;
+  /** The associated PO from our distributor / partner's records. */
+  po?: Maybe<Scalars['String']>;
+  /** Indicates whether or not the resolution for the symptom was a pre-approved repair. */
+  preApproved?: Maybe<Scalars['Boolean']>;
+  /** Indicates the product family this good. */
+  productId?: Maybe<Scalars['String']>;
+  /** Indicates the name of product family this good. */
+  productName?: Maybe<Scalars['String']>;
+  /** Indicates the product type for this good. */
+  productType?: Maybe<ProductType>;
+  /** The proposed resolution the issue affecting this good. */
+  resolution?: Maybe<Scalars['String']>;
+  /** The fee involved for resolving this issue. */
+  resolutionFee?: Maybe<FeeStructure>;
+  /** The RGA this good is assigned to. */
+  rgaId: Scalars['String'];
+  /** The associated RMA from our distributor / partner's records. */
+  rma?: Maybe<Scalars['String']>;
+  /** The serial number unique to this good if lotted. If left blank and not lotted a uuid will be generated. */
+  serial?: Maybe<Scalars['String']>;
+  /** A URL to download a generated PDF of the associated service form. */
+  serviceFormUrl?: Maybe<Scalars['String']>;
+  /** The unique service id for this good. */
+  serviceId?: Maybe<Scalars['String']>;
+  /** The preferred shipping speed assigned to return this good to the customer. */
+  shippingSpeed?: Maybe<Scalars['String']>;
+  /** Indicates whether or not an SSD is applicable to this good. */
+  ssd?: Maybe<Scalars['Boolean']>;
+  /** The current status of the good. */
+  status?: Maybe<RgaGoodStatus>;
+  /** The current description of the symptom. */
+  symptomDescription?: Maybe<Scalars['String']>;
+  /** The symptom / reason this product is being returned. */
+  symptomId?: Maybe<Scalars['String']>;
+  /** The solution for associated symptom. */
+  symptomSolution?: Maybe<Scalars['String']>;
+  /** The synopsis of the associated symptom. */
+  symptomSynopsis?: Maybe<Scalars['String']>;
+  /** The tracking number associated to the return shipment. */
+  tracking?: Maybe<Scalars['String']>;
+  /** Indicates whether or not this product is currently under warranty. */
+  warrantied?: Maybe<Scalars['Boolean']>;
+  /** Indicates the details of the associated products warranty. */
+  warrantyDescription?: Maybe<Scalars['String']>;
+  /** Indicates the number of months the associated product was warrantied for. */
+  warrantyTerm?: Maybe<Scalars['Int']>;
 };
 
 /** The input to make changes to an existing RGA Good. */
@@ -1469,101 +1443,163 @@ export type RgaGoodMutationOutput = {
   success: Scalars['Boolean'];
 };
 
-/** A set of file keys to generate S3 endpoint URLS for. */
-export type UploadInput = {
-  keys: Array<InputMaybe<Scalars['String']>>;
-};
-
-/** The result of a mutation applied to a customer. */
-export type UploadMutationOutput = {
-  __typename?: 'UploadMutationOutput';
-  /** Any validation errors encountered while running the mutation. */
-  errors?: Maybe<Array<Maybe<ValidationError>>>;
-  /** A simple boolean indicating whether or not the operation was successful. */
-  success: Scalars['Boolean'];
-  /** The resulting customer if the operation was successful. */
-  uploads?: Maybe<Array<Maybe<UploadUrl>>>;
-};
-
-export type UploadUrl = {
-  __typename?: 'UploadURL';
-  /** The unique file key to use on AWS S3. */
+/** The input to apply a shipping update make changes to an existing RGA Good. */
+export type RgaGoodShippingInput = {
+  /** The carrier used to transport the return shipment. */
+  carrier?: InputMaybe<RgaShippingCarrier>;
+  /** The unique serial number or uuid associated to the good. */
   id: Scalars['ID'];
-  /** The endpoint to utilize for uploading the associated file key/id to AWS S3. */
-  url: Scalars['String'];
+  /** The message to email to all specified recipients */
+  message?: InputMaybe<Scalars['String']>;
+  /** A list of email addresses to notify the shipping alert / tracking message. */
+  recipients?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** The shipping status for the good. */
+  status: RgaShippingStatus;
+  /** The tracking number associated to the return shipment. */
+  tracking?: InputMaybe<Scalars['String']>;
 };
 
-/** A set of fields used to create or update a user. */
-export type NewUserInput = {
-  email: Scalars['String'];
-  firstName: Scalars['String'];
-  lastName: Scalars['String'];
-  password: Scalars['String'];
-};
+/** The current status of a given good belonging to an RGA. */
+export enum RgaGoodStatus {
+  /** The good was removed from the request at some point. */
+  Archived = 'ARCHIVED',
+  /** Indicates a good has been delayed from shipping. */
+  Delayed = 'DELAYED',
+  /** The good is considered valid and part of the request. */
+  Valid = 'VALID'
+}
 
-/** The result of a mutation applied to a user. */
-export type UserMutationOutput = {
-  __typename?: 'UserMutationOutput';
+/** The result of a mutation applied to a RGA. */
+export type RgaMutationOutput = {
+  __typename?: 'RGAMutationOutput';
   /** Any validation errors encountered while running the mutation. */
   errors?: Maybe<Array<Maybe<ValidationError>>>;
-  /** A simple boolean indicating whether or not the operation was successful. */
-  success: Scalars['Boolean'];
-  /** The resulting user if the operation was successful. */
-  user?: Maybe<User>;
-};
-
-/** The result of a mutation applied to a document. */
-export type DocumentMutationOutput = {
-  __typename?: 'DocumentMutationOutput';
-  /** The resulting document if the operation was successful. */
-  document?: Maybe<Document>;
-  /** Any validation errors encountered while running the mutation. */
-  errors?: Maybe<Array<Maybe<ValidationError>>>;
+  /** The resulting RGA if the operation was successful. */
+  rga?: Maybe<Rga>;
   /** A simple boolean indicating whether or not the operation was successful. */
   success: Scalars['Boolean'];
 };
 
-/** The result of a mutation applied to a page. */
-export type PageMutationOutput = {
-  __typename?: 'PageMutationOutput';
+/** The result of a query for a RGA or RGAs. */
+export type RgaQueryOutput = {
+  __typename?: 'RGAQueryOutput';
   /** Any validation errors encountered while running the mutation. */
   errors?: Maybe<Array<Maybe<ValidationError>>>;
-  /** The resulting page if the operation was successful. */
-  page?: Maybe<Page>;
+  /** This key can be used to continue querying paginated results. */
+  lastEvaluatedKey?: Maybe<Scalars['String']>;
+  /** The size of the paginated results. */
+  pageSize?: Maybe<Scalars['Int']>;
+  /** The resulting RGA if the operation was successful. */
+  rga?: Maybe<Rga>;
+  /** The resulting RGAs if the operation was successful and multiple results were returned. */
+  rgas?: Maybe<Array<Maybe<Rga>>>;
   /** A simple boolean indicating whether or not the operation was successful. */
   success: Scalars['Boolean'];
 };
 
-/** A set of fields used to create or update a document. */
-export type DocumentInput = {
-  /** The document description for SEO purposes. */
-  description?: InputMaybe<Scalars['String']>;
-  /** The S3 file key to generate the download url for the file. */
-  fileKey?: InputMaybe<Scalars['String']>;
-  /** The id of the customer associated to the document. */
-  id?: InputMaybe<Scalars['ID']>;
-  /** The meta keywords of the document for SEO purposes. */
-  keywords?: InputMaybe<Scalars['String']>;
-  /** The slug of the document. */
-  slug: Scalars['String'];
-  /** The id of the customer associated to the document. */
-  title: Scalars['String'];
+/** Indicates the shipping carrier used to transport a good associated to an RGA. */
+export enum RgaShippingCarrier {
+  /** DHL as a shipping carrier. */
+  Dhl = 'DHL',
+  /** FedEx as a shipping carrier. */
+  Fedex = 'FEDEX',
+  /** Another shipping carrier not fully supported by the system. */
+  Other = 'OTHER',
+  /** UPS as a shipping carrier. */
+  Ups = 'UPS'
+}
+
+/** Indicates the shipping status for a given good that belongs to an RGA. */
+export enum RgaShippingStatus {
+  /** Indicates that a given item could not be shipped for various reasons. */
+  Delayed = 'DELAYED',
+  /** Indicates an RGA good has shipped. */
+  Shipped = 'SHIPPED'
+}
+
+/** Defines a state a given RGA could be in. */
+export enum RgaStatus {
+  /** RPMED team is assessing the contents of the package. */
+  Assessing = 'ASSESSING',
+  /**
+   * The customer has confirmed the goods associated to the request and
+   * RPMED is awaiting the delivery of the customer's package.
+   */
+  AwaitingArrival = 'AWAITING_ARRIVAL',
+  /**
+   * The request was canceled at any point during the process. Notes may
+   * may be added for further explanation.
+   */
+  Canceled = 'CANCELED',
+  /** The request is complete and no further notes / changes can be made. */
+  Closed = 'CLOSED',
+  /**
+   * Indicates the RGA may have partially shipped but still has some pending
+   * items that have been delayed.
+   */
+  Delayed = 'DELAYED',
+  /**
+   * An RGA number has been issued to the distributor but the customer
+   * has not completed or shipped the package.
+   */
+  Issued = 'ISSUED',
+  /** RPMED team is making any necessary repairs. */
+  Repairing = 'REPAIRING',
+  /** RPMED team has shipped the package back to the customer. */
+  Shipping = 'SHIPPING'
+}
+
+/** A list of totals for any given rga status. */
+export type RgaStatusCountOutput = {
+  __typename?: 'RGAStatusCountOutput';
+  /** Count of all RGAs currently being assessed. */
+  assessing?: Maybe<Scalars['Int']>;
+  /** Count of all RGAs awaiting arrival. */
+  awaitingArrival?: Maybe<Scalars['Int']>;
+  /** Count of all canceled RGAs. */
+  canceled?: Maybe<Scalars['Int']>;
+  /** Count of all closed RGAs. */
+  closed?: Maybe<Scalars['Int']>;
+  /** Count of all RGAs that have delayed items. */
+  delayed?: Maybe<Scalars['Int']>;
+  /** Any validation errors encountered while running the mutation. */
+  errors?: Maybe<Array<Maybe<ValidationError>>>;
+  /** Count of all issued RGAs that may not have been shipped. */
+  issued?: Maybe<Scalars['Int']>;
+  /** Count of all received RGAs that have not yet been assessed. */
+  received?: Maybe<Scalars['Int']>;
+  /** Count of all RGAs currently being repaired. */
+  repairing?: Maybe<Scalars['Int']>;
+  /** Count of all RGAs being shipped back to customers. */
+  shipping?: Maybe<Scalars['Int']>;
+  /** A simple boolean indicating whether or not the operation was successful. */
+  success: Scalars['Boolean'];
 };
 
-/** A set of fields used to create or update a page. */
-export type PageInput = {
-  /** The page description for SEO purposes. */
-  description?: InputMaybe<Scalars['String']>;
-  /** The id of the customer associated to the page. */
-  id?: InputMaybe<Scalars['ID']>;
-  /** The meta keywords of the page for SEO purposes. */
-  keywords?: InputMaybe<Scalars['String']>;
-  /** The sections of content on the page. */
-  sections?: InputMaybe<Array<InputMaybe<SectionInput>>>;
-  /** The slug of the page. */
-  slug: Scalars['String'];
-  /** The id of the customer associated to the page. */
-  title: Scalars['String'];
+/** A description of a status update for a given RGA. */
+export type RgaStatusUpdate = {
+  __typename?: 'RGAStatusUpdate';
+  /** Any notes describing what happened to the request during this update. */
+  notes?: Maybe<Scalars['String']>;
+  /** The new status the request was assigned. */
+  status?: Maybe<RgaStatus>;
+  /** Details about who made this update. */
+  updatedBy?: Maybe<UpdateProfile>;
+  /** An ISO string representing when this update occurred. */
+  updatedOn?: Maybe<Scalars['String']>;
+};
+
+/** A section of content that can appear on a page. */
+export type Section = {
+  __typename?: 'Section';
+  /** The unique identifier for this page */
+  id: Scalars['ID'];
+  /** The items in this section. */
+  items?: Maybe<Array<Maybe<SectionItem>>>;
+  /** The name/title of the section. */
+  name?: Maybe<Scalars['String']>;
+  /** The order this section should appear. */
+  position?: Maybe<Scalars['Int']>;
 };
 
 /** A section of content that can appear on a page. */
@@ -1576,6 +1612,27 @@ export type SectionInput = {
   name?: InputMaybe<Scalars['String']>;
   /** The order this section should appear. */
   position?: InputMaybe<Scalars['Int']>;
+};
+
+/** A content item that can appear within a section on a page. */
+export type SectionItem = {
+  __typename?: 'SectionItem';
+  /** The description of this item. */
+  description?: Maybe<Scalars['String']>;
+  /** The icon of the item. */
+  icon?: Maybe<Scalars['String']>;
+  /** The unique identifier for this page */
+  id: Scalars['ID'];
+  /** The name/title of the item. */
+  name?: Maybe<Scalars['String']>;
+  /** The order this item should appear. */
+  position?: Maybe<Scalars['Int']>;
+  /** The target url or content ID of this item. */
+  target?: Maybe<Scalars['String']>;
+  /** The type of content this item points to. */
+  type?: Maybe<Scalars['String']>;
+  /** The resulting URL this item will point to.. */
+  url?: Maybe<Scalars['String']>;
 };
 
 /** A content item that can appear within a section on a page. */
@@ -1596,135 +1653,78 @@ export type SectionItemInput = {
   type?: InputMaybe<Scalars['String']>;
 };
 
-/** A set of fields used to create or update a customer. */
-export type ExistingCustomerInput = {
-  email: Scalars['String'];
-  id: Scalars['ID'];
-  name?: InputMaybe<Scalars['String']>;
+export type UpdateProfile = {
+  __typename?: 'UpdateProfile';
+  /** The email address of the user who made the update. */
+  email?: Maybe<Scalars['String']>;
+  /** The id of the user who made the update. */
+  id?: Maybe<Scalars['String']>;
+  /** The name of the user who made the update. */
+  name?: Maybe<Scalars['String']>;
 };
 
-/** A set of fields used to create or update a distributor. */
-export type ExistingDistributorInput = {
-  domain: Scalars['String'];
-  id: Scalars['ID'];
-  name?: InputMaybe<Scalars['String']>;
+/** A set of file keys to generate S3 endpoint URLS for. */
+export type UploadInput = {
+  keys: Array<InputMaybe<Scalars['String']>>;
 };
 
-/** A set of fields used to create or update a registration. */
-export type ExistingProductRegistrationInput = {
-  /** The id of the customer associated to the registration. */
-  customerId: Scalars['String'];
-  id: Scalars['ID'];
-  /** The model number for representing the specific product configuration being registered. */
-  modelNumber: Scalars['String'];
-  /** The date the product was registered. */
-  registeredOn: Scalars['String'];
-  /** The serial number associate to the product if it is lotted. */
-  serial?: InputMaybe<Scalars['String']>;
+/** The result of a mutation applied to a customer. */
+export type UploadMutationOutput = {
+  __typename?: 'UploadMutationOutput';
+  /** Any validation errors encountered while running the mutation. */
+  errors?: Maybe<Array<Maybe<ValidationError>>>;
+  /** A simple boolean indicating whether or not the operation was successful. */
+  success: Scalars['Boolean'];
+  /** The resulting customer if the operation was successful. */
+  uploads?: Maybe<Array<Maybe<UploadUrl>>>;
 };
 
-/** A set of fields used to create or update a symptom. */
-export type ExistingProductSymptomInput = {
-  careTip?: InputMaybe<Scalars['String']>;
-  faultCode?: InputMaybe<Scalars['String']>;
-  fee?: InputMaybe<Scalars['Boolean']>;
-  id: Scalars['ID'];
-  name?: InputMaybe<Scalars['String']>;
-  preApproved?: InputMaybe<Scalars['Boolean']>;
-  solution?: InputMaybe<Scalars['String']>;
-  synopsis?: InputMaybe<Scalars['String']>;
-};
-
-/** A set of fields used to update certain aspects of an RGA. */
-export type ExistingRgaInput = {
-  /** The id of the RGA. */
-  id: Scalars['String'];
-  /** The preferred shipping speed assigned to return this request to the customer. */
-  shippingSpeed: Scalars['String'];
-};
-
-/** The input to apply a shipping update make changes to an existing RGA Good. */
-export type RgaGoodShippingInput = {
-  /** The carrier used to transport the return shipment. */
-  carrier?: InputMaybe<RgaShippingCarrier>;
-  /** The unique serial number or uuid associated to the good. */
-  id: Scalars['ID'];
-  /** The message to email to all specified recipients */
-  message?: InputMaybe<Scalars['String']>;
-  /** A list of email addresses to notify the shipping alert / tracking message. */
-  recipients?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  /** The shipping status for the good. */
-  status: RgaShippingStatus;
-  /** The tracking number associated to the return shipment. */
-  tracking?: InputMaybe<Scalars['String']>;
-};
-
-/** Indicates the shipping status for a given good that belongs to an RGA. */
-export enum RgaShippingStatus {
-  /** Indicates that a given item could not be shipped for various reasons. */
-  Delayed = 'DELAYED',
-  /** Indicates an RGA good has shipped. */
-  Shipped = 'SHIPPED'
+/** Indicates whether or not an image is currently transferring, available, or even deleted. */
+export enum UploadStatus {
+  Available = 'AVAILABLE',
+  Deleted = 'DELETED',
+  Pending = 'PENDING'
 }
 
-/** A set of fields used to create or update a user. */
-export type ExistingUserInput = {
-  email: Scalars['String'];
-  firstName: Scalars['String'];
+export type UploadUrl = {
+  __typename?: 'UploadURL';
+  /** The unique file key to use on AWS S3. */
   id: Scalars['ID'];
-  lastName: Scalars['String'];
-  password?: InputMaybe<Scalars['String']>;
+  /** The endpoint to utilize for uploading the associated file key/id to AWS S3. */
+  url: Scalars['String'];
 };
 
-/**
- * Used as an argument on any query incorporating the relay connection spec
- * to orchestrate paginated results
- */
-export type ConnectionPayload = {
-  /** The id of the item to fetch forward pagination. Use with first. */
-  after?: InputMaybe<Scalars['ID']>;
-  /** The id of the item to fetch backward pagination. Use with last. */
-  before?: InputMaybe<Scalars['ID']>;
-  /** A limit when performing forward pagination. */
-  first?: InputMaybe<Scalars['Int']>;
-  /** A limit when performing backward pagination. */
-  last?: InputMaybe<Scalars['Int']>;
+/** A registered user object from API. Could be a customer, admin, or partner account. */
+export type User = {
+  __typename?: 'User';
+  /** The email address for this user. */
+  email: Scalars['String'];
+  /** The actual first name of the user. */
+  firstName?: Maybe<Scalars['String']>;
+  /** The unique identifier for this user */
+  id: Scalars['ID'];
+  /** The actual last name of the user. */
+  lastName?: Maybe<Scalars['String']>;
 };
 
-/** Provides essential pagination info for a connection (or paginated request) */
-export type PageInfo = {
-  __typename?: 'PageInfo';
-  /** The cursor representing the id of the last item in the connection result. */
-  endCursor: Scalars['ID'];
-  /** Indicates whether or not there is a next page after this connection result. */
-  hasNextPage: Scalars['Boolean'];
-  /** Returns any available pages after to the current set based on the limit. */
-  hasNextPages: Array<Maybe<PaginationEntry>>;
-  /** Indicates whether or not there is a previous page before this connection result. */
-  hasPreviousPage: Scalars['Boolean'];
-  /** Returns any available pages prior to the current set based on the limit. */
-  hasPreviousPages: Array<Maybe<PaginationEntry>>;
-  /** The cursor representing the id of the first item in the connection result. */
-  startCursor: Scalars['ID'];
+/** The result of a mutation applied to a user. */
+export type UserMutationOutput = {
+  __typename?: 'UserMutationOutput';
+  /** Any validation errors encountered while running the mutation. */
+  errors?: Maybe<Array<Maybe<ValidationError>>>;
+  /** A simple boolean indicating whether or not the operation was successful. */
+  success: Scalars['Boolean'];
+  /** The resulting user if the operation was successful. */
+  user?: Maybe<User>;
 };
 
-
-/** Provides essential pagination info for a connection (or paginated request) */
-export type PageInfoHasNextPagesArgs = {
-  amount: Scalars['Int'];
-};
-
-
-/** Provides essential pagination info for a connection (or paginated request) */
-export type PageInfoHasPreviousPagesArgs = {
-  amount: Scalars['Int'];
-};
-
-/** A description of a pagination destination to fetch additional paginated results. */
-export type PaginationEntry = {
-  __typename?: 'PaginationEntry';
-  /** The id of the entry to use for the pagination request. */
-  cursor: Scalars['ID'];
+/** A validation error that provides details for an unsuccesful mutation or query. */
+export type ValidationError = {
+  __typename?: 'ValidationError';
+  /** A brief description of why the specified attribute failed validation. */
+  message: Scalars['String'];
+  /** A path indicating the attribute that failed validation. */
+  path: Scalars['String'];
 };
 
 export type AttachImagesToSymptomMutationVariables = Exact<{
@@ -2162,7 +2162,10 @@ export type UsersQuery = { __typename?: 'Query', users?: Array<{ __typename?: 'U
 
 export const AttachImagesToSymptomDocument = gql`
     mutation AttachImagesToSymptom($symptomId: String!, $attachedImages: [AttachedImageInput]!) {
-  response: attachImagesToSymptom(symptomId: $symptomId, attachedImages: $attachedImages) {
+  response: attachImagesToSymptom(
+    symptomId: $symptomId
+    attachedImages: $attachedImages
+  ) {
     productSymptom {
       id
       attachedImages {
@@ -2400,7 +2403,9 @@ export type CreateProductMutationResult = Apollo.MutationResult<CreateProductMut
 export type CreateProductMutationOptions = Apollo.BaseMutationOptions<CreateProductMutation, CreateProductMutationVariables>;
 export const CreateProductRegistrationDocument = gql`
     mutation CreateProductRegistration($productRegistrationInput: NewProductRegistrationInput!) {
-  response: createProductRegistration(productRegistrationInput: $productRegistrationInput) {
+  response: createProductRegistration(
+    productRegistrationInput: $productRegistrationInput
+  ) {
     success
     productRegistration {
       id
@@ -3407,7 +3412,11 @@ export type DocumentsLazyQueryHookResult = ReturnType<typeof useDocumentsLazyQue
 export type DocumentsQueryResult = Apollo.QueryResult<DocumentsQuery, DocumentsQueryVariables>;
 export const LinkSymptomToModelNumberDocument = gql`
     mutation LinkSymptomToModelNumber($modelNumber: String!, $symptomId: String!, $linked: Boolean!) {
-  response: linkSymptomToModel(modelNumber: $modelNumber, symptomId: $symptomId, linked: $linked) {
+  response: linkSymptomToModel(
+    modelNumber: $modelNumber
+    symptomId: $symptomId
+    linked: $linked
+  ) {
     success
     productSymptom {
       id
@@ -3679,7 +3688,11 @@ export type ModelNumbersLottedLazyQueryHookResult = ReturnType<typeof useModelNu
 export type ModelNumbersLottedQueryResult = Apollo.QueryResult<ModelNumbersLottedQuery, ModelNumbersLottedQueryVariables>;
 export const ModelNumbersDocument = gql`
     query ModelNumbers($search: String, $productId: String, $productType: ProductType) {
-  response: modelNumbers(search: $search, productId: $productId, productType: $productType) {
+  response: modelNumbers(
+    search: $search
+    productId: $productId
+    productType: $productType
+  ) {
     modelNumbers {
       id
       lotted
@@ -4662,7 +4675,10 @@ export type UpdateModelNumberMutationResult = Apollo.MutationResult<UpdateModelN
 export type UpdateModelNumberMutationOptions = Apollo.BaseMutationOptions<UpdateModelNumberMutation, UpdateModelNumberMutationVariables>;
 export const UpdateModelNumberViewableDocument = gql`
     mutation UpdateModelNumberViewable($id: ID!, $publiclyViewable: Boolean!) {
-  response: updateModelNumberViewable(id: $id, publiclyViewable: $publiclyViewable) {
+  response: updateModelNumberViewable(
+    id: $id
+    publiclyViewable: $publiclyViewable
+  ) {
     modelNumber {
       id
       publiclyViewable
@@ -4744,7 +4760,9 @@ export type UpdateProductMutationResult = Apollo.MutationResult<UpdateProductMut
 export type UpdateProductMutationOptions = Apollo.BaseMutationOptions<UpdateProductMutation, UpdateProductMutationVariables>;
 export const UpdateProductRegistrationDocument = gql`
     mutation UpdateProductRegistration($productRegistrationInput: ExistingProductRegistrationInput!) {
-  response: updateProductRegistration(productRegistrationInput: $productRegistrationInput) {
+  response: updateProductRegistration(
+    productRegistrationInput: $productRegistrationInput
+  ) {
     success
     productRegistration {
       id
@@ -4966,7 +4984,11 @@ export type UpdateRgaMutationResult = Apollo.MutationResult<UpdateRgaMutation>;
 export type UpdateRgaMutationOptions = Apollo.BaseMutationOptions<UpdateRgaMutation, UpdateRgaMutationVariables>;
 export const UpdateRgaShippingStatusDocument = gql`
     mutation UpdateRGAShippingStatus($id: ID!, $shippingUpdates: [RGAGoodShippingInput], $notes: String) {
-  response: updateRGAShippingStatus(id: $id, shippingUpdates: $shippingUpdates, notes: $notes) {
+  response: updateRGAShippingStatus(
+    id: $id
+    shippingUpdates: $shippingUpdates
+    notes: $notes
+  ) {
     rga {
       id
       status
@@ -5273,204 +5295,175 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
-  Query: ResolverTypeWrapper<{}>;
-  String: ResolverTypeWrapper<Scalars['String']>;
-  CustomerQueryOutput: ResolverTypeWrapper<CustomerQueryOutput>;
-  Customer: ResolverTypeWrapper<Customer>;
-  ID: ResolverTypeWrapper<Scalars['ID']>;
-  ValidationError: ResolverTypeWrapper<ValidationError>;
-  Int: ResolverTypeWrapper<Scalars['Int']>;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
-  DistributorQueryOutput: ResolverTypeWrapper<DistributorQueryOutput>;
-  Distributor: ResolverTypeWrapper<Distributor>;
-  DocumentQueryOutput: ResolverTypeWrapper<DocumentQueryOutput>;
-  Document: ResolverTypeWrapper<Document>;
-  ModelNumberQueryOutput: ResolverTypeWrapper<ModelNumberQueryOutput>;
-  ModelNumber: ResolverTypeWrapper<ModelNumber>;
-  FeeStructure: ResolverTypeWrapper<FeeStructure>;
-  Pricing: ResolverTypeWrapper<Pricing>;
-  Product: ResolverTypeWrapper<Product>;
-  ProductType: ProductType;
-  ProductSymptom: ResolverTypeWrapper<ProductSymptom>;
   AttachedImage: ResolverTypeWrapper<AttachedImage>;
-  UploadStatus: UploadStatus;
-  ModelNumberSymptomDetail: ResolverTypeWrapper<ModelNumberSymptomDetail>;
-  PageQueryOutput: ResolverTypeWrapper<PageQueryOutput>;
-  Page: ResolverTypeWrapper<Page>;
-  Section: ResolverTypeWrapper<Section>;
-  SectionItem: ResolverTypeWrapper<SectionItem>;
-  ProductQueryOutput: ResolverTypeWrapper<ProductQueryOutput>;
-  ProductRegistrationQueryOutput: ResolverTypeWrapper<ProductRegistrationQueryOutput>;
-  ProductRegistration: ResolverTypeWrapper<ProductRegistration>;
-  ProductSymptomQueryOutput: ResolverTypeWrapper<ProductSymptomQueryOutput>;
-  RGAQueryOutput: ResolverTypeWrapper<RgaQueryOutput>;
-  RGA: ResolverTypeWrapper<Rga>;
-  RGAGood: ResolverTypeWrapper<RgaGood>;
-  RGAShippingCarrier: RgaShippingCarrier;
-  RGAGoodStatus: RgaGoodStatus;
-  RGAStatus: RgaStatus;
-  RGAStatusUpdate: ResolverTypeWrapper<RgaStatusUpdate>;
-  UpdateProfile: ResolverTypeWrapper<UpdateProfile>;
-  RGAStatusCountOutput: ResolverTypeWrapper<RgaStatusCountOutput>;
-  User: ResolverTypeWrapper<User>;
-  Mutation: ResolverTypeWrapper<{}>;
   AttachedImageInput: AttachedImageInput;
-  ProductSymptomMutationOutput: ResolverTypeWrapper<ProductSymptomMutationOutput>;
-  NewCustomerInput: NewCustomerInput;
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  ConnectionPayload: ConnectionPayload;
+  Customer: ResolverTypeWrapper<Customer>;
   CustomerMutationOutput: ResolverTypeWrapper<CustomerMutationOutput>;
-  NewDistributorInput: NewDistributorInput;
+  CustomerQueryOutput: ResolverTypeWrapper<CustomerQueryOutput>;
+  Distributor: ResolverTypeWrapper<Distributor>;
   DistributorMutationOutput: ResolverTypeWrapper<DistributorMutationOutput>;
-  ModelNumberInput: ModelNumberInput;
-  FeeStructureInput: FeeStructureInput;
-  PricingInput: PricingInput;
-  ModelNumberMutationOutput: ResolverTypeWrapper<ModelNumberMutationOutput>;
-  ProductInput: ProductInput;
-  ProductMutationOutput: ResolverTypeWrapper<ProductMutationOutput>;
-  NewProductRegistrationInput: NewProductRegistrationInput;
-  ProductRegistrationMutationOutput: ResolverTypeWrapper<ProductRegistrationMutationOutput>;
-  NewProductSymptomInput: NewProductSymptomInput;
-  NewRGAInput: NewRgaInput;
-  RGAMutationOutput: ResolverTypeWrapper<RgaMutationOutput>;
-  RGAGoodInput: RgaGoodInput;
-  RGAGoodMutationOutput: ResolverTypeWrapper<RgaGoodMutationOutput>;
-  UploadInput: UploadInput;
-  UploadMutationOutput: ResolverTypeWrapper<UploadMutationOutput>;
-  UploadURL: ResolverTypeWrapper<UploadUrl>;
-  NewUserInput: NewUserInput;
-  UserMutationOutput: ResolverTypeWrapper<UserMutationOutput>;
-  DocumentMutationOutput: ResolverTypeWrapper<DocumentMutationOutput>;
-  PageMutationOutput: ResolverTypeWrapper<PageMutationOutput>;
+  DistributorQueryOutput: ResolverTypeWrapper<DistributorQueryOutput>;
+  Document: ResolverTypeWrapper<Document>;
   DocumentInput: DocumentInput;
-  PageInput: PageInput;
-  SectionInput: SectionInput;
-  SectionItemInput: SectionItemInput;
+  DocumentMutationOutput: ResolverTypeWrapper<DocumentMutationOutput>;
+  DocumentQueryOutput: ResolverTypeWrapper<DocumentQueryOutput>;
   ExistingCustomerInput: ExistingCustomerInput;
   ExistingDistributorInput: ExistingDistributorInput;
   ExistingProductRegistrationInput: ExistingProductRegistrationInput;
   ExistingProductSymptomInput: ExistingProductSymptomInput;
   ExistingRGAInput: ExistingRgaInput;
-  RGAGoodShippingInput: RgaGoodShippingInput;
-  RGAShippingStatus: RgaShippingStatus;
   ExistingUserInput: ExistingUserInput;
-  ConnectionPayload: ConnectionPayload;
+  FeeStructure: ResolverTypeWrapper<FeeStructure>;
+  FeeStructureInput: FeeStructureInput;
+  ID: ResolverTypeWrapper<Scalars['ID']>;
+  Int: ResolverTypeWrapper<Scalars['Int']>;
+  ModelNumber: ResolverTypeWrapper<ModelNumber>;
+  ModelNumberInput: ModelNumberInput;
+  ModelNumberMutationOutput: ResolverTypeWrapper<ModelNumberMutationOutput>;
+  ModelNumberQueryOutput: ResolverTypeWrapper<ModelNumberQueryOutput>;
+  ModelNumberSymptomDetail: ResolverTypeWrapper<ModelNumberSymptomDetail>;
+  Mutation: ResolverTypeWrapper<{}>;
+  NewCustomerInput: NewCustomerInput;
+  NewDistributorInput: NewDistributorInput;
+  NewProductRegistrationInput: NewProductRegistrationInput;
+  NewProductSymptomInput: NewProductSymptomInput;
+  NewRGAInput: NewRgaInput;
+  NewUserInput: NewUserInput;
+  Page: ResolverTypeWrapper<Page>;
   PageInfo: ResolverTypeWrapper<PageInfo>;
+  PageInput: PageInput;
+  PageMutationOutput: ResolverTypeWrapper<PageMutationOutput>;
+  PageQueryOutput: ResolverTypeWrapper<PageQueryOutput>;
   PaginationEntry: ResolverTypeWrapper<PaginationEntry>;
+  Pricing: ResolverTypeWrapper<Pricing>;
+  PricingInput: PricingInput;
+  Product: ResolverTypeWrapper<Product>;
+  ProductInput: ProductInput;
+  ProductMutationOutput: ResolverTypeWrapper<ProductMutationOutput>;
+  ProductQueryOutput: ResolverTypeWrapper<ProductQueryOutput>;
+  ProductRegistration: ResolverTypeWrapper<ProductRegistration>;
+  ProductRegistrationMutationOutput: ResolverTypeWrapper<ProductRegistrationMutationOutput>;
+  ProductRegistrationQueryOutput: ResolverTypeWrapper<ProductRegistrationQueryOutput>;
+  ProductSymptom: ResolverTypeWrapper<ProductSymptom>;
+  ProductSymptomMutationOutput: ResolverTypeWrapper<ProductSymptomMutationOutput>;
+  ProductSymptomQueryOutput: ResolverTypeWrapper<ProductSymptomQueryOutput>;
+  ProductType: ProductType;
+  Query: ResolverTypeWrapper<{}>;
+  RGA: ResolverTypeWrapper<Rga>;
+  RGAGood: ResolverTypeWrapper<RgaGood>;
+  RGAGoodInput: RgaGoodInput;
+  RGAGoodMutationOutput: ResolverTypeWrapper<RgaGoodMutationOutput>;
+  RGAGoodShippingInput: RgaGoodShippingInput;
+  RGAGoodStatus: RgaGoodStatus;
+  RGAMutationOutput: ResolverTypeWrapper<RgaMutationOutput>;
+  RGAQueryOutput: ResolverTypeWrapper<RgaQueryOutput>;
+  RGAShippingCarrier: RgaShippingCarrier;
+  RGAShippingStatus: RgaShippingStatus;
+  RGAStatus: RgaStatus;
+  RGAStatusCountOutput: ResolverTypeWrapper<RgaStatusCountOutput>;
+  RGAStatusUpdate: ResolverTypeWrapper<RgaStatusUpdate>;
+  Section: ResolverTypeWrapper<Section>;
+  SectionInput: SectionInput;
+  SectionItem: ResolverTypeWrapper<SectionItem>;
+  SectionItemInput: SectionItemInput;
+  String: ResolverTypeWrapper<Scalars['String']>;
+  UpdateProfile: ResolverTypeWrapper<UpdateProfile>;
+  UploadInput: UploadInput;
+  UploadMutationOutput: ResolverTypeWrapper<UploadMutationOutput>;
+  UploadStatus: UploadStatus;
+  UploadURL: ResolverTypeWrapper<UploadUrl>;
+  User: ResolverTypeWrapper<User>;
+  UserMutationOutput: ResolverTypeWrapper<UserMutationOutput>;
+  ValidationError: ResolverTypeWrapper<ValidationError>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
-  Query: {};
-  String: Scalars['String'];
-  CustomerQueryOutput: CustomerQueryOutput;
-  Customer: Customer;
-  ID: Scalars['ID'];
-  ValidationError: ValidationError;
-  Int: Scalars['Int'];
-  Boolean: Scalars['Boolean'];
-  DistributorQueryOutput: DistributorQueryOutput;
-  Distributor: Distributor;
-  DocumentQueryOutput: DocumentQueryOutput;
-  Document: Document;
-  ModelNumberQueryOutput: ModelNumberQueryOutput;
-  ModelNumber: ModelNumber;
-  FeeStructure: FeeStructure;
-  Pricing: Pricing;
-  Product: Product;
-  ProductSymptom: ProductSymptom;
   AttachedImage: AttachedImage;
-  ModelNumberSymptomDetail: ModelNumberSymptomDetail;
-  PageQueryOutput: PageQueryOutput;
-  Page: Page;
-  Section: Section;
-  SectionItem: SectionItem;
-  ProductQueryOutput: ProductQueryOutput;
-  ProductRegistrationQueryOutput: ProductRegistrationQueryOutput;
-  ProductRegistration: ProductRegistration;
-  ProductSymptomQueryOutput: ProductSymptomQueryOutput;
-  RGAQueryOutput: RgaQueryOutput;
-  RGA: Rga;
-  RGAGood: RgaGood;
-  RGAStatusUpdate: RgaStatusUpdate;
-  UpdateProfile: UpdateProfile;
-  RGAStatusCountOutput: RgaStatusCountOutput;
-  User: User;
-  Mutation: {};
   AttachedImageInput: AttachedImageInput;
-  ProductSymptomMutationOutput: ProductSymptomMutationOutput;
-  NewCustomerInput: NewCustomerInput;
+  Boolean: Scalars['Boolean'];
+  ConnectionPayload: ConnectionPayload;
+  Customer: Customer;
   CustomerMutationOutput: CustomerMutationOutput;
-  NewDistributorInput: NewDistributorInput;
+  CustomerQueryOutput: CustomerQueryOutput;
+  Distributor: Distributor;
   DistributorMutationOutput: DistributorMutationOutput;
-  ModelNumberInput: ModelNumberInput;
-  FeeStructureInput: FeeStructureInput;
-  PricingInput: PricingInput;
-  ModelNumberMutationOutput: ModelNumberMutationOutput;
-  ProductInput: ProductInput;
-  ProductMutationOutput: ProductMutationOutput;
-  NewProductRegistrationInput: NewProductRegistrationInput;
-  ProductRegistrationMutationOutput: ProductRegistrationMutationOutput;
-  NewProductSymptomInput: NewProductSymptomInput;
-  NewRGAInput: NewRgaInput;
-  RGAMutationOutput: RgaMutationOutput;
-  RGAGoodInput: RgaGoodInput;
-  RGAGoodMutationOutput: RgaGoodMutationOutput;
-  UploadInput: UploadInput;
-  UploadMutationOutput: UploadMutationOutput;
-  UploadURL: UploadUrl;
-  NewUserInput: NewUserInput;
-  UserMutationOutput: UserMutationOutput;
-  DocumentMutationOutput: DocumentMutationOutput;
-  PageMutationOutput: PageMutationOutput;
+  DistributorQueryOutput: DistributorQueryOutput;
+  Document: Document;
   DocumentInput: DocumentInput;
-  PageInput: PageInput;
-  SectionInput: SectionInput;
-  SectionItemInput: SectionItemInput;
+  DocumentMutationOutput: DocumentMutationOutput;
+  DocumentQueryOutput: DocumentQueryOutput;
   ExistingCustomerInput: ExistingCustomerInput;
   ExistingDistributorInput: ExistingDistributorInput;
   ExistingProductRegistrationInput: ExistingProductRegistrationInput;
   ExistingProductSymptomInput: ExistingProductSymptomInput;
   ExistingRGAInput: ExistingRgaInput;
-  RGAGoodShippingInput: RgaGoodShippingInput;
   ExistingUserInput: ExistingUserInput;
-  ConnectionPayload: ConnectionPayload;
+  FeeStructure: FeeStructure;
+  FeeStructureInput: FeeStructureInput;
+  ID: Scalars['ID'];
+  Int: Scalars['Int'];
+  ModelNumber: ModelNumber;
+  ModelNumberInput: ModelNumberInput;
+  ModelNumberMutationOutput: ModelNumberMutationOutput;
+  ModelNumberQueryOutput: ModelNumberQueryOutput;
+  ModelNumberSymptomDetail: ModelNumberSymptomDetail;
+  Mutation: {};
+  NewCustomerInput: NewCustomerInput;
+  NewDistributorInput: NewDistributorInput;
+  NewProductRegistrationInput: NewProductRegistrationInput;
+  NewProductSymptomInput: NewProductSymptomInput;
+  NewRGAInput: NewRgaInput;
+  NewUserInput: NewUserInput;
+  Page: Page;
   PageInfo: PageInfo;
+  PageInput: PageInput;
+  PageMutationOutput: PageMutationOutput;
+  PageQueryOutput: PageQueryOutput;
   PaginationEntry: PaginationEntry;
+  Pricing: Pricing;
+  PricingInput: PricingInput;
+  Product: Product;
+  ProductInput: ProductInput;
+  ProductMutationOutput: ProductMutationOutput;
+  ProductQueryOutput: ProductQueryOutput;
+  ProductRegistration: ProductRegistration;
+  ProductRegistrationMutationOutput: ProductRegistrationMutationOutput;
+  ProductRegistrationQueryOutput: ProductRegistrationQueryOutput;
+  ProductSymptom: ProductSymptom;
+  ProductSymptomMutationOutput: ProductSymptomMutationOutput;
+  ProductSymptomQueryOutput: ProductSymptomQueryOutput;
+  Query: {};
+  RGA: Rga;
+  RGAGood: RgaGood;
+  RGAGoodInput: RgaGoodInput;
+  RGAGoodMutationOutput: RgaGoodMutationOutput;
+  RGAGoodShippingInput: RgaGoodShippingInput;
+  RGAMutationOutput: RgaMutationOutput;
+  RGAQueryOutput: RgaQueryOutput;
+  RGAStatusCountOutput: RgaStatusCountOutput;
+  RGAStatusUpdate: RgaStatusUpdate;
+  Section: Section;
+  SectionInput: SectionInput;
+  SectionItem: SectionItem;
+  SectionItemInput: SectionItemInput;
+  String: Scalars['String'];
+  UpdateProfile: UpdateProfile;
+  UploadInput: UploadInput;
+  UploadMutationOutput: UploadMutationOutput;
+  UploadURL: UploadUrl;
+  User: User;
+  UserMutationOutput: UserMutationOutput;
+  ValidationError: ValidationError;
 };
 
-export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  customer?: Resolver<ResolversTypes['CustomerQueryOutput'], ParentType, ContextType, RequireFields<QueryCustomerArgs, 'id'>>;
-  customers?: Resolver<ResolversTypes['CustomerQueryOutput'], ParentType, ContextType, RequireFields<QueryCustomersArgs, never>>;
-  distributor?: Resolver<ResolversTypes['DistributorQueryOutput'], ParentType, ContextType, RequireFields<QueryDistributorArgs, 'id'>>;
-  distributors?: Resolver<ResolversTypes['DistributorQueryOutput'], ParentType, ContextType>;
-  document?: Resolver<ResolversTypes['DocumentQueryOutput'], ParentType, ContextType, RequireFields<QueryDocumentArgs, 'id'>>;
-  documents?: Resolver<ResolversTypes['DocumentQueryOutput'], ParentType, ContextType>;
-  info?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  modelNumber?: Resolver<Maybe<ResolversTypes['ModelNumberQueryOutput']>, ParentType, ContextType, RequireFields<QueryModelNumberArgs, 'id'>>;
-  modelNumbers?: Resolver<Maybe<ResolversTypes['ModelNumberQueryOutput']>, ParentType, ContextType, RequireFields<QueryModelNumbersArgs, never>>;
-  page?: Resolver<ResolversTypes['PageQueryOutput'], ParentType, ContextType, RequireFields<QueryPageArgs, 'id'>>;
-  pages?: Resolver<ResolversTypes['PageQueryOutput'], ParentType, ContextType>;
-  product?: Resolver<Maybe<ResolversTypes['ProductQueryOutput']>, ParentType, ContextType, RequireFields<QueryProductArgs, 'id'>>;
-  productRegistration?: Resolver<ResolversTypes['ProductRegistrationQueryOutput'], ParentType, ContextType, RequireFields<QueryProductRegistrationArgs, 'id'>>;
-  productRegistrations?: Resolver<ResolversTypes['ProductRegistrationQueryOutput'], ParentType, ContextType>;
-  products?: Resolver<Maybe<ResolversTypes['ProductQueryOutput']>, ParentType, ContextType, RequireFields<QueryProductsArgs, never>>;
-  productSymptom?: Resolver<ResolversTypes['ProductSymptomQueryOutput'], ParentType, ContextType, RequireFields<QueryProductSymptomArgs, 'id'>>;
-  productSymptoms?: Resolver<ResolversTypes['ProductSymptomQueryOutput'], ParentType, ContextType, RequireFields<QueryProductSymptomsArgs, never>>;
-  rga?: Resolver<ResolversTypes['RGAQueryOutput'], ParentType, ContextType, RequireFields<QueryRgaArgs, 'id'>>;
-  rgaCount?: Resolver<ResolversTypes['RGAStatusCountOutput'], ParentType, ContextType>;
-  rgas?: Resolver<ResolversTypes['RGAQueryOutput'], ParentType, ContextType, RequireFields<QueryRgasArgs, never>>;
-  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
-  users?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
-  userWithEmail?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserWithEmailArgs, 'email'>>;
-  version?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-};
-
-export type CustomerQueryOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['CustomerQueryOutput'] = ResolversParentTypes['CustomerQueryOutput']> = {
-  customer?: Resolver<Maybe<ResolversTypes['Customer']>, ParentType, ContextType>;
-  customers?: Resolver<Maybe<Array<Maybe<ResolversTypes['Customer']>>>, ParentType, ContextType>;
-  errors?: Resolver<Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>, ParentType, ContextType>;
-  lastEvaluatedKey?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  pageSize?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+export type AttachedImageResolvers<ContextType = any, ParentType extends ResolversParentTypes['AttachedImage'] = ResolversParentTypes['AttachedImage']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  position?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  status?: Resolver<ResolversTypes['UploadStatus'], ParentType, ContextType>;
+  url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -5490,15 +5483,16 @@ export type CustomerResolvers<ContextType = any, ParentType extends ResolversPar
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type ValidationErrorResolvers<ContextType = any, ParentType extends ResolversParentTypes['ValidationError'] = ResolversParentTypes['ValidationError']> = {
-  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  path?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+export type CustomerMutationOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['CustomerMutationOutput'] = ResolversParentTypes['CustomerMutationOutput']> = {
+  customer?: Resolver<Maybe<ResolversTypes['Customer']>, ParentType, ContextType>;
+  errors?: Resolver<Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>, ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type DistributorQueryOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['DistributorQueryOutput'] = ResolversParentTypes['DistributorQueryOutput']> = {
-  distributor?: Resolver<Maybe<ResolversTypes['Distributor']>, ParentType, ContextType>;
-  distributors?: Resolver<Maybe<Array<Maybe<ResolversTypes['Distributor']>>>, ParentType, ContextType>;
+export type CustomerQueryOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['CustomerQueryOutput'] = ResolversParentTypes['CustomerQueryOutput']> = {
+  customer?: Resolver<Maybe<ResolversTypes['Customer']>, ParentType, ContextType>;
+  customers?: Resolver<Maybe<Array<Maybe<ResolversTypes['Customer']>>>, ParentType, ContextType>;
   errors?: Resolver<Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>, ParentType, ContextType>;
   lastEvaluatedKey?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   pageSize?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
@@ -5513,12 +5507,19 @@ export type DistributorResolvers<ContextType = any, ParentType extends Resolvers
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type DocumentQueryOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['DocumentQueryOutput'] = ResolversParentTypes['DocumentQueryOutput']> = {
-  document?: Resolver<Maybe<ResolversTypes['Document']>, ParentType, ContextType>;
-  documents?: Resolver<Maybe<Array<Maybe<ResolversTypes['Document']>>>, ParentType, ContextType>;
-  documentSize?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+export type DistributorMutationOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['DistributorMutationOutput'] = ResolversParentTypes['DistributorMutationOutput']> = {
+  distributor?: Resolver<Maybe<ResolversTypes['Distributor']>, ParentType, ContextType>;
+  errors?: Resolver<Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>, ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DistributorQueryOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['DistributorQueryOutput'] = ResolversParentTypes['DistributorQueryOutput']> = {
+  distributor?: Resolver<Maybe<ResolversTypes['Distributor']>, ParentType, ContextType>;
+  distributors?: Resolver<Maybe<Array<Maybe<ResolversTypes['Distributor']>>>, ParentType, ContextType>;
   errors?: Resolver<Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>, ParentType, ContextType>;
   lastEvaluatedKey?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  pageSize?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -5534,6 +5535,57 @@ export type DocumentResolvers<ContextType = any, ParentType extends ResolversPar
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type DocumentMutationOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['DocumentMutationOutput'] = ResolversParentTypes['DocumentMutationOutput']> = {
+  document?: Resolver<Maybe<ResolversTypes['Document']>, ParentType, ContextType>;
+  errors?: Resolver<Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>, ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DocumentQueryOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['DocumentQueryOutput'] = ResolversParentTypes['DocumentQueryOutput']> = {
+  document?: Resolver<Maybe<ResolversTypes['Document']>, ParentType, ContextType>;
+  documentSize?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  documents?: Resolver<Maybe<Array<Maybe<ResolversTypes['Document']>>>, ParentType, ContextType>;
+  errors?: Resolver<Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>, ParentType, ContextType>;
+  lastEvaluatedKey?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type FeeStructureResolvers<ContextType = any, ParentType extends ResolversParentTypes['FeeStructure'] = ResolversParentTypes['FeeStructure']> = {
+  distributor?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  endUser?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ModelNumberResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModelNumber'] = ResolversParentTypes['ModelNumber']> = {
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  feeWithWarranty?: Resolver<Maybe<ResolversTypes['FeeStructure']>, ParentType, ContextType>;
+  feeWithoutWarranty?: Resolver<Maybe<ResolversTypes['FeeStructure']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  lotted?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  pricing?: Resolver<Maybe<ResolversTypes['Pricing']>, ParentType, ContextType>;
+  privateNotes?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  productIds?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
+  productType?: Resolver<Maybe<ResolversTypes['ProductType']>, ParentType, ContextType>;
+  products?: Resolver<Maybe<Array<Maybe<ResolversTypes['Product']>>>, ParentType, ContextType>;
+  publicNotes?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  publiclyViewable?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  resolutionWithWarranty?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  resolutionWithoutWarranty?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  symptoms?: Resolver<Maybe<Array<Maybe<ResolversTypes['ProductSymptom']>>>, ParentType, ContextType>;
+  warrantyDescription?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  warrantyTerm?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ModelNumberMutationOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModelNumberMutationOutput'] = ResolversParentTypes['ModelNumberMutationOutput']> = {
+  errors?: Resolver<Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>, ParentType, ContextType>;
+  modelNumber?: Resolver<Maybe<ResolversTypes['ModelNumber']>, ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type ModelNumberQueryOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModelNumberQueryOutput'] = ResolversParentTypes['ModelNumberQueryOutput']> = {
   errors?: Resolver<Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>, ParentType, ContextType>;
   lastEvaluatedKey?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -5544,30 +5596,95 @@ export type ModelNumberQueryOutputResolvers<ContextType = any, ParentType extend
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type ModelNumberResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModelNumber'] = ResolversParentTypes['ModelNumber']> = {
-  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  feeWithoutWarranty?: Resolver<Maybe<ResolversTypes['FeeStructure']>, ParentType, ContextType>;
-  feeWithWarranty?: Resolver<Maybe<ResolversTypes['FeeStructure']>, ParentType, ContextType>;
+export type ModelNumberSymptomDetailResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModelNumberSymptomDetail'] = ResolversParentTypes['ModelNumberSymptomDetail']> = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  lotted?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
-  pricing?: Resolver<Maybe<ResolversTypes['Pricing']>, ParentType, ContextType>;
-  privateNotes?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  productIds?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
-  products?: Resolver<Maybe<Array<Maybe<ResolversTypes['Product']>>>, ParentType, ContextType>;
-  productType?: Resolver<Maybe<ResolversTypes['ProductType']>, ParentType, ContextType>;
-  publiclyViewable?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
-  publicNotes?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  resolutionWithoutWarranty?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  resolutionWithWarranty?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  symptoms?: Resolver<Maybe<Array<Maybe<ResolversTypes['ProductSymptom']>>>, ParentType, ContextType>;
-  warrantyDescription?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  warrantyTerm?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  productId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  symptoms?: Resolver<Array<Maybe<ResolversTypes['ProductSymptom']>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type FeeStructureResolvers<ContextType = any, ParentType extends ResolversParentTypes['FeeStructure'] = ResolversParentTypes['FeeStructure']> = {
-  distributor?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  endUser?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  attachImagesToSymptom?: Resolver<ResolversTypes['ProductSymptomMutationOutput'], ParentType, ContextType, RequireFields<MutationAttachImagesToSymptomArgs, 'attachedImages' | 'symptomId'>>;
+  createCustomer?: Resolver<ResolversTypes['CustomerMutationOutput'], ParentType, ContextType, RequireFields<MutationCreateCustomerArgs, 'customerInput'>>;
+  createDistributor?: Resolver<ResolversTypes['DistributorMutationOutput'], ParentType, ContextType, RequireFields<MutationCreateDistributorArgs, 'distributorInput'>>;
+  createModelNumber?: Resolver<ResolversTypes['ModelNumberMutationOutput'], ParentType, ContextType, RequireFields<MutationCreateModelNumberArgs, 'modelNumberInput'>>;
+  createProduct?: Resolver<ResolversTypes['ProductMutationOutput'], ParentType, ContextType, RequireFields<MutationCreateProductArgs, 'productInput'>>;
+  createProductRegistration?: Resolver<ResolversTypes['ProductRegistrationMutationOutput'], ParentType, ContextType, RequireFields<MutationCreateProductRegistrationArgs, 'productRegistrationInput'>>;
+  createProductSymptom?: Resolver<ResolversTypes['ProductSymptomMutationOutput'], ParentType, ContextType, RequireFields<MutationCreateProductSymptomArgs, 'productSymptomInput'>>;
+  createRGA?: Resolver<ResolversTypes['RGAMutationOutput'], ParentType, ContextType, RequireFields<MutationCreateRgaArgs, 'rgaInput'>>;
+  createRGAGood?: Resolver<ResolversTypes['RGAGoodMutationOutput'], ParentType, ContextType, RequireFields<MutationCreateRgaGoodArgs, 'rgaGoodInput' | 'rgaId'>>;
+  createUploads?: Resolver<ResolversTypes['UploadMutationOutput'], ParentType, ContextType, RequireFields<MutationCreateUploadsArgs, 'uploadInput'>>;
+  createUser?: Resolver<ResolversTypes['UserMutationOutput'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'userInput'>>;
+  destroyCustomer?: Resolver<ResolversTypes['CustomerMutationOutput'], ParentType, ContextType, RequireFields<MutationDestroyCustomerArgs, 'id'>>;
+  destroyDistributor?: Resolver<ResolversTypes['DistributorMutationOutput'], ParentType, ContextType, RequireFields<MutationDestroyDistributorArgs, 'id'>>;
+  destroyDocument?: Resolver<ResolversTypes['DocumentMutationOutput'], ParentType, ContextType, RequireFields<MutationDestroyDocumentArgs, 'id'>>;
+  destroyModelNumber?: Resolver<ResolversTypes['ModelNumberMutationOutput'], ParentType, ContextType, RequireFields<MutationDestroyModelNumberArgs, 'id'>>;
+  destroyPage?: Resolver<ResolversTypes['PageMutationOutput'], ParentType, ContextType, RequireFields<MutationDestroyPageArgs, 'id'>>;
+  destroyProduct?: Resolver<ResolversTypes['ProductMutationOutput'], ParentType, ContextType, RequireFields<MutationDestroyProductArgs, 'id'>>;
+  destroyProductRegistration?: Resolver<ResolversTypes['ProductRegistrationMutationOutput'], ParentType, ContextType, RequireFields<MutationDestroyProductRegistrationArgs, 'id'>>;
+  destroyProductSymptom?: Resolver<ResolversTypes['ProductSymptomMutationOutput'], ParentType, ContextType, RequireFields<MutationDestroyProductSymptomArgs, 'id'>>;
+  destroyRGAGood?: Resolver<ResolversTypes['RGAGoodMutationOutput'], ParentType, ContextType, RequireFields<MutationDestroyRgaGoodArgs, 'id' | 'rgaId'>>;
+  destroyUser?: Resolver<ResolversTypes['UserMutationOutput'], ParentType, ContextType, RequireFields<MutationDestroyUserArgs, 'id'>>;
+  linkSymptomToModel?: Resolver<ResolversTypes['ProductSymptomMutationOutput'], ParentType, ContextType, RequireFields<MutationLinkSymptomToModelArgs, 'linked' | 'modelNumber' | 'symptomId'>>;
+  makeDocument?: Resolver<ResolversTypes['DocumentMutationOutput'], ParentType, ContextType, RequireFields<MutationMakeDocumentArgs, 'documentInput'>>;
+  makePage?: Resolver<ResolversTypes['PageMutationOutput'], ParentType, ContextType, RequireFields<MutationMakePageArgs, 'pageInput'>>;
+  resetPassword?: Resolver<ResolversTypes['UserMutationOutput'], ParentType, ContextType, RequireFields<MutationResetPasswordArgs, 'password'>>;
+  submitRGAForReview?: Resolver<ResolversTypes['RGAMutationOutput'], ParentType, ContextType, RequireFields<MutationSubmitRgaForReviewArgs, 'id'>>;
+  updateCustomer?: Resolver<ResolversTypes['CustomerMutationOutput'], ParentType, ContextType, RequireFields<MutationUpdateCustomerArgs, 'customerInput'>>;
+  updateDistributor?: Resolver<ResolversTypes['DistributorMutationOutput'], ParentType, ContextType, RequireFields<MutationUpdateDistributorArgs, 'distributorInput'>>;
+  updateModelNumber?: Resolver<ResolversTypes['ModelNumberMutationOutput'], ParentType, ContextType, RequireFields<MutationUpdateModelNumberArgs, 'modelNumberInput'>>;
+  updateModelNumberLotted?: Resolver<ResolversTypes['ModelNumberMutationOutput'], ParentType, ContextType, RequireFields<MutationUpdateModelNumberLottedArgs, 'id' | 'lotted'>>;
+  updateModelNumberViewable?: Resolver<ResolversTypes['ModelNumberMutationOutput'], ParentType, ContextType, RequireFields<MutationUpdateModelNumberViewableArgs, 'id' | 'publiclyViewable'>>;
+  updateProduct?: Resolver<ResolversTypes['ProductMutationOutput'], ParentType, ContextType, RequireFields<MutationUpdateProductArgs, 'productInput'>>;
+  updateProductRegistration?: Resolver<ResolversTypes['ProductRegistrationMutationOutput'], ParentType, ContextType, RequireFields<MutationUpdateProductRegistrationArgs, 'productRegistrationInput'>>;
+  updateProductSymptom?: Resolver<ResolversTypes['ProductSymptomMutationOutput'], ParentType, ContextType, RequireFields<MutationUpdateProductSymptomArgs, 'productSymptomInput'>>;
+  updateRGA?: Resolver<ResolversTypes['RGAMutationOutput'], ParentType, ContextType, RequireFields<MutationUpdateRgaArgs, 'rgaInput'>>;
+  updateRGAGood?: Resolver<ResolversTypes['RGAGoodMutationOutput'], ParentType, ContextType, RequireFields<MutationUpdateRgaGoodArgs, 'id' | 'rgaGoodInput' | 'rgaId'>>;
+  updateRGAShippingStatus?: Resolver<ResolversTypes['RGAMutationOutput'], ParentType, ContextType, RequireFields<MutationUpdateRgaShippingStatusArgs, 'id'>>;
+  updateRGAStatus?: Resolver<ResolversTypes['RGAMutationOutput'], ParentType, ContextType, RequireFields<MutationUpdateRgaStatusArgs, 'id' | 'status'>>;
+  updateUser?: Resolver<ResolversTypes['UserMutationOutput'], ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'userInput'>>;
+  version?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+};
+
+export type PageResolvers<ContextType = any, ParentType extends ResolversParentTypes['Page'] = ResolversParentTypes['Page']> = {
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  keywords?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  sections?: Resolver<Maybe<Array<Maybe<ResolversTypes['Section']>>>, ParentType, ContextType>;
+  slug?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PageInfoResolvers<ContextType = any, ParentType extends ResolversParentTypes['PageInfo'] = ResolversParentTypes['PageInfo']> = {
+  endCursor?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  hasNextPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  hasNextPages?: Resolver<Array<Maybe<ResolversTypes['PaginationEntry']>>, ParentType, ContextType, RequireFields<PageInfoHasNextPagesArgs, 'amount'>>;
+  hasPreviousPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  hasPreviousPages?: Resolver<Array<Maybe<ResolversTypes['PaginationEntry']>>, ParentType, ContextType, RequireFields<PageInfoHasPreviousPagesArgs, 'amount'>>;
+  startCursor?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PageMutationOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['PageMutationOutput'] = ResolversParentTypes['PageMutationOutput']> = {
+  errors?: Resolver<Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>, ParentType, ContextType>;
+  page?: Resolver<Maybe<ResolversTypes['Page']>, ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PageQueryOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['PageQueryOutput'] = ResolversParentTypes['PageQueryOutput']> = {
+  errors?: Resolver<Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>, ParentType, ContextType>;
+  lastEvaluatedKey?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  page?: Resolver<Maybe<ResolversTypes['Page']>, ParentType, ContextType>;
+  pageSize?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  pages?: Resolver<Maybe<Array<Maybe<ResolversTypes['Page']>>>, ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PaginationEntryResolvers<ContextType = any, ParentType extends ResolversParentTypes['PaginationEntry'] = ResolversParentTypes['PaginationEntry']> = {
+  cursor?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -5582,6 +5699,52 @@ export type ProductResolvers<ContextType = any, ParentType extends ResolversPare
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   modelNumbers?: Resolver<Maybe<Array<Maybe<ResolversTypes['ModelNumber']>>>, ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ProductMutationOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['ProductMutationOutput'] = ResolversParentTypes['ProductMutationOutput']> = {
+  errors?: Resolver<Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>, ParentType, ContextType>;
+  product?: Resolver<Maybe<ResolversTypes['Product']>, ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ProductQueryOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['ProductQueryOutput'] = ResolversParentTypes['ProductQueryOutput']> = {
+  errors?: Resolver<Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>, ParentType, ContextType>;
+  lastEvaluatedKey?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  pageSize?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  product?: Resolver<Maybe<ResolversTypes['Product']>, ParentType, ContextType>;
+  products?: Resolver<Maybe<Array<Maybe<ResolversTypes['Product']>>>, ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ProductRegistrationResolvers<ContextType = any, ParentType extends ResolversParentTypes['ProductRegistration'] = ResolversParentTypes['ProductRegistration']> = {
+  customer?: Resolver<ResolversTypes['Customer'], ParentType, ContextType>;
+  customerId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  lotted?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  modelNumber?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  productId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  registeredOn?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  serial?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ProductRegistrationMutationOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['ProductRegistrationMutationOutput'] = ResolversParentTypes['ProductRegistrationMutationOutput']> = {
+  errors?: Resolver<Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>, ParentType, ContextType>;
+  productRegistration?: Resolver<Maybe<ResolversTypes['ProductRegistration']>, ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ProductRegistrationQueryOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['ProductRegistrationQueryOutput'] = ResolversParentTypes['ProductRegistrationQueryOutput']> = {
+  errors?: Resolver<Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>, ParentType, ContextType>;
+  lastEvaluatedKey?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  pageSize?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  productRegistration?: Resolver<Maybe<ResolversTypes['ProductRegistration']>, ParentType, ContextType>;
+  productRegistrations?: Resolver<Maybe<Array<Maybe<ResolversTypes['ProductRegistration']>>>, ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -5600,90 +5763,11 @@ export type ProductSymptomResolvers<ContextType = any, ParentType extends Resolv
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type AttachedImageResolvers<ContextType = any, ParentType extends ResolversParentTypes['AttachedImage'] = ResolversParentTypes['AttachedImage']> = {
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  position?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  status?: Resolver<ResolversTypes['UploadStatus'], ParentType, ContextType>;
-  url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ModelNumberSymptomDetailResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModelNumberSymptomDetail'] = ResolversParentTypes['ModelNumberSymptomDetail']> = {
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  productId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  symptoms?: Resolver<Array<Maybe<ResolversTypes['ProductSymptom']>>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type PageQueryOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['PageQueryOutput'] = ResolversParentTypes['PageQueryOutput']> = {
+export type ProductSymptomMutationOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['ProductSymptomMutationOutput'] = ResolversParentTypes['ProductSymptomMutationOutput']> = {
   errors?: Resolver<Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>, ParentType, ContextType>;
-  lastEvaluatedKey?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  page?: Resolver<Maybe<ResolversTypes['Page']>, ParentType, ContextType>;
-  pages?: Resolver<Maybe<Array<Maybe<ResolversTypes['Page']>>>, ParentType, ContextType>;
-  pageSize?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  modelNumber?: Resolver<Maybe<ResolversTypes['ModelNumberSymptomDetail']>, ParentType, ContextType>;
+  productSymptom?: Resolver<Maybe<ResolversTypes['ProductSymptom']>, ParentType, ContextType>;
   success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type PageResolvers<ContextType = any, ParentType extends ResolversParentTypes['Page'] = ResolversParentTypes['Page']> = {
-  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  keywords?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  sections?: Resolver<Maybe<Array<Maybe<ResolversTypes['Section']>>>, ParentType, ContextType>;
-  slug?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type SectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Section'] = ResolversParentTypes['Section']> = {
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  items?: Resolver<Maybe<Array<Maybe<ResolversTypes['SectionItem']>>>, ParentType, ContextType>;
-  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  position?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type SectionItemResolvers<ContextType = any, ParentType extends ResolversParentTypes['SectionItem'] = ResolversParentTypes['SectionItem']> = {
-  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  icon?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  position?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  target?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ProductQueryOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['ProductQueryOutput'] = ResolversParentTypes['ProductQueryOutput']> = {
-  errors?: Resolver<Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>, ParentType, ContextType>;
-  lastEvaluatedKey?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  pageSize?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  product?: Resolver<Maybe<ResolversTypes['Product']>, ParentType, ContextType>;
-  products?: Resolver<Maybe<Array<Maybe<ResolversTypes['Product']>>>, ParentType, ContextType>;
-  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ProductRegistrationQueryOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['ProductRegistrationQueryOutput'] = ResolversParentTypes['ProductRegistrationQueryOutput']> = {
-  errors?: Resolver<Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>, ParentType, ContextType>;
-  lastEvaluatedKey?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  pageSize?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  productRegistration?: Resolver<Maybe<ResolversTypes['ProductRegistration']>, ParentType, ContextType>;
-  productRegistrations?: Resolver<Maybe<Array<Maybe<ResolversTypes['ProductRegistration']>>>, ParentType, ContextType>;
-  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ProductRegistrationResolvers<ContextType = any, ParentType extends ResolversParentTypes['ProductRegistration'] = ResolversParentTypes['ProductRegistration']> = {
-  customer?: Resolver<ResolversTypes['Customer'], ParentType, ContextType>;
-  customerId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  lotted?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
-  modelNumber?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  productId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  registeredOn?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  serial?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -5697,14 +5781,31 @@ export type ProductSymptomQueryOutputResolvers<ContextType = any, ParentType ext
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type RgaQueryOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['RGAQueryOutput'] = ResolversParentTypes['RGAQueryOutput']> = {
-  errors?: Resolver<Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>, ParentType, ContextType>;
-  lastEvaluatedKey?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  pageSize?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  rga?: Resolver<Maybe<ResolversTypes['RGA']>, ParentType, ContextType>;
-  rgas?: Resolver<Maybe<Array<Maybe<ResolversTypes['RGA']>>>, ParentType, ContextType>;
-  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+  customer?: Resolver<ResolversTypes['CustomerQueryOutput'], ParentType, ContextType, RequireFields<QueryCustomerArgs, 'id'>>;
+  customers?: Resolver<ResolversTypes['CustomerQueryOutput'], ParentType, ContextType, RequireFields<QueryCustomersArgs, never>>;
+  distributor?: Resolver<ResolversTypes['DistributorQueryOutput'], ParentType, ContextType, RequireFields<QueryDistributorArgs, 'id'>>;
+  distributors?: Resolver<ResolversTypes['DistributorQueryOutput'], ParentType, ContextType>;
+  document?: Resolver<ResolversTypes['DocumentQueryOutput'], ParentType, ContextType, RequireFields<QueryDocumentArgs, 'id'>>;
+  documents?: Resolver<ResolversTypes['DocumentQueryOutput'], ParentType, ContextType>;
+  info?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  modelNumber?: Resolver<Maybe<ResolversTypes['ModelNumberQueryOutput']>, ParentType, ContextType, RequireFields<QueryModelNumberArgs, 'id'>>;
+  modelNumbers?: Resolver<Maybe<ResolversTypes['ModelNumberQueryOutput']>, ParentType, ContextType, RequireFields<QueryModelNumbersArgs, never>>;
+  page?: Resolver<ResolversTypes['PageQueryOutput'], ParentType, ContextType, RequireFields<QueryPageArgs, 'id'>>;
+  pages?: Resolver<ResolversTypes['PageQueryOutput'], ParentType, ContextType>;
+  product?: Resolver<Maybe<ResolversTypes['ProductQueryOutput']>, ParentType, ContextType, RequireFields<QueryProductArgs, 'id'>>;
+  productRegistration?: Resolver<ResolversTypes['ProductRegistrationQueryOutput'], ParentType, ContextType, RequireFields<QueryProductRegistrationArgs, 'id'>>;
+  productRegistrations?: Resolver<ResolversTypes['ProductRegistrationQueryOutput'], ParentType, ContextType>;
+  productSymptom?: Resolver<ResolversTypes['ProductSymptomQueryOutput'], ParentType, ContextType, RequireFields<QueryProductSymptomArgs, 'id'>>;
+  productSymptoms?: Resolver<ResolversTypes['ProductSymptomQueryOutput'], ParentType, ContextType, RequireFields<QueryProductSymptomsArgs, never>>;
+  products?: Resolver<Maybe<ResolversTypes['ProductQueryOutput']>, ParentType, ContextType, RequireFields<QueryProductsArgs, never>>;
+  rga?: Resolver<ResolversTypes['RGAQueryOutput'], ParentType, ContextType, RequireFields<QueryRgaArgs, 'id'>>;
+  rgaCount?: Resolver<ResolversTypes['RGAStatusCountOutput'], ParentType, ContextType>;
+  rgas?: Resolver<ResolversTypes['RGAQueryOutput'], ParentType, ContextType, RequireFields<QueryRgasArgs, never>>;
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
+  userWithEmail?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserWithEmailArgs, 'email'>>;
+  users?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
+  version?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
 export type RgaResolvers<ContextType = any, ParentType extends ResolversParentTypes['RGA'] = ResolversParentTypes['RGA']> = {
@@ -5768,18 +5869,28 @@ export type RgaGoodResolvers<ContextType = any, ParentType extends ResolversPare
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type RgaStatusUpdateResolvers<ContextType = any, ParentType extends ResolversParentTypes['RGAStatusUpdate'] = ResolversParentTypes['RGAStatusUpdate']> = {
-  notes?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  status?: Resolver<Maybe<ResolversTypes['RGAStatus']>, ParentType, ContextType>;
-  updatedBy?: Resolver<Maybe<ResolversTypes['UpdateProfile']>, ParentType, ContextType>;
-  updatedOn?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+export type RgaGoodMutationOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['RGAGoodMutationOutput'] = ResolversParentTypes['RGAGoodMutationOutput']> = {
+  errors?: Resolver<Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>, ParentType, ContextType>;
+  rgaGood?: Resolver<Maybe<ResolversTypes['RGAGood']>, ParentType, ContextType>;
+  rgaId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type UpdateProfileResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateProfile'] = ResolversParentTypes['UpdateProfile']> = {
-  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+export type RgaMutationOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['RGAMutationOutput'] = ResolversParentTypes['RGAMutationOutput']> = {
+  errors?: Resolver<Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>, ParentType, ContextType>;
+  rga?: Resolver<Maybe<ResolversTypes['RGA']>, ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type RgaQueryOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['RGAQueryOutput'] = ResolversParentTypes['RGAQueryOutput']> = {
+  errors?: Resolver<Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>, ParentType, ContextType>;
+  lastEvaluatedKey?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  pageSize?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  rga?: Resolver<Maybe<ResolversTypes['RGA']>, ParentType, ContextType>;
+  rgas?: Resolver<Maybe<Array<Maybe<ResolversTypes['RGA']>>>, ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -5798,112 +5909,38 @@ export type RgaStatusCountOutputResolvers<ContextType = any, ParentType extends 
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
-  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  firstName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+export type RgaStatusUpdateResolvers<ContextType = any, ParentType extends ResolversParentTypes['RGAStatusUpdate'] = ResolversParentTypes['RGAStatusUpdate']> = {
+  notes?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  status?: Resolver<Maybe<ResolversTypes['RGAStatus']>, ParentType, ContextType>;
+  updatedBy?: Resolver<Maybe<ResolversTypes['UpdateProfile']>, ParentType, ContextType>;
+  updatedOn?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Section'] = ResolversParentTypes['Section']> = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  lastName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  items?: Resolver<Maybe<Array<Maybe<ResolversTypes['SectionItem']>>>, ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  position?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  attachImagesToSymptom?: Resolver<ResolversTypes['ProductSymptomMutationOutput'], ParentType, ContextType, RequireFields<MutationAttachImagesToSymptomArgs, 'attachedImages' | 'symptomId'>>;
-  createCustomer?: Resolver<ResolversTypes['CustomerMutationOutput'], ParentType, ContextType, RequireFields<MutationCreateCustomerArgs, 'customerInput'>>;
-  createDistributor?: Resolver<ResolversTypes['DistributorMutationOutput'], ParentType, ContextType, RequireFields<MutationCreateDistributorArgs, 'distributorInput'>>;
-  createModelNumber?: Resolver<ResolversTypes['ModelNumberMutationOutput'], ParentType, ContextType, RequireFields<MutationCreateModelNumberArgs, 'modelNumberInput'>>;
-  createProduct?: Resolver<ResolversTypes['ProductMutationOutput'], ParentType, ContextType, RequireFields<MutationCreateProductArgs, 'productInput'>>;
-  createProductRegistration?: Resolver<ResolversTypes['ProductRegistrationMutationOutput'], ParentType, ContextType, RequireFields<MutationCreateProductRegistrationArgs, 'productRegistrationInput'>>;
-  createProductSymptom?: Resolver<ResolversTypes['ProductSymptomMutationOutput'], ParentType, ContextType, RequireFields<MutationCreateProductSymptomArgs, 'productSymptomInput'>>;
-  createRGA?: Resolver<ResolversTypes['RGAMutationOutput'], ParentType, ContextType, RequireFields<MutationCreateRgaArgs, 'rgaInput'>>;
-  createRGAGood?: Resolver<ResolversTypes['RGAGoodMutationOutput'], ParentType, ContextType, RequireFields<MutationCreateRgaGoodArgs, 'rgaGoodInput' | 'rgaId'>>;
-  createUploads?: Resolver<ResolversTypes['UploadMutationOutput'], ParentType, ContextType, RequireFields<MutationCreateUploadsArgs, 'uploadInput'>>;
-  createUser?: Resolver<ResolversTypes['UserMutationOutput'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'userInput'>>;
-  destroyCustomer?: Resolver<ResolversTypes['CustomerMutationOutput'], ParentType, ContextType, RequireFields<MutationDestroyCustomerArgs, 'id'>>;
-  destroyDistributor?: Resolver<ResolversTypes['DistributorMutationOutput'], ParentType, ContextType, RequireFields<MutationDestroyDistributorArgs, 'id'>>;
-  destroyDocument?: Resolver<ResolversTypes['DocumentMutationOutput'], ParentType, ContextType, RequireFields<MutationDestroyDocumentArgs, 'id'>>;
-  destroyModelNumber?: Resolver<ResolversTypes['ModelNumberMutationOutput'], ParentType, ContextType, RequireFields<MutationDestroyModelNumberArgs, 'id'>>;
-  destroyPage?: Resolver<ResolversTypes['PageMutationOutput'], ParentType, ContextType, RequireFields<MutationDestroyPageArgs, 'id'>>;
-  destroyProduct?: Resolver<ResolversTypes['ProductMutationOutput'], ParentType, ContextType, RequireFields<MutationDestroyProductArgs, 'id'>>;
-  destroyProductRegistration?: Resolver<ResolversTypes['ProductRegistrationMutationOutput'], ParentType, ContextType, RequireFields<MutationDestroyProductRegistrationArgs, 'id'>>;
-  destroyProductSymptom?: Resolver<ResolversTypes['ProductSymptomMutationOutput'], ParentType, ContextType, RequireFields<MutationDestroyProductSymptomArgs, 'id'>>;
-  destroyRGAGood?: Resolver<ResolversTypes['RGAGoodMutationOutput'], ParentType, ContextType, RequireFields<MutationDestroyRgaGoodArgs, 'id' | 'rgaId'>>;
-  destroyUser?: Resolver<ResolversTypes['UserMutationOutput'], ParentType, ContextType, RequireFields<MutationDestroyUserArgs, 'id'>>;
-  linkSymptomToModel?: Resolver<ResolversTypes['ProductSymptomMutationOutput'], ParentType, ContextType, RequireFields<MutationLinkSymptomToModelArgs, 'linked' | 'modelNumber' | 'symptomId'>>;
-  makeDocument?: Resolver<ResolversTypes['DocumentMutationOutput'], ParentType, ContextType, RequireFields<MutationMakeDocumentArgs, 'documentInput'>>;
-  makePage?: Resolver<ResolversTypes['PageMutationOutput'], ParentType, ContextType, RequireFields<MutationMakePageArgs, 'pageInput'>>;
-  resetPassword?: Resolver<ResolversTypes['UserMutationOutput'], ParentType, ContextType, RequireFields<MutationResetPasswordArgs, 'password'>>;
-  submitRGAForReview?: Resolver<ResolversTypes['RGAMutationOutput'], ParentType, ContextType, RequireFields<MutationSubmitRgaForReviewArgs, 'id'>>;
-  updateCustomer?: Resolver<ResolversTypes['CustomerMutationOutput'], ParentType, ContextType, RequireFields<MutationUpdateCustomerArgs, 'customerInput'>>;
-  updateDistributor?: Resolver<ResolversTypes['DistributorMutationOutput'], ParentType, ContextType, RequireFields<MutationUpdateDistributorArgs, 'distributorInput'>>;
-  updateModelNumber?: Resolver<ResolversTypes['ModelNumberMutationOutput'], ParentType, ContextType, RequireFields<MutationUpdateModelNumberArgs, 'modelNumberInput'>>;
-  updateModelNumberLotted?: Resolver<ResolversTypes['ModelNumberMutationOutput'], ParentType, ContextType, RequireFields<MutationUpdateModelNumberLottedArgs, 'id' | 'lotted'>>;
-  updateModelNumberViewable?: Resolver<ResolversTypes['ModelNumberMutationOutput'], ParentType, ContextType, RequireFields<MutationUpdateModelNumberViewableArgs, 'id' | 'publiclyViewable'>>;
-  updateProduct?: Resolver<ResolversTypes['ProductMutationOutput'], ParentType, ContextType, RequireFields<MutationUpdateProductArgs, 'productInput'>>;
-  updateProductRegistration?: Resolver<ResolversTypes['ProductRegistrationMutationOutput'], ParentType, ContextType, RequireFields<MutationUpdateProductRegistrationArgs, 'productRegistrationInput'>>;
-  updateProductSymptom?: Resolver<ResolversTypes['ProductSymptomMutationOutput'], ParentType, ContextType, RequireFields<MutationUpdateProductSymptomArgs, 'productSymptomInput'>>;
-  updateRGA?: Resolver<ResolversTypes['RGAMutationOutput'], ParentType, ContextType, RequireFields<MutationUpdateRgaArgs, 'rgaInput'>>;
-  updateRGAGood?: Resolver<ResolversTypes['RGAGoodMutationOutput'], ParentType, ContextType, RequireFields<MutationUpdateRgaGoodArgs, 'id' | 'rgaGoodInput' | 'rgaId'>>;
-  updateRGAShippingStatus?: Resolver<ResolversTypes['RGAMutationOutput'], ParentType, ContextType, RequireFields<MutationUpdateRgaShippingStatusArgs, 'id'>>;
-  updateRGAStatus?: Resolver<ResolversTypes['RGAMutationOutput'], ParentType, ContextType, RequireFields<MutationUpdateRgaStatusArgs, 'id' | 'status'>>;
-  updateUser?: Resolver<ResolversTypes['UserMutationOutput'], ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'userInput'>>;
-  version?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-};
-
-export type ProductSymptomMutationOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['ProductSymptomMutationOutput'] = ResolversParentTypes['ProductSymptomMutationOutput']> = {
-  errors?: Resolver<Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>, ParentType, ContextType>;
-  modelNumber?: Resolver<Maybe<ResolversTypes['ModelNumberSymptomDetail']>, ParentType, ContextType>;
-  productSymptom?: Resolver<Maybe<ResolversTypes['ProductSymptom']>, ParentType, ContextType>;
-  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+export type SectionItemResolvers<ContextType = any, ParentType extends ResolversParentTypes['SectionItem'] = ResolversParentTypes['SectionItem']> = {
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  icon?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  position?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  target?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type CustomerMutationOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['CustomerMutationOutput'] = ResolversParentTypes['CustomerMutationOutput']> = {
-  customer?: Resolver<Maybe<ResolversTypes['Customer']>, ParentType, ContextType>;
-  errors?: Resolver<Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>, ParentType, ContextType>;
-  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type DistributorMutationOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['DistributorMutationOutput'] = ResolversParentTypes['DistributorMutationOutput']> = {
-  distributor?: Resolver<Maybe<ResolversTypes['Distributor']>, ParentType, ContextType>;
-  errors?: Resolver<Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>, ParentType, ContextType>;
-  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ModelNumberMutationOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['ModelNumberMutationOutput'] = ResolversParentTypes['ModelNumberMutationOutput']> = {
-  errors?: Resolver<Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>, ParentType, ContextType>;
-  modelNumber?: Resolver<Maybe<ResolversTypes['ModelNumber']>, ParentType, ContextType>;
-  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ProductMutationOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['ProductMutationOutput'] = ResolversParentTypes['ProductMutationOutput']> = {
-  errors?: Resolver<Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>, ParentType, ContextType>;
-  product?: Resolver<Maybe<ResolversTypes['Product']>, ParentType, ContextType>;
-  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ProductRegistrationMutationOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['ProductRegistrationMutationOutput'] = ResolversParentTypes['ProductRegistrationMutationOutput']> = {
-  errors?: Resolver<Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>, ParentType, ContextType>;
-  productRegistration?: Resolver<Maybe<ResolversTypes['ProductRegistration']>, ParentType, ContextType>;
-  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type RgaMutationOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['RGAMutationOutput'] = ResolversParentTypes['RGAMutationOutput']> = {
-  errors?: Resolver<Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>, ParentType, ContextType>;
-  rga?: Resolver<Maybe<ResolversTypes['RGA']>, ParentType, ContextType>;
-  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type RgaGoodMutationOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['RGAGoodMutationOutput'] = ResolversParentTypes['RGAGoodMutationOutput']> = {
-  errors?: Resolver<Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>, ParentType, ContextType>;
-  rgaGood?: Resolver<Maybe<ResolversTypes['RGAGood']>, ParentType, ContextType>;
-  rgaId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+export type UpdateProfileResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateProfile'] = ResolversParentTypes['UpdateProfile']> = {
+  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -5920,6 +5957,14 @@ export type UploadUrlResolvers<ContextType = any, ParentType extends ResolversPa
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
+  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  firstName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  lastName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type UserMutationOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserMutationOutput'] = ResolversParentTypes['UserMutationOutput']> = {
   errors?: Resolver<Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>, ParentType, ContextType>;
   success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
@@ -5927,82 +5972,59 @@ export type UserMutationOutputResolvers<ContextType = any, ParentType extends Re
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type DocumentMutationOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['DocumentMutationOutput'] = ResolversParentTypes['DocumentMutationOutput']> = {
-  document?: Resolver<Maybe<ResolversTypes['Document']>, ParentType, ContextType>;
-  errors?: Resolver<Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>, ParentType, ContextType>;
-  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type PageMutationOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['PageMutationOutput'] = ResolversParentTypes['PageMutationOutput']> = {
-  errors?: Resolver<Maybe<Array<Maybe<ResolversTypes['ValidationError']>>>, ParentType, ContextType>;
-  page?: Resolver<Maybe<ResolversTypes['Page']>, ParentType, ContextType>;
-  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type PageInfoResolvers<ContextType = any, ParentType extends ResolversParentTypes['PageInfo'] = ResolversParentTypes['PageInfo']> = {
-  endCursor?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  hasNextPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  hasNextPages?: Resolver<Array<Maybe<ResolversTypes['PaginationEntry']>>, ParentType, ContextType, RequireFields<PageInfoHasNextPagesArgs, 'amount'>>;
-  hasPreviousPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  hasPreviousPages?: Resolver<Array<Maybe<ResolversTypes['PaginationEntry']>>, ParentType, ContextType, RequireFields<PageInfoHasPreviousPagesArgs, 'amount'>>;
-  startCursor?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type PaginationEntryResolvers<ContextType = any, ParentType extends ResolversParentTypes['PaginationEntry'] = ResolversParentTypes['PaginationEntry']> = {
-  cursor?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+export type ValidationErrorResolvers<ContextType = any, ParentType extends ResolversParentTypes['ValidationError'] = ResolversParentTypes['ValidationError']> = {
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  path?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type Resolvers<ContextType = any> = {
-  Query?: QueryResolvers<ContextType>;
-  CustomerQueryOutput?: CustomerQueryOutputResolvers<ContextType>;
+  AttachedImage?: AttachedImageResolvers<ContextType>;
   Customer?: CustomerResolvers<ContextType>;
-  ValidationError?: ValidationErrorResolvers<ContextType>;
-  DistributorQueryOutput?: DistributorQueryOutputResolvers<ContextType>;
+  CustomerMutationOutput?: CustomerMutationOutputResolvers<ContextType>;
+  CustomerQueryOutput?: CustomerQueryOutputResolvers<ContextType>;
   Distributor?: DistributorResolvers<ContextType>;
-  DocumentQueryOutput?: DocumentQueryOutputResolvers<ContextType>;
+  DistributorMutationOutput?: DistributorMutationOutputResolvers<ContextType>;
+  DistributorQueryOutput?: DistributorQueryOutputResolvers<ContextType>;
   Document?: DocumentResolvers<ContextType>;
-  ModelNumberQueryOutput?: ModelNumberQueryOutputResolvers<ContextType>;
-  ModelNumber?: ModelNumberResolvers<ContextType>;
+  DocumentMutationOutput?: DocumentMutationOutputResolvers<ContextType>;
+  DocumentQueryOutput?: DocumentQueryOutputResolvers<ContextType>;
   FeeStructure?: FeeStructureResolvers<ContextType>;
+  ModelNumber?: ModelNumberResolvers<ContextType>;
+  ModelNumberMutationOutput?: ModelNumberMutationOutputResolvers<ContextType>;
+  ModelNumberQueryOutput?: ModelNumberQueryOutputResolvers<ContextType>;
+  ModelNumberSymptomDetail?: ModelNumberSymptomDetailResolvers<ContextType>;
+  Mutation?: MutationResolvers<ContextType>;
+  Page?: PageResolvers<ContextType>;
+  PageInfo?: PageInfoResolvers<ContextType>;
+  PageMutationOutput?: PageMutationOutputResolvers<ContextType>;
+  PageQueryOutput?: PageQueryOutputResolvers<ContextType>;
+  PaginationEntry?: PaginationEntryResolvers<ContextType>;
   Pricing?: PricingResolvers<ContextType>;
   Product?: ProductResolvers<ContextType>;
-  ProductSymptom?: ProductSymptomResolvers<ContextType>;
-  AttachedImage?: AttachedImageResolvers<ContextType>;
-  ModelNumberSymptomDetail?: ModelNumberSymptomDetailResolvers<ContextType>;
-  PageQueryOutput?: PageQueryOutputResolvers<ContextType>;
-  Page?: PageResolvers<ContextType>;
-  Section?: SectionResolvers<ContextType>;
-  SectionItem?: SectionItemResolvers<ContextType>;
+  ProductMutationOutput?: ProductMutationOutputResolvers<ContextType>;
   ProductQueryOutput?: ProductQueryOutputResolvers<ContextType>;
-  ProductRegistrationQueryOutput?: ProductRegistrationQueryOutputResolvers<ContextType>;
   ProductRegistration?: ProductRegistrationResolvers<ContextType>;
+  ProductRegistrationMutationOutput?: ProductRegistrationMutationOutputResolvers<ContextType>;
+  ProductRegistrationQueryOutput?: ProductRegistrationQueryOutputResolvers<ContextType>;
+  ProductSymptom?: ProductSymptomResolvers<ContextType>;
+  ProductSymptomMutationOutput?: ProductSymptomMutationOutputResolvers<ContextType>;
   ProductSymptomQueryOutput?: ProductSymptomQueryOutputResolvers<ContextType>;
-  RGAQueryOutput?: RgaQueryOutputResolvers<ContextType>;
+  Query?: QueryResolvers<ContextType>;
   RGA?: RgaResolvers<ContextType>;
   RGAGood?: RgaGoodResolvers<ContextType>;
-  RGAStatusUpdate?: RgaStatusUpdateResolvers<ContextType>;
-  UpdateProfile?: UpdateProfileResolvers<ContextType>;
-  RGAStatusCountOutput?: RgaStatusCountOutputResolvers<ContextType>;
-  User?: UserResolvers<ContextType>;
-  Mutation?: MutationResolvers<ContextType>;
-  ProductSymptomMutationOutput?: ProductSymptomMutationOutputResolvers<ContextType>;
-  CustomerMutationOutput?: CustomerMutationOutputResolvers<ContextType>;
-  DistributorMutationOutput?: DistributorMutationOutputResolvers<ContextType>;
-  ModelNumberMutationOutput?: ModelNumberMutationOutputResolvers<ContextType>;
-  ProductMutationOutput?: ProductMutationOutputResolvers<ContextType>;
-  ProductRegistrationMutationOutput?: ProductRegistrationMutationOutputResolvers<ContextType>;
-  RGAMutationOutput?: RgaMutationOutputResolvers<ContextType>;
   RGAGoodMutationOutput?: RgaGoodMutationOutputResolvers<ContextType>;
+  RGAMutationOutput?: RgaMutationOutputResolvers<ContextType>;
+  RGAQueryOutput?: RgaQueryOutputResolvers<ContextType>;
+  RGAStatusCountOutput?: RgaStatusCountOutputResolvers<ContextType>;
+  RGAStatusUpdate?: RgaStatusUpdateResolvers<ContextType>;
+  Section?: SectionResolvers<ContextType>;
+  SectionItem?: SectionItemResolvers<ContextType>;
+  UpdateProfile?: UpdateProfileResolvers<ContextType>;
   UploadMutationOutput?: UploadMutationOutputResolvers<ContextType>;
   UploadURL?: UploadUrlResolvers<ContextType>;
+  User?: UserResolvers<ContextType>;
   UserMutationOutput?: UserMutationOutputResolvers<ContextType>;
-  DocumentMutationOutput?: DocumentMutationOutputResolvers<ContextType>;
-  PageMutationOutput?: PageMutationOutputResolvers<ContextType>;
-  PageInfo?: PageInfoResolvers<ContextType>;
-  PaginationEntry?: PaginationEntryResolvers<ContextType>;
+  ValidationError?: ValidationErrorResolvers<ContextType>;
 };
 

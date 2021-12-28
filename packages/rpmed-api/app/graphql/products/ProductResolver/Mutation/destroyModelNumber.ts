@@ -1,5 +1,5 @@
 import { ModelNumber } from '../../../../models'
-import { generateMutationError } from '../../../../util'
+import { generateMutationError } from 'api-utils'
 import {
   ErrorModelNumberCouldNotBeDestroyed,
   ErrorModelNumberIDDoesNotExist,

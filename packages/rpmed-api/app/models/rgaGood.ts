@@ -1,6 +1,7 @@
 import { v4 as uuid } from 'uuid'
 import { FeeStructure, RgaGoodStatus } from '../schema'
-import { filterBlankAttributes, getDynamoClient, getS3Client } from '../util'
+import { getDynamoClient, getS3Client } from 'api-utils'
+import { filterBlankAttributes } from 'utils'
 
 /**
  * Dynamo DB Model:

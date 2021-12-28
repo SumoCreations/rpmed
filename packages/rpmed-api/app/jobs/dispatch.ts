@@ -1,4 +1,4 @@
-import { getSNSClient } from '../util'
+import { getSNSClient } from 'api-utils'
 import { BackgroundJob } from './types'
 
 /**

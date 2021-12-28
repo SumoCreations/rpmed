@@ -1,9 +1,6 @@
 import { Page } from '../../../../models'
-import { generateMutationError } from '../../../../util'
-import {
-  ErrorPageInvalid,
-  ErrorPageNotFound,
-} from '../pageErrors'
+import { generateMutationError } from 'api-utils'
+import { ErrorPageInvalid, ErrorPageNotFound } from '../pageErrors'
 import { MutationDestroyPageArgs, PageMutationOutput } from 'rpmed-schema'
 
 export const destroyPage = async (
@@ -21,7 +18,7 @@ export const destroyPage = async (
   }
   return {
     page: {
-      ...page
+      ...page,
     },
     success: true,
   }

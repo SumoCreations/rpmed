@@ -1,5 +1,6 @@
 import { v4 as uuid } from 'uuid'
-import { filterBlankAttributes, getDynamoClient } from '../util'
+import { getDynamoClient } from 'api-utils'
+import { filterBlankAttributes } from 'utils'
 import AttachedImage, {
   AttachedImageStatus,
   IAttachedImage,

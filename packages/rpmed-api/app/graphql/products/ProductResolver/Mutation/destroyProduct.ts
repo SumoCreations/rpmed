@@ -1,5 +1,5 @@
 import { Product } from '../../../../models'
-import { generateMutationError } from '../../../../util'
+import { generateMutationError } from 'api-utils'
 import {
   ErrorProductCouldNotBeDestroyed,
   ErrorProductIDDoesNotExist,

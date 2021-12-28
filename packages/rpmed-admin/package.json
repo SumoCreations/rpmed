@@ -97,7 +97,7 @@
   "jest": {
     "transformIgnorePatterns": [
       "^.+\\.module\\.(css|sass|scss)$",
-      "/node_modules/(?!(@sumocreations/forms|rpmed-validation-schema)/)"
+      "/node_modules/(?!(@sumocreations/forms|rpmed-validation-schema|api-models|api-utils)/)"
     ],
     "moduleNameMapper": {
       "\\.(css|less)$": "identity-obj-proxy",
