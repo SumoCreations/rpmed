@@ -1,6 +1,6 @@
 import * as jwt from 'jsonwebtoken'
 import { User } from '../models'
-import { getDynamoClient } from '../util'
+import { getDynamoClient } from 'api-utils'
 import { verifyUser } from './verify'
 
 export interface ITokenInput {

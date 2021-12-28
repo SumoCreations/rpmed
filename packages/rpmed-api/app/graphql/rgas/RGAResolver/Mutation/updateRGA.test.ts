@@ -33,7 +33,7 @@ describe('updateRGA', () => {
   })
 
   test('should fail if the RGA does not exist', async () => {
-    expect.assertions(3)
+    expect.assertions(1)
     const invalidInput: any = {
       rgaInput: {
         id: 'does-not-exist',
@@ -54,7 +54,7 @@ describe('updateRGA', () => {
     }
     const output = await updateRGA(null, invalidInput)
     expect(output.success).toBe(false)
-    expect(output.errors.map(e => e.path)).toContain('submittedBy')
-    expect(output.errors.map(e => e.path)).toContain('submittedOn')
+    expect(output.errors.map(e => e.path)).toContain('id')
+    expect(output.errors.map(e => e.path)).toContain('shippingSpeed')
   })
 })

@@ -57,15 +57,12 @@ describe('rga', () => {
       )
     })
 
-    test('should fail if the same serial is used twice', async () => {
+    test('should not fail if the same serial is used twice', async () => {
       expect.assertions(1)
-      try {
-        await RGAGood.create({
-          ...goodParams,
-        })
-      } catch (e) {
-        expect(e).toBeDefined()
-      }
+      const good = await RGAGood.create({
+        ...goodParams,
+      })
+      expect(good.id).not.toBeNull()
     })
   })
 
@@ -90,7 +87,7 @@ describe('rga', () => {
   describe('find', () => {
     test('should return an rga good if one exists', async () => {
       expect.assertions(1)
-      const existingRGAGood = await RGAGood.find(RGA_ID, SERIAL)
+      const existingRGAGood = await RGAGood.find(RGA_ID, existingGood.id)
       expect(existingRGAGood).not.toBeNull()
     })
 
@@ -104,7 +101,7 @@ describe('rga', () => {
   describe('forRGA', () => {
     test('should return all goods for the specific rga if they exists', async () => {
       expect.assertions(2)
-      await RGAGood.create({
+      const newGood = await RGAGood.create({
         faultCode: 'Test',
         lotted: true,
         modelNumber: 'MLD-X01',
@@ -127,8 +124,8 @@ describe('rga', () => {
         warrantyTerm: 6,
       })
       const existingGoods = await RGAGood.forRGA(RGA_ID)
-      expect(existingGoods.map(g => g.id)).toContain(SERIAL)
-      expect(existingGoods.map(g => g.id)).toContain('SERIAL-B')
+      expect(existingGoods.map(g => g.id)).toContain(existingGood.id)
+      expect(existingGoods.map(g => g.id)).toContain(newGood.id)
     })
 
     test('should return an empty array if the RGA does not exist', async () => {
@@ -141,8 +138,8 @@ describe('rga', () => {
   describe('destroy', () => {
     test('should delete a rga and return true if one exists', async () => {
       expect.assertions(2)
-      expect(await RGAGood.destroy(RGA_ID, SERIAL)).toBeTruthy()
-      const existingRGAGood = await RGAGood.find(RGA_ID, SERIAL)
+      expect(await RGAGood.destroy(RGA_ID, existingGood.id)).toBeTruthy()
+      const existingRGAGood = await RGAGood.find(RGA_ID, existingGood.id)
       expect(existingRGAGood).toBeNull()
     })
 

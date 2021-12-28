@@ -1,5 +1,5 @@
 import { IProductInput, Product } from '../../../../models'
-import { generateMutationError } from '../../../../util'
+import { generateMutationError } from 'api-utils'
 import * as Validation from '../../../../validations'
 import { ErrorProductAlreadyExist } from '../productErrors'
 import { IProductMutationOutput } from './productMutationTypes'

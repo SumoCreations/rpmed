@@ -3,7 +3,7 @@ import * as email from './email'
 import { TemporaryAccessToken, User } from './models'
 import { response, Status } from './net'
 import { parseEmail } from './parsers'
-import { CLIENT_URL } from './util'
+import { CLIENT_URL } from 'api-utils'
 
 /**
  * Generates a temporary token and sends a forgot password email

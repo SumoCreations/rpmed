@@ -5,7 +5,7 @@
   "main": "app/index.json",
   "scripts": {
     "jestInline": "jest --runInBand --config jest.config.js ./app/**/*",
-    "testLocal": "npm run dynamo; jest --watch --runInBand --config jest.config.js ./app/models/product*",
+    "testLocal": "npm run dynamo; jest --watch --runInBand --config jest.config.js ./app/**/*",
     "test": "npm run jestInline",
     "start": "npm run dynamo & serverless offline start -s dev",
     "lint": "tslint -p tsconfig.json",
@@ -21,6 +21,7 @@
   "dependencies": {
     "apollo-server-lambda": "^3.5.0",
     "bcryptjs": "^2.4.3",
+    "dotenv": "^10.0.0",
     "googleapis": "^39.2.0",
     "graphql": "^16.2.0",
     "graphql-tools": "^4.0.4",
@@ -51,7 +52,7 @@
     "@types/bcryptjs": "^2.4.2",
     "@types/graphql": "^14.5.0",
     "@types/humps": "^1.1.2",
-    "@types/jest": "^24.0.11",
+    "@types/jest": "^27.0.3",
     "@types/jsonwebtoken": "^8.3.2",
     "@types/lodash": "^4.14.123",
     "@types/luxon": "^1.12.0",

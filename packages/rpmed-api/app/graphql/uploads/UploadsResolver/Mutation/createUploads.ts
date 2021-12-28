@@ -1,4 +1,4 @@
-import { getS3Client, getUploadsBucket } from '../../../../util'
+import { getS3Client, getUploadsBucket } from 'api-utils'
 import { ErrorList } from '../../../../validations'
 
 interface IUploadInput {

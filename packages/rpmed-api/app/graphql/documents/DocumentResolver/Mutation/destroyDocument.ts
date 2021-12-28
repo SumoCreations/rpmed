@@ -1,10 +1,10 @@
 import { Document } from '../../../../models'
-import { generateMutationError } from '../../../../util'
+import { generateMutationError } from 'api-utils'
+import { ErrorDocumentInvalid, ErrorDocumentNotFound } from '../documentErrors'
 import {
-  ErrorDocumentInvalid,
-  ErrorDocumentNotFound,
-} from '../documentErrors'
-import { MutationDestroyDocumentArgs, DocumentMutationOutput } from 'rpmed-schema'
+  MutationDestroyDocumentArgs,
+  DocumentMutationOutput,
+} from 'rpmed-schema'
 
 export const destroyDocument = async (
   _: any,
@@ -21,7 +21,7 @@ export const destroyDocument = async (
   }
   return {
     document: {
-      ...document
+      ...document,
     },
     success: true,
   }

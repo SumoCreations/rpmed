@@ -109,8 +109,9 @@ describe('createRGAGood', () => {
       },
       rgaId: existingRGAId,
     })
-    const registration = await ProductRegistration.find(`${SERIAL}-2`)
+    const registration = await ProductRegistration.find(output.rgaGood?.id)
     const customer = await Customer.findByEmail(CUSTOMER_EMAIL)
+
     expect(output.success).toBe(true)
     expect(registration.customerId).toEqual(customer.partitionKey)
   })

@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid'
 import { hashPassword } from '../oauth'
-import { getDynamoClient } from '../util'
+import { getDynamoClient } from 'api-utils'
 
 /**
  * Dynamo DB Model:
@@ -236,9 +236,9 @@ const findByEmail = async (email: string): Promise<IUser | null> => {
 
 const destroyParamsForAssociatedEmailAddressesForUserId = async (
   userId: string
-): Promise<
-  Array<{ [key: string]: { Key: { email: string }; TableName: string } }>
-> => {
+): Promise<Array<{
+  [key: string]: { Key: { email: string }; TableName: string }
+}>> => {
   const params = {
     ExpressionAttributeValues: {
       ':hkey': userId,

@@ -3,7 +3,7 @@ import {
   ModelNumberMutationOutput,
   MutationUpdateModelNumberViewableArgs,
 } from '../../../../schema'
-import { generateMutationError } from '../../../../util'
+import { generateMutationError } from 'api-utils'
 import * as Validation from '../../../../validations'
 import { ErrorModelNumberIDDoesNotExist } from '../productErrors'
 

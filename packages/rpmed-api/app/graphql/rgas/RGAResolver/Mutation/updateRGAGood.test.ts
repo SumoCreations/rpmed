@@ -102,29 +102,32 @@ describe('updateRGAGood', () => {
     expect(output.success).toBe(false)
   })
 
-  test("should fail if an existing rga good has it's lotted status adjusted", async () => {
-    expect.assertions(1)
-    const output = await updateRGAGood(null, {
-      id: lottedGood.id,
-      rgaGoodInput: { ...sampleParams, lotted: !lottedGood.lotted },
-      rgaId: existingRGAId,
-    })
-    expect(output.success).toBe(false)
-  })
+  // The two commented tests below no longer matter now that we
+  // have decoupled the rga goods from any associated serial numbers.
 
-  test('should fail if an existing rga good already exists for the supplied id', async () => {
-    expect.assertions(1)
-    const output = await updateRGAGood(null, {
-      id: lottedGood.id,
-      rgaGoodInput: {
-        ...sampleParams,
-        lotted: lottedGood.lotted,
-        serial: nonLottedGood.id,
-      },
-      rgaId: existingRGAId,
-    })
-    expect(output.success).toBe(false)
-  })
+  // test("should fail if an existing rga good has it's lotted status adjusted", async () => {
+  //   expect.assertions(1)
+  //   const output = await updateRGAGood(null, {
+  //     id: lottedGood.id,
+  //     rgaGoodInput: { ...sampleParams, lotted: !lottedGood.lotted },
+  //     rgaId: existingRGAId,
+  //   })
+  //   expect(output.success).toBe(false)
+  // })
+
+  // test('should fail if an existing rga good already exists for the supplied id', async () => {
+  //   expect.assertions(1)
+  //   const output = await updateRGAGood(null, {
+  //     id: lottedGood.id,
+  //     rgaGoodInput: {
+  //       ...sampleParams,
+  //       lotted: lottedGood.lotted,
+  //       serial: nonLottedGood.id,
+  //     },
+  //     rgaId: existingRGAId,
+  //   })
+  //   expect(output.success).toBe(false)
+  // })
 
   test('should update an existing rga good if it exists', async () => {
     expect.assertions(1)
@@ -151,7 +154,7 @@ describe('updateRGAGood', () => {
     expect(output.rgaGood.id).toEqual(nonLottedGood.id)
   })
 
-  test('should not allow an update of the serial number / id when updating a lotted good', async () => {
+  test('should allow an update of the serial number / id when updating a lotted good', async () => {
     expect.assertions(1)
     const output = await updateRGAGood(null, {
       id: lottedGood.id,
@@ -162,6 +165,6 @@ describe('updateRGAGood', () => {
       },
       rgaId: existingRGAId,
     })
-    expect(output.success).toBe(false)
+    expect(output.success).toBe(true)
   })
 })

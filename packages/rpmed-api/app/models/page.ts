@@ -1,5 +1,6 @@
 import { v4 as uuid } from 'uuid'
-import { filterBlankAttributes, getDynamoClient } from '../util'
+import { getDynamoClient } from 'api-utils'
+import { filterBlankAttributes } from 'utils'
 
 /**
  * Dynamo DB Model:
@@ -37,7 +38,7 @@ export interface PageBase {
   id: string
 }
 
-export interface PageInput extends PageBase { }
+export interface PageInput extends PageBase {}
 
 export interface Page extends PageBase {
   partitionKey: string // id
@@ -45,17 +46,13 @@ export interface Page extends PageBase {
   indexSortKey: string // title
 }
 
-export interface PageOutput extends PageBase {
-}
+export interface PageOutput extends PageBase {}
 
 /**
  * Creates or updates an existing Page model in the database provided the supplied input is valid.
  * @param input The identifying input to assign to the Page.
  */
-const make = async ({
-  id,
-  ...page
-}: PageInput): Promise<Page> => {
+const make = async ({ id, ...page }: PageInput): Promise<Page> => {
   const existing = await find(id)
   const partitionKey = id ?? uuid()
   const pageAttributes: Page = {
@@ -64,7 +61,7 @@ const make = async ({
     id: partitionKey,
     indexSortKey: page.slug,
     partitionKey,
-    sortKey: `${SECONDARY_KEY}`
+    sortKey: `${SECONDARY_KEY}`,
   }
   console.log(pageAttributes)
   const params = {
@@ -109,11 +106,12 @@ const find = async (id?: string | null | undefined): Promise<Page | null> => {
 const findBySlug = async (slug: string): Promise<Page | null> => {
   const searchParams = {
     ExpressionAttributeValues: {
-      ":sortKey": SECONDARY_KEY,
-      ":indexSortKey": slug
+      ':sortKey': SECONDARY_KEY,
+      ':indexSortKey': slug,
     },
     IndexName: 'GSI_1',
-    KeyConditionExpression: 'sortKey = :sortKey AND indexSortKey = :indexSortKey',
+    KeyConditionExpression:
+      'sortKey = :sortKey AND indexSortKey = :indexSortKey',
     TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.query(searchParams).promise()
@@ -133,9 +131,10 @@ const all = async (): Promise<PageOutput[]> => {
     TableName: process.env.DYNAMODB_RESOURCES_TABLE,
   }
   const result = await client.query(searchParams).promise()
-  return (result.Items ? (result.Items as Page[]).map(output) : []) as PageOutput[]
+  return (result.Items
+    ? (result.Items as Page[]).map(output)
+    : []) as PageOutput[]
 }
-
 
 /**
  * Deletes a page.
@@ -174,7 +173,7 @@ const output = ({
   indexSortKey,
   ...page
 }: Page): PageOutput => ({
-  ...page
+  ...page,
 })
 
 export const Page = {
@@ -184,5 +183,5 @@ export const Page = {
   find,
   make,
   findBySlug,
-  output
+  output,
 }
