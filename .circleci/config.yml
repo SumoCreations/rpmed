@@ -132,7 +132,7 @@ commands:
           name: Copy sample environment
           command: cp packages/<< parameters.workspace >>/.env.sample packages/<< parameters.workspace >>/.env
       - run:
-          command: yarn << parameters.workspace >> test
+          command: yarn workspace << parameters.workspace >> test
           name: Run YARN tests
 
 jobs:
