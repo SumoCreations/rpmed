@@ -129,7 +129,10 @@ commands:
           name: Rebuild dependencies with CommonJS
           command: yarn build-test
       - run:
-          command: cd packages/<< parameters.workspace >> && yarn test
+          name: Copy sample environment
+          command: cp packages/<< parameters.workspace >>/.env.sample packages/<< parameters.workspace >>/.env
+      - run:
+          command: yarn << parameters.workspace >> test
           name: Run YARN tests
 
 jobs:
