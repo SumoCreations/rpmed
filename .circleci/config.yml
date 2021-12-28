@@ -120,7 +120,7 @@ commands:
       workspace:
         description: The workspace to test
         type: string
-        default: epc-client
+        default: rpmed-api
     steps:
       - checkout
       - restore-monorepo
@@ -129,7 +129,7 @@ commands:
           name: Rebuild dependencies with CommonJS
           command: yarn build-test
       - run:
-          command: yarn workspace << parameters.workspace >> test
+          command: cd packages/<< parameters.workspace >> && yarn test
           name: Run YARN tests
 
 jobs:
