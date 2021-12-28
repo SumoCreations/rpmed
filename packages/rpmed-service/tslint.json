@@ -1,0 +1,13 @@
+{
+  "extends": ["tslint:recommended", "tslint-react", "tslint-config-prettier"],
+  "linterOptions": {
+    "exclude": [
+      "src/schema/graphql.tsx",
+      "config/**/*.js",
+      "node_modules/**/*.ts",
+      "coverage/lcov-report/*.js",
+      "*.css",
+      "*.svg"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+mutation RegisterProduct(
+  $productRegistrationInput: NewProductRegistrationInput!
+) {
+  response: createProductRegistration(
+    productRegistrationInput: $productRegistrationInput
+  ) {
+    rga {
+      id
+      shippingSpeed
+      status
+      submittedBy
+      submittedOn
+    }
+    errors {
+      message
+      path
+    }
+    success
+  }
+}

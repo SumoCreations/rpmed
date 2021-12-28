@@ -13,4 +13,5 @@ jspm_packages
 report.*.json
 
 lib
-/packages/rpmed-api/.env
+.env
+/packages/rpmed-api/schema.graphql
