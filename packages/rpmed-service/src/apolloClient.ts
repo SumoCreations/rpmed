@@ -1,7 +1,6 @@
 import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
 import { fetchValidatedToken } from 'session'
-import store from './store'
 
 const fetcher = (input: RequestInfo, init?: RequestInit | undefined) => {
   return window.fetch(input, init)
@@ -44,7 +43,7 @@ const setAuthorizationLink = setContext((_, previousContext) => ({
 const asyncAuthLink = setContext(
   _ =>
     new Promise(async success => {
-      const token = await fetchValidatedToken(API_URL)(store)
+      const token = await fetchValidatedToken(API_URL)({})
       success({ token })
     })
 )
