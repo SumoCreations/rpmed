@@ -12,7 +12,7 @@ import {
   SutureHomeView,
 } from './home'
 import * as MedLED from './medled'
-import { Content, defaultTheme, Header, ThemeProvider } from 'rpmed-ui/lib/V1'
+import { defaultTheme, Header, ThemeProvider } from 'rpmed-ui/lib/V1'
 import { DownloadView, DownloadsView } from './downloads'
 
 class App extends Component<{}, {}, any> {
@@ -27,7 +27,7 @@ class App extends Component<{}, {}, any> {
             </Helmet>
             <Header.Primary />
             <Router>
-              <Content>
+              <div className="flex mx-auto" style={{ maxWidth: '1170px' }}>
                 <Route path="/" exact={true} component={HomeView} />
                 <Route path="/medled" exact={true} component={MedledHomeView} />
                 <Route
@@ -76,7 +76,7 @@ class App extends Component<{}, {}, any> {
                   component={MedLED.TroubleshootingView}
                 />
                 <Route path="/contact/" component={ContactView} />
-              </Content>
+              </div>
             </Router>
           </div>
         </ThemeProvider>

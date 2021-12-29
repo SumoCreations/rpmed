@@ -1,12 +1,7 @@
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
-import {
-  BreadCrumb,
-  ContentMainHeading,
-  TextFormContent,
-  View,
-} from 'rpmed-ui/lib/V1'
-import { BatteryForm } from 'rpmed-ui'
+import { ContentMainHeading, TextFormContent, View } from 'rpmed-ui/lib/V1'
+import { BreadCrumb, BatteryForm } from 'rpmed-ui'
 
 const BatteryView: React.FC<{}> = () => (
   <View>
@@ -14,11 +9,13 @@ const BatteryView: React.FC<{}> = () => (
       <meta charSet="utf-8" />
       <title>MedLED® Battery Recycling Program - Riverpoint Medical</title>
     </Helmet>
-    <BreadCrumb.Container>
-      <BreadCrumb.Link to="/medled/batteries">
-        Battery Recycling
-      </BreadCrumb.Link>
-    </BreadCrumb.Container>
+    <BreadCrumb
+      trail={[
+        { label: 'Resource Center', url: '/' },
+        { label: 'MedLED®', to: '/medled' },
+        { label: 'Battery Recycling Program', to: '/medled/batteries' },
+      ]}
+    />
     <ContentMainHeading>MedLED® Battery Recycling Program</ContentMainHeading>
     <TextFormContent>
       <p>
@@ -43,7 +40,7 @@ const BatteryView: React.FC<{}> = () => (
         </li>
       </ol>
       <BatteryForm
-        onSubmit={async data => {
+        onSubmit={async () => {
           return undefined
         }}
       />

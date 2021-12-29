@@ -1,11 +1,7 @@
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
-import {
-  BreadCrumb,
-  ContentMainHeading,
-  TextFormContent,
-} from 'rpmed-ui/lib/V1'
-import { ContactForm } from 'rpmed-ui'
+import { ContentMainHeading, TextFormContent } from 'rpmed-ui/lib/V1'
+import { BreadCrumb, ContactForm } from 'rpmed-ui'
 
 const ContactView: React.FC<{}> = () => (
   <article>
@@ -13,9 +9,12 @@ const ContactView: React.FC<{}> = () => (
       <meta charSet="utf-8" />
       <title>Contact Us - Riverpoint Medical</title>
     </Helmet>
-    <BreadCrumb.Container>
-      <BreadCrumb.Link to="/contact">Contact Us</BreadCrumb.Link>
-    </BreadCrumb.Container>
+    <BreadCrumb
+      trail={[
+        { label: 'Resource Center', url: '/' },
+        { label: 'Contact Us', to: '#' },
+      ]}
+    />
     <ContentMainHeading>We Want to Hear From You</ContentMainHeading>
     <TextFormContent>
       <p>
@@ -23,7 +22,7 @@ const ContactView: React.FC<{}> = () => (
         services.
       </p>
       <ContactForm
-        onSubmit={async data => {
+        onSubmit={async () => {
           return undefined
         }}
       />

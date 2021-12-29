@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useHistory } from 'react-router-dom'
-import { BreadCrumb } from 'rpmed-ui/lib/V1'
+import { BreadCrumb } from 'rpmed-ui'
 import surgicalMenu from './surgicalMenu'
 import { GridMenu } from './GridMenu'
 
@@ -9,11 +9,12 @@ const SurgicalHomeView: React.FC = () => {
   const handleSelectedItem = (link?: string) => history.push(link ?? '#')
   return (
     <article>
-      <BreadCrumb.Container>
-        <BreadCrumb.Link to="/surgical">
-          Surgical Fibers &amp; Devices
-        </BreadCrumb.Link>
-      </BreadCrumb.Container>
+      <BreadCrumb
+        trail={[
+          { label: 'Resource Center', url: '/' },
+          { label: 'Surgical Fibers', to: '/surgical' },
+        ]}
+      />
       <h1>Surgical Fibers &amp; Devices</h1>
       <GridMenu
         sections={surgicalMenu}

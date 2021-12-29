@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useHistory } from 'react-router-dom'
-import { BreadCrumb } from 'rpmed-ui/lib/V1'
+import { BreadCrumb } from 'rpmed-ui'
 import mainMenu from './mainMenu'
 import { GridMenu } from './GridMenu'
 
@@ -9,8 +9,8 @@ const HomeView: React.FC = () => {
   const handleSelectedItem = (link?: string) => history.push(link ?? '#')
   return (
     <article>
-      <BreadCrumb.Container home={true} />
-      <h1>Resource Center</h1>
+      <BreadCrumb trail={[{ label: 'Resource Center', to: '/' }]} />
+      <h1 className="text-xl font-bold mb-2">Resource Center</h1>
       <GridMenu
         sections={mainMenu}
         onItemSelect={handleSelectedItem}

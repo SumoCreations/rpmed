@@ -1,13 +1,8 @@
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
 import { Link } from 'react-router-dom'
-import {
-  BreadCrumb,
-  ContentMainHeading,
-  TextFormContent,
-  View,
-} from 'rpmed-ui/lib/V1'
-import { QuoteForm } from 'rpmed-ui'
+import { ContentMainHeading, TextFormContent, View } from 'rpmed-ui/lib/V1'
+import { BreadCrumb, QuoteForm } from 'rpmed-ui'
 
 const QuoteView: React.FC<{}> = () => (
   <View>
@@ -15,9 +10,13 @@ const QuoteView: React.FC<{}> = () => (
       <meta charSet="utf-8" />
       <title>MedLED® Quote, Trial &amp; Buy - Riverpoint Medical</title>
     </Helmet>
-    <BreadCrumb.Container>
-      <BreadCrumb.Link to="/medled/quote">Quote / Trial</BreadCrumb.Link>
-    </BreadCrumb.Container>
+    <BreadCrumb
+      trail={[
+        { label: 'Resource Center', url: '/' },
+        { label: 'MedLED®', to: '/medled' },
+        { label: 'Quote / Trial', to: '/medled/quote' },
+      ]}
+    />
     <ContentMainHeading>MedLED® Quote, Trial &amp; Buy</ContentMainHeading>
     <TextFormContent>
       <p>
@@ -55,7 +54,7 @@ const QuoteView: React.FC<{}> = () => (
         .
       </p>
       <QuoteForm
-        onSubmit={async data => {
+        onSubmit={async () => {
           return undefined
         }}
       />

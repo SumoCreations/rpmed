@@ -1,10 +1,10 @@
-import React, { useState } from "react"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { IconDefinition } from "@fortawesome/pro-regular-svg-icons"
-import { ToolTip, ToolTipAlignment, ToolTipDirection } from "./ToolTip"
-import clsx from "clsx"
+import React, { useState } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { IconDefinition } from '@fortawesome/pro-regular-svg-icons'
+import { ToolTip, ToolTipAlignment, ToolTipDirection } from './ToolTip'
+import clsx from 'clsx'
 
-export interface IconButtonProps {
+export interface IconActionProps {
   tooltip?: string
   tooltipAlignment?: ToolTipAlignment
   toolTipDirection?: ToolTipDirection
@@ -17,20 +17,20 @@ export interface IconButtonProps {
   noPadding?: boolean
 }
 
-const BUTTON_STYLES = "rounded-full w-10 flex-shrink-0"
-const HOVER_STYLES = "hover:bg-gray-400 hover:bg-opacity-25"
-const INACTIVE_STYLES = "opacity-50"
-const DISABLED_STYLES = "opacity-25 pointer-events-none"
+const BUTTON_STYLES = 'rounded-full w-10 flex-shrink-0'
+const HOVER_STYLES = 'hover:bg-gray-400 hover:bg-opacity-25'
+const INACTIVE_STYLES = 'opacity-50'
+const DISABLED_STYLES = 'opacity-25 pointer-events-none'
 
-export const IconButton: React.FC<IconButtonProps> = ({
+export const IconAction: React.FC<IconActionProps> = ({
   disabled,
   icon,
   onClick: clickHandlerFromProps,
   className,
   style,
   tooltip,
-  tooltipAlignment = "center",
-  toolTipDirection = "below",
+  tooltipAlignment = 'center',
+  toolTipDirection = 'below',
   inactive,
   noPadding,
 }) => {
@@ -59,9 +59,9 @@ export const IconButton: React.FC<IconButtonProps> = ({
     <button
       className={clsx([
         BUTTON_STYLES,
-        (className ?? "").indexOf("absolute") < 0 && "relative",
-        (className ?? "").indexOf("hover:bg") < 0 && HOVER_STYLES,
-        !noPadding && "p-2",
+        (className ?? '').indexOf('absolute') < 0 && 'relative',
+        (className ?? '').indexOf('hover:bg') < 0 && HOVER_STYLES,
+        !noPadding && 'p-2',
         className,
         disabled ? DISABLED_STYLES : inactive ? INACTIVE_STYLES : null,
       ])}

@@ -1,7 +1,6 @@
 import * as Actions from './Actions'
 import * as Animations from './Animations'
 import * as Brand from './Brand'
-import * as BreadCrumb from './BreadCrumb'
 import * as Card from './Card'
 import Container from './Container'
 import Content, { ContentMainHeading, TextFormContent } from './Content'
@@ -35,7 +34,6 @@ export {
   Actions,
   Animations,
   Brand,
-  BreadCrumb,
   Card,
   Container,
   Content,

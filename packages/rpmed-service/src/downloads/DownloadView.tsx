@@ -1,14 +1,7 @@
 import React, { useEffect } from 'react'
-import { useParams } from 'react-router-dom'
-import { Box, Flex } from 'rebass'
-import {
-  BreadCrumb,
-  ContentMainHeading,
-  Form,
-  TextFormContent,
-  Input,
-} from 'rpmed-ui/lib/V1'
-import { Clipboard } from 'rpmed-ui'
+import { useParams, Link } from 'react-router-dom'
+import { ContentMainHeading, Form, TextFormContent } from 'rpmed-ui/lib/V1'
+import { BreadCrumb, Clipboard } from 'rpmed-ui'
 import { documents } from './documents'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -41,49 +34,47 @@ const DownloadView: React.FC = () => {
   const downloadsPath = `/downloads/${params.category ?? ''}`
   return (
     <article>
-      <BreadCrumb.Container>
-        <BreadCrumb.Link to={downloadsPath}>Downloads</BreadCrumb.Link>
-        <BreadCrumb.Link to={`/d/${result?.id}`}>
-          {result?.title ?? 'Not Found'}
-        </BreadCrumb.Link>
-      </BreadCrumb.Container>
+      <BreadCrumb
+        trail={[
+          { to: '/', label: 'Resource Center' },
+          { to: downloadsPath, label: 'Downloads' },
+          { to: `/d/${result?.id}`, label: result?.title ?? 'Not Found' },
+        ]}
+      />
       <ContentMainHeading>{result?.title ?? 'Not Found'}</ContentMainHeading>
       <TextFormContent>
-        <Flex flexDirection={'column'}>
-          <Flex width={1} marginBottom={[3, 0]}>
-            <Box as="p">
-              <BreadCrumb.Link to={downloadsPath}>
-                <FontAwesomeIcon icon={faArrowAltCircleLeft} /> Downloads
-              </BreadCrumb.Link>
-            </Box>
-          </Flex>
-          <Flex flexDirection={['column', 'row']} width={1}>
-            <Flex
-              flexDirection="column"
-              as="p"
-              marginRight={[0, 3]}
-              marginY="auto"
-              width={[1, 1 / 2]}
-            >
+        <div className="flex flex-col">
+          <p className="md:mb-3">
+            <Link to={downloadsPath}>
+              <FontAwesomeIcon icon={faArrowAltCircleLeft} /> Downloads
+            </Link>
+          </p>
+          <div className="flex flex-row w-full">
+            <p className="flex flex-col w-full md:w-1/2 md:mr-3">
               This document is available for download as a PDF. You can also
               share a direct link via the provided url in the clipboard field.
-            </Flex>
-            <Flex flexDirection="column" width={[1, 1 / 2]}>
-              <Flex as="p" marginTop={2} width={1}>
+            </p>
+            <ul className="flex flex-col md:w-1/2">
+              <li className="mt-2 w-full">
                 <Form.Button onClick={handleDownload}>
                   <FontAwesomeIcon icon={faDownload} />
                   &nbsp; Download This Document
                 </Form.Button>
-              </Flex>
-              <Clipboard
-                value={`${window.location.protocol}//${window.location.host}${window.location.pathname}?a=1`}
-              />
-            </Flex>
-          </Flex>
-          <Box mt={4}>
-            <iframe src={result?.url} width="100%" height="700px"></iframe>
-          </Box>
-        </Flex>
+              </li>
+              <li>
+                <Clipboard
+                  value={`${window.location.protocol}//${window.location.host}${window.location.pathname}?a=1`}
+                />
+              </li>
+            </ul>
+          </div>
+          <iframe
+            src={result?.url}
+            width="100%"
+            height="700px"
+            className="mt-4"
+          ></iframe>
+        </div>
       </TextFormContent>
     </article>
   )

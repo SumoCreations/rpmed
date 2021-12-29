@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
-import { BreadCrumb, ContentMainHeading, GridNav, View } from 'rpmed-ui/lib/V1'
+import { ContentMainHeading, GridNav, View } from 'rpmed-ui/lib/V1'
+import { BreadCrumb } from 'rpmed-ui'
 import ProductGrid from './ProductGrid'
 import { IProductOption } from './products'
 import SymptomList from './SymptomList'
@@ -35,11 +36,13 @@ const TroubleshootingView: React.FunctionComponent<{}> = () => {
         <meta charSet="utf-8" />
         <title>MedLED® Troubleshooting - Riverpoint Medical</title>
       </Helmet>
-      <BreadCrumb.Container>
-        <BreadCrumb.Link to="/medled/troubleshooting">
-          Troubleshooting
-        </BreadCrumb.Link>
-      </BreadCrumb.Container>
+      <BreadCrumb
+        trail={[
+          { label: 'Resource Center', url: '/' },
+          { label: 'MedLED®', to: '/medled' },
+          { label: 'Troubleshooting', to: '/medled/troubleshooting' },
+        ]}
+      />
       <ContentMainHeading>MedLED® Troubleshooting</ContentMainHeading>
       <GridNav.SectionTitle>Choose Your Product</GridNav.SectionTitle>
       <ProductGrid

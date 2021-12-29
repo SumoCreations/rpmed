@@ -1,12 +1,7 @@
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
-import {
-  BreadCrumb,
-  ContentMainHeading,
-  TextFormContent,
-  View,
-} from 'rpmed-ui/lib/V1'
-import { RegisterForm } from 'rpmed-ui'
+import { ContentMainHeading, TextFormContent, View } from 'rpmed-ui/lib/V1'
+import { BreadCrumb, RegisterForm } from 'rpmed-ui'
 
 const RegisterView: React.FC<{}> = () => (
   <View>
@@ -14,11 +9,12 @@ const RegisterView: React.FC<{}> = () => (
       <meta charSet="utf-8" />
       <title>MedLED® Product Registration - Riverpoint Medical</title>
     </Helmet>
-    <BreadCrumb.Container>
-      <BreadCrumb.Link to="/medled/register">
-        Register Your Product
-      </BreadCrumb.Link>
-    </BreadCrumb.Container>
+    <BreadCrumb
+      trail={[
+        { label: 'Resource Center', url: '/' },
+        { label: 'MedLED® Product Registration', to: '#' },
+      ]}
+    />
     <ContentMainHeading>Register Your Product</ContentMainHeading>
     <TextFormContent>
       <RegisterForm
