@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import App from './App'
 import * as serviceWorker from './serviceWorker'
 import './index.css'
-import 'rpmed-ui/lib/rpmed-ui.scss'
+import 'rpmed-ui/lib/rpmed-ui.css'
 
 ReactDOM.render(<App />, document.getElementById('root'))
 
