@@ -1,6 +1,6 @@
 import React from 'react'
 import { Flex } from 'rebass'
-import { Divider, Form, Heading, Input } from 'rpmed-ui'
+import { Divider, Form, Heading, Input } from 'rpmed-ui/lib/V1'
 
 import { IRgaGoodFormSection } from './types'
 
@@ -18,19 +18,11 @@ export const PartnerDetailsSection: React.FC<IRgaGoodFormSection> = ({
     <Divider.Light />
     <Flex flexDirection={['column', 'row']} marginBottom={2}>
       <Flex marginRight={[0, 2]} width={[1, 1 / 2]}>
-        <Input.Field
-          name="po"
-          label="PO (Customer)"
-          placeholder=""
-          type="text"
-          required={false}
-        />
+        <Input.Field name="po" label="PO (Customer)" required={false} />
       </Flex>
       <Input.Field
         name="rma"
         label="RMA (Customer / Optional)"
-        placeholder=""
-        type="text"
         required={false}
       />
     </Flex>

@@ -4,7 +4,8 @@ import get from 'lodash.get'
 import React, { useState } from 'react'
 import { Flex } from 'rebass'
 import { ProductType, ValidationError, RgaGood } from 'rpmed-schema'
-import { Divider, Heading, IconButton, Indicators, Modal } from 'rpmed-ui'
+import { Heading, Indicators } from 'rpmed-ui/lib/V1'
+import { IconButton, Modal } from 'rpmed-ui'
 import { useCreateRgaGoodMutation, useUpdateRgaGoodMutation } from './graphql'
 import {
   FormSection,
@@ -98,17 +99,24 @@ export const CreateRGAGoodWidget: React.FunctionComponent<{
   }
 
   return (
-    <Modal.Dialog
-      size={Modal.Size.default}
-      onDismiss={handleDismiss || undefined}
-    >
+    <Modal onClose={handleDismiss} title="" open>
       <Flex flexDirection="column" paddingTop={3}>
         <Flex style={{ marginBottom: '1rem' }}>
           {currentSection > 0 ? (
-            <IconButton icon={faArrowLeft} onClick={handleBack} />
+            <IconButton
+              icon={faArrowLeft}
+              onClick={handleBack}
+              mode="default"
+              label=""
+            />
           ) : null}
           <span style={{ display: 'flex', flexGrow: 1 }} />
-          <IconButton icon={faTimes} onClick={handleDismiss} />
+          <IconButton
+            icon={faTimes}
+            onClick={handleDismiss}
+            mode="default"
+            label=""
+          />
         </Flex>
         {renderForm ? (
           <RGAGoodForm
@@ -147,6 +155,6 @@ export const CreateRGAGoodWidget: React.FunctionComponent<{
           </Heading.Section>
         )}
       </Flex>
-    </Modal.Dialog>
+    </Modal>
   )
 }

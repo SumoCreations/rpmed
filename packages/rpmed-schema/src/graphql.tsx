@@ -2159,6 +2159,21 @@ export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type UsersQuery = { __typename?: 'Query', users?: Array<{ __typename?: 'User', id: string, firstName?: string | null | undefined, lastName?: string | null | undefined, email: string } | null | undefined> | null | undefined };
 
+export type RegisterProductMutationVariables = Exact<{
+  productRegistrationInput: NewProductRegistrationInput;
+}>;
+
+
+export type RegisterProductMutation = { __typename?: 'Mutation', response: { __typename?: 'ProductRegistrationMutationOutput', success: boolean, productRegistration?: { __typename?: 'ProductRegistration', id: string } | null | undefined, errors?: Array<{ __typename?: 'ValidationError', message: string, path: string } | null | undefined> | null | undefined } };
+
+export type SubmitRgaForReviewMutationVariables = Exact<{
+  id: Scalars['ID'];
+  notes?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type SubmitRgaForReviewMutation = { __typename?: 'Mutation', submitRGAForReview: { __typename?: 'RGAMutationOutput', success: boolean, rga?: { __typename?: 'RGA', id: string, shippingSpeed?: string | null | undefined, submittedOn: string, submittedBy: string, status: RgaStatus } | null | undefined, errors?: Array<{ __typename?: 'ValidationError', message: string, path: string } | null | undefined> | null | undefined } };
+
 
 export const AttachImagesToSymptomDocument = gql`
     mutation AttachImagesToSymptom($symptomId: String!, $attachedImages: [AttachedImageInput]!) {
@@ -5215,6 +5230,93 @@ export function useUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<User
 export type UsersQueryHookResult = ReturnType<typeof useUsersQuery>;
 export type UsersLazyQueryHookResult = ReturnType<typeof useUsersLazyQuery>;
 export type UsersQueryResult = Apollo.QueryResult<UsersQuery, UsersQueryVariables>;
+export const RegisterProductDocument = gql`
+    mutation RegisterProduct($productRegistrationInput: NewProductRegistrationInput!) {
+  response: createProductRegistration(
+    productRegistrationInput: $productRegistrationInput
+  ) {
+    productRegistration {
+      id
+    }
+    errors {
+      message
+      path
+    }
+    success
+  }
+}
+    `;
+export type RegisterProductMutationFn = Apollo.MutationFunction<RegisterProductMutation, RegisterProductMutationVariables>;
+
+/**
+ * __useRegisterProductMutation__
+ *
+ * To run a mutation, you first call `useRegisterProductMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRegisterProductMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [registerProductMutation, { data, loading, error }] = useRegisterProductMutation({
+ *   variables: {
+ *      productRegistrationInput: // value for 'productRegistrationInput'
+ *   },
+ * });
+ */
+export function useRegisterProductMutation(baseOptions?: Apollo.MutationHookOptions<RegisterProductMutation, RegisterProductMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RegisterProductMutation, RegisterProductMutationVariables>(RegisterProductDocument, options);
+      }
+export type RegisterProductMutationHookResult = ReturnType<typeof useRegisterProductMutation>;
+export type RegisterProductMutationResult = Apollo.MutationResult<RegisterProductMutation>;
+export type RegisterProductMutationOptions = Apollo.BaseMutationOptions<RegisterProductMutation, RegisterProductMutationVariables>;
+export const SubmitRgaForReviewDocument = gql`
+    mutation SubmitRGAForReview($id: ID!, $notes: String) {
+  submitRGAForReview(id: $id, notes: $notes) {
+    rga {
+      id
+      shippingSpeed
+      submittedOn
+      submittedBy
+      status
+    }
+    errors {
+      message
+      path
+    }
+    success
+  }
+}
+    `;
+export type SubmitRgaForReviewMutationFn = Apollo.MutationFunction<SubmitRgaForReviewMutation, SubmitRgaForReviewMutationVariables>;
+
+/**
+ * __useSubmitRgaForReviewMutation__
+ *
+ * To run a mutation, you first call `useSubmitRgaForReviewMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSubmitRgaForReviewMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [submitRgaForReviewMutation, { data, loading, error }] = useSubmitRgaForReviewMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      notes: // value for 'notes'
+ *   },
+ * });
+ */
+export function useSubmitRgaForReviewMutation(baseOptions?: Apollo.MutationHookOptions<SubmitRgaForReviewMutation, SubmitRgaForReviewMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SubmitRgaForReviewMutation, SubmitRgaForReviewMutationVariables>(SubmitRgaForReviewDocument, options);
+      }
+export type SubmitRgaForReviewMutationHookResult = ReturnType<typeof useSubmitRgaForReviewMutation>;
+export type SubmitRgaForReviewMutationResult = Apollo.MutationResult<SubmitRgaForReviewMutation>;
+export type SubmitRgaForReviewMutationOptions = Apollo.BaseMutationOptions<SubmitRgaForReviewMutation, SubmitRgaForReviewMutationVariables>;
 
       export interface PossibleTypesResultData {
         possibleTypes: {

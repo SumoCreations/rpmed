@@ -10,7 +10,6 @@ import * as Divider from './Divider'
 import * as Errors from './Errors'
 import * as Form from './Form'
 import * as Grid from './Grid'
-import * as GridNav from './GridNav'
 import * as Header from './Header'
 import * as Heading from './Heading'
 import * as Indicators from './Indicators'
@@ -28,6 +27,7 @@ import defaultTheme from './theme'
 import * as Toolbar from './Toolbar'
 import View from './View'
 import { Link } from 'react-router-dom'
+import * as GridNav from './GridNav'
 
 export {
   Link,

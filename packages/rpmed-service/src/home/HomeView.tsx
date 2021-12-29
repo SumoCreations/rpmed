@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useHistory } from 'react-router-dom'
-import { BreadCrumb } from 'rpmed-ui'
+import { BreadCrumb } from 'rpmed-ui/lib/V1'
 import mainMenu from './mainMenu'
 import { GridMenu } from './GridMenu'
 

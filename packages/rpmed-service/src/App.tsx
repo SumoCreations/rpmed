@@ -1,4 +1,4 @@
-import { ApolloProvider } from '@apollo/react-hooks'
+import { ApolloProvider } from '@apollo/client'
 import React, { Component } from 'react'
 import { Helmet } from 'react-helmet'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
@@ -12,7 +12,7 @@ import {
   SutureHomeView,
 } from './home'
 import * as MedLED from './medled'
-import { Content, defaultTheme, Header, Layout, ThemeProvider } from './ui'
+import { Content, defaultTheme, Header, ThemeProvider } from 'rpmed-ui/lib/V1'
 import { DownloadView, DownloadsView } from './downloads'
 
 class App extends Component<{}, {}, any> {
@@ -20,7 +20,7 @@ class App extends Component<{}, {}, any> {
     return (
       <ApolloProvider client={client}>
         <ThemeProvider theme={defaultTheme}>
-          <Layout>
+          <div className="flex min-h-screen flex-col flex-grow w-full bg-secondary">
             <Helmet>
               <meta charSet="utf-8" />
               <title>Resource Center - Riverpoint Medical</title>
@@ -78,7 +78,7 @@ class App extends Component<{}, {}, any> {
                 <Route path="/contact/" component={ContactView} />
               </Content>
             </Router>
-          </Layout>
+          </div>
         </ThemeProvider>
       </ApolloProvider>
     )

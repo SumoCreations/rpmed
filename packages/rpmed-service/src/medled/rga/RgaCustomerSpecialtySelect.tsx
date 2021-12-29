@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Input } from 'rpmed-ui'
+import { Form, Input } from 'rpmed-ui/lib/V1'
 
 const BLANK_VALUE = 'Not Specified'
 const specialties = [

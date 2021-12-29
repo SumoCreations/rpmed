@@ -1,6 +1,6 @@
 import React from 'react'
 import { Flex } from 'rebass'
-import { Form, Divider, GridNav, Heading, Input } from 'rpmed-ui'
+import { Form, Divider, GridNav, Heading, Input } from 'rpmed-ui/lib/V1'
 import { ModelNumber, Product } from 'rpmed-schema'
 import { ModelNumberSelectFn } from './ModelNumberSelectField'
 import { ProductSelectField, ProductSelectFn } from './ProductSelectField'
@@ -107,13 +107,7 @@ export const ModelNumberGrid: React.FC<IModelNumberGridProps> = ({
       ) : null}
       {values.lotted ? (
         <Flex marginBottom="auto" width={[1]}>
-          <Input.Field
-            name="serial"
-            label="Serial Number"
-            placeholder="i.e. 'MC-161000-000000'"
-            type="text"
-            required={true}
-          />
+          <Input.Field name="serial" label="Serial Number" required={true} />
         </Flex>
       ) : null}
       <Flex marginTop={2}>

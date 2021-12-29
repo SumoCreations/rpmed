@@ -2,7 +2,7 @@ import { faPencil } from '@fortawesome/pro-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react'
 import { Box, Flex } from 'rebass'
-import { Actions, Divider } from 'rpmed-ui'
+import { Actions, Divider } from 'rpmed-ui/lib/V1'
 
 interface ISummaryProps {
   onEdit: React.MouseEventHandler

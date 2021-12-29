@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useHistory } from 'react-router-dom'
-import { BreadCrumb } from 'rpmed-ui'
+import { BreadCrumb } from 'rpmed-ui/lib/V1'
 import surgicalMenu from './surgicalMenu'
 import { GridMenu } from './GridMenu'
 
@@ -10,7 +10,7 @@ const SurgicalHomeView: React.FC = () => {
   return (
     <article>
       <BreadCrumb.Container>
-        <BreadCrumb.Link to="/surgical" primary={true}>
+        <BreadCrumb.Link to="/surgical">
           Surgical Fibers &amp; Devices
         </BreadCrumb.Link>
       </BreadCrumb.Container>

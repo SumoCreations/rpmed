@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box, Flex } from 'rebass'
-import { Divider, Form, Heading, Input, Switch } from 'rpmed-ui'
+import { Divider, Form, Heading, Input, Switch } from 'rpmed-ui/lib/V1'
 import {
   ProductSymptomSelectField,
   ProductSymptomSelectFn,
@@ -107,8 +107,6 @@ export const SymptomDetailsSection: React.FC<ISymptomDetailsSectionProps> = ({
           <Input.Field
             name="notes"
             label="Any specific notes?"
-            placeholder=""
-            type="text"
             required={false}
           />
         </Flex>

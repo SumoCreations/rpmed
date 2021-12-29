@@ -1,7 +1,7 @@
 import { Formik, FormikHelpers } from 'formik'
 import * as React from 'react'
 import { Link, useHistory } from 'react-router-dom'
-import { Card, Form, Input, TextFormContent } from 'rpmed-ui'
+import { Card, Form, Input, TextFormContent } from 'rpmed-ui/lib/V1'
 import { RequiredEmail, validation } from '../../validations'
 import { useCreateRgaMutation } from './graphql'
 import { ShippingSpeedSelect } from './ShippingSpeedSelect'
@@ -72,7 +72,6 @@ export const CreateRgaView: React.FC = () => {
                     <Input.Field
                       name="email"
                       label="Email Address"
-                      placeholder="name@company.com"
                       required={true}
                     />
                   </Form.RowItem>

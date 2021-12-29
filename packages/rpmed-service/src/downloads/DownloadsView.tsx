@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import * as React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { useQuery } from '../routes'
-import { BreadCrumb, GridNav } from 'rpmed-ui'
+import { BreadCrumb, GridNav } from 'rpmed-ui/lib/V1'
 import { documents } from './documents'
 
 const DownloadsView: React.FC = () => {
@@ -41,9 +41,7 @@ const DownloadsView: React.FC = () => {
   return (
     <article>
       <BreadCrumb.Container>
-        <BreadCrumb.Link to="/downloads" primary={true}>
-          Downloads
-        </BreadCrumb.Link>
+        <BreadCrumb.Link to="/downloads">Downloads</BreadCrumb.Link>
       </BreadCrumb.Container>
       <h1>Downloads {title ? `(${title})` : <span />}</h1>
       <GridNav.SectionTitle>

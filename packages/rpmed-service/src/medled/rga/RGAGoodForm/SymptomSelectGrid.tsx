@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { Flex } from 'rebass'
-import { Form, GridNav, Heading, Divider } from 'rpmed-ui'
+import { Form, GridNav, Heading, Divider } from 'rpmed-ui/lib/V1'
 import { useProductSymptomsQuery } from '../graphql'
 import { ProductSymptomSelectFn } from './ProductSymptomSelectField'
 import { IInteractiveSection } from './types'

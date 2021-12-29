@@ -1,5 +1,10 @@
 module.exports = {
-  content: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
+  content: [
+    './src/**/*.{js,jsx,ts,tsx}',
+    './public/index.html',
+    '../rpmed-admin/src/**/*.{js,jsx,ts,tsx}',
+    '../rpmed-service/src/**/*.{js,jsx,ts,tsx}',
+  ],
   darkMode: 'media', // or 'media' or 'class'
   theme: {
     inset: {

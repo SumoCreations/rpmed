@@ -7,7 +7,8 @@ import {
   Form,
   TextFormContent,
   Input,
-} from 'rpmed-ui'
+} from 'rpmed-ui/lib/V1'
+import { Clipboard } from 'rpmed-ui'
 import { documents } from './documents'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -42,7 +43,7 @@ const DownloadView: React.FC = () => {
     <article>
       <BreadCrumb.Container>
         <BreadCrumb.Link to={downloadsPath}>Downloads</BreadCrumb.Link>
-        <BreadCrumb.Link to={`/d/${result?.id}`} primary={true}>
+        <BreadCrumb.Link to={`/d/${result?.id}`}>
           {result?.title ?? 'Not Found'}
         </BreadCrumb.Link>
       </BreadCrumb.Container>
@@ -74,7 +75,7 @@ const DownloadView: React.FC = () => {
                   &nbsp; Download This Document
                 </Form.Button>
               </Flex>
-              <Input.Clipboard
+              <Clipboard
                 value={`${window.location.protocol}//${window.location.host}${window.location.pathname}?a=1`}
               />
             </Flex>

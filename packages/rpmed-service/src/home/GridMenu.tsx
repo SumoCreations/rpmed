@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLightbulb } from '@fortawesome/pro-regular-svg-icons'
 import React from 'react'
 import { IMenuSection } from './types'
-import { GridNav } from 'rpmed-ui'
+import { GridNav } from 'rpmed-ui/lib/V1'
 
 export const GridMenu: React.FC<{
   sections: IMenuSection[]

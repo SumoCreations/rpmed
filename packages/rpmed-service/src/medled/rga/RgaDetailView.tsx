@@ -11,12 +11,11 @@ import {
   Form,
   Heading,
   Input,
-  Modal,
   Para,
   TextFormContent,
   Indicators,
   Tags,
-} from 'rpmed-ui'
+} from 'rpmed-ui/lib/V1'
 import {
   OptionalEmail,
   OptionalString,
@@ -30,6 +29,7 @@ import {
   useSubmitRgaForReviewMutation,
 } from './graphql'
 import { RgaGood, ValidationError, RgaStatus } from 'rpmed-schema'
+import { Modal, Dialog } from 'rpmed-ui'
 
 const validationSchema = validation({
   goods: validateArrayOf(
@@ -226,7 +226,6 @@ export const RgaDetailView: React.FC = () => {
                       name="notes"
                       label="Is there anything else you'd like to let us to know?"
                       required={false}
-                      type="textarea"
                     />
                   </Form.RowItem>
                 </Form.Row>
@@ -242,7 +241,7 @@ export const RgaDetailView: React.FC = () => {
                 </Form.Button>
               </Card.View>
               {isSubmitting || (status && status !== RgaStatus.Issued) ? (
-                <Modal.Dialog size={Modal.Size.small}>
+                <Modal title="" open>
                   <Flex flexDirection="column" paddingTop={3}>
                     {isSubmitting ? (
                       <Flex margin="auto" paddingBottom={3}>
@@ -272,19 +271,19 @@ export const RgaDetailView: React.FC = () => {
                       </React.Fragment>
                     )}
                   </Flex>
-                </Modal.Dialog>
+                </Modal>
               ) : null}
             </Form.Form>
           )
         }}
       </Formik>
       {goodToDelete ? (
-        <Modal.Confirm
+        <Dialog
           title={`Remove RGA Item?`}
           message={`Are you sure you want to delete '${goodToDelete.modelNumber}'? You can not undo this action.`}
-          onDismiss={handleDismissDelete}
+          onClose={handleDismissDelete}
           onConfirm={handleConfirmDelete}
-          destructive={true}
+          open
         />
       ) : null}
     </TextFormContent>

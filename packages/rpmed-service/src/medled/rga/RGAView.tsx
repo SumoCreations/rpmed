@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
 import { Route, Switch } from 'react-router-dom'
-import { BreadCrumb, ContentMainHeading, View } from 'rpmed-ui'
+import { BreadCrumb, ContentMainHeading, View } from 'rpmed-ui/lib/V1'
 import { CreateRgaView } from './CreateRgaView'
 import { RgaDetailView } from './RgaDetailView'
 
@@ -13,9 +13,7 @@ const RGAView: React.FC = () => {
         <title>MedLED® Request an RGA - Riverpoint Medical</title>
       </Helmet>
       <BreadCrumb.Container>
-        <BreadCrumb.Link to="/medled/quote" primary={true}>
-          RGA
-        </BreadCrumb.Link>
+        <BreadCrumb.Link to="/medled/quote">RGA</BreadCrumb.Link>
       </BreadCrumb.Container>
       <ContentMainHeading>Return Good Authorization Request</ContentMainHeading>
       <Switch>

@@ -1,7 +1,7 @@
 import { ErrorMessage } from 'formik'
 import * as React from 'react'
 import { ProductType } from 'rpmed-schema'
-import { Form, Input } from 'rpmed-ui'
+import { Form, Input } from 'rpmed-ui/lib/V1'
 
 export type ProductTypeSelectFn = Input.DropDownSelectFn<ProductType>
 

@@ -42,12 +42,10 @@
     "yup": "^0.32.11"
   },
   "scripts": {
-    "start": "yarn storybook",
-    "build": "rm -rf ./lib && tsc && yarn build-tailwind:release && cp ./src/*.png ./lib",
-    "build-tailwind": "postcss src/scss/base.scss -o src/scss/tailwind.scss && postcss src/scss/base.scss -o lib/rpmed-ui.scss",
-    "build-tailwind:purged": "postcss src/scss/base.scss -o src/scss/tailwind.scss && ls -lh src/**/*tailwind.scss NODE_ENV=production",
-    "build-tailwind:release": "postcss src/scss/base.scss -o lib/rpmed-ui.scss NODE_ENV=production ",
-    "build-tailwind:watch": "npx tailwindcss -i ./src/scss/base.scss -o ./src/scss/tailwind.css  --watch",
+    "start": "yarn build-tailwind:watch & yarn storybook",
+    "build": "NODE_ENV=production rm -rf ./lib && tsc && yarn build-tailwind && cp ./src/*.png ./lib",
+    "build-tailwind": "postcss src/scss/base.scss -o src/scss/tailwind.scss && postcss src/scss/base.scss -o lib/rpmed-ui.css",
+    "build-tailwind:watch": "npx tailwindcss -i ./src/scss/base.scss -o lib/rpmed-ui.css  --watch",
     "storybook": "start-storybook -p 6006",
     "prettier": "prettier --config ../../.prettierrc 'src/**/*.{js,jsx,ts,tsx}' --write",
     "build-storybook": "build-storybook"

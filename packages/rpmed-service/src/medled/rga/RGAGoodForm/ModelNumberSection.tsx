@@ -1,6 +1,6 @@
 import React from 'react'
 import { Flex } from 'rebass'
-import { Form, Input } from 'rpmed-ui'
+import { Form, Input } from 'rpmed-ui/lib/V1'
 import {
   ModelNumberSelectField,
   ModelNumberSelectFn,
@@ -76,13 +76,7 @@ export const ModelNumberSection: React.FC<IModelNumberSectionProps> = ({
         ) : null}
         {values.lotted ? (
           <Flex marginBottom="auto" width={[1, 1 / 2]}>
-            <Input.Field
-              name="serial"
-              label="Serial Number"
-              placeholder="i.e. 'MC-161000-000000'"
-              type="text"
-              required={true}
-            />
+            <Input.Field name="serial" label="Serial Number" required={true} />
           </Flex>
         ) : null}
       </Flex>

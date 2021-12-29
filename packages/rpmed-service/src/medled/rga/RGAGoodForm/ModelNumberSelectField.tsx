@@ -2,7 +2,7 @@ import { ErrorMessage } from 'formik'
 import * as React from 'react'
 import { Box, Flex } from 'rebass'
 import { ModelNumber, ProductType } from 'rpmed-schema'
-import { Form, Indicators, Input } from 'rpmed-ui'
+import { Form, Indicators, Input } from 'rpmed-ui/lib/V1'
 import { useModelNumbersQuery } from '../graphql'
 
 export type ModelNumberSelectFn = Input.DropDownSelectFn<ModelNumber>
@@ -62,12 +62,7 @@ const Results: React.FC<IResultProps> = ({
             return (
               <Input.AutocompleteSuggestion
                 key={`ModelNumbersSearchResult${m.id}`}
-                displayName={
-                  <Input.SuggestionDetailView
-                    heading={m.id}
-                    description={m.description}
-                  />
-                }
+                displayName={<Input.SuggestionDetailView heading={m.id} />}
                 onClick={onClick}
               />
             )

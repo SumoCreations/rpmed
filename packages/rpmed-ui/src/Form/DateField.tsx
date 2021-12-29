@@ -130,7 +130,7 @@ export const DateField = React.forwardRef<HTMLInputElement, DateFieldProps>(
         {focused ? (
           <Overlay>
             <div
-              className={`fixed bg-white shadow hover:shadow-lg mt-1 transition-shadow ease-in-out duration-500 z-50 w-64 my-auto`}
+              className={`fixed bg-white shadow hover:shadow-lg mt-1 transition-shadow ease-in-out duration-500 z-50s w-64 my-auto`}
               style={{
                 top: (y ?? 0) + (height ?? 0),
                 left: x,

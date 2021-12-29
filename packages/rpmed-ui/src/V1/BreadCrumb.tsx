@@ -1,52 +1,25 @@
 import * as React from 'react'
-import styled from './styled-components'
 import { Link } from 'react-router-dom'
 import clsx from 'clsx'
 
-const List = styled.ul`
-  list-style: none;
-  margin: 0 0 12px 0;
-  padding: 0;
-  display: flex;
-  flex-direction: row;
-`
-
-const Item = styled.li`
-  margin: 0;
-  padding: 0;
-  display: flex;
-  font-family: ${(p) => p.theme.fontFamilyHeader};
-
-  & > span {
-    display: flex;
-    font-size: 0.675rem;
-    opacity: 0.25;
-    margin: auto 4px;
-    font-weight: bold;
-  }
-
-  &:last-child > span {
-    display: none;
-  }
-`
-
-const HomeLink = styled.a`
-  text-transform: uppercase;
-  font-weight: 600;
-  color: ${(p) => p.theme.colorPrimary};
-  font-size: 0.875em;
-`
+const LIST_STYLES = 'mb-4 p-0 flex flex-row'
+const LIST_ITEM_STYLES = 'flex m-0 p-0 font-header'
+const LIST_ITEM_CHILD_STYLES =
+  'text-sm opacity-25 mx-auto my-2 font-bold display-none:last-child text-center'
+const HOME_LINK_STYLES = 'uppercase text-sm text-primary font-bold'
 
 const Container: React.FC<{
   children?: JSX.Element[] | JSX.Element
   home?: boolean
 }> = ({ children, home }) => (
-  <List>
-    <Item>
-      <HomeLink href="https://rpmed.com">Home</HomeLink>
+  <ul className={LIST_STYLES}>
+    <li className={LIST_ITEM_STYLES}>
+      <a href="https://rpmed.com" className={HOME_LINK_STYLES}>
+        Home
+      </a>
       <span aria-hidden="true">&gt;</span>
-    </Item>
-    <Item>
+    </li>
+    <li className={LIST_ITEM_STYLES}>
       <Link
         to="/"
         className={clsx(
@@ -56,14 +29,19 @@ const Container: React.FC<{
       >
         Resource Center
       </Link>
-      <span aria-hidden="true">&gt;</span>
-    </Item>
+      <span aria-hidden="true" className={LIST_ITEM_CHILD_STYLES}>
+        &gt;
+      </span>
+    </li>
     {React.Children.map(children, (child) => (
-      <Item>
-        {child} <span aria-hidden="true">&gt;</span>
-      </Item>
+      <li className={LIST_ITEM_STYLES}>
+        {child}{' '}
+        <span aria-hidden="true" className={LIST_ITEM_CHILD_STYLES}>
+          &gt;
+        </span>
+      </li>
     ))}
-  </List>
+  </ul>
 )
 
-export { Container, List, Item, Link }
+export { Container, Link }

@@ -2,7 +2,7 @@ import { ErrorMessage } from 'formik'
 import * as React from 'react'
 import { Box, Flex } from 'rebass'
 import { Product } from 'rpmed-schema'
-import { Form, Indicators, Input } from 'rpmed-ui'
+import { Form, Indicators, Input } from 'rpmed-ui/lib/V1'
 import { useProductsQuery } from '../graphql'
 
 export type ProductSelectFn = Input.DropDownSelectFn<Product>

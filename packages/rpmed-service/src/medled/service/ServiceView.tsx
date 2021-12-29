@@ -1,8 +1,13 @@
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
 import { Link } from 'react-router-dom'
-import { BreadCrumb, ContentMainHeading, TextFormContent, View } from 'rpmed-ui'
-import { ServiceForm } from './ServiceForm'
+import {
+  BreadCrumb,
+  ContentMainHeading,
+  TextFormContent,
+  View,
+} from 'rpmed-ui/lib/V1'
+import { ServiceForm } from 'rpmed-ui'
 
 const ServiceView: React.FC<{}> = () => (
   <View>
@@ -11,7 +16,7 @@ const ServiceView: React.FC<{}> = () => (
       <title>MedLED® Service Request - Riverpoint Medical</title>
     </Helmet>
     <BreadCrumb.Container>
-      <BreadCrumb.Link to="/medled/service-request" primary={true}>
+      <BreadCrumb.Link to="/medled/service-request">
         Service Request
       </BreadCrumb.Link>
     </BreadCrumb.Container>
@@ -50,7 +55,11 @@ const ServiceView: React.FC<{}> = () => (
           </strong>
         </li>
       </ol>
-      <ServiceForm />
+      <ServiceForm
+        onSubmit={async data => {
+          return undefined
+        }}
+      />
     </TextFormContent>
   </View>
 )

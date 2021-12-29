@@ -2,7 +2,7 @@ import { ErrorMessage } from 'formik'
 import * as React from 'react'
 import { Box, Flex } from 'rebass'
 import { ProductSymptom } from 'rpmed-schema'
-import { Form, Indicators, Input } from 'rpmed-ui'
+import { Form, Indicators, Input } from 'rpmed-ui/lib/V1'
 import { useProductSymptomsQuery } from '../graphql'
 
 export type ProductSymptomSelectFn = (p: ProductSymptom) => void
