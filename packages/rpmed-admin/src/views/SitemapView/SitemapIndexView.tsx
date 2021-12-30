@@ -12,6 +12,7 @@ import { EditPageView } from './EditPageView'
 import { EditDocumentView } from './EditDocumentView'
 import { ShowDocumentView } from './ShowDocumentView'
 import { ShowPageView } from './ShowPageView'
+import { BuildOriginalSitemapView } from './BuildOriginalSitemapView'
 
 const checkPath = (path: string, test: string): boolean =>
   path.indexOf(test) > 0
@@ -53,6 +54,11 @@ const View: React.FC<RouteComponentProps<{}>> = ({ history, location }) => {
               <Route
                 path="/admin/sitemap/pages"
                 component={PageListView}
+                exact={true}
+              />
+              <Route
+                path="/admin/sitemap/import"
+                component={BuildOriginalSitemapView}
                 exact={true}
               />
               <Route
