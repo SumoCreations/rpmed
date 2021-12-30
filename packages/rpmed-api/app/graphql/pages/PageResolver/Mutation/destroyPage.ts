@@ -11,6 +11,9 @@ export const destroyPage = async (
   if (!page) {
     return generateMutationError([ErrorPageNotFound])
   }
+  if (page.slug === 'root') {
+    return generateMutationError([ErrorPageInvalid])
+  }
   try {
     await Page.destroy(id)
   } catch (e) {
