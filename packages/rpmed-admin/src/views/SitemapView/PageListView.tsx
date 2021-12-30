@@ -34,6 +34,8 @@ interface IPageProps {
   error: any
 }
 
+const ROOT_STYLES = 'bg-primary bg-opacity-10 font-bold'
+
 const sendTo = (p: { history: History; url: string }) => () =>
   p.history.push(p.url)
 
@@ -62,10 +64,14 @@ const Pages: React.FunctionComponent<IPageProps> = ({
   const onClickDelete = (product: Page) => () => onDelete(product)
 
   const rows = pages?.filter(filterPage).map(p => [
-    <Link to={`/admin/sitemap/pages/${p.id}`} key={p.id}>
+    <Link
+      to={`/admin/sitemap/pages/${p.id}`}
+      key={p.id}
+      className={p.slug === 'root' ? ROOT_STYLES : ''}
+    >
       {p.title}
     </Link>,
-    p.slug,
+    <span className={p.slug === 'root' ? ROOT_STYLES : ''}>{p.slug}</span>,
     <Actions.Group key={`actions${p.id}`}>
       <Actions.Primary
         onClick={sendTo({ history, url: `/admin/sitemap/pages/${p.id}` })}

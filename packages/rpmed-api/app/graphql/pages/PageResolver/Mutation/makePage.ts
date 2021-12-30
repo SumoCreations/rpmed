@@ -14,8 +14,6 @@ export const makePage = async (
   } catch (e) {
     return { errors: Validation.formatError(e), success: false }
   }
-  console.log('PAGE INPUT:')
-  console.log(pageInput)
 
   const { id, slug } = pageInput
   const existingPage = await Page.findBySlug(slug)
@@ -25,9 +23,11 @@ export const makePage = async (
       success: false,
     }
   }
-
   try {
-    const page = await Page.make({ ...(pageInput as any) })
+    const page = await Page.make({
+      ...(pageInput as any),
+      slug: existingPage.slug === 'root' ? 'root' : slug, // root page cannot be renamed or changed.
+    })
     return { page: Page.output(page), success: true }
   } catch (e) {
     console.log('PAGE MAKE ERROR!')

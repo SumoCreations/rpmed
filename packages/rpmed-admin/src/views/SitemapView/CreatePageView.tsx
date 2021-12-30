@@ -64,6 +64,7 @@ export const CreatePageView: React.FC = () => {
             defaultValues={
               {
                 ...defaultValues,
+                slug: '',
                 keywords: defaultValues.keywords ?? '',
                 description: defaultValues.description ?? '',
               } as PageFormValues

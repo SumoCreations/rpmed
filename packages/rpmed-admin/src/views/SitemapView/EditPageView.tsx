@@ -25,7 +25,7 @@ export const EditPageView: React.FC = () => {
   const { data: existingPageData, loading: pageLoading } = usePageQuery({
     variables: { id },
   })
-  const { __typename, ...existingPage } =
+  const { __typename, sections, ...existingPage } =
     existingPageData?.response.page ?? ({} as Page)
 
   const [makePage] = useMakePageMutation()

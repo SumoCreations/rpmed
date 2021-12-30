@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import { kebabCase } from "lodash"
+import { kebabCase } from 'lodash'
 import { Button, TextField, Fields } from '../Form'
 import { AbsoluteOverlay } from '../Indicators'
 import { useForm } from 'react-hook-form'
@@ -45,18 +45,22 @@ export const PageForm: React.FC<PageFormProps> = ({
     setError,
     setValue,
     reset,
-    watch
+    watch,
   } = useForm<PageFormValues>({
     resolver: yupResolver(schema),
     mode: 'onBlur',
   })
 
-  const [slug] = watch(["slug"])
+  const [slug] = watch(['slug'])
 
   useEffect(() => {
     const formatted = kebabCase(slug)
-    if (slug?.substr(-1) === " ") { return }
-    if (formatted && formatted.length > 0 && formatted !== slug) { setValue("slug", formatted) }
+    if (slug?.substr(-1) === ' ') {
+      return
+    }
+    if (formatted && formatted.length > 0 && formatted !== slug) {
+      setValue('slug', formatted)
+    }
   }, [slug, setValue])
 
   useDefaultValueListener<PageFormValues>(defaultValues, reset)
@@ -90,6 +94,7 @@ export const PageForm: React.FC<PageFormProps> = ({
           className="w-full"
         />
         <TextField
+          disabled={slug === 'root'}
           name="slug"
           label="Slug"
           placeholder="url-slug"
