@@ -42,10 +42,10 @@
     "yup": "^0.32.11"
   },
   "scripts": {
-    "start": "yarn build-tailwind:watch & yarn storybook",
+    "start": "yarn storybook",
     "build": "NODE_ENV=production rm -rf ./lib && tsc && yarn build-tailwind && cp ./src/*.png ./lib",
-    "build-tailwind": "postcss src/scss/base.scss -o src/scss/tailwind.scss && postcss src/scss/base.scss -o lib/rpmed-ui.css",
-    "build-tailwind:watch": "npx tailwindcss -i ./src/scss/base.scss -o lib/rpmed-ui.css  --watch",
+    "build-tailwind": "postcss ./src/css/base.css -o ./src/css/tailwind.css && postcss ./src/css/base.css -o ./lib/rpmed-ui.css",
+    "build-tailwind:watch": "npx tailwindcss -i ./src/css/base.css -o ./src/css/tailwind.css  --watch & npx tailwindcss -i ./src/css/base.css -o ./lib/rpmed-ui.css  --watch",
     "storybook": "start-storybook -p 6006",
     "prettier": "prettier --config ../../.prettierrc 'src/**/*.{js,jsx,ts,tsx}' --write",
     "build-storybook": "build-storybook"
