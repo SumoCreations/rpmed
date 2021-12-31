@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
 import { IRGA, IUser, RGA, User } from '../../../../models'
 import { generate } from '../../../../oauth'
-import { RgaStatus } from '../../../../schema'
+import { RgaStatus } from 'rpmed-schema'
 import { updateRGAStatus } from './updateRGAStatus'
 
 describe('updateRGAStatus', () => {

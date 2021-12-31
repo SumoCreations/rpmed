@@ -1,5 +1,5 @@
 import { Distributor, IDistributor, RGA } from '../../../../models'
-import { RgaStatus } from '../../../../schema'
+import { RgaStatus } from 'rpmed-schema'
 import { rgas } from './rgas'
 
 describe('Query', () => {

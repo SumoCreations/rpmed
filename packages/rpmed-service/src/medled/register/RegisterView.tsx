@@ -1,25 +1,21 @@
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
 import { ContentMainHeading, TextFormContent, View } from 'rpmed-ui/lib/V1'
-import { BreadCrumb, RegisterForm } from 'rpmed-ui'
-import { useFindPageWithSlugQuery } from 'rpmed-schema'
+import { RegisterForm } from 'rpmed-ui'
 import { useParams } from 'react-router-dom'
+import { BreadCrumbFromPage } from '../../pages'
 
 const RegisterView: React.FC<{}> = () => {
-  const { slug } = useParams<{ slug: string }>()
-  const { data } = useFindPageWithSlugQuery({ variables: { slug } })
+  const { slug = '' } = useParams<{ slug: string }>()
   return (
     <View>
       <Helmet>
         <meta charSet="utf-8" />
         <title>MedLED® Product Registration - Riverpoint Medical</title>
       </Helmet>
-      <BreadCrumb
-        trail={[
-          { label: 'Resource Center', url: '/' },
-          { label: data?.pageBySlug.page?.title ?? '...', to: `/${slug}` },
-          { label: 'Product Registration', to: `/${slug}/register` },
-        ]}
+      <BreadCrumbFromPage
+        slug={slug}
+        trail={[{ label: 'Product Registration', to: `/${slug}/register` }]}
       />
       <ContentMainHeading>Register Your Product</ContentMainHeading>
       <TextFormContent>

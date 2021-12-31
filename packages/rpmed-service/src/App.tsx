@@ -22,7 +22,7 @@ class App extends Component<{}, {}, any> {
             <Header.Primary />
             <Router>
               <div
-                className="flex mx-auto w-full"
+                className="flex mx-auto w-full py-2 px-4 md:px-8"
                 style={{ maxWidth: '1170px' }}
               >
                 <Routes>

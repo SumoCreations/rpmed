@@ -1,7 +1,8 @@
 import { DateTime } from 'luxon'
 import { IRGAGood, RGA, RGAGood } from '../../../../models'
-import { ProductType, RgaGoodStatus, RgaStatus } from '../../../../schema'
+import { ProductType, RgaGoodStatus, RgaStatus } from 'rpmed-schema'
 import { updateRGAGood } from './updateRGAGood'
+import { TST_ORIGIN_CTX } from '../../../auth'
 
 const RGA_ID = 'TEST-RGA-ID'
 const PRODUCT_ID = 'TEST-PRODUCT-ID'
@@ -84,21 +85,29 @@ describe('updateRGAGood', () => {
 
   test('should fail if the rga does not exist', async () => {
     expect.assertions(1)
-    const output = await updateRGAGood(null, {
-      id: lottedGood.id,
-      rgaGoodInput: sampleParams,
-      rgaId: 'existingRGAId-does-not-exist',
-    })
+    const output = await updateRGAGood(
+      null,
+      {
+        id: lottedGood.id,
+        rgaGoodInput: sampleParams,
+        rgaId: 'existingRGAId-does-not-exist',
+      },
+      TST_ORIGIN_CTX
+    )
     expect(output.success).toBe(false)
   })
 
   test('should fail if the rga good does not exists', async () => {
     expect.assertions(1)
-    const output = await updateRGAGood(null, {
-      id: 'lottedGoodId-does-not-exist',
-      rgaGoodInput: sampleParams,
-      rgaId: existingRGAId,
-    })
+    const output = await updateRGAGood(
+      null,
+      {
+        id: 'lottedGoodId-does-not-exist',
+        rgaGoodInput: sampleParams,
+        rgaId: existingRGAId,
+      },
+      TST_ORIGIN_CTX
+    )
     expect(output.success).toBe(false)
   })
 
@@ -129,42 +138,68 @@ describe('updateRGAGood', () => {
   //   expect(output.success).toBe(false)
   // })
 
+  test('should fail if not authorized', async () => {
+    expect.assertions(1)
+    const output = await updateRGAGood(
+      null,
+      {
+        id: lottedGood.id,
+        rgaGoodInput: { ...sampleParams, lotted: lottedGood.lotted },
+        rgaId: existingRGAId,
+      },
+      null
+    )
+    expect(output.success).toBe(false)
+  })
+
   test('should update an existing rga good if it exists', async () => {
     expect.assertions(1)
-    const output = await updateRGAGood(null, {
-      id: lottedGood.id,
-      rgaGoodInput: { ...sampleParams, lotted: lottedGood.lotted },
-      rgaId: existingRGAId,
-    })
+    const output = await updateRGAGood(
+      null,
+      {
+        id: lottedGood.id,
+        rgaGoodInput: { ...sampleParams, lotted: lottedGood.lotted },
+        rgaId: existingRGAId,
+      },
+      TST_ORIGIN_CTX
+    )
     expect(output.success).toBe(true)
   })
 
   test('should ignore the serial number when updating a non lotted good', async () => {
     expect.assertions(2)
-    const output = await updateRGAGood(null, {
-      id: nonLottedGood.id,
-      rgaGoodInput: {
-        ...sampleParams,
-        lotted: nonLottedGood.lotted,
-        serial: 'IGNORE_ME',
+    const output = await updateRGAGood(
+      null,
+      {
+        id: nonLottedGood.id,
+        rgaGoodInput: {
+          ...sampleParams,
+          lotted: nonLottedGood.lotted,
+          serial: 'IGNORE_ME',
+        },
+        rgaId: existingRGAId,
       },
-      rgaId: existingRGAId,
-    })
+      TST_ORIGIN_CTX
+    )
     expect(output.success).toBe(true)
     expect(output.rgaGood.id).toEqual(nonLottedGood.id)
   })
 
   test('should allow an update of the serial number / id when updating a lotted good', async () => {
     expect.assertions(1)
-    const output = await updateRGAGood(null, {
-      id: lottedGood.id,
-      rgaGoodInput: {
-        ...sampleParams,
-        lotted: lottedGood.lotted,
-        serial: 'A-NEW-SERIAL',
+    const output = await updateRGAGood(
+      null,
+      {
+        id: lottedGood.id,
+        rgaGoodInput: {
+          ...sampleParams,
+          lotted: lottedGood.lotted,
+          serial: 'A-NEW-SERIAL',
+        },
+        rgaId: existingRGAId,
       },
-      rgaId: existingRGAId,
-    })
+      TST_ORIGIN_CTX
+    )
     expect(output.success).toBe(true)
   })
 })

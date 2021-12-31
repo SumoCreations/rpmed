@@ -1,5 +1,5 @@
 import { Distributor, IDistributor, IRGA, RGA } from '../../../../models'
-import { RgaStatus } from '../../../../schema'
+import { RgaStatus } from 'rpmed-schema'
 import { rga } from './rga'
 
 describe('Query', () => {
@@ -23,12 +23,11 @@ describe('Query', () => {
 
   describe('rga', () => {
     test('should return a rga if it exists', async () => {
-      expect.assertions(6)
+      expect.assertions(5)
       const output = await rga({}, { id: existingRGA.partitionKey })
       expect(output.success).toEqual(true)
       expect(output.rga).toBeDefined()
       expect(output.rgas).toBeUndefined()
-      expect(output.rga.distributorId).toEqual(existingRGA.distributorId)
       expect(output.rga.submittedBy).toEqual(existingRGA.submittedBy)
       expect(output.rga.submittedOn).toEqual(existingRGA.submittedOn)
     })

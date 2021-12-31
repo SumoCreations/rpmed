@@ -13,7 +13,7 @@ export const rgas = async (_, args): Promise<IRGAQueryOutput> => {
           Distributor.output(await Distributor.find(o.distributorId)),
         goods: async () =>
           ((await RGAGood.forRGA(o.id)) || []).map(RGAGood.output),
-      })),
+      })) as any[],
       success: true,
     }
   } catch (e) {

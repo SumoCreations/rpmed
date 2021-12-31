@@ -1,25 +1,21 @@
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
 import { ContentMainHeading, TextFormContent, View } from 'rpmed-ui/lib/V1'
-import { BreadCrumb, BatteryForm } from 'rpmed-ui'
+import { BatteryForm } from 'rpmed-ui'
 import { useParams } from 'react-router-dom'
-import { useFindPageWithSlugQuery } from 'rpmed-schema'
+import { BreadCrumbFromPage } from '../../pages'
 
 const BatteryView: React.FC<{}> = () => {
-  const { slug } = useParams<{ slug: string }>()
-  const { data } = useFindPageWithSlugQuery({ variables: { slug } })
+  const { slug = '' } = useParams<{ slug: string }>()
   return (
     <View>
       <Helmet>
         <meta charSet="utf-8" />
         <title>MedLED® Battery Recycling Program - Riverpoint Medical</title>
       </Helmet>
-      <BreadCrumb
-        trail={[
-          { label: 'Resource Center', url: '/' },
-          { label: data?.pageBySlug.page?.title ?? '...', to: `/${slug}` },
-          { label: 'Quote / Trial', to: `/${slug}/quote` },
-        ]}
+      <BreadCrumbFromPage
+        slug={slug}
+        trail={[{ label: 'Battery Recycling', to: `/${slug}/batteries` }]}
       />
       <ContentMainHeading>MedLED® Battery Recycling Program</ContentMainHeading>
       <TextFormContent>

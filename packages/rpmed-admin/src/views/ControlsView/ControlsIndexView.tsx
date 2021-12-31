@@ -13,12 +13,9 @@ const View: React.FC = () => {
     <SecondaryNav.View icon={faCog} title="Controls" hidden={true} data={[]}>
       <Helmet title="Control Panel - RPMed Service Admin" />
       <Routes>
-        <Route
-          path="/admin/controls/"
-          element={<Navigate to="/admin/controls/menu" replace />}
-        />
-        <Route path="/admin/controls/menu" element={<ControlsMenuView />} />
-        <Route path="/admin/controls/users" element={<UserIndexView />} />
+        <Route index element={<Navigate to="/admin/controls/menu" replace />} />
+        <Route path="menu" element={<ControlsMenuView />} />
+        <Route path="users" element={<UserIndexView />} />
       </Routes>
     </SecondaryNav.View>
   )

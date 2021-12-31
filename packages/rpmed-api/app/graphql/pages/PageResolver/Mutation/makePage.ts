@@ -1,12 +1,21 @@
 import { Page } from '../../../../models'
 import * as Validation from '../../../../validations'
 import { ErrorPageWithSlugAlreadyExists, ErrorPageInvalid } from '../pageErrors'
-import { PageInput, PageMutationOutput } from 'rpmed-schema'
+import { MakePageMutationVariables, PageMutationOutput } from 'rpmed-schema'
+import {
+  generateAuthorizationError,
+  isAuthorizedUser,
+  ServerContext,
+} from '../../../auth'
 
 export const makePage = async (
   _: any,
-  { pageInput }: { pageInput: PageInput }
+  { pageInput }: MakePageMutationVariables,
+  ctx: ServerContext
 ): Promise<PageMutationOutput> => {
+  if (!isAuthorizedUser(ctx)) {
+    return generateAuthorizationError()
+  }
   try {
     await Validation.Page.Default.validate(pageInput, {
       abortEarly: false,

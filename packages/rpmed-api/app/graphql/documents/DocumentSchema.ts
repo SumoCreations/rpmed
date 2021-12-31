@@ -96,6 +96,10 @@ export const typeDefs = gql`
     A specific document in the system via ID.
     """
     document(id: ID!): DocumentQueryOutput!
+    """
+    A specific document in the system via slug.
+    """
+    documentBySlug(slug: String!): DocumentQueryOutput!
   }
 
   """
@@ -128,14 +132,11 @@ export const typeDefs = gql`
     description: String
   }
 
-
   extend type Mutation {
     """
     Creates a new document.
     """
-    makeDocument(
-      documentInput: DocumentInput!
-    ): DocumentMutationOutput!
+    makeDocument(documentInput: DocumentInput!): DocumentMutationOutput!
 
     """
     Removes an existing document.

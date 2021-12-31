@@ -166,7 +166,7 @@ export const SectionItem: React.FC<SectionItemProps> = ({
             value={values.target}
             options={
               documentsData?.response.documents?.map(d => ({
-                id: d?.id as string,
+                id: d?.slug as string,
                 name: d?.title as string,
               })) ?? []
             }

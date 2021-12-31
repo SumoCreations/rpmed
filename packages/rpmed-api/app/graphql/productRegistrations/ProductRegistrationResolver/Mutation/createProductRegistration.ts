@@ -3,15 +3,23 @@ import {
   IProductRegistrationInput,
   ProductRegistration,
 } from '../../../../models'
+import {
+  generateAuthorizationError,
+  isAuthorized,
+  ServerContext,
+} from '../../../auth'
 import { IProductRegistrationMutationOutput } from './productRegistrationMutationTypes'
 import { validateRegistrationInput } from './validateRegistrationInput'
 
 export const createProductRegistration = async (
-  _: any,
+  context: ServerContext,
   {
     productRegistrationInput,
   }: { productRegistrationInput: IProductRegistrationInput }
 ): Promise<IProductRegistrationMutationOutput> => {
+  if (!isAuthorized(context)) {
+    return generateAuthorizationError()
+  }
   const { errorResponse, input, customer } = await validateRegistrationInput(
     productRegistrationInput
   )

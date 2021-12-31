@@ -1,11 +1,20 @@
 import { Document } from '../../../../models'
+import {
+  isAuthorized,
+  generateAuthorizationError,
+  ServerContext,
+} from '../../../auth'
 import { ErrorDocumentNotFound } from '../documentErrors'
-// import { DocumentQueryOutput } from 'rpmed-schema'
+import { DocumentQueryOutput } from 'rpmed-schema'
 
 export const documents = async (
   _,
-  _args
-): Promise<any> => {
+  _args,
+  ctx: ServerContext
+): Promise<DocumentQueryOutput> => {
+  if (!isAuthorized(ctx)) {
+    return generateAuthorizationError()
+  }
   try {
     const result = await Document.all()
     if (!result) {
@@ -23,8 +32,7 @@ export const documents = async (
       errors: [
         {
           path: '_',
-          message:
-            e.localizedMessage || 'Could not retrieve document',
+          message: e.localizedMessage || 'Could not retrieve document',
         },
       ],
       success: false,

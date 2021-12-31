@@ -1,22 +1,17 @@
 import * as React from 'react'
-import { BreadCrumb, ContactForm } from 'rpmed-ui'
+import { ContactForm } from 'rpmed-ui'
 import { useParams } from 'react-router-dom'
-import { useFindPageWithSlugQuery } from 'rpmed-schema'
+import { BreadCrumbFromPage } from '../../pages'
 import { View, ContentMainHeading, TextFormContent } from 'rpmed-ui/lib/V1'
 
 const MissionView: React.FC<{}> = () => {
-  const { slug } = useParams<{ slug: string }>()
-  const { data } = useFindPageWithSlugQuery({ variables: { slug } })
+  const { slug = '' } = useParams<{ slug: string }>()
   return (
     <View>
-      <BreadCrumb
-        trail={[
-          { label: 'Resource Center', url: '/' },
-          { label: data?.pageBySlug.page?.title ?? '...', to: `/${slug}` },
-          { label: 'Mission Application', to: `/${slug}/mission` },
-        ]}
+      <BreadCrumbFromPage
+        slug={slug}
+        trail={[{ label: 'Mission Application', to: `/${slug}/mission` }]}
       />
-
       <ContentMainHeading>Apply for a MedLED Mission</ContentMainHeading>
       <TextFormContent>
         <p>

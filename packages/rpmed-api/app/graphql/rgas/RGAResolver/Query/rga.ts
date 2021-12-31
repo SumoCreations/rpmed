@@ -1,8 +1,8 @@
+import { RgaQueryOutput } from 'rpmed-schema'
 import { Distributor, RGA, RGAGood } from '../../../../models'
 import { ErrorRGAWithIDDoesNotExist } from '../rgaErrors'
-import { IRGAQueryOutput } from './rgaQueryTypes'
 
-export const rga = async (_, args): Promise<IRGAQueryOutput> => {
+export const rga = async (_, args): Promise<RgaQueryOutput> => {
   try {
     const result = await RGA.find(args.id)
     if (!result) {
@@ -14,9 +14,11 @@ export const rga = async (_, args): Promise<IRGAQueryOutput> => {
     return {
       rga: {
         ...RGA.output(result),
-        distributor: async () =>
-          Distributor.output(await Distributor.find(result.distributorId)),
-        goods: async () => {
+        distributor: (async () =>
+          Distributor.output(
+            await Distributor.find(result.distributorId)
+          )) as any,
+        goods: (async () => {
           return await Promise.all(
             ((await RGAGood.forRGA(result.partitionKey)) || []).map(
               async good => {
@@ -44,7 +46,7 @@ export const rga = async (_, args): Promise<IRGAQueryOutput> => {
               }
             )
           )
-        },
+        }) as any,
       },
       success: true,
     }

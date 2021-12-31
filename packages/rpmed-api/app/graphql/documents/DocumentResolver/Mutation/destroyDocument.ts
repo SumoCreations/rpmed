@@ -5,11 +5,20 @@ import {
   MutationDestroyDocumentArgs,
   DocumentMutationOutput,
 } from 'rpmed-schema'
+import {
+  ServerContext,
+  generateAuthorizationError,
+  isAuthorizedUser,
+} from '../../../auth'
 
 export const destroyDocument = async (
-  _: any,
-  { id }: MutationDestroyDocumentArgs
+  _,
+  { id }: MutationDestroyDocumentArgs,
+  context: ServerContext
 ): Promise<DocumentMutationOutput> => {
+  if (!isAuthorizedUser(context)) {
+    return generateAuthorizationError()
+  }
   const document = await Document.find(id)
   if (!document) {
     return generateMutationError([ErrorDocumentNotFound])

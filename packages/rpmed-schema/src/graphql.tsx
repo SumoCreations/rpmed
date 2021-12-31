@@ -1095,6 +1095,8 @@ export type Query = {
   distributors: DistributorQueryOutput;
   /** A specific document in the system via ID. */
   document: DocumentQueryOutput;
+  /** A specific document in the system via slug. */
+  documentBySlug: DocumentQueryOutput;
   /** All documents in the system */
   documents: DocumentQueryOutput;
   info?: Maybe<Scalars['String']>;
@@ -1157,6 +1159,12 @@ export type QueryDistributorArgs = {
 /** The root query for the schema. */
 export type QueryDocumentArgs = {
   id: Scalars['ID'];
+};
+
+
+/** The root query for the schema. */
+export type QueryDocumentBySlugArgs = {
+  slug: Scalars['String'];
 };
 
 
@@ -2167,12 +2175,19 @@ export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type UsersQuery = { __typename?: 'Query', users?: Array<{ __typename?: 'User', id: string, firstName?: string | null | undefined, lastName?: string | null | undefined, email: string } | null | undefined> | null | undefined };
 
+export type FindDocumentWithSlugQueryVariables = Exact<{
+  slug: Scalars['String'];
+}>;
+
+
+export type FindDocumentWithSlugQuery = { __typename?: 'Query', response: { __typename?: 'DocumentQueryOutput', success: boolean, errors?: Array<{ __typename?: 'ValidationError', message: string, path: string } | null | undefined> | null | undefined, document?: { __typename?: 'Document', id: string, title?: string | null | undefined, keywords?: string | null | undefined, description?: string | null | undefined, slug?: string | null | undefined, fileKey?: string | null | undefined, url?: string | null | undefined } | null | undefined } };
+
 export type FindPageWithSlugQueryVariables = Exact<{
   slug: Scalars['String'];
 }>;
 
 
-export type FindPageWithSlugQuery = { __typename?: 'Query', pageBySlug: { __typename?: 'PageQueryOutput', success: boolean, errors?: Array<{ __typename?: 'ValidationError', message: string, path: string } | null | undefined> | null | undefined, page?: { __typename?: 'Page', title?: string | null | undefined, id: string, slug?: string | null | undefined, description?: string | null | undefined, keywords?: string | null | undefined, sections?: Array<{ __typename?: 'Section', id: string, name?: string | null | undefined, position?: number | null | undefined, items?: Array<{ __typename?: 'SectionItem', id: string, icon?: string | null | undefined, name?: string | null | undefined, description?: string | null | undefined, position?: number | null | undefined, type?: string | null | undefined, target?: string | null | undefined } | null | undefined> | null | undefined } | null | undefined> | null | undefined } | null | undefined } };
+export type FindPageWithSlugQuery = { __typename?: 'Query', response: { __typename?: 'PageQueryOutput', success: boolean, errors?: Array<{ __typename?: 'ValidationError', message: string, path: string } | null | undefined> | null | undefined, page?: { __typename?: 'Page', title?: string | null | undefined, id: string, slug?: string | null | undefined, description?: string | null | undefined, keywords?: string | null | undefined, sections?: Array<{ __typename?: 'Section', id: string, name?: string | null | undefined, position?: number | null | undefined, items?: Array<{ __typename?: 'SectionItem', id: string, icon?: string | null | undefined, name?: string | null | undefined, description?: string | null | undefined, position?: number | null | undefined, type?: string | null | undefined, target?: string | null | undefined } | null | undefined> | null | undefined } | null | undefined> | null | undefined } | null | undefined } };
 
 export type RegisterProductMutationVariables = Exact<{
   productRegistrationInput: NewProductRegistrationInput;
@@ -5245,9 +5260,57 @@ export function useUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<User
 export type UsersQueryHookResult = ReturnType<typeof useUsersQuery>;
 export type UsersLazyQueryHookResult = ReturnType<typeof useUsersLazyQuery>;
 export type UsersQueryResult = Apollo.QueryResult<UsersQuery, UsersQueryVariables>;
+export const FindDocumentWithSlugDocument = gql`
+    query FindDocumentWithSlug($slug: String!) {
+  response: documentBySlug(slug: $slug) {
+    success
+    errors {
+      message
+      path
+    }
+    document {
+      id
+      title
+      keywords
+      description
+      slug
+      fileKey
+      url
+    }
+  }
+}
+    `;
+
+/**
+ * __useFindDocumentWithSlugQuery__
+ *
+ * To run a query within a React component, call `useFindDocumentWithSlugQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindDocumentWithSlugQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindDocumentWithSlugQuery({
+ *   variables: {
+ *      slug: // value for 'slug'
+ *   },
+ * });
+ */
+export function useFindDocumentWithSlugQuery(baseOptions: Apollo.QueryHookOptions<FindDocumentWithSlugQuery, FindDocumentWithSlugQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindDocumentWithSlugQuery, FindDocumentWithSlugQueryVariables>(FindDocumentWithSlugDocument, options);
+      }
+export function useFindDocumentWithSlugLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindDocumentWithSlugQuery, FindDocumentWithSlugQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindDocumentWithSlugQuery, FindDocumentWithSlugQueryVariables>(FindDocumentWithSlugDocument, options);
+        }
+export type FindDocumentWithSlugQueryHookResult = ReturnType<typeof useFindDocumentWithSlugQuery>;
+export type FindDocumentWithSlugLazyQueryHookResult = ReturnType<typeof useFindDocumentWithSlugLazyQuery>;
+export type FindDocumentWithSlugQueryResult = Apollo.QueryResult<FindDocumentWithSlugQuery, FindDocumentWithSlugQueryVariables>;
 export const FindPageWithSlugDocument = gql`
     query FindPageWithSlug($slug: String!) {
-  pageBySlug(slug: $slug) {
+  response: pageBySlug(slug: $slug) {
     success
     errors {
       message
@@ -5964,6 +6027,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   distributor?: Resolver<ResolversTypes['DistributorQueryOutput'], ParentType, ContextType, RequireFields<QueryDistributorArgs, 'id'>>;
   distributors?: Resolver<ResolversTypes['DistributorQueryOutput'], ParentType, ContextType>;
   document?: Resolver<ResolversTypes['DocumentQueryOutput'], ParentType, ContextType, RequireFields<QueryDocumentArgs, 'id'>>;
+  documentBySlug?: Resolver<ResolversTypes['DocumentQueryOutput'], ParentType, ContextType, RequireFields<QueryDocumentBySlugArgs, 'slug'>>;
   documents?: Resolver<ResolversTypes['DocumentQueryOutput'], ParentType, ContextType>;
   info?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   modelNumber?: Resolver<Maybe<ResolversTypes['ModelNumberQueryOutput']>, ParentType, ContextType, RequireFields<QueryModelNumberArgs, 'id'>>;

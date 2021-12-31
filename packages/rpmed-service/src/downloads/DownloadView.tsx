@@ -1,23 +1,26 @@
 import React, { useEffect } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { ContentMainHeading, Form, TextFormContent } from 'rpmed-ui/lib/V1'
-import { BreadCrumb, Clipboard } from 'rpmed-ui'
+import { AbsoluteOverlay, Clipboard } from 'rpmed-ui'
 import { documents } from './documents'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faArrowAltCircleLeft,
-  faDownload,
-} from '@fortawesome/pro-solid-svg-icons'
+import { faDownload } from '@fortawesome/pro-solid-svg-icons'
 import { useQuery } from '../routes'
-import { useFindPageWithSlugQuery } from 'rpmed-schema'
+import { BreadCrumbFromPage } from '../pages'
+import { useFindDocumentWithSlugQuery } from 'rpmed-schema'
 
 const DownloadView: React.FC = () => {
-  const { slug, downloadId } = useParams<{ slug: string; downloadId: string }>()
-  const { data } = useFindPageWithSlugQuery({ variables: { slug } })
+  const { slug = '', downloadId = '' } = useParams<{
+    slug: string
+    downloadId: string
+  }>()
   const query = useQuery<{ a?: boolean }>()
 
   const autoload = query.search.a
-  const result = documents.find(d => d.id === downloadId)
+  const { data, loading } = useFindDocumentWithSlugQuery({
+    variables: { slug: downloadId },
+  })
+  const result = data?.response.document
 
   useEffect(() => {
     setTimeout(() => {
@@ -34,19 +37,21 @@ const DownloadView: React.FC = () => {
     }
   }
 
+  const title = loading ? '...' : result?.title ?? 'Not Found'
+
   return (
-    <article className="w-full flex flex-col">
-      <BreadCrumb
+    <article className="w-full flex flex-col relative px-8">
+      <BreadCrumbFromPage
+        slug={slug}
         trail={[
-          { label: 'Resource Center', url: '/' },
-          { label: data?.pageBySlug.page?.title ?? '...', to: `/${slug}` },
           {
-            label: result?.title ?? 'Not Found',
-            to: `/${slug}/d/${result?.id}`,
+            label: title,
+            to: `/${slug}/d/${result?.slug}`,
           },
         ]}
       />
-      <ContentMainHeading>{result?.title ?? 'Not Found'}</ContentMainHeading>
+      <ContentMainHeading>{title}</ContentMainHeading>
+      {loading ? <AbsoluteOverlay /> : null}
       <TextFormContent>
         <div className="flex flex-col">
           <div className="flex flex-row w-full">
@@ -68,12 +73,14 @@ const DownloadView: React.FC = () => {
               </li>
             </ul>
           </div>
-          <iframe
-            src={result?.url}
-            width="100%"
-            height="700px"
-            className="mt-4"
-          ></iframe>
+          {result?.url && (
+            <iframe
+              src={result?.url}
+              width="100%"
+              height="700px"
+              className="mt-4 mb-12"
+            ></iframe>
+          )}
         </div>
       </TextFormContent>
     </article>

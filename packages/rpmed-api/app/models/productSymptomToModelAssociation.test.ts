@@ -1,4 +1,4 @@
-import { ProductType } from '../schema'
+import { ProductType } from 'rpmed-schema'
 import { IModelNumber, ModelNumber } from './modelNumber'
 import { IProduct, Product } from './product'
 import { IProductSymptom, ProductSymptom } from './productSymptom'

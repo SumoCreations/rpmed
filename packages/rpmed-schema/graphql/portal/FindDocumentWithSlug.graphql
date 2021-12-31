@@ -1,0 +1,18 @@
+query FindDocumentWithSlug($slug: String!) {
+  response: documentBySlug(slug: $slug) {
+    success
+    errors {
+      message
+      path
+    }
+    document {
+      id
+      title
+      keywords
+      description
+      slug
+      fileKey
+      url
+    }
+  }
+}

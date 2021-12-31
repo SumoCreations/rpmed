@@ -14,7 +14,7 @@ const PageView: React.FC = () => {
 
   const navigate = useNavigate()
   const handleSelectedItem = (link?: string) => navigate(link ?? '#')
-  const page = data?.pageBySlug.page
+  const page = data?.response.page
   const defaultTrail = { label: 'Resource Center', url: '/' }
   return (
     <article className="flex flex-col w-full">
@@ -25,7 +25,7 @@ const PageView: React.FC = () => {
             : [
                 defaultTrail,
                 {
-                  label: data?.pageBySlug.page?.title ?? '...',
+                  label: page?.title ?? '...',
                   to: `/${slug}`,
                 },
               ]

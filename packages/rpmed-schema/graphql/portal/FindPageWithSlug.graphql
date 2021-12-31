@@ -1,5 +1,5 @@
 query FindPageWithSlug($slug: String!) {
-  pageBySlug(slug: $slug) {
+  response: pageBySlug(slug: $slug) {
     success
     errors {
       message

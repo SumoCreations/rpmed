@@ -6,7 +6,7 @@ import {
   Product,
   ProductSymptom,
 } from '../../../../models'
-import { ProductType } from '../../../../schema'
+import { ProductType } from 'rpmed-schema'
 import {
   ErrorModelNumberIDDoesNotExist,
   ErrorProductSymptomWithIDDoesNotExist,

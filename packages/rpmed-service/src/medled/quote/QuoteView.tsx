@@ -2,25 +2,20 @@ import * as React from 'react'
 import { Helmet } from 'react-helmet'
 import { Link, useParams } from 'react-router-dom'
 import { ContentMainHeading, TextFormContent, View } from 'rpmed-ui/lib/V1'
-import { BreadCrumb, QuoteForm } from 'rpmed-ui'
-import { useFindPageWithSlugQuery } from 'rpmed-schema'
+import { QuoteForm } from 'rpmed-ui'
+import { BreadCrumbFromPage } from '../../pages'
 
 const QuoteView: React.FC<{}> = () => {
-  const { slug } = useParams<{ slug: string }>()
-  const { data } = useFindPageWithSlugQuery({ variables: { slug } })
-
+  const { slug = '' } = useParams<{ slug: string }>()
   return (
     <View>
       <Helmet>
         <meta charSet="utf-8" />
         <title>MedLED® Quote, Trial &amp; Buy - Riverpoint Medical</title>
       </Helmet>
-      <BreadCrumb
-        trail={[
-          { label: 'Resource Center', url: '/' },
-          { label: data?.pageBySlug.page?.title ?? '...', to: `/${slug}` },
-          { label: 'Quote / Trial', to: `/${slug}/quote` },
-        ]}
+      <BreadCrumbFromPage
+        slug={slug}
+        trail={[{ label: 'Quote / Trial', to: `/${slug}/quote` }]}
       />
       <ContentMainHeading>MedLED® Quote, Trial &amp; Buy</ContentMainHeading>
       <TextFormContent>

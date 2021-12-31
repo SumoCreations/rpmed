@@ -8,7 +8,7 @@ import {
   ProductSymptom,
 } from './models'
 import { response, Status } from './net'
-import { ProductType } from './schema'
+import { ProductType } from 'rpmed-schema'
 
 // tslint:disable no-console
 
@@ -178,9 +178,7 @@ const processSymptoms = auth =>
             try {
               await previousPromise
               console.log(
-                `${row[0]}, ${row[1]}, ${row[2]}, ${row[3]}, ${row[4]}, ${
-                  row[5]
-                }`
+                `${row[0]}, ${row[1]}, ${row[2]}, ${row[3]}, ${row[4]}, ${row[5]}`
               )
 
               const symptom = await ProductSymptom.create({
@@ -216,9 +214,7 @@ const processSymptoms = auth =>
                 }, Promise.resolve(''))
 
               console.log(
-                `Found ${modelNumbersForSymptom.length} that match '${
-                  symptom.partitionKey
-                }' at index ${index}`
+                `Found ${modelNumbersForSymptom.length} that match '${symptom.partitionKey}' at index ${index}`
               )
               console.log(modelNumbersForSymptom.join(', '))
               console.log('Joining...')

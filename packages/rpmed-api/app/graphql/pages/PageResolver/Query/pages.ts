@@ -1,11 +1,20 @@
 import { Page } from '../../../../models'
 import { ErrorPageNotFound } from '../pageErrors'
 import { PageQueryOutput } from 'rpmed-schema'
+import {
+  generateAuthorizationError,
+  ServerContext,
+  isAuthorized,
+} from '../../../auth'
 
 export const pages = async (
   _,
-  _args
+  _args,
+  ctx: ServerContext
 ): Promise<PageQueryOutput> => {
+  if (!isAuthorized(ctx)) {
+    return generateAuthorizationError()
+  }
   try {
     const result = await Page.all()
     if (!result) {
@@ -23,8 +32,7 @@ export const pages = async (
       errors: [
         {
           path: '_',
-          message:
-            e.localizedMessage || 'Could not retrieve page',
+          message: e.localizedMessage || 'Could not retrieve page',
         },
       ],
       success: false,

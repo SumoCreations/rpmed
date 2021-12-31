@@ -2,25 +2,21 @@ import * as React from 'react'
 import { Helmet } from 'react-helmet'
 import { Link } from 'react-router-dom'
 import { ContentMainHeading, TextFormContent, View } from 'rpmed-ui/lib/V1'
-import { BreadCrumb, ServiceForm } from 'rpmed-ui'
+import { ServiceForm } from 'rpmed-ui'
 import { useParams } from 'react-router-dom'
-import { useFindPageWithSlugQuery } from 'rpmed-schema'
+import { BreadCrumbFromPage } from '../../pages'
 
 const ServiceView: React.FC<{}> = () => {
-  const { slug } = useParams<{ slug: string }>()
-  const { data } = useFindPageWithSlugQuery({ variables: { slug } })
+  const { slug = '' } = useParams<{ slug: string }>()
   return (
     <View>
       <Helmet>
         <meta charSet="utf-8" />
         <title>MedLED® Service Request - Riverpoint Medical</title>
       </Helmet>
-      <BreadCrumb
-        trail={[
-          { label: 'Resource Center', url: '/' },
-          { label: data?.pageBySlug.page?.title ?? '...', to: `/${slug}` },
-          { label: 'Service Request', to: `/${slug}/service-request` },
-        ]}
+      <BreadCrumbFromPage
+        slug={slug}
+        trail={[{ label: 'Service Request', to: `/${slug}/service-request` }]}
       />
       <ContentMainHeading>MedLED® Service Request</ContentMainHeading>
       <TextFormContent>

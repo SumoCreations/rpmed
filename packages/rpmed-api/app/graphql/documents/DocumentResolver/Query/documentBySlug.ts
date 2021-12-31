@@ -1,23 +1,23 @@
 import { Document } from '../../../../models'
 import { ErrorDocumentNotFound } from '../documentErrors'
-import { DocumentQueryOutput, QueryDocumentArgs } from 'rpmed-schema'
+import { DocumentQueryOutput, QueryDocumentBySlugArgs } from 'rpmed-schema'
 import { getDownloadUrl } from 'api-utils'
 import {
-  generateAuthorizationError,
-  isAuthorized,
   ServerContext,
+  isAuthorized,
+  generateAuthorizationError,
 } from '../../../auth'
 
-export const document = async (
+export const documentBySlug = async (
   _,
-  args: QueryDocumentArgs,
+  args: QueryDocumentBySlugArgs,
   ctx: ServerContext
 ): Promise<DocumentQueryOutput> => {
   if (!isAuthorized(ctx)) {
     return generateAuthorizationError()
   }
   try {
-    const result = await Document.find(args.id)
+    const result = await Document.findBySlug(args.slug)
     if (!result) {
       return {
         errors: [ErrorDocumentNotFound],

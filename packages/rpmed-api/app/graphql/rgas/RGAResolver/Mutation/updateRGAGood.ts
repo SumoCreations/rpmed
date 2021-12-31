@@ -1,42 +1,35 @@
 import { RGA, RGAGood } from '../../../../models'
-import { ProductType } from '../../../../schema'
+import {
+  MutationUpdateRgaGoodArgs,
+  RgaGoodMutationOutput,
+  RgaStatus,
+} from 'rpmed-schema'
 import {
   ErrorRGAGoodCouldNotBeUpdated,
   ErrorRGAGoodWithIDDoesNotExist,
   ErrorRGAWithIDDoesNotExist,
 } from '../rgaErrors'
-import { IRGAGoodMutationOutput } from './rgaMutationTypes'
-
-interface IRGAUpdateGoodInputParams {
-  rgaId: string
-  id: string
-  rgaGoodInput: {
-    warrantied: boolean
-    symptomId: string
-    rgaId: string
-    productId: string
-    productName: string
-    productType: ProductType
-    lotted: boolean
-    modelNumber: string
-    serial?: string
-    rma?: string
-    po?: string
-    notes?: string
-    customerName?: string
-    customerEmail?: string
-    submittedBy?: string
-    submittedOn?: string
-  }
-}
+import {
+  ServerContext,
+  isAuthorized,
+  generateAuthorizationError,
+  isAuthorizedUser,
+} from '../../../auth'
 
 export const updateRGAGood = async (
-  _: any,
-  { rgaId, id, rgaGoodInput }: IRGAUpdateGoodInputParams
-): Promise<IRGAGoodMutationOutput> => {
+  _,
+  { rgaId, id, rgaGoodInput }: MutationUpdateRgaGoodArgs,
+  context: ServerContext
+): Promise<RgaGoodMutationOutput> => {
+  if (!isAuthorized(context)) {
+    return generateAuthorizationError()
+  }
   const rga = await RGA.find(rgaId)
   if (!rga) {
     return { success: false, errors: [ErrorRGAWithIDDoesNotExist] }
+  }
+  if (rga.status !== RgaStatus.Issued && !isAuthorizedUser(context)) {
+    return generateAuthorizationError()
   }
   const existing = await RGAGood.find(rgaId, id)
   if (!existing) {

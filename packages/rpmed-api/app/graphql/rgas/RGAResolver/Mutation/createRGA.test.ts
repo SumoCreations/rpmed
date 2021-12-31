@@ -1,7 +1,8 @@
 import { DateTime } from 'luxon'
-import { Distributor, IRGA, RGA } from '../../../../models'
-import { RgaStatus } from '../../../../schema'
+import { IRGA, RGA } from '../../../../models'
+import { RgaStatus } from 'rpmed-schema'
 import { createRGA } from './createRGA'
+import { TST_ORIGIN_CTX } from '../../../auth'
 
 const sampleParams = {
   submittedBy: 'someone-ex1@someOtherPartner.com',
@@ -27,26 +28,49 @@ describe('createRGA', () => {
     done()
   })
 
+  test('should fail if not authorized', async () => {
+    expect.assertions(1)
+    const output = await createRGA(
+      null,
+      {
+        rgaInput: {
+          ...sampleParams,
+        },
+      },
+      null
+    )
+    expect(output.success).toBe(false)
+  })
+
   test('should generate a new rga if it is valid', async () => {
     expect.assertions(1)
-    const output = await createRGA(null, {
-      rgaInput: {
-        ...sampleParams,
+    const output = await createRGA(
+      null,
+      {
+        rgaInput: {
+          ...sampleParams,
+        },
       },
-    })
+      TST_ORIGIN_CTX
+    )
     expect(output.success).toBe(true)
   })
 
   test('should generate a distributor that matches the submitted by domain', async () => {
     expect.assertions(2)
-    const output = await createRGA(null, {
-      rgaInput: {
-        ...sampleParams,
+    const output = await createRGA(
+      null,
+      {
+        rgaInput: {
+          ...sampleParams,
+        },
       },
-    })
-    const distributor = await Distributor.find(output.rga.distributorId)
+      TST_ORIGIN_CTX
+    )
     expect(output.success).toEqual(true)
-    expect(distributor.domain).toEqual('someOtherPartner.com')
+    expect((await output.rga.distributor).domain).toEqual(
+      'someOtherPartner.com'
+    )
   })
 
   test('should fail if the RGA does not pass validations', async () => {
@@ -58,7 +82,7 @@ describe('createRGA', () => {
         submittedOn: null,
       },
     }
-    const output = await createRGA(null, invalidInput)
+    const output = await createRGA(null, invalidInput, TST_ORIGIN_CTX)
     expect(output.success).toBe(false)
     expect(output.errors.map(e => e.path)).toContain('submittedBy')
     expect(output.errors.map(e => e.path)).toContain('submittedOn')

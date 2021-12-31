@@ -4,12 +4,21 @@ import {
   ErrorDocumentWithSlugAlreadyExists,
   ErrorDocumentInvalid,
 } from '../documentErrors'
-import { MutationMakeDocumentArgs, DocumentMutationOutput } from "rpmed-schema"
+import { MutationMakeDocumentArgs, DocumentMutationOutput } from 'rpmed-schema'
+import {
+  isAuthorizedUser,
+  ServerContext,
+  generateAuthorizationError,
+} from '../../../auth'
 
 export const makeDocument = async (
-  _: any,
-  { documentInput }: MutationMakeDocumentArgs
+  _,
+  { documentInput }: MutationMakeDocumentArgs,
+  context: ServerContext
 ): Promise<DocumentMutationOutput> => {
+  if (!isAuthorizedUser(context)) {
+    return generateAuthorizationError()
+  }
   try {
     await Validation.Document.Default.validate(documentInput, {
       abortEarly: false,
@@ -28,10 +37,10 @@ export const makeDocument = async (
   }
 
   try {
-    const document = await Document.make({ ...documentInput as any })
+    const document = await Document.make({ ...(documentInput as any) })
     return { document: Document.output(document), success: true }
   } catch (e) {
-    console.log("PAGE MAKE ERROR!")
+    console.log('PAGE MAKE ERROR!')
     console.log(e)
     return { success: false, errors: [ErrorDocumentInvalid] }
   }
