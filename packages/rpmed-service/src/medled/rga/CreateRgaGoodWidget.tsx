@@ -6,14 +6,17 @@ import { Flex } from 'rebass'
 import { ProductType, ValidationError, RgaGood } from 'rpmed-schema'
 import { Heading, Indicators } from 'rpmed-ui/lib/V1'
 import { IconButton, Modal } from 'rpmed-ui'
-import { useCreateRgaGoodMutation, useUpdateRgaGoodMutation } from './graphql'
+import {
+  useCreateRgaGoodMutation,
+  useUpdateRgaGoodMutation,
+} from 'rpmed-schema'
 import {
   FormSection,
   RGAGoodForm,
   RGAGoodFormSubmitHandler,
 } from './RGAGoodForm'
 
-export const CreateRGAGoodWidget: React.FunctionComponent<{
+export const CreateRGAGoodWidget: React.FC<{
   rgaId: string
   onDismiss?: () => void
   onSubmit?: () => void

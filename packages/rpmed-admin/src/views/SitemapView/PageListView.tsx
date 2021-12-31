@@ -5,11 +5,11 @@ import {
   faTrash,
 } from '@fortawesome/pro-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { History } from 'history'
+
 import qs from 'query-string'
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
-import { Link, useHistory } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {
   Actions,
   Card,
@@ -36,16 +36,14 @@ interface IPageProps {
 
 const ROOT_STYLES = 'bg-primary bg-opacity-10 font-bold'
 
-const sendTo = (p: { history: History; url: string }) => () =>
-  p.history.push(p.url)
-
-const Pages: React.FunctionComponent<IPageProps> = ({
+const Pages: React.FC<IPageProps> = ({
   onDelete,
   filterText,
   pages,
   error,
 }) => {
-  const history = useHistory()
+  const navigate = useNavigate()
+  const sendTo = (p: { url: string }) => () => navigate(p.url)
 
   if (error) {
     return <Errors.LoadingError error={error} />
@@ -74,18 +72,17 @@ const Pages: React.FunctionComponent<IPageProps> = ({
     <span className={p.slug === 'root' ? ROOT_STYLES : ''}>{p.slug}</span>,
     <Actions.Group key={`actions${p.id}`}>
       <Actions.Primary
-        onClick={sendTo({ history, url: `/admin/sitemap/pages/${p.id}` })}
+        onClick={sendTo({ url: `/admin/sitemap/pages/${p.id}` })}
       >
         <FontAwesomeIcon icon={faEye} />
       </Actions.Primary>
       <Actions.Primary
-        onClick={sendTo({ history, url: `/admin/sitemap/pages/${p.id}/edit` })}
+        onClick={sendTo({ url: `/admin/sitemap/pages/${p.id}/edit` })}
       >
         <FontAwesomeIcon icon={faPencil} />
       </Actions.Primary>
       <Actions.Primary
         onClick={sendTo({
-          history,
           url: `/admin/sitemap/pages/new?${qs.stringify({ ...p })}`,
         })}
       >
@@ -110,7 +107,7 @@ const Pages: React.FunctionComponent<IPageProps> = ({
 
 export const PageListView: React.FC = () => {
   const [deleting, setDeleting] = useState(false)
-  const history = useHistory()
+  const navigate = useNavigate()
   const { loading, error, data, refetch } = usePagesQuery({
     fetchPolicy: 'network-only',
   })
@@ -118,7 +115,7 @@ export const PageListView: React.FC = () => {
   const [pageToDelete, setPageToDelete] = useState(null as Page | null)
   const [searchText, setSearchText] = useState('')
   const confirmPageToDelete = (product: Page) => setPageToDelete(product)
-  const onClickNew = () => history.push('/admin/sitemap/pages/new')
+  const onClickNew = () => navigate('/admin/sitemap/pages/new')
   const onSearchChange: React.ChangeEventHandler = event =>
     setSearchText((event.target as HTMLInputElement).value)
   return (

@@ -5,9 +5,9 @@ import * as React from 'react'
 import styled from '../styled-components'
 
 export const SearchInput = styled.input`
-  background: ${p => transparentize(0.2)(p.theme.colorBodyTextInverted)};
+  background: ${(p) => transparentize(0.2)(p.theme.colorBodyTextInverted)};
   display: flex;
-  border: 2px solid ${p => p.theme.colorPrimary};
+  border: 2px solid ${(p) => p.theme.colorPrimary};
   border-radius: 1rem;
   font-size: 16px;
   padding: 18px 18px 18px 2.25rem;
@@ -21,7 +21,7 @@ export const SearchInput = styled.input`
   width: 100%;
 
   &:focus {
-    background: ${p => transparentize(0)(p.theme.colorBodyTextInverted)};
+    background: ${(p) => transparentize(0)(p.theme.colorBodyTextInverted)};
     opacity: 1;
     max-width: 100%;
   }
@@ -35,7 +35,7 @@ export const SearchView = styled.p`
 `
 
 export const SearchIcon = styled.span`
-  color: ${p => p.theme.colorPrimary};
+  color: ${(p) => p.theme.colorPrimary};
   position: absolute;
   left: 0.5rem;
   top: 0;
@@ -52,7 +52,7 @@ interface ISearchInputProps {
   value: string
 }
 
-export const Search: React.FunctionComponent<ISearchInputProps> = ({
+export const Search: React.FC<ISearchInputProps> = ({
   placeholder,
   onChange,
   value,

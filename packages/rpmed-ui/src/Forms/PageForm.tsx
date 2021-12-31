@@ -113,11 +113,11 @@ export const PageForm: React.FC<PageFormProps> = ({
           placeholder="A page description used for SEO purposes."
           className="w-full"
         />
-        <ErrorList errors={formErrors as ErrorMap} />
-        <Button type="submit" className="mt-2 w-full">
-          {submitTitle ?? 'Save Page'}
-        </Button>
       </Fields>
+      <ErrorList errors={formErrors as ErrorMap} />
+      <Button type="submit" className="mt-2 w-full">
+        {submitTitle ?? 'Save Page'}
+      </Button>
       {loading ? <AbsoluteOverlay /> : null}
     </form>
   )

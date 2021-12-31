@@ -3,7 +3,7 @@ import * as React from 'react'
 import { Box, Flex } from 'rebass'
 import { ModelNumber, ProductType } from 'rpmed-schema'
 import { Form, Indicators, Input } from 'rpmed-ui/lib/V1'
-import { useModelNumbersQuery } from '../graphql'
+import { useModelNumbersQuery } from 'rpmed-schema'
 
 export type ModelNumberSelectFn = Input.DropDownSelectFn<ModelNumber>
 
@@ -78,7 +78,7 @@ const Results: React.FC<IResultProps> = ({
   )
 }
 
-export const ModelNumberSelectField: React.FunctionComponent<IModelNumberSelectFieldProps> = props => {
+export const ModelNumberSelectField: React.FC<IModelNumberSelectFieldProps> = props => {
   return (
     <Input.FieldContainer margin={props.margin}>
       {props.label ? <Form.Label>{props.label}</Form.Label> : null}

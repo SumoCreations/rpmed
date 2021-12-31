@@ -12,7 +12,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
-import { RouteComponentProps } from 'react-router'
+import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import {
   Actions,
@@ -26,11 +26,10 @@ import {
 
 const { useState } = React
 
-const View: React.FunctionComponent<RouteComponentProps<{}>> = ({
-  history,
-}) => {
+const View: React.FC = () => {
+  const navigate = useNavigate()
   const [searchText, setSearchText] = useState('')
-  const onClickOption = (route: string) => () => history.push(`/admin/${route}`)
+  const onClickOption = (route: string) => () => navigate(`/admin/${route}`)
   const onSearchChange: React.ChangeEventHandler = event =>
     setSearchText((event.target as HTMLInputElement).value)
   return (

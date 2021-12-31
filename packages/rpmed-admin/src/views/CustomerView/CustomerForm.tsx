@@ -61,7 +61,7 @@ const renderForm = ({
         <span>
           {isSubmitting ? (
             <Indicators.Spinner size={'lg'} />
-          ) : values.id ? (
+          ) : values?.id ? (
             'Update Customer'
           ) : (
             'Create Customer'
@@ -72,7 +72,7 @@ const renderForm = ({
   )
 }
 
-export const CustomerForm: React.FunctionComponent<ICustomerFormProps> = ({
+export const CustomerForm: React.FC<ICustomerFormProps> = ({
   initialValues,
   onSubmit,
 }) => {

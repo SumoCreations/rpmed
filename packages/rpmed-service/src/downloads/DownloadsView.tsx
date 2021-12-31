@@ -1,17 +1,17 @@
 import { faFilePdf } from '@fortawesome/pro-light-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import * as React from 'react'
-import { useHistory, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { BreadCrumb } from 'rpmed-ui'
 import { GridNav } from 'rpmed-ui/lib/V1'
 import { documents } from './documents'
 
 const DownloadsView: React.FC = () => {
-  const history = useHistory()
+  const navigate = useNavigate()
   const { category } = useParams<{ category: string }>()
   const handleDocumentSelection = (id: string) => (e: React.MouseEvent) => {
     e.preventDefault()
-    history.push(`/d/${category}/${id}`)
+    navigate(`/d/${category}/${id}`)
   }
   var tag: string
   var title: string | null = null

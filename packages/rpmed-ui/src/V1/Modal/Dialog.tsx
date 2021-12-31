@@ -13,7 +13,7 @@ interface IDialogProps {
   destructive?: boolean
 }
 
-export const Dialog: React.FunctionComponent<IDialogProps> = p => (
+export const Dialog: React.FC<IDialogProps> = (p) => (
   <Modal.Container onClick={p.onDismiss} transparent={true}>
     <Modal.ContentRegion size={Modal.Size.small}>
       <Card.View>

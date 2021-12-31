@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import get from 'lodash.get'
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
-import { RouteComponentProps } from 'react-router'
+import { useNavigate, useParams } from 'react-router-dom'
 import { ErrorList } from 'rpmed-validation-schema'
 import {
   Actions,
@@ -21,22 +21,19 @@ import {
 } from 'rpmed-schema'
 import { ProductForm, ProductFormSubmitHandler } from './ProductForm'
 
-interface IProductRouterProps {
-  productId: string
-}
+const View: React.FC = () => {
+  const navigate = useNavigate()
+  const { productId = '' } = useParams()
 
-const View: React.FunctionComponent<RouteComponentProps<
-  IProductRouterProps
->> = ({ history, match }) => {
   const [updateProduct] = useUpdateProductMutation()
   const { loading, data } = useProductQuery({
     variables: {
-      productId: match.params.productId,
+      productId: productId,
     },
   })
   const extendedProduct = (data?.response?.product ?? {}) as Product
   const { modelNumbers, ...product } = extendedProduct
-  const handleBack = () => history.push('/admin/products')
+  const handleBack = () => navigate('/admin/products')
   const handleSubmit: ProductFormSubmitHandler = async (values, actions) => {
     const result = await updateProduct({
       variables: {
@@ -55,7 +52,7 @@ const View: React.FunctionComponent<RouteComponentProps<
       })
       return
     }
-    history.push('/admin/products')
+    navigate('/admin/products')
   }
   return (
     <Layout.Layout>

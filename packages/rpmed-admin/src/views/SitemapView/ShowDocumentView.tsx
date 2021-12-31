@@ -4,13 +4,13 @@ import React from 'react'
 import { Helmet } from 'react-helmet'
 import { Actions, Card, Content, Layout, Toolbar } from 'rpmed-ui/lib/V1'
 import { AbsoluteOverlay } from 'rpmed-ui'
-import { useHistory, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Document, useDocumentQuery } from 'rpmed-schema'
 import { faPencil } from '@fortawesome/pro-regular-svg-icons'
 
 export const ShowDocumentView: React.FC = () => {
-  const history = useHistory()
-  const { id } = useParams<{ id: string }>()
+  const navigate = useNavigate()
+  const { id = '' } = useParams<{ id: string }>()
   const { data: existingDocumentData, loading } = useDocumentQuery({
     variables: { id },
     fetchPolicy: 'network-only',
@@ -18,10 +18,10 @@ export const ShowDocumentView: React.FC = () => {
   const { __typename, url, ...existingDocument } =
     existingDocumentData?.response.document ?? ({} as Document)
   const handleBack = () => {
-    history.push('/admin/sitemap/documents')
+    navigate('/admin/sitemap/documents')
   }
   const handleEdit = () => {
-    history.push(`/admin/sitemap/documents/${id}/edit`)
+    navigate(`/admin/sitemap/documents/${id}/edit`)
   }
   return (
     <Layout.Layout>

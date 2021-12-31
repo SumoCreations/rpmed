@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import get from 'lodash.get'
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
-import { RouteComponentProps } from 'react-router'
+
 import { ErrorList } from 'rpmed-validation-schema'
 import { ModelNumber, Product } from 'rpmed-schema'
 import {
@@ -19,19 +19,16 @@ import {
   ModelNumberForm,
   ModelNumberFormSubmitHandler,
 } from './ModelNumberForm'
+import { useNavigate, useParams } from 'react-router-dom'
 
-interface IModelNumberRouterProps {
-  modelNumberId: string
-}
-
-export const ModelNumberEditView: React.FC<RouteComponentProps<
-  IModelNumberRouterProps
->> = ({ match, history }) => {
+export const ModelNumberEditView: React.FC = () => {
+  const { modelNumberId = '' } = useParams()
+  const navigate = useNavigate()
   const handleBack = () =>
-    history.push(`/admin/products/modelNumbers/${match.params.modelNumberId}`)
+    navigate(`/admin/products/modelNumbers/${modelNumberId}`)
   const [updateModelNumber] = useUpdateModelNumberMutation()
   const { loading, data } = useModelNumberQuery({
-    variables: { modelNumberId: match.params.modelNumberId ?? '' },
+    variables: { modelNumberId: modelNumberId ?? '' },
   })
   const modelNumber = data?.response?.modelNumber
   const handleSubmit: ModelNumberFormSubmitHandler = async (
@@ -66,7 +63,7 @@ export const ModelNumberEditView: React.FC<RouteComponentProps<
         })
         return
       }
-      history.push(`/admin/products/modelNumbers/${modelNumber?.id}`)
+      navigate(`/admin/products/modelNumbers/${modelNumber?.id}`)
     } catch (e) {
       actions.setSubmitting(false)
       actions.setFieldError('_', e?.message)

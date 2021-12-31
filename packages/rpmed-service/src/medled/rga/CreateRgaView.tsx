@@ -1,9 +1,9 @@
 import { Formik, FormikHelpers } from 'formik'
 import * as React from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Card, Form, Input, TextFormContent } from 'rpmed-ui/lib/V1'
 import { RequiredEmail, validation } from '../../validations'
-import { useCreateRgaMutation } from './graphql'
+import { useCreateRgaMutation } from 'rpmed-schema'
 import { ShippingSpeedSelect } from './ShippingSpeedSelect'
 
 const validationSchema = validation({
@@ -23,7 +23,7 @@ export type RGAEntryFormSubmitHandler = (
 
 export const CreateRgaView: React.FC = () => {
   const [createRga] = useCreateRgaMutation()
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const handleFormSubmit = async (
     values: IFormValues,
@@ -42,7 +42,7 @@ export const CreateRgaView: React.FC = () => {
     const rga =
       (result.data && result.data.response && result.data.response.rga) || null
     if (rga) {
-      history.push(`/medled/rga/${rga.id}`)
+      navigate(`/medled/rga/${rga.id}`)
     }
     return
   }

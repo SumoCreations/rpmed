@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import get from 'lodash.get'
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
-import { RouteComponentProps } from 'react-router'
+
 import { ErrorList } from 'rpmed-validation-schema'
 import {
   Actions,
@@ -19,18 +19,15 @@ import {
   ICustomerFormValues,
 } from './CustomerForm'
 import { useCustomerQuery, useUpdateCustomerMutation } from 'rpmed-schema'
+import { useNavigate, useParams } from 'react-router-dom'
 
-interface ICustomerRouterProps {
-  customerId: string
-}
-
-const View: React.FunctionComponent<RouteComponentProps<
-  ICustomerRouterProps
->> = ({ history, match }) => {
+const View: React.FC = () => {
+  const navigate = useNavigate()
+  const { customerId = '' } = useParams()
   const [updateCustomer] = useUpdateCustomerMutation()
-  const handleBack = () => history.push('/admin/customers')
+  const handleBack = () => navigate('/admin/customers')
   const { data, loading } = useCustomerQuery({
-    variables: { customerId: match.params.customerId },
+    variables: { customerId },
   })
   const customer = data?.response.customer
   const handleSubmit: CustomerFormSubmitHandler = async (values, actions) => {
@@ -51,7 +48,7 @@ const View: React.FunctionComponent<RouteComponentProps<
       })
       return
     }
-    history.push('/admin/customers')
+    navigate('/admin/customers')
   }
   return (
     <Layout.Layout>

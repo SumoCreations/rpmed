@@ -68,7 +68,7 @@ const validationSchema = Yup.object({
   warrantyTerm: Yup.number().required('Cannot be blank'),
 })
 
-export const ModelNumberForm: React.FunctionComponent<IModelNumberFormProps> = ({
+export const ModelNumberForm: React.FC<IModelNumberFormProps> = ({
   initialValues,
   onSubmit,
 }) => {

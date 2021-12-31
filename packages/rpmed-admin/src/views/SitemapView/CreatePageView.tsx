@@ -5,15 +5,15 @@ import { Helmet } from 'react-helmet'
 import { Actions, Card, Content, Layout, Toolbar } from 'rpmed-ui/lib/V1'
 import qs from 'query-string'
 import { PageForm, PageFormValues } from 'rpmed-ui'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { AsyncSubmitHandler, FormErrors } from '@sumocreations/forms'
 import { useMakePageMutation } from 'rpmed-schema'
 
 export const CreatePageView: React.FC = () => {
   const [loading, setLoading] = useState(false)
-  const history = useHistory()
+  const navigate = useNavigate()
   const handleBack = () => {
-    history.push('/admin/sitemap/pages')
+    navigate('/admin/sitemap/pages')
   }
   const { __typename, id, ...defaultValues } = qs.parse(window.location.search)
   const [makePage] = useMakePageMutation()

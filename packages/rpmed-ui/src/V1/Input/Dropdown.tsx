@@ -20,12 +20,12 @@ const Container = styled.div`
 `
 
 const ResultView = styled.div`
-  background: ${p => p.theme.colorBodyTextInverted};
+  background: ${(p) => p.theme.colorBodyTextInverted};
   display: flex;
-  border: 2px solid ${p => p.theme.colorButtonPrimary};
+  border: 2px solid ${(p) => p.theme.colorButtonPrimary};
   border-top: 0;
-  box-shadow: 0 0 2px ${p => p.theme.colorButtonPrimary};
-  border-radius: ${p => p.theme.borderRadius};
+  box-shadow: 0 0 2px ${(p) => p.theme.colorButtonPrimary};
+  border-radius: ${(p) => p.theme.borderRadius};
   border-top-left-radius: 0;
   border-top-right-radius: 0;
   flex-direction: column;
@@ -45,28 +45,28 @@ const Field = styled.p<{
   primary?: boolean
 }>`
   display: flex;
-  background: ${p => p.theme.colorBodyTextInverted};
-  border: ${p =>
+  background: ${(p) => p.theme.colorBodyTextInverted};
+  border: ${(p) =>
     p.active
       ? `2px solid ${p.theme.colorButtonPrimary}`
       : p.primary
       ? `2px solid ${p.theme.colorPrimary}`
       : `1px solid ${p.theme.colorContentAreaBorder}`};
-  border-radius: ${p => p.theme.borderRadius};
-  font-size: ${p => p.theme.inputTextSize};
-  padding: ${p => p.padding || p.theme.inputPadding};
+  border-radius: ${(p) => p.theme.borderRadius};
+  font-size: ${(p) => p.theme.inputTextSize};
+  padding: ${(p) => p.padding || p.theme.inputPadding};
   flex-grow: 1;
   flex-shrink: 1;
   width: auto;
   margin-bottom: auto;
-  height: ${p => p.height || 'auto'};
-  box-shadow: ${p =>
+  height: ${(p) => p.height || 'auto'};
+  box-shadow: ${(p) =>
     p.active ? `0 0 2px ${p.theme.colorButtonPrimary}` : `none`};
   max-width: 100%;
 `
 
 const SearchField = styled(Text as any)`
-  padding: ${p => p.theme.inputPadding};
+  padding: ${(p) => p.theme.inputPadding};
   margin: 0.5rem;
   display: flex;
   flex-shrink: 1;
@@ -76,7 +76,7 @@ const SearchField = styled(Text as any)`
 const Label = styled.span<{ inactive: boolean }>`
   display: flex;
   margin: auto 0;
-  opacity: ${p => (p.inactive ? 0.75 : 1)};
+  opacity: ${(p) => (p.inactive ? 0.75 : 1)};
   max-width: 100%;
   overflow: hidden;
   white-space: nowrap;
@@ -84,7 +84,7 @@ const Label = styled.span<{ inactive: boolean }>`
 `
 
 const Overlay = styled.span`
-  background: ${p => transparentize(0.8)(p.theme.colorBodyTextInverted)};
+  background: ${(p) => transparentize(0.8)(p.theme.colorBodyTextInverted)};
   position: fixed;
   z-index: 4;
   height: 100vh;
@@ -125,7 +125,7 @@ interface IDropdownProps extends IDropdown {
 
 const { useState } = React
 
-export const Dropdown: React.FunctionComponent<IDropdownProps> = ({
+export const Dropdown: React.FC<IDropdownProps> = ({
   value,
   children,
   height,
@@ -147,7 +147,7 @@ export const Dropdown: React.FunctionComponent<IDropdownProps> = ({
     { leading: false, trailing: true }
   )
   const onClick: React.MouseEventHandler = () => setActive(!active)
-  const onChange: React.ChangeEventHandler = e =>
+  const onChange: React.ChangeEventHandler = (e) =>
     updateSearch((e.target as HTMLInputElement).value)
   const dismiss: DismissFn = () => {
     setActive(false)

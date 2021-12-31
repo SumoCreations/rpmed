@@ -35,7 +35,10 @@ export const BreadCrumb: React.FC<BreadCrumbProps> = ({ trail = [] }) => (
     {trail.map((item, i) => {
       const last = i === trail.length - 1
       return (
-        <li className={clsx(LIST_ITEM_STYLES, last && 'opacity-50')}>
+        <li
+          className={clsx(LIST_ITEM_STYLES, last && 'opacity-50')}
+          key={`${item.label}${i}`}
+        >
           {item.url ? (
             <a href={item.url} className={LINK_STYLES}>
               {item.label}

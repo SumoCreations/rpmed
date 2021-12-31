@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import get from 'lodash.get'
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
-import { RouteComponentProps } from 'react-router'
+import { useNavigate, useParams } from 'react-router-dom'
 import { ErrorList } from 'rpmed-validation-schema'
 import {
   Actions,
@@ -23,18 +23,14 @@ import {
   IProductRegistrationFormValues,
 } from './ProductRegistrationForm'
 
-interface IProductRegistrationRouterProps {
-  productRegistrationId: string
-}
-
-const View: React.FunctionComponent<RouteComponentProps<
-  IProductRegistrationRouterProps
->> = ({ history, match }) => {
-  const handleBack = () => history.push('/admin/registrations')
+const View: React.FC = () => {
+  const navigate = useNavigate()
+  const { productRegistrationId = '' } = useParams()
+  const handleBack = () => navigate('/admin/registrations')
   const [updateProductRegistration] = useUpdateProductRegistrationMutation()
   const { loading, data } = useProductRegistrationQuery({
     variables: {
-      productRegistrationId: match.params.productRegistrationId,
+      productRegistrationId,
     },
   })
   const productRegistration = data?.response.productRegistration
@@ -74,7 +70,7 @@ const View: React.FunctionComponent<RouteComponentProps<
       })
       return
     }
-    history.push('/admin/registrations')
+    navigate('/admin/registrations')
   }
   return (
     <Layout.Layout>

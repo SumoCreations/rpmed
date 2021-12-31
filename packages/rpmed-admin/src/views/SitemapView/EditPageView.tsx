@@ -4,22 +4,22 @@ import React, { useState } from 'react'
 import { Helmet } from 'react-helmet'
 import { Actions, Card, Content, Layout, Toolbar } from 'rpmed-ui/lib/V1'
 import { PageForm, PageFormValues } from 'rpmed-ui'
-import { useHistory, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { AsyncSubmitHandler, FormErrors } from '@sumocreations/forms'
 import { Page, useMakePageMutation, usePageQuery } from 'rpmed-schema'
 import { faEye } from '@fortawesome/pro-regular-svg-icons'
 
 export const EditPageView: React.FC = () => {
-  const history = useHistory()
+  const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
-  const { id } = useParams<{ id: string }>()
+  const { id = '' } = useParams<{ id: string }>()
 
   const handlePreview = () => {
-    history.push(`/admin/sitemap/pages/${id}`)
+    navigate(`/admin/sitemap/pages/${id}`)
   }
 
   const handleBack = () => {
-    history.push('/admin/sitemap/pages')
+    navigate('/admin/sitemap/pages')
   }
 
   const { data: existingPageData, loading: pageLoading } = usePageQuery({

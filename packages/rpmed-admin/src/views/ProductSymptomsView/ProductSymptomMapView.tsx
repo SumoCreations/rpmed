@@ -2,7 +2,7 @@ import { faEye, faPlus, faSync } from '@fortawesome/pro-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useState } from 'react'
 import { Helmet } from 'react-helmet'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import {
   Actions,
   Card,
@@ -20,7 +20,7 @@ import { Flex } from 'rebass'
 import { ModelNumbersMap, ModelSelectHandlerFn } from './ModelNumbersMap'
 
 export const ProductSymptomMapView: React.FC = () => {
-  const history = useHistory()
+  const navigate = useNavigate()
   const [searchText, setSearchText] = useState('')
   const {
     loading,
@@ -34,10 +34,10 @@ export const ProductSymptomMapView: React.FC = () => {
   const [linkSymptomToModelNumber] = useLinkSymptomToModelNumberMutation()
   const networkActive = loading || networkStatus === 4
   const handleRefresh = () => refetch()
-  const onClickNew = () => history.push('/admin/products/symptoms/new')
+  const onClickNew = () => navigate('/admin/products/symptoms/new')
   const onSearchChange: React.ChangeEventHandler = event =>
     setSearchText((event.target as HTMLInputElement).value)
-  const navigateTo = (url: string) => () => history.push(url)
+  const navigateTo = (url: string) => () => navigate(url)
   return (
     <Layout.Layout>
       <Helmet title="Product Symptom - RPMed Service Admin" />

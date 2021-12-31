@@ -4,7 +4,7 @@ import get from 'lodash.get'
 import qs from 'query-string'
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
-import { RouteComponentProps } from 'react-router'
+import { useNavigate } from 'react-router-dom'
 import { ErrorList } from 'rpmed-validation-schema'
 import { Actions, Card, Content, Layout, Toolbar } from 'rpmed-ui/lib/V1'
 import {
@@ -13,10 +13,9 @@ import {
 } from './DistributorForm'
 import { useCreateDistributorMutation } from 'rpmed-schema'
 
-export const DistributorCreateView: React.FC<RouteComponentProps> = ({
-  history,
-}) => {
-  const handleBack = () => history.push('/admin/distributors')
+export const DistributorCreateView: React.FC = () => {
+  const navigate = useNavigate()
+  const handleBack = () => navigate('/admin/distributors')
   const defaultValues = qs.parse(window.location.search)
   const [createDistributor] = useCreateDistributorMutation()
   const handleSubmit: DistributorFormSubmitHandler = async (
@@ -39,7 +38,7 @@ export const DistributorCreateView: React.FC<RouteComponentProps> = ({
       })
       return
     }
-    history.push('/admin/distributors')
+    navigate('/admin/distributors')
   }
   return (
     <Layout.Layout>

@@ -27,9 +27,10 @@ const Button = styled.button`
 `
 
 const Dropdown = styled.div`
-  background: ${p => p.theme.colorContentAreaBackground};
-  border: 1px solid ${p => p.theme.colorButtonPrimary};
-  box-shadow: 2px 2px 0 ${p => transparentize(0.75)(p.theme.colorButtonPrimary)};
+  background: ${(p) => p.theme.colorContentAreaBackground};
+  border: 1px solid ${(p) => p.theme.colorButtonPrimary};
+  box-shadow: 2px 2px 0
+    ${(p) => transparentize(0.75)(p.theme.colorButtonPrimary)};
   position: absolute;
   left: 0;
   top: 100%;
@@ -41,7 +42,7 @@ const Dismiss = styled.div`
   top: 0;
   left: 0;
   z-index: 1;
-  background: ${p => transparentize(0.9)(p.theme.colorPrimary)};
+  background: ${(p) => transparentize(0.9)(p.theme.colorPrimary)};
   height: 100vh;
   width: 100vw;
 `
@@ -54,7 +55,7 @@ interface IRegisteredFieldProps {
 
 const { useState } = React
 
-export const DateSelect: React.FunctionComponent<IRegisteredFieldProps> = ({
+export const DateSelect: React.FC<IRegisteredFieldProps> = ({
   selectedDate,
   onSelectDate,
   onDismiss,
@@ -66,7 +67,7 @@ export const DateSelect: React.FunctionComponent<IRegisteredFieldProps> = ({
     toggleDatePicker()
     onSelectDate(date)
   }
-  const dismissHandler: React.MouseEventHandler = e => {
+  const dismissHandler: React.MouseEventHandler = (e) => {
     if (onDismiss) {
       onDismiss(e)
     }

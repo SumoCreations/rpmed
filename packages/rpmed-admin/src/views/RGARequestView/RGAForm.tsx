@@ -26,7 +26,7 @@ interface IRGAFormProps {
 
 const FormField = Input.Renderer<IRGAFormValues>()
 
-export const RGAForm: React.FunctionComponent<IRGAFormProps> = ({
+export const RGAForm: React.FC<IRGAFormProps> = ({
   initialValues,
   onSubmit,
 }) => {

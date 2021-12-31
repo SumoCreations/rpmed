@@ -30,7 +30,7 @@ interface IRGAGoodFormProps {
 
 const ErrorSummary = Form.ErrorSummaryRenderer<IRGAGoodFormValues>()
 
-export const RGAGoodForm: React.FunctionComponent<IRGAGoodFormProps> = ({
+export const RGAGoodForm: React.FC<IRGAGoodFormProps> = ({
   initialValues,
   onSubmit,
 }) => {

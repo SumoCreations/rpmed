@@ -156,11 +156,11 @@ export const BatteryForm: React.FC<BatteryFormProps> = ({
           placeholder="optional"
           className="w-full"
         />
-        <ErrorList errors={formErrors as ErrorMap} />
-        <Button type="submit" className="mt-2 w-full">
-          {submitTitle ?? 'Request Batteries'}
-        </Button>
       </Fields>
+      <ErrorList errors={formErrors as ErrorMap} />
+      <Button type="submit" className="mt-2 w-full">
+        {submitTitle ?? 'Request Batteries'}
+      </Button>
       {loading ? <AbsoluteOverlay /> : null}
     </form>
   )

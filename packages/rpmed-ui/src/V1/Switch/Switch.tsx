@@ -9,7 +9,7 @@ interface ISwitchProps {
 }
 
 const Container = styled.p<ISwitchProps>`
-  background: ${p =>
+  background: ${(p) =>
     p.on
       ? p.theme.colorButtonPrimary
       : transparentize(0.5)(p.theme.colorPrimary)};
@@ -38,29 +38,25 @@ const Button = styled.button<ISwitchProps>`
   span {
     margin: auto;
     text-align: center;
-    transform: translate3d(${p => (p.on ? 0.75 : -0.75)}rem, 0, 0);
+    transform: translate3d(${(p) => (p.on ? 0.75 : -0.75)}rem, 0, 0);
     transition: 0.25s transform ease-out;
     text-transform: uppercase;
   }
 `
 
 const Indicator = styled.span<ISwitchProps>`
-  background: ${p => p.theme.colorContentAreaBackground};
+  background: ${(p) => p.theme.colorContentAreaBackground};
   display: block;
   height: 1.75rem;
   width: 1.75rem;
   border-radius: 0.875rem;
-  box-shadow: 1px 0 4px ${p => p.theme.colorPrimary};
-  transform: translate3d(${p => (p.on ? 0 : 2.25)}rem, 0, 0);
+  box-shadow: 1px 0 4px ${(p) => p.theme.colorPrimary};
+  transform: translate3d(${(p) => (p.on ? 0 : 2.25)}rem, 0, 0);
   transition: 0.25s transform ease-out;
   pointer-events: none;
 `
 
-export const View: React.FunctionComponent<ISwitchProps> = ({
-  labels,
-  on,
-  onClick,
-}) => {
+export const View: React.FC<ISwitchProps> = ({ labels, on, onClick }) => {
   const displayLabel = labels || ['on', 'off']
   return (
     <Container on={on}>

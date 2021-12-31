@@ -126,7 +126,7 @@ const renderForm = ({
   )
 }
 
-export const ProductRegistrationForm: React.FunctionComponent<IProductRegistrationFormProps> = ({
+export const ProductRegistrationForm: React.FC<IProductRegistrationFormProps> = ({
   initialValues,
   onSubmit,
 }) => {

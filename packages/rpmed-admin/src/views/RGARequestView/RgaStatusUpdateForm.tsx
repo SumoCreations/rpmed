@@ -68,7 +68,7 @@ const StatusDescription: React.FC<{ status: RgaStatus }> = ({ status }) => {
   return null
 }
 
-export const RgaStatusUpdateForm: React.FunctionComponent<IRGAGoodFormProps> = ({
+export const RgaStatusUpdateForm: React.FC<IRGAGoodFormProps> = ({
   initialValues,
   onSubmit,
   onCancel,

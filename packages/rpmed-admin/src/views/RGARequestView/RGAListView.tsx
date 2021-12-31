@@ -1,11 +1,11 @@
 import { faEye, faPlus } from '@fortawesome/pro-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { History } from 'history'
+
 import { DateTime } from 'luxon'
 import React, { useState } from 'react'
 import { Helmet } from 'react-helmet'
-import { RouteComponentProps } from 'react-router'
-import { Link } from 'react-router-dom'
+
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Rga, RgaStatus } from 'rpmed-schema'
 import {
   Actions,
@@ -27,22 +27,15 @@ const readableStatus = (s: string) =>
     .map(capitalize)
     .join(' ')
 
-const sendTo = (p: { history: History; url: string }) => () =>
-  p.history.push(p.url)
-
 interface IRGAProps {
-  history: History
   filterText: string
   status: RgaStatus
 }
 
-const RGAs: React.FunctionComponent<IRGAProps> = ({
-  history,
-  filterText,
-  status,
-}) => {
+const RGAs: React.FC<IRGAProps> = ({ filterText, status }) => {
   const { error, loading, rgas } = useRGAs({ status })
-
+  const navigate = useNavigate()
+  const sendTo = (p: { url: string }) => () => navigate(p.url)
   if (loading) {
     return <p>Loading...</p>
   }
@@ -53,8 +46,8 @@ const RGAs: React.FunctionComponent<IRGAProps> = ({
   const filterRGA = ({ submittedBy, id }: Rga) =>
     filterText.length > 0
       ? [id, submittedBy]
-        .map(val => val.toLowerCase().indexOf(filterText.toLowerCase()) >= 0)
-        .includes(true)
+          .map(val => val.toLowerCase().indexOf(filterText.toLowerCase()) >= 0)
+          .includes(true)
       : true
 
   const rows = rgas.filter(filterRGA).map(p => [
@@ -66,7 +59,7 @@ const RGAs: React.FunctionComponent<IRGAProps> = ({
     p.goods.length,
     <Actions.Group key={`actions${p.id}`}>
       <Actions.Primary
-        onClick={sendTo({ history, url: `/admin/rga/${p.status}/${p.id}` })}
+        onClick={sendTo({ url: `/admin/rga/${p.status}/${p.id}` })}
       >
         <FontAwesomeIcon icon={faEye} />
       </Actions.Primary>
@@ -87,16 +80,11 @@ const RGAs: React.FunctionComponent<IRGAProps> = ({
   )
 }
 
-interface IParams {
-  status: string
-}
-
-export const RGAListView: React.FC<RouteComponentProps<IParams>> = ({
-  history,
-  match,
-}) => {
+export const RGAListView: React.FC = () => {
   const [searchText, setSearchText] = useState('')
-  const onClickNew = () => history.push('/admin/rga/new')
+  const params = useParams()
+  const navigate = useNavigate()
+  const onClickNew = () => navigate('/admin/rga/new')
   const onSearchChange: React.ChangeEventHandler = event =>
     setSearchText((event.target as HTMLInputElement).value)
   return (
@@ -123,16 +111,15 @@ export const RGAListView: React.FC<RouteComponentProps<IParams>> = ({
           <Grid.Row>
             <Grid.Col span={16}>
               <Heading.Title>
-                {readableStatus(match.params.status)}
+                {readableStatus(params.status as RgaStatus)}
               </Heading.Title>
             </Grid.Col>
           </Grid.Row>
           <Grid.Row>
             <Grid.Col span={16}>
               <RGAs
-                history={history}
                 filterText={searchText}
-                status={match.params.status as RgaStatus}
+                status={params.status as RgaStatus}
               />
             </Grid.Col>
           </Grid.Row>

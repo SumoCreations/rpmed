@@ -154,7 +154,7 @@ interface ISymptomListProps {
   onSelectSymptom: SymptomSelectHandler
 }
 
-const SymptomList: React.FunctionComponent<ISymptomListProps> = ({
+const SymptomList: React.FC<ISymptomListProps> = ({
   selectedProduct,
   selectedSymptoms,
   onSelectSymptom,

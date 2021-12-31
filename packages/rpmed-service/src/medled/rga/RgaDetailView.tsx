@@ -2,7 +2,7 @@ import { faPlus, faTrash, faPencil } from '@fortawesome/pro-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Formik, FormikHelpers } from 'formik'
 import React, { useState } from 'react'
-import { useParams, useHistory } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { Box, Flex } from 'rebass'
 import { useQuery } from '../../routes'
 import {
@@ -27,7 +27,7 @@ import {
   useRgaQuery,
   useDestroyRgaGoodMutation,
   useSubmitRgaForReviewMutation,
-} from './graphql'
+} from 'rpmed-schema'
 import { RgaGood, ValidationError, RgaStatus } from 'rpmed-schema'
 import { Modal, Dialog } from 'rpmed-ui'
 
@@ -48,11 +48,12 @@ interface IRGADetailFormValues {
 }
 
 export const RgaDetailView: React.FC = () => {
-  const { id } = useParams<{ id: string }>()
+  const { id = '' } = useParams<{ id: string }>()
   const [userToken, setUserToken] = useState('')
 
-  const history = useHistory()
-  const handleNavigation = (path: string) => () => history.replace(path)
+  const navigate = useNavigate()
+  const handleNavigation = (path: string) => () =>
+    navigate(path, { replace: true })
 
   const handleCaptcha = (token: string | null): void =>
     setUserToken(token || '')

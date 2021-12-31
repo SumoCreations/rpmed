@@ -26,7 +26,7 @@ export const makePage = async (
   try {
     const page = await Page.make({
       ...(pageInput as any),
-      slug: existingPage.slug === 'root' ? 'root' : slug, // root page cannot be renamed or changed.
+      slug: existingPage?.slug === 'root' ? 'root' : slug, // root page cannot be renamed or changed.
     })
     return { page: Page.output(page), success: true }
   } catch (e) {

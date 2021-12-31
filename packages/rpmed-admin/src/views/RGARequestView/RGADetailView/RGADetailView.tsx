@@ -2,7 +2,7 @@ import { faChevronLeft } from '@fortawesome/pro-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react'
 import { Helmet } from 'react-helmet'
-import { RouteComponentProps } from 'react-router'
+
 import { Box, Flex } from 'rebass'
 import { useQuery } from '../../../routes'
 import { Rga, RgaGood, RgaStatus } from 'rpmed-schema'
@@ -19,10 +19,7 @@ import { CreateRGAGoodWidget } from './CreateRgaGoodWidget'
 import { EditRGAGoodView } from './EditRgaGoodView'
 import { RGADetails } from './RGADetails'
 import { RGAGoodsList } from './RgaGoodsList'
-
-interface IRGARouterProps {
-  rgaId: string
-}
+import { useNavigate, useParams } from 'react-router'
 
 const statusesWithEditableGoods = [
   RgaStatus.Issued,
@@ -32,17 +29,16 @@ const statusesWithEditableGoods = [
   RgaStatus.Shipping,
 ]
 
-const View: React.FunctionComponent<RouteComponentProps<IRGARouterProps>> = ({
-  history,
-  match,
-}) => {
+const View: React.FC = () => {
   const { search, set: setSearch } = useQuery<{
     editId?: string | null
     deleteId?: string | null
   }>()
+  const params = useParams()
+  const navigate = useNavigate()
   const destroyRGAGood = useDestroyRGAGood()
-  const { loading, rga, refetch } = useRGA(match.params.rgaId)
-  const handleBack = () => history.push(`/admin/rga/${rga ? rga.status : ''}`)
+  const { loading, rga, refetch } = useRGA(params.rgaId ?? '')
+  const handleBack = () => navigate(`/admin/rga/${rga ? rga.status : ''}`)
   const handleServiceForm = (good: RgaGood) => {
     if (good.serviceFormUrl) {
       window.location.href = good.serviceFormUrl
@@ -74,13 +70,13 @@ const View: React.FunctionComponent<RouteComponentProps<IRGARouterProps>> = ({
       return
     }
     await destroyRGAGood({
-      variables: { id: search.deleteId, rgaId: match.params.rgaId },
+      variables: { id: search.deleteId, rgaId: params.rgaId ?? '' },
     })
     await refetch()
     handleDismissDelete()
   }
   const handleStatusUpdate = (status: RgaStatus) => {
-    history.push(`/admin/rga/update/${rga ? rga.id : ''}/${status}`)
+    navigate(`/admin/rga/update/${rga ? rga.id : ''}/${status}`)
   }
   const canEdit = statusesWithEditableGoods.includes(
     rga ? rga.status : RgaStatus.Closed
@@ -88,8 +84,8 @@ const View: React.FunctionComponent<RouteComponentProps<IRGARouterProps>> = ({
   const goodToDelete =
     rga && search.deleteId
       ? rga.goods
-        .map(g => g as RgaGood)
-        .filter(g => g.id === search.deleteId)[0]
+          .map(g => g as RgaGood)
+          .filter(g => g.id === search.deleteId)[0]
       : null
   const goodToEdit =
     rga && search.editId

@@ -23,12 +23,12 @@ import { ProductSymptomSelectFn } from '../../../ProductSymptomsView'
 import { IRGAGoodFormValues } from '../RGAGoodForm'
 import { AdvancedSection } from './AdvancedSection'
 
-const SummaryView = styled(Flex) <{ active?: boolean }>`
+const SummaryView = styled(Flex)<{ active?: boolean }>`
   border: 1px solid
     ${p =>
-    p.active
-      ? p.theme.colorContentAreaBorderSelected
-      : p.theme.colorContentAreaBorder};
+      p.active
+        ? p.theme.colorContentAreaBorderSelected
+        : p.theme.colorContentAreaBorder};
   border-radius: ${p => p.theme.borderRadius};
 `
 
@@ -111,7 +111,7 @@ interface IRGAGoodFormProps {
 
 const ErrorSummary = Form.ErrorSummaryRenderer<IRGAEditGoodFormValues>()
 
-export const RGAGoodEditForm: React.FunctionComponent<IRGAGoodFormProps> = ({
+export const RGAGoodEditForm: React.FC<IRGAGoodFormProps> = ({
   initialValues,
   onSubmit,
   onCancel,

@@ -9,13 +9,15 @@ import {
   faDownload,
 } from '@fortawesome/pro-solid-svg-icons'
 import { useQuery } from '../routes'
+import { useFindPageWithSlugQuery } from 'rpmed-schema'
 
 const DownloadView: React.FC = () => {
-  const params = useParams<{ downloadId: string; category?: string }>()
+  const { slug, downloadId } = useParams<{ slug: string; downloadId: string }>()
+  const { data } = useFindPageWithSlugQuery({ variables: { slug } })
   const query = useQuery<{ a?: boolean }>()
 
   const autoload = query.search.a
-  const result = documents.find(d => d.id === params.downloadId)
+  const result = documents.find(d => d.id === downloadId)
 
   useEffect(() => {
     setTimeout(() => {
@@ -31,24 +33,22 @@ const DownloadView: React.FC = () => {
       window.location.href = result?.url
     }
   }
-  const downloadsPath = `/downloads/${params.category ?? ''}`
+
   return (
-    <article>
+    <article className="w-full flex flex-col">
       <BreadCrumb
         trail={[
-          { to: '/', label: 'Resource Center' },
-          { to: downloadsPath, label: 'Downloads' },
-          { to: `/d/${result?.id}`, label: result?.title ?? 'Not Found' },
+          { label: 'Resource Center', url: '/' },
+          { label: data?.pageBySlug.page?.title ?? '...', to: `/${slug}` },
+          {
+            label: result?.title ?? 'Not Found',
+            to: `/${slug}/d/${result?.id}`,
+          },
         ]}
       />
       <ContentMainHeading>{result?.title ?? 'Not Found'}</ContentMainHeading>
       <TextFormContent>
         <div className="flex flex-col">
-          <p className="md:mb-3">
-            <Link to={downloadsPath}>
-              <FontAwesomeIcon icon={faArrowAltCircleLeft} /> Downloads
-            </Link>
-          </p>
           <div className="flex flex-row w-full">
             <p className="flex flex-col w-full md:w-1/2 md:mr-3">
               This document is available for download as a PDF. You can also

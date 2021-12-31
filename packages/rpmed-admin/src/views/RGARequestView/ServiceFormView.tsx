@@ -2,7 +2,8 @@ import { faTimes } from '@fortawesome/pro-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { DateTime } from 'luxon'
 import React from 'react'
-import { RouteComponentProps } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
+
 import { Box, Flex } from 'rebass'
 import { Rga, RgaGood, RgaStatus, RgaStatusUpdate } from 'rpmed-schema'
 import {
@@ -18,12 +19,6 @@ import serviceFormLogoUrl from './ServiceFormLogo.png'
 import serviceFormMedLedLogoUrl from './ServiceFormMedLed.png'
 import serviceFormRPQAUrl from './ServiceFormRPQA.png'
 import serviceFormSignature from './ServiceFormSignature.png'
-
-interface IRGARouterProps {
-  rgaId: string
-  status: RgaStatus
-  goodId: string
-}
 
 const DontPrint = styled.div`
   @media print {
@@ -110,7 +105,7 @@ const Value = styled(Box)`
   font-family: 'Times', 'serif';
 `
 
-const Cell = styled(Value as any) <any>`
+const Cell = styled(Value as any)<any>`
   border-right: 1px solid #ccc;
   background: ${p => (p.selected ? p.theme.colorButtonPrimary : '#fff')};
   color: ${p =>
@@ -477,19 +472,18 @@ const CustomerLetter: React.FC<{ good: RgaGood; rga: Rga }> = ({
   )
 }
 
-export const ServiceFormView: React.FC<RouteComponentProps<
-  IRGARouterProps
->> = ({ history, match }) => {
-  const { loading, rga } = useRGA(match.params.rgaId)
+export const ServiceFormView: React.FC = () => {
+  const navigate = useNavigate()
+  const params = useParams()
+
+  const { loading, rga } = useRGA(params.rgaId ?? '')
 
   const dismiss = () => {
-    history.goBack()
+    navigate(-1)
   }
 
   const good = rga
-    ? rga.goods
-      .map(g => g as RgaGood)
-      .filter(g => g.id === match.params.goodId)[0]
+    ? rga.goods.map(g => g as RgaGood).filter(g => g.id === params.goodId)[0]
     : null
 
   const rendering = loading || !rga || !good
@@ -509,9 +503,7 @@ export const ServiceFormView: React.FC<RouteComponentProps<
             <Box width={1} my="auto" mx={3}>
               <Flex flexDirection="column">
                 <Heading.ToolBarOne>Service Form</Heading.ToolBarOne>
-                <Heading.ToolBarTwo>
-                  RGA {match.params.rgaId}
-                </Heading.ToolBarTwo>
+                <Heading.ToolBarTwo>RGA {params.rgaId}</Heading.ToolBarTwo>
               </Flex>
             </Box>
           </Toolbar.View>

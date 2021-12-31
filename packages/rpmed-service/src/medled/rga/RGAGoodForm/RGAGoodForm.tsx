@@ -27,7 +27,7 @@ const validationSchema = Yup.object({
   warrantied: Yup.boolean().required(),
 })
 
-export const RGAGoodForm: React.FunctionComponent<IRGAGoodFormProps> = ({
+export const RGAGoodForm: React.FC<IRGAGoodFormProps> = ({
   initialValues,
   initialSection,
   onSubmit,

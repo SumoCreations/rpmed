@@ -6,7 +6,7 @@ import * as Validation from 'rpmed-validation-schema'
 import { Form, Indicators, Input } from 'rpmed-ui/lib/V1'
 import { ProductInput } from 'rpmed-schema'
 
-interface IProductFormValues extends ProductInput { }
+interface IProductFormValues extends ProductInput {}
 
 export type ProductFormSubmitHandler = (
   values: IProductFormValues,
@@ -68,7 +68,7 @@ const renderForm = ({
   )
 }
 
-export const ProductForm: React.FunctionComponent<IProductFormProps> = ({
+export const ProductForm: React.FC<IProductFormProps> = ({
   initialValues,
   onSubmit,
 }) => {

@@ -11,7 +11,7 @@ import {
   Toolbar,
 } from 'rpmed-ui/lib/V1'
 import { AbsoluteOverlay, Button } from 'rpmed-ui'
-import { useHistory, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Page, useMakePageMutation, usePageQuery } from 'rpmed-schema'
 import { v4 as uuid } from 'uuid'
 import { SectionDetail } from './SectionDetail'
@@ -19,20 +19,20 @@ import { Section, SectionItem } from './types'
 import { isEqual, omit } from 'lodash'
 
 export const ShowPageView: React.FC = () => {
-  const history = useHistory()
+  const navigate = useNavigate()
   const { id } = useParams<{ id: string }>()
   const handleBack = () => {
-    history.push('/admin/sitemap/pages')
+    navigate('/admin/sitemap/pages')
   }
   const handleEdit = () => {
-    history.push(`/admin/sitemap/pages/${id}/edit`)
+    navigate(`/admin/sitemap/pages/${id}/edit`)
   }
 
   const [initialSections, setInitialSections] = useState<Section[]>([])
 
   const [makePage, { loading: postingPage }] = useMakePageMutation()
   const { data: existingPageData, loading } = usePageQuery({
-    variables: { id },
+    variables: { id: id ?? '' },
   })
   const page = existingPageData?.response.page ?? ({} as Page)
 

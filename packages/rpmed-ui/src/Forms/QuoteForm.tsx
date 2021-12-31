@@ -104,8 +104,8 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
           placeholder="optional"
           className="w-full"
         />
-        <ErrorList errors={formErrors as ErrorMap} />
       </Fields>
+      <ErrorList errors={formErrors as ErrorMap} />
       <Button type="submit" className="mt-2 w-full">
         {submitTitle ?? 'Request Quote'}
       </Button>

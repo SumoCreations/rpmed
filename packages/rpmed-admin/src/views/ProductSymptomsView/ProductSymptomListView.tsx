@@ -7,11 +7,11 @@ import {
   faTrash,
 } from '@fortawesome/pro-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { History } from 'history'
+
 import qs from 'query-string'
 import React, { useState } from 'react'
 import { Helmet } from 'react-helmet'
-import { RouteComponentProps } from 'react-router'
+
 import { Link } from 'react-router-dom'
 import { ProductSymptom } from 'rpmed-schema'
 import {
@@ -30,20 +30,20 @@ import {
 import { DestroyProductSymptomButton } from './DestroyProductSymptomButton'
 import { useProductFilters } from './useProductFilters'
 
-const sendTo = (p: { history: History; url: string }) => () =>
-  p.history.push(p.url)
+import { useNavigate } from 'react-router-dom'
 
 interface IProductSymptomsProps {
-  history: History
   onDelete: (product: ProductSymptom) => void
   productSymptoms: ProductSymptom[]
 }
 
-const ProductSymptoms: React.FunctionComponent<IProductSymptomsProps> = ({
-  history,
+const ProductSymptoms: React.FC<IProductSymptomsProps> = ({
   onDelete,
   productSymptoms,
 }) => {
+  const navigate = useNavigate()
+  const sendTo = (p: { url: string }) => () => navigate(p.url)
+
   const onClickDelete = (productSymptom: ProductSymptom) => () =>
     onDelete(productSymptom)
 
@@ -57,7 +57,6 @@ const ProductSymptoms: React.FunctionComponent<IProductSymptomsProps> = ({
     <Actions.Group key={`actions${p.id}`}>
       <Actions.Primary
         onClick={sendTo({
-          history,
           url: `/admin/products/symptoms/${p.id}`,
         })}
       >
@@ -65,7 +64,6 @@ const ProductSymptoms: React.FunctionComponent<IProductSymptomsProps> = ({
       </Actions.Primary>
       <Actions.Primary
         onClick={sendTo({
-          history,
           url: `/admin/products/symptoms/edit/${p.id}`,
         })}
       >
@@ -73,7 +71,6 @@ const ProductSymptoms: React.FunctionComponent<IProductSymptomsProps> = ({
       </Actions.Primary>
       <Actions.Primary
         onClick={sendTo({
-          history,
           url: `/admin/products/symptoms/new?${qs.stringify({ ...p })}`,
         })}
       >
@@ -99,9 +96,8 @@ const ProductSymptoms: React.FunctionComponent<IProductSymptomsProps> = ({
   )
 }
 
-export const ProductSymptomListView: React.FC<RouteComponentProps<{}>> = ({
-  history,
-}) => {
+export const ProductSymptomListView: React.FC = () => {
+  const navigate = useNavigate()
   const [searchText, setSearchText] = useState('')
   const {
     loading,
@@ -120,7 +116,7 @@ export const ProductSymptomListView: React.FC<RouteComponentProps<{}>> = ({
   )
   const confirmProductSymptomToDelete = (product: ProductSymptom) =>
     setProductSymptomToDelete(product)
-  const onClickNew = () => history.push('/admin/products/symptoms/new')
+  const onClickNew = () => navigate('/admin/products/symptoms/new')
   const onSearchChange: React.ChangeEventHandler = event =>
     setSearchText((event.target as HTMLInputElement).value)
 
@@ -176,7 +172,6 @@ export const ProductSymptomListView: React.FC<RouteComponentProps<{}>> = ({
                 <Errors.LoadingError error={error} />
               ) : (
                 <ProductSymptoms
-                  history={history}
                   onDelete={confirmProductSymptomToDelete}
                   productSymptoms={(productSymptoms || []) as ProductSymptom[]}
                 />

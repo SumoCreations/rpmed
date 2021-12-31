@@ -5,12 +5,16 @@ import { BreadCrumb } from 'rpmed-ui'
 import ProductGrid from './ProductGrid'
 import { IProductOption } from './products'
 import SymptomList from './SymptomList'
+import { useParams } from 'react-router-dom'
+import { useFindPageWithSlugQuery } from 'rpmed-schema'
 
 const { useState } = React
 
-const TroubleshootingView: React.FunctionComponent<{}> = () => {
+const TroubleshootingView: React.FC<{}> = () => {
   const [product, setProduct] = useState('')
   const [symptoms, setSymptoms] = useState([''])
+  const { slug } = useParams<{ slug: string }>()
+  const { data } = useFindPageWithSlugQuery({ variables: { slug } })
 
   const handleProductSelect = (selectedProduct: IProductOption) => {
     setProduct(selectedProduct.name)
@@ -39,8 +43,8 @@ const TroubleshootingView: React.FunctionComponent<{}> = () => {
       <BreadCrumb
         trail={[
           { label: 'Resource Center', url: '/' },
-          { label: 'MedLED®', to: '/medled' },
-          { label: 'Troubleshooting', to: '/medled/troubleshooting' },
+          { label: data?.pageBySlug.page?.title ?? '...', to: `/${slug}` },
+          { label: 'Troubleshooting', to: `/${slug}/troubleshooting` },
         ]}
       />
       <ContentMainHeading>MedLED® Troubleshooting</ContentMainHeading>

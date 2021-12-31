@@ -88,7 +88,7 @@ const renderForm = ({
   )
 }
 
-export const UserForm: React.FunctionComponent<IUserFormProps> = ({
+export const UserForm: React.FC<IUserFormProps> = ({
   initialValues,
   onSubmit,
 }) => {

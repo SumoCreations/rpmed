@@ -43,7 +43,8 @@ const setAuthorizationLink = setContext((_, previousContext) => ({
 const asyncAuthLink = setContext(
   _ =>
     new Promise(async success => {
-      const token = await fetchValidatedToken(API_URL)({})
+      // const token = await fetchValidatedToken(API_URL)({ getState: () => {} })
+      const token = 'test'
       success({ token })
     })
 )
@@ -52,10 +53,6 @@ const asyncAuthLink = setContext(
  * The client with our final cache / link configuration.
  */
 export const client = new ApolloClient({
-  cache: new InMemoryCache({
-    possibleTypes: {
-      Profile: ['Educator', 'Professional'],
-    },
-  }),
+  cache: new InMemoryCache(),
   link: asyncAuthLink.concat(setAuthorizationLink).concat(httpLink),
 })

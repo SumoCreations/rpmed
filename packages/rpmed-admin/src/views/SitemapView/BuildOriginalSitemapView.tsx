@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react'
 import { Helmet } from 'react-helmet'
 import { Actions, Card, Content, Layout, Toolbar } from 'rpmed-ui/lib/V1'
-import { useHistory, useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useMakePageMutation } from 'rpmed-schema'
 import { kebabCase } from 'lodash'
 import uuid from 'uuid'
@@ -13,7 +13,7 @@ import { wait } from 'utils'
 
 const sitemap = [
   {
-    title: 'Root',
+    title: 'Resource Center',
     sections: [
       {
         name: 'Support',
@@ -57,21 +57,24 @@ const sitemap = [
           {
             description: "48-Hour Turnaround with MedLED's Signature Service.",
             icon: 'faAmbulance',
-            target: '/medled/service-request',
+            target: 'service-request',
+            type: 'tool',
             name: 'Service My Headlight',
           },
           {
             description:
               'Find common problems &amp; solutions to your product.',
             icon: 'faTools',
-            target: '/medled/troubleshooting',
+            target: 'troubleshooting',
+            type: 'tool',
             name: 'Troubleshoot',
           },
           {
             description:
               'Get new batteries at no charge using our recycling program.',
             icon: 'faBatteryQuarter',
-            target: '/medled/batteries',
+            target: 'batteries',
+            type: 'tool',
             name: 'Battery Recycling',
           },
         ],
@@ -83,14 +86,16 @@ const sitemap = [
             description:
               'Learn how to buy a Headlight or get a free trial & quote.',
             icon: 'faFileInvoiceDollar',
-            target: '/medled/quote',
+            target: 'quote',
+            type: 'tool',
             name: 'Request a Quote',
           },
           {
             description:
               'Together, we can provide light where it is needed most.',
             icon: 'faGlobeAfrica',
-            target: '/medled/mission',
+            target: 'mission',
+            type: 'tool',
             name: 'Mission Trips',
           },
         ],
@@ -169,7 +174,7 @@ const sitemap = [
             description: 'Take advantage of your MedLED® limited warranty.',
             icon: 'faFileCertificate',
             target: 'register',
-            type: 'page',
+            type: 'tool',
             name: 'Register',
           },
         ],
@@ -181,7 +186,7 @@ const sitemap = [
             description: 'Please reach out with any feedback or questions.',
             icon: 'faCommentsAlt',
             target: 'contact',
-            type: 'page',
+            type: 'tool',
             name: 'Contact Us',
           },
           {
@@ -202,7 +207,7 @@ const sitemap = [
             icon: 'faTools',
             target: 'rga',
             name: 'Request an RGA',
-            type: 'page',
+            type: 'tool',
           },
         ],
       },
@@ -219,7 +224,7 @@ const sitemap = [
               'Learn how to buy a Headlight or get a free trial & quote.',
             icon: 'faFileInvoiceDollar',
             target: 'quote',
-            type: 'page',
+            type: 'tool',
             name: 'Request a Quote',
           },
         ],
@@ -243,9 +248,9 @@ const sitemap = [
           {
             description: 'Please reach out with any feedback or questions.',
             icon: 'faCommentsAlt',
-            target: '/contact',
+            target: 'contact',
             name: 'Contact Us',
-            type: 'page',
+            type: 'tool',
           },
           {
             description: 'Take a Look at our MedLED® Champions',
@@ -268,7 +273,7 @@ const sitemap = [
             description:
               'Learn how to buy a Headlight or get a free trial & quote.',
             icon: 'faFileInvoiceDollar',
-            type: 'page',
+            type: 'tool',
             target: 'quote',
             name: 'Request a Quote',
           },
@@ -351,7 +356,7 @@ const sitemap = [
           {
             description: 'Please reach out with any feedback or questions.',
             icon: 'faCommentsAlt',
-            type: 'page',
+            type: 'tool',
             target: 'contact',
             name: 'Contact Us',
           },
@@ -376,7 +381,7 @@ const sitemap = [
             description:
               'Learn how to buy a Headlight or get a free trial & quote.',
             icon: 'faFileInvoiceDollar',
-            type: 'page',
+            type: 'tool',
             target: 'quote',
             name: 'Request a Quote',
           },
@@ -458,7 +463,7 @@ const sitemap = [
           {
             description: 'Please reach out with any feedback or questions.',
             icon: 'faCommentsAlt',
-            type: 'page',
+            type: 'tool',
             target: 'contact',
             name: 'Contact Us',
           },
@@ -476,11 +481,10 @@ const sitemap = [
 ]
 
 export const BuildOriginalSitemapView: React.FC = () => {
-  const history = useHistory()
-  const { id } = useParams<{ id: string }>()
+  const navigate = useNavigate()
   const [makePageMutation] = useMakePageMutation()
   const handleBack = () => {
-    history.push('/admin/sitemap/pages')
+    navigate('/admin/sitemap/pages')
   }
   const [currentPage, setCurrentPage] = useState(0)
   const [pendingPageIndex, setPendingPageIndex] = useState(-1)
@@ -517,11 +521,11 @@ export const BuildOriginalSitemapView: React.FC = () => {
       makePage()
     }
   }, [
-    sitemap,
     currentPage,
     setCurrentPage,
     pendingPageIndex,
     setPendingPageIndex,
+    makePageMutation,
   ])
 
   return (

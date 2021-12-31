@@ -156,11 +156,11 @@ export const ServiceForm: React.FC<ServiceFormProps> = ({
           placeholder="optional"
           className="w-full"
         />
-        <ErrorList errors={formErrors as ErrorMap} />
-        <Button type="submit" className="mt-2 w-full">
-          {submitTitle ?? 'Submit Service Request'}
-        </Button>
       </Fields>
+      <ErrorList errors={formErrors as ErrorMap} />
+      <Button type="submit" className="mt-2 w-full">
+        {submitTitle ?? 'Submit Service Request'}
+      </Button>
       {loading ? <AbsoluteOverlay /> : null}
     </form>
   )

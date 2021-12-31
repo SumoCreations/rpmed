@@ -31,7 +31,7 @@ export const SectionItem: React.FC<SectionItemProps> = ({
   const { data: documentsData } = useDocumentsQuery()
   const { data: pagesData } = usePagesQuery()
   const [confirm, setConfirm] = useState(false)
-  const [iconQuery, setIconQuery] = useState('')
+  const [iconQuery, setIconQuery] = useState(icon)
   const fromProps = useMemo(
     () => ({
       name,
@@ -113,6 +113,7 @@ export const SectionItem: React.FC<SectionItemProps> = ({
         <Select
           name={`item-target-${id}`}
           value={values.icon}
+          placeholder="Select an icon"
           options={iconOptions
             .filter(i =>
               iconQuery?.length > 0 ? i.id.includes(iconQuery) : true
@@ -194,10 +195,13 @@ export const SectionItem: React.FC<SectionItemProps> = ({
             name={`item-target-${id}`}
             value={values.target}
             options={[
-              { id: 'batteryRecycling', name: 'Recycling Form' },
-              { id: 'contactForm', name: 'Contact Form' },
-              { id: 'rga', name: 'Request an RGA' },
-              { id: 'productRegistration', name: 'Registration Form' },
+              { id: 'batteries', name: 'Recycling Form' },
+              { id: 'contact', name: 'Contact Form' },
+              { id: 'rga', name: 'RGA Tool' },
+              { id: 'quote', name: 'Quote Form' },
+              { id: 'register', name: 'Registration Form' },
+              { id: 'mission', name: 'Mission Form' },
+              { id: 'service-request', name: 'Service Request Form' },
               { id: 'troubleshooting', name: 'Troubleshooting' },
             ]}
             onSelect={selectedId => {

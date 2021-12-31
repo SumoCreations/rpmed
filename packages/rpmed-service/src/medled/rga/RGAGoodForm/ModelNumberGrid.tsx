@@ -5,7 +5,7 @@ import { ModelNumber, Product } from 'rpmed-schema'
 import { ModelNumberSelectFn } from './ModelNumberSelectField'
 import { ProductSelectField, ProductSelectFn } from './ProductSelectField'
 import { IInteractiveSection } from './types'
-import { useModelNumbersQuery, useProductsQuery } from '../graphql'
+import { useModelNumbersQuery, useProductsQuery } from 'rpmed-schema'
 
 interface IModelNumberGridProps extends IInteractiveSection {
   onSelectProduct: ProductSelectFn

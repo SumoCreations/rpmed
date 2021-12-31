@@ -72,7 +72,7 @@ const renderForm = ({
   )
 }
 
-export const DistributorForm: React.FunctionComponent<IDistributorFormProps> = ({
+export const DistributorForm: React.FC<IDistributorFormProps> = ({
   initialValues,
   onSubmit,
 }) => {

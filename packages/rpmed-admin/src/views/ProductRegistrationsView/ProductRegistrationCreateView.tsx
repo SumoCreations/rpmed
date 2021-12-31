@@ -4,7 +4,7 @@ import get from 'lodash.get'
 import qs from 'query-string'
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
-import { RouteComponentProps } from 'react-router'
+import { useNavigate } from 'react-router-dom'
 import { ErrorList } from 'rpmed-validation-schema'
 import { Actions, Card, Content, Layout, Toolbar } from 'rpmed-ui/lib/V1'
 import { useCreateProductRegistrationMutation } from 'rpmed-schema'
@@ -16,10 +16,9 @@ import {
 const initialRegisteredOn = new Date().toISOString()
 const initialRegisteredOnDisplayDate = new Date().toLocaleDateString()
 
-export const ProductRegistrationCreateView: React.FC<RouteComponentProps> = ({
-  history,
-}) => {
-  const handleBack = () => history.push('/admin/registrations')
+export const ProductRegistrationCreateView: React.FC = () => {
+  const navigate = useNavigate()
+  const handleBack = () => navigate('/admin/registrations')
   const defaultValues = qs.parse(window.location.search)
   const [createProductRegistration] = useCreateProductRegistrationMutation()
   const handleSubmit: ProductRegistrationFormSubmitHandler = async (
@@ -44,7 +43,7 @@ export const ProductRegistrationCreateView: React.FC<RouteComponentProps> = ({
       })
       return false
     }
-    history.push('/admin/registrations')
+    navigate('/admin/registrations')
   }
 
   return (

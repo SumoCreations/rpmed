@@ -88,9 +88,7 @@ const STATUS_LIST = [
   RgaStatus.Canceled, // Not an indicated status.
 ]
 
-export const RGAStatusWidget: React.FunctionComponent<IDetailViewProps> = ({
-  status,
-}) => {
+export const RGAStatusWidget: React.FC<IDetailViewProps> = ({ status }) => {
   const index = STATUS_LIST.indexOf(status || RgaStatus.Issued)
   const progress = index / (STATUS_LIST.length - 3)
 

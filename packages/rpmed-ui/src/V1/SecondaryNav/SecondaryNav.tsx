@@ -193,7 +193,7 @@ interface ISecondaryNavProps {
   hidden?: boolean
 }
 
-export const View: React.FunctionComponent<ISecondaryNavProps> = ({
+export const View: React.FC<ISecondaryNavProps> = ({
   children,
   data,
   hidden,

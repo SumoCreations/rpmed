@@ -1,13 +1,12 @@
 import * as React from 'react'
-import { RouteComponentProps } from 'react-router'
+import { useNavigate } from 'react-router-dom'
 import { Modal } from 'rpmed-ui/lib/V1'
 
-export const ModalView: React.FunctionComponent<RouteComponentProps<{}>> = ({
-  history,
-}) => {
+export const ModalView: React.FC = () => {
+  const navigate = useNavigate()
   const back: React.MouseEventHandler = e => {
     e.stopPropagation()
-    history.goBack()
+    navigate(-1)
   }
 
   return (

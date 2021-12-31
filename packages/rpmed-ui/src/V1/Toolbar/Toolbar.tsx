@@ -65,7 +65,7 @@ export const Breadcrumbs: React.FC<IBreadcrumbProps> = ({ data }) => {
   )
 }
 
-export const View: React.FunctionComponent = ({ children }) => (
+export const View: React.FC = ({ children }) => (
   <ToolbarView>
     <ToolbarItems>{children}</ToolbarItems>
   </ToolbarView>

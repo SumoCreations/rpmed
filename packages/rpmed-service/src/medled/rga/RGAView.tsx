@@ -1,12 +1,17 @@
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
-import { Route, Switch } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import { BreadCrumb } from 'rpmed-ui'
 import { ContentMainHeading, View } from 'rpmed-ui/lib/V1'
 import { CreateRgaView } from './CreateRgaView'
 import { RgaDetailView } from './RgaDetailView'
+import { useFindPageWithSlugQuery } from 'rpmed-schema'
+import { useParams } from 'react-router-dom'
 
 const RGAView: React.FC = () => {
+  const { slug } = useParams<{ slug: string }>()
+  const { data } = useFindPageWithSlugQuery({ variables: { slug } })
+
   return (
     <View>
       <Helmet>
@@ -16,19 +21,19 @@ const RGAView: React.FC = () => {
       <BreadCrumb
         trail={[
           { label: 'Resource Center', url: '/' },
-          { label: 'MedLED®', to: '/medled' },
-          { label: 'RGA', to: '/medled/rga' },
+          { label: data?.pageBySlug.page?.title ?? '...', to: `/${slug}` },
+          { label: 'RGA', to: `/${slug}/rga` },
         ]}
       />
       <ContentMainHeading>Return Good Authorization Request</ContentMainHeading>
-      <Switch>
-        <Route path="/medled/rga/" exact={true}>
+      <Routes>
+        <Route path="/medled/rga/">
           <CreateRgaView />
         </Route>
         <Route path="/medled/rga/:id">
           <RgaDetailView />
         </Route>
-      </Switch>
+      </Routes>
     </View>
   )
 }

@@ -3,47 +3,14 @@ import React, { Component } from 'react'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { DndProvider } from 'react-dnd'
 import { Helmet } from 'react-helmet'
-import { connect, Provider } from 'react-redux'
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { Provider } from 'react-redux'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import { client } from './apolloClient'
-import { ConditionalRoute } from './routes'
-import { isAuthenticated } from './session'
+import { RequireAuth, RequireAnon } from './routes'
 import store from './store'
-import { IStoreState } from './store'
 import { UiProvider } from 'rpmed-ui'
 import { defaultTheme, ThemeProvider } from 'rpmed-ui/lib/V1'
 import { AdminView, LoginView } from './views'
-
-interface IProps {
-  authenticated: boolean
-}
-
-const RootRoutes: React.FunctionComponent<IProps> = ({ authenticated }) => {
-  const loggedIn = () => authenticated
-  const loggedOut = () => !loggedIn()
-  return (
-    <Router>
-      <Helmet>
-        <meta charSet="utf-8" />
-      </Helmet>
-      <Switch>
-        <ConditionalRoute
-          path="/admin"
-          component={AdminView}
-          redirectIf={loggedOut}
-          redirectPath={'/'}
-        />
-        <Route path="/" component={LoginView} />
-      </Switch>
-    </Router>
-  )
-}
-
-const mapStateToProps = (state: IStoreState) => ({
-  authenticated: isAuthenticated(state.session),
-})
-
-const ConnectedRootRouter = connect(mapStateToProps)(RootRoutes)
 
 class App extends Component<{}, {}, any> {
   public componentDidMount() {
@@ -65,7 +32,29 @@ class App extends Component<{}, {}, any> {
           <ThemeProvider theme={defaultTheme}>
             <UiProvider backend={HTML5Backend}>
               <DndProvider backend={HTML5Backend}>
-                <ConnectedRootRouter />
+                <Router>
+                  <Helmet>
+                    <meta charSet="utf-8" />
+                  </Helmet>
+                  <Routes>
+                    <Route
+                      path="/admin/*"
+                      element={
+                        <RequireAuth>
+                          <AdminView />
+                        </RequireAuth>
+                      }
+                    />
+                    <Route
+                      path="/"
+                      element={
+                        <RequireAnon>
+                          <LoginView />
+                        </RequireAnon>
+                      }
+                    />
+                  </Routes>
+                </Router>
               </DndProvider>
             </UiProvider>
           </ThemeProvider>

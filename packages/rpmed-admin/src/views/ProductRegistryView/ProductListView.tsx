@@ -6,11 +6,11 @@ import {
   faTrash,
 } from '@fortawesome/pro-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { History } from 'history'
+
 import qs from 'query-string'
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
-import { RouteComponentProps } from 'react-router'
+
 import { Link } from 'react-router-dom'
 import {
   Actions,
@@ -25,46 +25,34 @@ import {
   Modal,
   Toolbar,
 } from 'rpmed-ui/lib/V1'
-
+import { useNavigate } from 'react-router-dom'
 import { DestroyProductButton } from './DestroyProductButton'
 import { Product, useProductsQuery } from 'rpmed-schema'
 
 const { useState } = React
 
-const sendTo = (p: { history: History; url: string }) => () =>
-  p.history.push(p.url)
-
-export const ProductListView: React.FC<RouteComponentProps<{}>> = ({
-  history,
-}) => {
-  const {
-    loading,
-    error,
-    data,
-    refetch,
-    networkStatus,
-  } = useProductsQuery()
+export const ProductListView: React.FC = () => {
+  const navigate = useNavigate()
+  const sendTo = (p: { url: string }) => () => navigate(p.url)
+  const { loading, error, data, refetch, networkStatus } = useProductsQuery()
   const products = (data?.response?.products ?? []) as Product[]
   const pageSize = data?.response?.pageSize ?? 0
   const handleRefresh = () => refetch()
   const networkActive = loading || networkStatus === 4
-  const [productToDelete, setProductToDelete] = useState(
-    null as Product | null
-  )
+  const [productToDelete, setProductToDelete] = useState(null as Product | null)
   const [searchText, setSearchText] = useState('')
-  const onClickNew = () => history.push('/admin/products/new')
+  const onClickNew = () => navigate('/admin/products/new')
   const onSearchChange: React.ChangeEventHandler = event =>
     setSearchText((event.target as HTMLInputElement).value)
 
   const filterProduct = ({ name, description, id }: Product) =>
     searchText.length > 0
       ? [id, name, description]
-        .map(val => val.toLowerCase().indexOf(searchText.toLowerCase()) >= 0)
-        .includes(true)
+          .map(val => val.toLowerCase().indexOf(searchText.toLowerCase()) >= 0)
+          .includes(true)
       : true
 
-  const onClickDelete = (product: Product) => () =>
-    setProductToDelete(product)
+  const onClickDelete = (product: Product) => () => setProductToDelete(product)
 
   const rows = (products || []).filter(filterProduct).map(p => [
     <Link to={`/admin/products/${p.id}`} key={p.id}>
@@ -73,14 +61,11 @@ export const ProductListView: React.FC<RouteComponentProps<{}>> = ({
     p.description,
     p.id,
     <Actions.Group key={`actions${p.id}`}>
-      <Actions.Primary
-        onClick={sendTo({ history, url: `/admin/products/${p.id}` })}
-      >
+      <Actions.Primary onClick={sendTo({ url: `/admin/products/${p.id}` })}>
         <FontAwesomeIcon icon={faPencil} />
       </Actions.Primary>
       <Actions.Primary
         onClick={sendTo({
-          history,
           url: `/admin/products/new?${qs.stringify({ ...p })}`,
         })}
       >

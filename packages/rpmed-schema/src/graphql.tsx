@@ -1104,6 +1104,8 @@ export type Query = {
   modelNumbers?: Maybe<ModelNumberQueryOutput>;
   /** A specific page in the system via ID. */
   page: PageQueryOutput;
+  /** A specific page in the system via slug. */
+  pageBySlug: PageQueryOutput;
   /** All pages in the system */
   pages: PageQueryOutput;
   /** A specific product in the system via ID. */
@@ -1177,6 +1179,12 @@ export type QueryModelNumbersArgs = {
 /** The root query for the schema. */
 export type QueryPageArgs = {
   id: Scalars['ID'];
+};
+
+
+/** The root query for the schema. */
+export type QueryPageBySlugArgs = {
+  slug: Scalars['String'];
 };
 
 
@@ -2158,6 +2166,13 @@ export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type UsersQuery = { __typename?: 'Query', users?: Array<{ __typename?: 'User', id: string, firstName?: string | null | undefined, lastName?: string | null | undefined, email: string } | null | undefined> | null | undefined };
+
+export type FindPageWithSlugQueryVariables = Exact<{
+  slug: Scalars['String'];
+}>;
+
+
+export type FindPageWithSlugQuery = { __typename?: 'Query', pageBySlug: { __typename?: 'PageQueryOutput', success: boolean, errors?: Array<{ __typename?: 'ValidationError', message: string, path: string } | null | undefined> | null | undefined, page?: { __typename?: 'Page', title?: string | null | undefined, id: string, slug?: string | null | undefined, description?: string | null | undefined, keywords?: string | null | undefined, sections?: Array<{ __typename?: 'Section', id: string, name?: string | null | undefined, position?: number | null | undefined, items?: Array<{ __typename?: 'SectionItem', id: string, icon?: string | null | undefined, name?: string | null | undefined, description?: string | null | undefined, position?: number | null | undefined, type?: string | null | undefined, target?: string | null | undefined } | null | undefined> | null | undefined } | null | undefined> | null | undefined } | null | undefined } };
 
 export type RegisterProductMutationVariables = Exact<{
   productRegistrationInput: NewProductRegistrationInput;
@@ -5230,6 +5245,66 @@ export function useUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<User
 export type UsersQueryHookResult = ReturnType<typeof useUsersQuery>;
 export type UsersLazyQueryHookResult = ReturnType<typeof useUsersLazyQuery>;
 export type UsersQueryResult = Apollo.QueryResult<UsersQuery, UsersQueryVariables>;
+export const FindPageWithSlugDocument = gql`
+    query FindPageWithSlug($slug: String!) {
+  pageBySlug(slug: $slug) {
+    success
+    errors {
+      message
+      path
+    }
+    page {
+      title
+      id
+      slug
+      description
+      keywords
+      sections {
+        id
+        name
+        position
+        items {
+          id
+          icon
+          name
+          description
+          position
+          type
+          target
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useFindPageWithSlugQuery__
+ *
+ * To run a query within a React component, call `useFindPageWithSlugQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindPageWithSlugQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindPageWithSlugQuery({
+ *   variables: {
+ *      slug: // value for 'slug'
+ *   },
+ * });
+ */
+export function useFindPageWithSlugQuery(baseOptions: Apollo.QueryHookOptions<FindPageWithSlugQuery, FindPageWithSlugQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindPageWithSlugQuery, FindPageWithSlugQueryVariables>(FindPageWithSlugDocument, options);
+      }
+export function useFindPageWithSlugLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindPageWithSlugQuery, FindPageWithSlugQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindPageWithSlugQuery, FindPageWithSlugQueryVariables>(FindPageWithSlugDocument, options);
+        }
+export type FindPageWithSlugQueryHookResult = ReturnType<typeof useFindPageWithSlugQuery>;
+export type FindPageWithSlugLazyQueryHookResult = ReturnType<typeof useFindPageWithSlugLazyQuery>;
+export type FindPageWithSlugQueryResult = Apollo.QueryResult<FindPageWithSlugQuery, FindPageWithSlugQueryVariables>;
 export const RegisterProductDocument = gql`
     mutation RegisterProduct($productRegistrationInput: NewProductRegistrationInput!) {
   response: createProductRegistration(
@@ -5894,6 +5969,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   modelNumber?: Resolver<Maybe<ResolversTypes['ModelNumberQueryOutput']>, ParentType, ContextType, RequireFields<QueryModelNumberArgs, 'id'>>;
   modelNumbers?: Resolver<Maybe<ResolversTypes['ModelNumberQueryOutput']>, ParentType, ContextType, RequireFields<QueryModelNumbersArgs, never>>;
   page?: Resolver<ResolversTypes['PageQueryOutput'], ParentType, ContextType, RequireFields<QueryPageArgs, 'id'>>;
+  pageBySlug?: Resolver<ResolversTypes['PageQueryOutput'], ParentType, ContextType, RequireFields<QueryPageBySlugArgs, 'slug'>>;
   pages?: Resolver<ResolversTypes['PageQueryOutput'], ParentType, ContextType>;
   product?: Resolver<Maybe<ResolversTypes['ProductQueryOutput']>, ParentType, ContextType, RequireFields<QueryProductArgs, 'id'>>;
   productRegistration?: Resolver<ResolversTypes['ProductRegistrationQueryOutput'], ParentType, ContextType, RequireFields<QueryProductRegistrationArgs, 'id'>>;

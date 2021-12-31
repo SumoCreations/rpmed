@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
-import { RouteComponentProps } from 'react-router'
+
 import { Content, Layout } from 'rpmed-ui/lib/V1'
 
-const View: React.FC<RouteComponentProps<{}>> = () => {
+const View: React.FC = () => {
   return (
     <Layout.Layout>
       <Helmet title="Battery Recycling" />

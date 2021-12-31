@@ -6,10 +6,10 @@ import * as React from 'react'
 import styled from '../styled-components'
 
 const Error = styled.p`
-  background: ${p => transparentize(0.9)(p.theme.colorErrorText)};
-  border: 1px solid ${p => transparentize(0.7)(p.theme.colorErrorText)};
-  border-radius: ${p => p.theme.borderRadius};
-  color: ${p => p.theme.colorErrorText};
+  background: ${(p) => transparentize(0.9)(p.theme.colorErrorText)};
+  border: 1px solid ${(p) => transparentize(0.7)(p.theme.colorErrorText)};
+  border-radius: ${(p) => p.theme.borderRadius};
+  color: ${(p) => p.theme.colorErrorText};
   display: flex;
   flex-direction: row;
   margin: 1rem auto;
@@ -26,10 +26,10 @@ const Icon = styled.span`
   display: block;
 `
 
-const ErrorComponent: React.FunctionComponent<{
+const ErrorComponent: React.FC<{
   formik?: any
   name: string
-}> = props => {
+}> = (props) => {
   const error = getIn((props.formik || {}).errors, props.name)
   return error ? (
     <Error>

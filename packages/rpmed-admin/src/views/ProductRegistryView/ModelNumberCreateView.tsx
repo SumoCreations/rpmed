@@ -4,7 +4,7 @@ import get from 'lodash.get'
 import qs from 'query-string'
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
-import { RouteComponentProps } from 'react-router'
+
 import { ErrorList } from 'rpmed-validation-schema'
 import { ProductType } from 'rpmed-schema'
 import { Actions, Card, Content, Layout, Toolbar } from 'rpmed-ui/lib/V1'
@@ -15,13 +15,13 @@ import {
   ModelNumberForm,
   ModelNumberFormSubmitHandler,
 } from './ModelNumberForm'
+import { useNavigate, useLocation } from 'react-router-dom'
 
-export const ModelNumberCreateView: React.FC<RouteComponentProps> = ({
-  history,
-  location,
-}) => {
+export const ModelNumberCreateView: React.FC = () => {
+  const navigate = useNavigate()
+  const location = useLocation()
   const [createModelNumber] = useCreateModelNumberMutation()
-  const handleBack = () => history.push('/admin/products/modelNumbers')
+  const handleBack = () => navigate('/admin/products/modelNumbers')
   const queryValues = qs.parse(location.search) as IModelNumberFormValues
   const handleSubmit: ModelNumberFormSubmitHandler = async (
     values,
@@ -45,7 +45,7 @@ export const ModelNumberCreateView: React.FC<RouteComponentProps> = ({
       return
     }
     console.log('Lets push to the next view...')
-    history.push(`/admin/products/modelNumbers/${values.id}`)
+    navigate(`/admin/products/modelNumbers/${values.id}`)
   }
   const initialValues = mapDefaultValues<IModelNumberFormValues>(queryValues, {
     description: '',
