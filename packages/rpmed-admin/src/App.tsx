@@ -4,13 +4,18 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 import { DndProvider } from 'react-dnd'
 import { Helmet } from 'react-helmet'
 import { Provider } from 'react-redux'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from 'react-router-dom'
 import { client } from './apolloClient'
 import { RequireAuth, RequireAnon } from './routes'
 import store from './store'
 import { UiProvider } from 'rpmed-ui'
 import { defaultTheme, ThemeProvider } from 'rpmed-ui/lib/V1'
-import { AdminView, LoginView } from './views'
+import { AdminView, LoginView, TokenView } from './views'
 
 class App extends Component<{}, {}, any> {
   public componentDidMount() {
@@ -46,13 +51,15 @@ class App extends Component<{}, {}, any> {
                       }
                     />
                     <Route
-                      path="/"
+                      path="/login/*"
                       element={
                         <RequireAnon>
                           <LoginView />
                         </RequireAnon>
                       }
                     />
+                    <Route path="/token/:token" element={<TokenView />} />
+                    <Route path="/" element={<Navigate to="/login" />} />
                   </Routes>
                 </Router>
               </DndProvider>

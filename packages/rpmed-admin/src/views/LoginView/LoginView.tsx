@@ -16,7 +16,6 @@ import { Brand, Card, Heading, Modal } from 'rpmed-ui/lib/V1'
 import { Link } from 'react-router-dom'
 import { ForgotPasswordView } from './ForgotPasswordView'
 import { ResetPasswordView } from './ResetPasswordView'
-import { TokenView } from './TokenView'
 import { useState } from 'react'
 
 interface IProps {
@@ -34,9 +33,7 @@ const View: React.FC<IProps> = ({ handleUpdatedCredentials }) => {
           setLoading(true)
           const result = await login(data.email || '', data.password || '')
           setLoading(false)
-          console.log(result)
           const error = Object.values(result.errors ?? {})[0]
-          console.log('error', error)
           if (!result.errors && !result.data) {
             return {
               error: 'There was a problem connecting to the server.',
@@ -57,7 +54,7 @@ const View: React.FC<IProps> = ({ handleUpdatedCredentials }) => {
       />
       <Card.CenteredSection as="section">
         <Box paddingTop={3}>
-          <Link to="/forgot">Forgot Your Password?</Link>
+          <Link to="forgot">Forgot Your Password?</Link>
         </Box>
       </Card.CenteredSection>
     </React.Fragment>
@@ -82,10 +79,9 @@ export const LoginView: React.FC = () => {
         </Modal.Heading>
         <Card.View>
           <Routes>
-            <Route path="/token/:token" element={<TokenView />} />
-            <Route path="/login/reset" element={<ResetPasswordView />} />
+            <Route path="reset" element={<ResetPasswordView />} />
             <Route
-              path="/forgot"
+              path="forgot"
               element={
                 <RequireAnon>
                   <ForgotPasswordView />
@@ -93,7 +89,7 @@ export const LoginView: React.FC = () => {
               }
             />
             <Route
-              path="/login"
+              index
               element={
                 <RequireAnon>
                   <DefaultLoginView />
