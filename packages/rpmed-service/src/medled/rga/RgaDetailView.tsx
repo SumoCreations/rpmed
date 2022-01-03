@@ -1,8 +1,8 @@
 import { faPlus, faTrash, faPencil } from '@fortawesome/pro-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Formik, FormikHelpers } from 'formik'
-import React, { useState } from 'react'
-import { useParams, useHistory } from 'react-router-dom'
+import React from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
 import { Box, Flex } from 'rebass'
 import { useQuery } from '../../routes'
 import {
@@ -11,12 +11,11 @@ import {
   Form,
   Heading,
   Input,
-  Modal,
   Para,
   TextFormContent,
   Indicators,
   Tags,
-} from 'rpmed-ui'
+} from 'rpmed-ui/lib/V1'
 import {
   OptionalEmail,
   OptionalString,
@@ -28,8 +27,9 @@ import {
   useRgaQuery,
   useDestroyRgaGoodMutation,
   useSubmitRgaForReviewMutation,
-} from './graphql'
+} from 'rpmed-schema'
 import { RgaGood, ValidationError, RgaStatus } from 'rpmed-schema'
+import { Modal, Dialog } from 'rpmed-ui'
 
 const validationSchema = validation({
   goods: validateArrayOf(
@@ -47,15 +47,14 @@ interface IRGADetailFormValues {
   goods: RgaGood[]
 }
 
+const FormField = Input.Renderer<IRGADetailFormValues>()
+
 export const RgaDetailView: React.FC = () => {
-  const { id } = useParams<{ id: string }>()
-  const [userToken, setUserToken] = useState('')
+  const { id = '' } = useParams<{ id: string }>()
 
-  const history = useHistory()
-  const handleNavigation = (path: string) => () => history.replace(path)
-
-  const handleCaptcha = (token: string | null): void =>
-    setUserToken(token || '')
+  const navigate = useNavigate()
+  const handleNavigation = (path: string) => () =>
+    navigate(path, { replace: true })
 
   const { loading, data, refetch } = useRgaQuery({
     variables: { rgaId: id },
@@ -127,13 +126,13 @@ export const RgaDetailView: React.FC = () => {
     actions.setSubmitting(false)
   }
 
-  const hasRequiredInfo = userToken.length > 0 && goods.length > 0
+  const hasRequiredInfo = goods.length > 0
   return (
     <TextFormContent>
-      <p>
+      <p className="py-2 text-primary">
         RGA Reference Number: <strong>{id.substr(0, 13)}</strong>
       </p>
-      <p>
+      <p className="py-2 mb-4">
         Add all applicable units and any associated customer information to your
         Return Good Authorization request. Providing the optional customer
         information will help expedite any current or future requests related to
@@ -222,18 +221,16 @@ export const RgaDetailView: React.FC = () => {
               <Card.View>
                 <Form.Row>
                   <Form.RowItem size={Form.ItemSize.Long}>
-                    <Input.Field
+                    <FormField
                       name="notes"
                       label="Is there anything else you'd like to let us to know?"
                       required={false}
-                      type="textarea"
                     />
                   </Form.RowItem>
                 </Form.Row>
               </Card.View>
               <Card.View>
                 <Form.GeneralError name="_" />
-                <Form.Captcha onChange={handleCaptcha} test={true} />
                 <Form.Button
                   type="submit"
                   disabled={!hasRequiredInfo || !isValid || isSubmitting}
@@ -242,7 +239,7 @@ export const RgaDetailView: React.FC = () => {
                 </Form.Button>
               </Card.View>
               {isSubmitting || (status && status !== RgaStatus.Issued) ? (
-                <Modal.Dialog size={Modal.Size.small}>
+                <Modal title="" open>
                   <Flex flexDirection="column" paddingTop={3}>
                     {isSubmitting ? (
                       <Flex margin="auto" paddingBottom={3}>
@@ -272,19 +269,19 @@ export const RgaDetailView: React.FC = () => {
                       </React.Fragment>
                     )}
                   </Flex>
-                </Modal.Dialog>
+                </Modal>
               ) : null}
             </Form.Form>
           )
         }}
       </Formik>
       {goodToDelete ? (
-        <Modal.Confirm
+        <Dialog
           title={`Remove RGA Item?`}
           message={`Are you sure you want to delete '${goodToDelete.modelNumber}'? You can not undo this action.`}
-          onDismiss={handleDismissDelete}
+          onClose={handleDismissDelete}
           onConfirm={handleConfirmDelete}
-          destructive={true}
+          open
         />
       ) : null}
     </TextFormContent>

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Route, RouteComponentProps, Switch } from 'react-router'
+import { Route, Routes, useLocation } from 'react-router-dom'
 import { BatteryRecyclingIndexView } from '../BatteryRecyclingView'
 import { ControlsIndexView } from '../ControlsView'
 import { CustomerIndexView } from '../CustomerView'
@@ -11,23 +11,25 @@ import { RGAIndexView } from '../RGARequestView'
 import { SitemapIndexView } from '../SitemapView'
 import { AdminNavigation } from './AdminNavigation'
 
-const View: React.FC<RouteComponentProps<{}>> = () => {
+const View: React.FC = () => {
+  const location = useLocation()
+  console.log(location)
   return (
     <AdminNavigation>
-      <Switch>
-        <Route path="/admin" component={DashboardView} exact={true} />
-        <Route path="/admin/batteries" component={BatteryRecyclingIndexView} />
-        <Route path="/admin/customers" component={CustomerIndexView} />
-        <Route path="/admin/distributors" component={DistributorIndexView} />
-        <Route path="/admin/products" component={ProductIndexView} />
-        <Route path="/admin/sitemap" component={SitemapIndexView} />
+      <Routes>
+        <Route index element={<DashboardView />} />
+        <Route path="batteries/*" element={<BatteryRecyclingIndexView />} />
+        <Route path="customers/*" element={<CustomerIndexView />} />
+        <Route path="distributors/*" element={<DistributorIndexView />} />
+        <Route path="products/*" element={<ProductIndexView />} />
+        <Route path="sitemap/*" element={<SitemapIndexView />} />
         <Route
-          path="/admin/registrations"
-          component={ProductRegistrationIndexView}
+          path="registrations/*"
+          element={<ProductRegistrationIndexView />}
         />
-        <Route path="/admin/rga" component={RGAIndexView} />
-        <Route path="/admin/controls/" component={ControlsIndexView} />
-      </Switch>
+        <Route path="rga/*" element={<RGAIndexView />} />
+        <Route path="controls/*" element={<ControlsIndexView />} />
+      </Routes>
     </AdminNavigation>
   )
 }

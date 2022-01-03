@@ -7,7 +7,7 @@ import {
 } from '@fortawesome/pro-light-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import * as React from 'react'
-import { media, styled } from 'rpmed-ui'
+import { media, styled } from 'rpmed-ui/lib/V1'
 import { symptoms } from './symptoms'
 
 const SymptomView = styled.div`
@@ -154,7 +154,7 @@ interface ISymptomListProps {
   onSelectSymptom: SymptomSelectHandler
 }
 
-const SymptomList: React.FunctionComponent<ISymptomListProps> = ({
+const SymptomList: React.FC<ISymptomListProps> = ({
   selectedProduct,
   selectedSymptoms,
   onSelectSymptom,

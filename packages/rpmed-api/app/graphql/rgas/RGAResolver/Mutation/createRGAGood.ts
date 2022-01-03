@@ -12,25 +12,30 @@ import {
   RgaGoodStatus,
   FeeStructure,
   MutationCreateRgaGoodArgs,
-} from '../../../../schema'
+  RgaGoodMutationOutput,
+} from 'rpmed-schema'
 import { generateMutationError } from 'api-utils'
 import * as Validation from '../../../../validations'
-import { IRGAGoodMutationOutput } from './rgaMutationTypes'
-
-type CreateRGAGoodMutation = (
-  context: any,
-  rgaGoodInput: MutationCreateRgaGoodArgs
-) => Promise<IRGAGoodMutationOutput>
+import {
+  isAuthorized,
+  generateAuthorizationError,
+  ServerContext,
+} from '../../../auth'
 
 const present = (val: string | null) =>
   typeof val === 'string' && val.length > 0
+
 /**
  * A GraphQL resolver that handles the 'CreateRGAGood' mutation.
  */
-export const createRGAGood: CreateRGAGoodMutation = async (
+export const createRGAGood = async (
   _,
-  { rgaGoodInput, rgaId }
-) => {
+  { rgaGoodInput, rgaId }: MutationCreateRgaGoodArgs,
+  context: ServerContext
+): Promise<RgaGoodMutationOutput> => {
+  if (!isAuthorized(context)) {
+    return generateAuthorizationError()
+  }
   try {
     await Validation.RGAGood.Default.validate(rgaGoodInput, {
       abortEarly: false,

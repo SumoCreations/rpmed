@@ -1,27 +1,26 @@
 import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Box, Flex } from 'rebass'
-import {
-  BreadCrumb,
-  ContentMainHeading,
-  Form,
-  TextFormContent,
-  Input,
-} from 'rpmed-ui'
+import { ContentMainHeading, Form, TextFormContent } from 'rpmed-ui/lib/V1'
+import { AbsoluteOverlay, Clipboard } from 'rpmed-ui'
 import { documents } from './documents'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faArrowAltCircleLeft,
-  faDownload,
-} from '@fortawesome/pro-solid-svg-icons'
+import { faDownload } from '@fortawesome/pro-solid-svg-icons'
 import { useQuery } from '../routes'
+import { BreadCrumbFromPage } from '../pages'
+import { useFindDocumentWithSlugQuery } from 'rpmed-schema'
 
 const DownloadView: React.FC = () => {
-  const params = useParams<{ downloadId: string; category?: string }>()
+  const { slug = '', downloadId = '' } = useParams<{
+    slug: string
+    downloadId: string
+  }>()
   const query = useQuery<{ a?: boolean }>()
 
   const autoload = query.search.a
-  const result = documents.find(d => d.id === params.downloadId)
+  const { data, loading } = useFindDocumentWithSlugQuery({
+    variables: { slug: downloadId },
+  })
+  const result = data?.response.document
 
   useEffect(() => {
     setTimeout(() => {
@@ -37,52 +36,52 @@ const DownloadView: React.FC = () => {
       window.location.href = result?.url
     }
   }
-  const downloadsPath = `/downloads/${params.category ?? ''}`
+
+  const title = loading ? '...' : result?.title ?? 'Not Found'
+
   return (
-    <article>
-      <BreadCrumb.Container>
-        <BreadCrumb.Link to={downloadsPath}>Downloads</BreadCrumb.Link>
-        <BreadCrumb.Link to={`/d/${result?.id}`} primary={true}>
-          {result?.title ?? 'Not Found'}
-        </BreadCrumb.Link>
-      </BreadCrumb.Container>
-      <ContentMainHeading>{result?.title ?? 'Not Found'}</ContentMainHeading>
+    <article className="w-full flex flex-col relative px-8">
+      <BreadCrumbFromPage
+        slug={slug}
+        trail={[
+          {
+            label: title,
+            to: `/${slug}/d/${result?.slug}`,
+          },
+        ]}
+      />
+      <ContentMainHeading>{title}</ContentMainHeading>
+      {loading ? <AbsoluteOverlay /> : null}
       <TextFormContent>
-        <Flex flexDirection={'column'}>
-          <Flex width={1} marginBottom={[3, 0]}>
-            <Box as="p">
-              <BreadCrumb.Link to={downloadsPath}>
-                <FontAwesomeIcon icon={faArrowAltCircleLeft} /> Downloads
-              </BreadCrumb.Link>
-            </Box>
-          </Flex>
-          <Flex flexDirection={['column', 'row']} width={1}>
-            <Flex
-              flexDirection="column"
-              as="p"
-              marginRight={[0, 3]}
-              marginY="auto"
-              width={[1, 1 / 2]}
-            >
+        <div className="flex flex-col">
+          <div className="flex flex-row w-full">
+            <p className="flex flex-col w-full md:w-1/2 md:mr-3">
               This document is available for download as a PDF. You can also
               share a direct link via the provided url in the clipboard field.
-            </Flex>
-            <Flex flexDirection="column" width={[1, 1 / 2]}>
-              <Flex as="p" marginTop={2} width={1}>
+            </p>
+            <ul className="flex flex-col md:w-1/2">
+              <li className="mt-2 w-full">
                 <Form.Button onClick={handleDownload}>
                   <FontAwesomeIcon icon={faDownload} />
                   &nbsp; Download This Document
                 </Form.Button>
-              </Flex>
-              <Input.Clipboard
-                value={`${window.location.protocol}//${window.location.host}${window.location.pathname}?a=1`}
-              />
-            </Flex>
-          </Flex>
-          <Box mt={4}>
-            <iframe src={result?.url} width="100%" height="700px"></iframe>
-          </Box>
-        </Flex>
+              </li>
+              <li>
+                <Clipboard
+                  value={`${window.location.protocol}//${window.location.host}${window.location.pathname}?a=1`}
+                />
+              </li>
+            </ul>
+          </div>
+          {result?.url && (
+            <iframe
+              src={result?.url}
+              width="100%"
+              height="700px"
+              className="mt-4 mb-12"
+            ></iframe>
+          )}
+        </div>
       </TextFormContent>
     </article>
   )

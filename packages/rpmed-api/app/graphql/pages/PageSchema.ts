@@ -158,6 +158,11 @@ export const typeDefs = gql`
     A specific page in the system via ID.
     """
     page(id: ID!): PageQueryOutput!
+
+    """
+    A specific page in the system via slug.
+    """
+    pageBySlug(slug: String!): PageQueryOutput!
   }
 
   """

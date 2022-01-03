@@ -32,8 +32,11 @@ const SymptomResultListView: React.FC<ISymptomResultListProps> = ({
   onDismiss: dismiss,
   onSelect: select,
 }) => {
-  const { data } = useProductSymptomsQuery({ variables: { search, modelNumber } })
-  const productSymptoms = (data?.response.productSymptoms ?? []) as ProductSymptom[]
+  const { data } = useProductSymptomsQuery({
+    variables: { search, modelNumber },
+  })
+  const productSymptoms = (data?.response.productSymptoms ??
+    []) as ProductSymptom[]
   return productSymptoms ? (
     <React.Fragment>
       {productSymptoms
@@ -72,7 +75,7 @@ const SymptomResultListView: React.FC<ISymptomResultListProps> = ({
   )
 }
 
-export const ProductSymptomSelectField: React.FunctionComponent<IProductSymptomSelectProps> = props => {
+export const ProductSymptomSelectField: React.FC<IProductSymptomSelectProps> = props => {
   return (
     <Input.FieldContainer>
       {props.label ? <Form.Label>{props.label}</Form.Label> : null}

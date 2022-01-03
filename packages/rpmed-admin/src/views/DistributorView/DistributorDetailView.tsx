@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import get from 'lodash.get'
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
-import { RouteComponentProps } from 'react-router'
+
 import { ErrorList } from 'rpmed-validation-schema'
 import {
   Actions,
@@ -19,17 +19,14 @@ import {
   IDistributorFormValues,
 } from './DistributorForm'
 import { useDistributorQuery, useUpdateDistributorMutation } from 'rpmed-schema'
+import { useNavigate, useParams } from 'react-router-dom'
 
-interface IDistributorRouterProps {
-  distributorId: string
-}
-
-const View: React.FunctionComponent<RouteComponentProps<
-  IDistributorRouterProps
->> = ({ history, match }) => {
-  const handleBack = () => history.push('/admin/distributors')
+const View: React.FC = () => {
+  const navigate = useNavigate()
+  const { distributorId = '' } = useParams()
+  const handleBack = () => navigate('/admin/distributors')
   const { data, loading } = useDistributorQuery({
-    variables: { distributorId: match.params.distributorId },
+    variables: { distributorId },
   })
   const distributor = data?.response.distributor
   const [updateDistributor] = useUpdateDistributorMutation()
@@ -54,7 +51,7 @@ const View: React.FunctionComponent<RouteComponentProps<
       })
       return
     }
-    history.push('/admin/distributors')
+    navigate('/admin/distributors')
   }
   return (
     <Layout.Layout>

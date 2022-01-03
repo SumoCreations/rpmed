@@ -1,5 +1,5 @@
 import { RGA } from '../../../../models'
-import { RgaStatus } from '../../../../schema'
+import { RgaStatus } from 'rpmed-schema'
 import { IRGACountQueryOutput } from './rgaQueryTypes'
 
 export const rgaCount = async (): Promise<IRGACountQueryOutput> => {

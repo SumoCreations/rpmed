@@ -2,8 +2,8 @@ import { ErrorMessage } from 'formik'
 import * as React from 'react'
 import { Box, Flex } from 'rebass'
 import { Product } from 'rpmed-schema'
-import { Form, Indicators, Input } from 'rpmed-ui'
-import { useProductsQuery } from '../graphql'
+import { Form, Indicators, Input } from 'rpmed-ui/lib/V1'
+import { useProductsQuery } from 'rpmed-schema'
 
 export type ProductSelectFn = Input.DropDownSelectFn<Product>
 
@@ -58,7 +58,7 @@ const ProductResults: React.FC<IProductResultProps> = ({
   )
 }
 
-export const ProductSelectField: React.FunctionComponent<Input.IDynamicDropdownProps<
+export const ProductSelectField: React.FC<Input.IDynamicDropdownProps<
   Product
 >> = props => {
   return (

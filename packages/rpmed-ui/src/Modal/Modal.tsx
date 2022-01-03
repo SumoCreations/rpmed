@@ -12,6 +12,7 @@ export interface ModalProps {
   onClose?: () => void
   draggable?: boolean
   onFocus?: () => void
+  scroll?: boolean
 }
 
 interface Coordinate {
@@ -45,7 +46,7 @@ const DRAG_BUTTON =
   'cursor-move flex flex-grow bg-gray-100 bg-opacity-50 hover:bg-gray-100 ml-1 my-1 rounded transition-colors duration-100 ease-out'
 const CLOSE_BUTTON =
   'hover:bg-gray-100 rounded-full w-10 h-10 transition-colors my-1 mr-1 duration-150 text-2xl focus:outline-none'
-const MODAL_BODY = 'px-3 py-4 text-base font-normal overflow-scroll'
+const MODAL_BODY = 'px-3 py-4 text-base font-normal'
 const NOT_DRAGGING = 'shadow-xl border-gray-100'
 const DRAGGING = 'shadow-2xl border-gray-200'
 
@@ -56,6 +57,7 @@ export const Modal: React.FC<ModalProps> = ({
   children,
   draggable,
   onFocus: handleFocus,
+  scroll,
   zIndex = 'z-40',
 }) => {
   const [state, setState] = useState<ModalDragState>(DEFAULT_STATE)
@@ -163,7 +165,7 @@ export const Modal: React.FC<ModalProps> = ({
             </button>
           ) : null}
         </header>
-        <div className={MODAL_BODY}>{children}</div>
+        <div className={clsx(MODAL_BODY, scroll && 'overflow-scroll')}>{children}</div>
       </section>
     </div>
   ) : null

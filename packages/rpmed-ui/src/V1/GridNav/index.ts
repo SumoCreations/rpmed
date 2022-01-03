@@ -4,6 +4,7 @@ import IconWrap from './IconWrap'
 import Item from './Item'
 import ItemContent from './ItemContent'
 import ItemDescription from './ItemDescription'
+import ItemLink from './ItemLink'
 import ItemLinkExternal from './ItemLinkExternal'
 import ItemTitle from './ItemTitle'
 import OverlayButton from './OverlayButton'
@@ -16,6 +17,7 @@ export {
   Item,
   ItemContent,
   ItemDescription,
+  ItemLink,
   ItemLinkExternal,
   ItemTitle,
   OverlayButton,

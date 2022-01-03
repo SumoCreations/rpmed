@@ -8,7 +8,7 @@ import {
 } from '@fortawesome/pro-regular-svg-icons'
 import * as React from 'react'
 import { connect } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Dispatch } from 'redux'
 import { clearSession, SessionActionTypes } from '../../session'
 import { Navigation } from 'rpmed-ui/lib/V1'
@@ -33,8 +33,8 @@ const AdminNavigationComponent: React.FC<IProps> = ({
   children,
   handleLogout,
 }) => {
-  const history = useHistory()
-  const goto = (path: string) => () => history.push(path)
+  const navigate = useNavigate()
+  const goto = (path: string) => () => navigate(path)
 
   const [currentDrawerView, setDrawerView] = useState(DrawerDisplay.Hidden)
   const showDrawer = (display: DrawerDisplay) => () => setDrawerView(display)

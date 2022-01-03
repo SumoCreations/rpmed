@@ -130,7 +130,7 @@ const renderForm = ({
   )
 }
 
-export const ProductSymptomForm: React.FunctionComponent<IProductSymptomFormProps> = ({
+export const ProductSymptomForm: React.FC<IProductSymptomFormProps> = ({
   initialValues,
   onSubmit,
 }) => {

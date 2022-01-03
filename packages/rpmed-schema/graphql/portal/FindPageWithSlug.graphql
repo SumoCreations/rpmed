@@ -1,0 +1,30 @@
+query FindPageWithSlug($slug: String!) {
+  response: pageBySlug(slug: $slug) {
+    success
+    errors {
+      message
+      path
+    }
+    page {
+      title
+      id
+      slug
+      description
+      keywords
+      sections {
+        id
+        name
+        position
+        items {
+          id
+          icon
+          name
+          description
+          position
+          type
+          target
+        }
+      }
+    }
+  }
+}

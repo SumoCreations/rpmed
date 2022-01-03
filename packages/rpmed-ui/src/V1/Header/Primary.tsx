@@ -44,28 +44,34 @@ const HiddenOnMobile = styled.span`
 `
 
 const Primary: React.FC<{}> = () => (
-  <PrimaryHeader>
-    <Container>
-      <Contents>
-        <CollapsableRow>
-          <a href="https://rpmed.com" target="_blank" rel="noopener noreferrer">
-            <Logo />
-          </a>
-          <Spacer />
-          <SecondaryLink
-            href="https://rpmed.com"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Flex>
-              <HiddenOnMobile>Go to Riverpoint</HiddenOnMobile>
-              <FontAwesomeIcon icon={faExternalLinkAlt} />
-            </Flex>
-          </SecondaryLink>
-        </CollapsableRow>
-      </Contents>
-    </Container>
-  </PrimaryHeader>
+  <div className="bg-primary text-white font-bold flex">
+    <ul
+      className="flex flex-row flex-grow mx-auto p-2"
+      style={{
+        maxWidth: '1170px',
+      }}
+    >
+      <li className="flex my-auto mr-auto">
+        {' '}
+        <a href="https://rpmed.com" target="_blank" rel="noopener noreferrer">
+          <Logo />
+        </a>
+      </li>
+      <li className="ml-auto my-auto flex">
+        <a
+          href="https://rpmed.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-white flex"
+        >
+          <span className="hidden md:flex mr-2 my-auto text-sm font-light">
+            Go to Riverpoint
+          </span>
+          <FontAwesomeIcon icon={faExternalLinkAlt} className="my-auto flex" />
+        </a>
+      </li>
+    </ul>
+  </div>
 )
 
 export default Primary

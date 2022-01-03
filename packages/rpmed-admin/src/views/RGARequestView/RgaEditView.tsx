@@ -2,7 +2,7 @@ import { faTimes } from '@fortawesome/pro-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useFormik } from 'formik'
 import React from 'react'
-import { useHistory, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Box, Flex, Text } from 'rebass'
 import {
   Actions,
@@ -26,7 +26,7 @@ interface IRGAUpdateValues {
 export const RGAEditView: React.FC = () => {
   const { rgaId } = useParams<{ rgaId: string }>()
   const [updateRga] = useUpdateRgaMutation()
-  const { loading, rga } = useRGA(rgaId)
+  const { loading, rga } = useRGA(rgaId ?? '')
   const formik = useFormik<IRGAUpdateValues>({
     enableReinitialize: true,
     initialValues: rga
@@ -56,8 +56,8 @@ export const RGAEditView: React.FC = () => {
   })
   const handleShippingSpeed = (value: string) =>
     formik.setFieldValue('shippingSpeed', value)
-  const history = useHistory()
-  const handleDismiss = () => history.goBack()
+  const navigate = useNavigate()
+  const handleDismiss = () => navigate(-1)
   return (
     <Layout.FullScreen>
       <Box my={[1, 1, 1, 4]} mx="auto" width={[1, 1, 1, 3 / 4]}>

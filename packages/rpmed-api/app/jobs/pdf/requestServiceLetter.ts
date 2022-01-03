@@ -1,6 +1,6 @@
 import { getSNSClient } from 'api-utils'
 import { RGAGood } from '../../models'
-import { RgaStatus } from '../../schema'
+import { RgaStatus } from 'rpmed-schema'
 import { PdfJobParams, RGAGoodDocumentType } from './types'
 import * as oauth from '../../oauth'
 

@@ -4,17 +4,16 @@ import get from 'lodash.get'
 import qs from 'query-string'
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
-import { RouteComponentProps } from 'react-router'
+import { useNavigate } from 'react-router-dom'
 import { ErrorList } from 'rpmed-validation-schema'
 import { Actions, Card, Content, Layout, Toolbar } from 'rpmed-ui/lib/V1'
 import { CustomerForm, CustomerFormSubmitHandler } from './CustomerForm'
 import { useCreateCustomerMutation } from 'rpmed-schema'
 
-export const CustomerCreateView: React.FC<RouteComponentProps> = ({
-  history,
-}) => {
+export const CustomerCreateView: React.FC = () => {
+  const navigate = useNavigate()
   const [createCustomer] = useCreateCustomerMutation()
-  const handleBack = () => history.push('/admin/customers')
+  const handleBack = () => navigate('/admin/customers')
   const defaultValues = qs.parse(window.location.search)
   const handleSubmit: CustomerFormSubmitHandler = async (values, actions) => {
     const result = await createCustomer({
@@ -33,7 +32,7 @@ export const CustomerCreateView: React.FC<RouteComponentProps> = ({
       })
       return
     }
-    history.push('/admin/customers')
+    navigate('/admin/customers')
   }
   return (
     <Layout.Layout>

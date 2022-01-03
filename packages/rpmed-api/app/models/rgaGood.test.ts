@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon'
 import { isEmpty } from 'validator'
-import { ProductType, RgaGoodStatus } from '../schema'
+import { ProductType, RgaGoodStatus } from 'rpmed-schema'
 import { IRGAGood, RGAGood } from './rgaGood'
 
 const RGA_ID = 'TEST-RGA-ID'

@@ -5,7 +5,7 @@ import { Form, Input } from 'rpmed-ui/lib/V1'
 
 export type ProductTypeSelectFn = Input.DropDownSelectFn<ProductType>
 
-export const ProductTypeSelectField: React.FunctionComponent<Input.IDynamicDropdownProps<
+export const ProductTypeSelectField: React.FC<Input.IDynamicDropdownProps<
   ProductType
 >> = props => {
   return (

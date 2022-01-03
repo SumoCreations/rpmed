@@ -14,13 +14,12 @@ import {
 } from '@fortawesome/pro-regular-svg-icons'
 import { faUsers } from '@fortawesome/pro-solid-svg-icons'
 import * as React from 'react'
-import { RouteComponentProps, withRouter } from 'react-router'
+import { useNavigate } from 'react-router-dom'
 import { Navigation } from 'rpmed-ui/lib/V1'
 
-const AdminNavigationHeirarchyComponent: React.FC<RouteComponentProps<{}>> = ({
-  history,
-}) => {
-  const goto = (path: string) => () => history.push(path)
+const AdminNavigationHeirarchyComponent: React.FC = () => {
+  const navigate = useNavigate()
+  const goto = (path: string) => () => navigate(path)
   return (
     <Navigation.Heirarchy
       contents={[
@@ -128,6 +127,4 @@ const AdminNavigationHeirarchyComponent: React.FC<RouteComponentProps<{}>> = ({
   )
 }
 
-export const AdminNavigationHeirarchy = withRouter(
-  AdminNavigationHeirarchyComponent
-)
+export const AdminNavigationHeirarchy = AdminNavigationHeirarchyComponent

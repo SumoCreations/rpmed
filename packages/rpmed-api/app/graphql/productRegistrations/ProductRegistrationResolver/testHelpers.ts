@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid'
 import * as M from '../../../models'
-import { ProductType } from '../../../schema'
+import { ProductType } from 'rpmed-schema'
 
 let idIncrement = 1000
 const makeId = (key: string, model: string) => {

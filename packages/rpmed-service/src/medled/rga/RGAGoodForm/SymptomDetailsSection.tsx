@@ -1,11 +1,13 @@
 import React from 'react'
 import { Box, Flex } from 'rebass'
-import { Divider, Form, Heading, Input, Switch } from 'rpmed-ui'
+import { Divider, Form, Heading, Input, Switch } from 'rpmed-ui/lib/V1'
 import {
   ProductSymptomSelectField,
   ProductSymptomSelectFn,
 } from './ProductSymptomSelectField'
 import { IInteractiveSection } from './types'
+
+const FormField = Input.Renderer<any>()
 
 interface ISymptomDetailsSectionProps extends IInteractiveSection {
   onSelectSymptom: ProductSymptomSelectFn
@@ -104,11 +106,9 @@ export const SymptomDetailsSection: React.FC<ISymptomDetailsSectionProps> = ({
               </Flex>
             ) : null}
           </Flex>
-          <Input.Field
+          <FormField
             name="notes"
             label="Any specific notes?"
-            placeholder=""
-            type="text"
             required={false}
           />
         </Flex>

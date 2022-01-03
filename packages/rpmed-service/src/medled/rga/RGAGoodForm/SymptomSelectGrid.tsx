@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react'
 import { Flex } from 'rebass'
-import { Form, GridNav, Heading, Divider } from 'rpmed-ui'
-import { useProductSymptomsQuery } from '../graphql'
+import { Form } from 'rpmed-ui/lib/V1'
+import { useProductSymptomsQuery } from 'rpmed-schema'
 import { ProductSymptomSelectFn } from './ProductSymptomSelectField'
 import { IInteractiveSection } from './types'
 import { ProductSymptom } from 'rpmed-schema'
+import { ItemList } from './ItemList'
+import { useMemo } from 'react'
 
 interface ISymptomSelectGridProps extends IInteractiveSection {
   onSelectSymptom: ProductSymptomSelectFn
@@ -24,14 +26,14 @@ export const SymptomSelectGrid: React.FC<ISymptomSelectGridProps> = ({
   const { data } = useProductSymptomsQuery({
     variables: { search: '', modelNumber: values.modelNumber },
   })
-  const productSymptoms = data?.response?.productSymptoms ?? []
+  const productSymptoms = useMemo(() => {
+    return data?.response?.productSymptoms ?? []
+  }, [data])
   const sectionValid = (values.symptomId || '').length > 0
-  const handleSelectSymptomClick = (
-    productSymptom?: ProductSymptom
-  ): React.MouseEventHandler => e => {
-    e.preventDefault()
+  const handleSelectItem = (id: string) => {
+    const productSymptom = productSymptoms.find(ps => ps?.id === id)
     if (productSymptom) {
-      handleSymptom(productSymptom)
+      handleSymptom(productSymptom as ProductSymptom)
     }
   }
   const other = productSymptoms.find(s => s?.name === 'Other')
@@ -57,13 +59,24 @@ export const SymptomSelectGrid: React.FC<ISymptomSelectGridProps> = ({
         handleSymptom(symptom as ProductSymptom)
       }
     }
-  }, [productSymptoms, values])
+  }, [productSymptoms, values, handleSymptom])
 
   return (
     <Flex flexDirection="column" width={1}>
-      <Heading.Section>Symptom / Problem (2/6)</Heading.Section>
-      <Divider.Light />
-      <GridNav.Container>
+      {/* <Heading.Section>Symptom / Problem (2/6)</Heading.Section>
+      <Divider.Light /> */}
+      {values.productId ? (
+        <ItemList
+          onSelect={handleSelectItem}
+          items={sortedSymptoms.map(i => ({
+            id: i?.id ?? 'n/a',
+            selected: i?.id === values.symptomId,
+            title: i?.name ?? 'n/a',
+            description: i?.synopsis ?? '...',
+          }))}
+        />
+      ) : null}
+      {/* <GridNav.Container>
         {sortedSymptoms.map(productSymptom => {
           return (
             <GridNav.Item
@@ -88,7 +101,7 @@ export const SymptomSelectGrid: React.FC<ISymptomSelectGridProps> = ({
             </GridNav.Item>
           )
         })}
-      </GridNav.Container>
+      </GridNav.Container> */}
       <Flex paddingTop={2} width={1}>
         <Form.Button disabled={!sectionValid} onClick={handleSubmit}>
           <span>Confirm Symptom</span>

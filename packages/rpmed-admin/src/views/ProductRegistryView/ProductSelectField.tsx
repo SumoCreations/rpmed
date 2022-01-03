@@ -57,7 +57,7 @@ const ProductResults: React.FC<IProductResultProps> = ({
   )
 }
 
-export const ProductSelectField: React.FunctionComponent<Input.IDynamicDropdownProps<
+export const ProductSelectField: React.FC<Input.IDynamicDropdownProps<
   Product
 >> = props => {
   return (

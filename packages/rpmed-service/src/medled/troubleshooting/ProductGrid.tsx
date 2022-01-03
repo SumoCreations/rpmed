@@ -1,7 +1,7 @@
 import { faTimesCircle } from '@fortawesome/pro-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import * as React from 'react'
-import { GridNav, styled } from 'rpmed-ui'
+import { GridNav, styled } from 'rpmed-ui/lib/V1'
 import products, { IProductOption } from './products'
 
 const CloseButton = styled.div`

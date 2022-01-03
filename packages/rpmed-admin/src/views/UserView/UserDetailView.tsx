@@ -2,7 +2,7 @@ import { faChevronLeft } from '@fortawesome/pro-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
-import { RouteComponentProps } from 'react-router'
+
 import { User, ValidationError } from 'rpmed-schema'
 import {
   Actions,
@@ -15,21 +15,17 @@ import {
 import { mapDefaultValues } from '../../validations'
 import { useUpdateUserMutation, useUserQuery } from 'rpmed-schema'
 import { IUserFormValues, UserForm, UserFormSubmitHandler } from './UserForm'
+import { useNavigate, useParams } from 'react-router-dom'
 
-interface IUserRouterProps {
-  userId: string
-}
-
-const View: React.FC<RouteComponentProps<IUserRouterProps>> = ({
-  history,
-  match,
-}) => {
+const View: React.FC = () => {
+  const navigate = useNavigate()
+  const params = useParams()
   const { loading, data } = useUserQuery({
-    variables: { userId: match.params.userId ?? '' },
+    variables: { userId: params.userId ?? '' },
   })
   const user = data?.user ?? ({} as User)
   const [updateUser] = useUpdateUserMutation()
-  const handleBack = () => history.push('/admin/controls/users')
+  const handleBack = () => navigate('/admin/controls/users')
   const handleSubmit: UserFormSubmitHandler = async (values, actions) => {
     const result = await updateUser({
       variables: {
@@ -54,7 +50,7 @@ const View: React.FC<RouteComponentProps<IUserRouterProps>> = ({
       })
       return
     }
-    history.push('/admin/controls/users')
+    navigate('/admin/controls/users')
   }
   const initialValues = mapDefaultValues<IUserFormValues>(user || {}, {
     email: '',

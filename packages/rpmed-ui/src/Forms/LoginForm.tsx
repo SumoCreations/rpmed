@@ -24,7 +24,6 @@ const schema = yup.object({
 
 export interface LoginFormProps extends FormProps<LoginFormValues> {
   loading?: boolean
-  hasAgreedToTerms?: (agreed: boolean) => void
 }
 
 export const LoginForm: React.FC<LoginFormProps> = ({
@@ -82,11 +81,11 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           type="password"
           className="w-full"
         />
-        <ErrorList errors={formErrors as ErrorMap} />
-        <Button type="submit" className="mt-2 w-full">
-          {submitTitle ?? 'Login'}
-        </Button>
       </Fields>
+      <ErrorList errors={formErrors as ErrorMap} />
+      <Button type="submit" className="mt-2 w-full">
+        {submitTitle ?? 'Login'}
+      </Button>
       {loading ? <AbsoluteOverlay /> : null}
     </form>
   )

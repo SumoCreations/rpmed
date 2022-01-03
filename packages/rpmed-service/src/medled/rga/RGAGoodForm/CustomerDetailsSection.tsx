@@ -1,7 +1,7 @@
 import { faEnvelope, faUserAlt } from '@fortawesome/pro-regular-svg-icons'
 import React from 'react'
 import { Box, Flex } from 'rebass'
-import { Divider, Form, Heading, Indicators } from 'rpmed-ui'
+import { Divider, Form, Heading, Indicators } from 'rpmed-ui/lib/V1'
 import { FormField, IRGAGoodFormValues } from './types'
 import { CustomerSpecialtySelect } from '../RgaCustomerSpecialtySelect'
 import { faPhone } from '@fortawesome/pro-solid-svg-icons'
@@ -23,7 +23,6 @@ export const CustomerDetailsSection: React.FC<ICustomerDetailsSectionProps> = ({
 }) => {
   return (
     <Flex flexDirection="column" width={1}>
-      <Heading.Section>Customer Info (5/6)</Heading.Section>
       <Form.Small>
         Automatically register this product for the customer.
       </Form.Small>

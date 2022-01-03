@@ -5,11 +5,9 @@ import {
   faTrash,
 } from '@fortawesome/pro-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { History } from 'history'
 import qs from 'query-string'
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
-import { RouteComponentProps } from 'react-router'
 import { Link } from 'react-router-dom'
 import {
   Actions,
@@ -23,14 +21,11 @@ import {
 } from 'rpmed-ui/lib/V1'
 import { DestroyProductRegistrationButton } from './DestroyProductRegistrationButton'
 import { ProductRegistration, useProductRegistrationsQuery } from 'rpmed-schema'
+import { useNavigate } from 'react-router-dom'
 
 const { useState } = React
 
-const sendTo = (p: { history: History; url: string }) => () =>
-  p.history.push(p.url)
-
 interface IProductRegistrationProps {
-  history: History
   onDelete: (registration: ProductRegistration) => void
   filterText: string
   registrations: ProductRegistration[]
@@ -38,14 +33,15 @@ interface IProductRegistrationProps {
   error?: any
 }
 
-const ProductRegistrations: React.FunctionComponent<IProductRegistrationProps> = ({
-  history,
+const ProductRegistrations: React.FC<IProductRegistrationProps> = ({
   onDelete,
   filterText,
   registrations,
   loading,
   error,
 }) => {
+  const navigate = useNavigate()
+  const sendTo = (p: { url: string }) => () => navigate(p.url)
   if (loading) {
     return <p>Loading...</p>
   }
@@ -79,13 +75,12 @@ const ProductRegistrations: React.FunctionComponent<IProductRegistrationProps> =
     </Link>,
     <Actions.Group key={`actions${p.id}`}>
       <Actions.Primary
-        onClick={sendTo({ history, url: `/admin/registrations/${p.id}` })}
+        onClick={sendTo({ url: `/admin/registrations/${p.id}` })}
       >
         <FontAwesomeIcon icon={faPencil} />
       </Actions.Primary>
       <Actions.Primary
         onClick={sendTo({
-          history,
           url: `/admin/registrations/new?${qs.stringify({ ...p })}`,
         })}
       >
@@ -108,9 +103,8 @@ const ProductRegistrations: React.FunctionComponent<IProductRegistrationProps> =
   )
 }
 
-export const ProductRegistrationListView: React.FC<RouteComponentProps<{}>> = ({
-  history,
-}) => {
+export const ProductRegistrationListView: React.FC = () => {
+  const navigate = useNavigate()
   const { loading, error, data, refetch } = useProductRegistrationsQuery({
     fetchPolicy: 'network-only',
   })
@@ -123,7 +117,7 @@ export const ProductRegistrationListView: React.FC<RouteComponentProps<{}>> = ({
   const confirmProductRegistrationToDelete = (
     registration: ProductRegistration
   ) => setProductRegistrationToDelete(registration)
-  const onClickNew = () => history.push('/admin/registrations/new')
+  const onClickNew = () => navigate('/admin/registrations/new')
   const onSearchChange: React.ChangeEventHandler = event =>
     setSearchText((event.target as HTMLInputElement).value)
   return (
@@ -148,7 +142,6 @@ export const ProductRegistrationListView: React.FC<RouteComponentProps<{}>> = ({
         </Toolbar.View>
         <Card.Flat>
           <ProductRegistrations
-            history={history}
             onDelete={confirmProductRegistrationToDelete}
             filterText={searchText}
             loading={loading}

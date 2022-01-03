@@ -2,7 +2,7 @@ import { faPencil } from '@fortawesome/pro-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { DateTime } from 'luxon'
 import React from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Box, Flex } from 'rebass'
 import { Maybe, Rga, RgaStatus, RgaStatusUpdate } from 'rpmed-schema'
 import {
@@ -24,7 +24,7 @@ interface IDetailViewProps {
   onUpdate?: StatusUpdateHandler
 }
 
-const RgaStatusLog: React.FunctionComponent<{
+const RgaStatusLog: React.FC<{
   statusLog?: Array<Maybe<RgaStatusUpdate>>
 }> = ({ statusLog }) => (
   <React.Fragment>
@@ -42,7 +42,7 @@ const RgaStatusLog: React.FunctionComponent<{
   </React.Fragment>
 )
 
-const StatusForRga: React.FunctionComponent<{
+const StatusForRga: React.FC<{
   rga?: Rga
   onUpdate?: StatusUpdateHandler
 }> = ({ rga, onUpdate: handleUpdate }) => {
@@ -132,14 +132,14 @@ const StatusForRga: React.FunctionComponent<{
   }
 }
 
-export const RGADetails: React.FunctionComponent<IDetailViewProps> = ({
+export const RGADetails: React.FC<IDetailViewProps> = ({
   rga,
   loading,
   onUpdate: handleUpdate,
 }) => {
-  const history = useHistory()
+  const navigate = useNavigate()
   const handleEditClick = () =>
-    rga ? history.push(`/admin/rga/update/${rga.id}/details`) : null
+    rga ? navigate(`/admin/rga/update/${rga.id}/details`) : null
   return (
     <Card.Flat>
       <Flex>

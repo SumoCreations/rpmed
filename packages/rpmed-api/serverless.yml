@@ -29,6 +29,10 @@ custom:
             sources: [./seed/resources.json]
           - table: ${self:service}-${opt:stage, "dev"}-users-lookup
             sources: [./seed/usersLookup.json]
+  allowedOrigins:
+    dev: 'localhost'
+    staging: '*'
+    prod: 'admin.medled.com,service.rpmed.com'
   adminEmail:
     dev: jim@sumocreations.com
     staging: jim@sumocreations.com
@@ -109,6 +113,7 @@ provider:
     ACCESS_TOKEN_LIFESPAN: 5m
     REFRESH_TOKEN_LIFESPAN: 7d
     SALT_ROUNDS: 10
+    ALLOWED_ORIGINS: ${self:custom.allowedOrigins.${opt:stage, 'dev'}}
     APOLLO_INTROSPECTION: ${self:custom.apolloIntrospection.${opt:stage, 'dev'}}
     CLIENT_DOMAIN: ${self:custom.clientDomain.${opt:stage, 'dev'}}
     RECAPTCHA_KEY: 6LdOqZoUAAAAAJ79IuWa4mU57Urnd-N6oxP4XhiR

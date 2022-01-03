@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid'
 import { isEmpty } from 'validator'
-import { ProductType } from '../schema'
+import { ProductType } from 'rpmed-schema'
 import { Customer, ICustomer } from './customer'
 import { IModelNumber, ModelNumber } from './modelNumber'
 import { IProduct, Product } from './product'

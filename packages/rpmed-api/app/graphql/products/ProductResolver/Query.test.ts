@@ -1,5 +1,5 @@
 import { IModelNumber, IProduct, ModelNumber, Product } from '../../../models'
-import { ProductType } from '../../../schema'
+import { ProductType } from 'rpmed-schema'
 import * as Query from './Query'
 
 describe('Query', () => {

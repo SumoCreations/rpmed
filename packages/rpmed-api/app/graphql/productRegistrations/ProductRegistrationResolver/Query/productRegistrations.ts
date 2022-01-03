@@ -1,9 +1,17 @@
 import { Customer, ProductRegistration } from '../../../../models'
+import {
+  ServerContext,
+  isAuthorizedUser,
+  generateAuthorizationError,
+} from '../../../auth'
 import { IProductRegistrationQueryOutput } from './productRegistrationQueryTypes'
 
-export const productRegistrations = async (): Promise<
-  IProductRegistrationQueryOutput
-> => {
+export const productRegistrations = async (
+  context: ServerContext
+): Promise<IProductRegistrationQueryOutput> => {
+  if (!isAuthorizedUser(context)) {
+    return generateAuthorizationError()
+  }
   try {
     const results = await ProductRegistration.all()
     return {

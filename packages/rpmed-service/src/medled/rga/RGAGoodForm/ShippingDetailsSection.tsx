@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box, Flex } from 'rebass'
-import { Divider, Form, Heading, Indicators } from 'rpmed-ui'
+import { Divider, Form, Heading, Indicators } from 'rpmed-ui/lib/V1'
 import { FormField, IInteractiveSection, IRGAGoodFormValues } from './types'
 import { ShippingSpeedSelect } from '../RgaShippingSpeedSelect'
 import { faAddressCard } from '@fortawesome/pro-solid-svg-icons'
@@ -20,7 +20,6 @@ export const ShippingDetailsSection: React.FC<IShippingDetailsSectionProps> = ({
   onSubmit: handleSubmit,
 }) => (
   <Flex flexDirection="column" width={1}>
-    <Heading.Section>Customer Shipping Info (6/6)</Heading.Section>
     <Form.Small>
       How & where should we ship this back to the customer.
     </Form.Small>

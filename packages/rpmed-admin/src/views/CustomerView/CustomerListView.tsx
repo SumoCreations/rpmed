@@ -5,11 +5,10 @@ import {
   faTrash,
 } from '@fortawesome/pro-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { History } from 'history'
 import qs from 'query-string'
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
-import { RouteComponentProps } from 'react-router'
+
 import { Link } from 'react-router-dom'
 import {
   Actions,
@@ -23,14 +22,11 @@ import {
 } from 'rpmed-ui/lib/V1'
 import { DestroyCustomerButton } from './DestroyCustomerButton'
 import { useCustomersQuery, Customer } from 'rpmed-schema'
+import { useNavigate } from 'react-router-dom'
 
 const { useState } = React
 
-const sendTo = (p: { history: History; url: string }) => () =>
-  p.history.push(p.url)
-
 interface ICustomerProps {
-  history: History
   onDelete: (customer: Customer) => void
   filterText: string
   loading?: boolean
@@ -38,14 +34,16 @@ interface ICustomerProps {
   customers: Customer[]
 }
 
-const Customers: React.FunctionComponent<ICustomerProps> = ({
-  history,
+const Customers: React.FC<ICustomerProps> = ({
   onDelete,
   filterText,
   loading,
   customers,
-  error
+  error,
 }) => {
+  const navigate = useNavigate()
+  const sendTo = (p: { url: string }) => () => navigate(p.url)
+
   if (loading) {
     return <p>Loading...</p>
   }
@@ -55,11 +53,13 @@ const Customers: React.FunctionComponent<ICustomerProps> = ({
   const filterCustomer = ({ name, email, id }: Customer) =>
     filterText.length > 0
       ? [id, name, email]
-        .map(val => (val?.toLowerCase().indexOf(filterText.toLowerCase()) ?? -1) >= 0)
-        .includes(true)
+          .map(
+            val =>
+              (val?.toLowerCase().indexOf(filterText.toLowerCase()) ?? -1) >= 0
+          )
+          .includes(true)
       : true
-  const onClickDelete = (customer: Customer) => () =>
-    onDelete(customer)
+  const onClickDelete = (customer: Customer) => () => onDelete(customer)
   const rows = (customers as Customer[]).filter(filterCustomer).map(p => [
     <Link to={`/admin/customers/${p.id}`} key={p.id}>
       {p.name}
@@ -67,14 +67,11 @@ const Customers: React.FunctionComponent<ICustomerProps> = ({
     p.email,
     p.id,
     <Actions.Group key={`actions${p.id}`}>
-      <Actions.Primary
-        onClick={sendTo({ history, url: `/admin/customers/${p.id}` })}
-      >
+      <Actions.Primary onClick={sendTo({ url: `/admin/customers/${p.id}` })}>
         <FontAwesomeIcon icon={faPencil} />
       </Actions.Primary>
       <Actions.Primary
         onClick={sendTo({
-          history,
           url: `/admin/customers/new?${qs.stringify({ ...p })}`,
         })}
       >
@@ -99,18 +96,18 @@ const Customers: React.FunctionComponent<ICustomerProps> = ({
   )
 }
 
-export const CustomerListView: React.FC<RouteComponentProps<{}>> = ({
-  history,
-}) => {
-  const { data, loading, error, refetch } = useCustomersQuery({ fetchPolicy: "network-only" })
+export const CustomerListView: React.FC = () => {
+  const { data, loading, error, refetch } = useCustomersQuery({
+    fetchPolicy: 'network-only',
+  })
+  const navigate = useNavigate()
+
   const customers = (data?.response.customers ?? []) as Customer[]
-  const [productToDelete, setCustomerToDelete] = useState<Customer | null>(
-    null
-  )
+  const [productToDelete, setCustomerToDelete] = useState<Customer | null>(null)
   const [searchText, setSearchText] = useState('')
   const confirmCustomerToDelete = (customer: Customer) =>
     setCustomerToDelete(customer)
-  const onClickNew = () => history.push('/admin/customers/new')
+  const onClickNew = () => navigate('/admin/customers/new')
   const onSearchChange: React.ChangeEventHandler = event =>
     setSearchText((event.target as HTMLInputElement).value)
   return (
@@ -135,7 +132,6 @@ export const CustomerListView: React.FC<RouteComponentProps<{}>> = ({
         </Toolbar.View>
         <Card.Flat>
           <Customers
-            history={history}
             onDelete={confirmCustomerToDelete}
             filterText={searchText}
             customers={customers}

@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-export const Group: React.FunctionComponent = ({ children }) => (
+export const Group: React.FC = ({ children }) => (
   <ul className="m-0 flex p-0 justify-end">
     {React.Children.map(children, (child) => (
       <li className="flex p-0 mx-1">{child}</li>

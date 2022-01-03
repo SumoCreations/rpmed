@@ -1,7 +1,8 @@
 import { DateTime } from 'luxon'
 import { RGA, RGAGood } from '../../../../models'
-import { ProductType, RgaGoodStatus, RgaStatus } from '../../../../schema'
+import { ProductType, RgaGoodStatus, RgaStatus } from 'rpmed-schema'
 import { destroyRGAGood } from './destroyRGAGood'
+import { TST_ORIGIN_CTX } from '../../../auth'
 
 const RGA_ID = 'TEST-RGA-ID'
 const PRODUCT_ID = 'TEST-PRODUCT-ID'
@@ -65,28 +66,53 @@ describe('destroyRGAGood', () => {
 
   test('should fail if the rga does not exist', async () => {
     expect.assertions(1)
-    const output = await destroyRGAGood(null, {
-      id: existingRGAGoodId,
-      rgaId: 'existingRGAId-does-not-exist',
-    })
+    const output = await destroyRGAGood(
+      null,
+      {
+        id: existingRGAGoodId,
+        rgaId: 'existingRGAId-does-not-exist',
+      },
+      TST_ORIGIN_CTX
+    )
     expect(output.success).toBe(false)
   })
 
   test('should fail if the rga good does not exists', async () => {
     expect.assertions(1)
-    const output = await destroyRGAGood(null, {
-      id: 'existingRGAGoodId-does-not-exist',
-      rgaId: existingRGAId,
-    })
+    const output = await destroyRGAGood(
+      null,
+      {
+        id: 'existingRGAGoodId-does-not-exist',
+        rgaId: existingRGAId,
+      },
+      TST_ORIGIN_CTX
+    )
+    expect(output.success).toBe(false)
+  })
+
+  test('should fail if not authorized', async () => {
+    expect.assertions(1)
+    const output = await destroyRGAGood(
+      null,
+      {
+        id: existingRGAGoodId,
+        rgaId: existingRGAId,
+      },
+      null
+    )
     expect(output.success).toBe(false)
   })
 
   test('should destroy an existing rga good if it exists', async () => {
     expect.assertions(1)
-    const output = await destroyRGAGood(null, {
-      id: existingRGAGoodId,
-      rgaId: existingRGAId,
-    })
+    const output = await destroyRGAGood(
+      null,
+      {
+        id: existingRGAGoodId,
+        rgaId: existingRGAId,
+      },
+      TST_ORIGIN_CTX
+    )
     expect(output.success).toBe(true)
   })
 })

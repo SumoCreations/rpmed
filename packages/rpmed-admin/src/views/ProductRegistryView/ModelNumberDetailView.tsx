@@ -4,8 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Formik } from 'formik'
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
-import { RouteComponentProps } from 'react-router'
-import { Link } from 'react-router-dom'
+import { Link, useParams, useNavigate } from 'react-router-dom'
 import { Flex } from 'rebass'
 import {
   ProductSymptom,
@@ -35,13 +34,9 @@ import { useModelNumberQuery } from 'rpmed-schema'
 
 const { useState } = React
 
-interface IModelNumberRouterProps {
-  modelNumberId: string
-}
-
-const View: React.FunctionComponent<RouteComponentProps<
-  IModelNumberRouterProps
->> = ({ history, match }) => {
+const View: React.FC = () => {
+  const { modelNumberId = '' } = useParams()
+  const navigate = useNavigate()
   const [associatedSymptoms, setAssociatedSymptoms] = useState([] as string[])
   const [symptomToRemove, setSymptomToRemove] = useState(null as string | null)
   const [linkSymptomToModelNumber] = useLinkSymptomToModelNumberMutation()
@@ -50,23 +45,21 @@ const View: React.FunctionComponent<RouteComponentProps<
     await linkSymptomToModelNumber({
       variables: {
         linked: true,
-        modelNumber: match.params.modelNumberId,
+        modelNumber: modelNumberId,
         symptomId: symptom.id,
       },
     })
     refetch()
   }
   const onDismiss = (name: string) => () => null
-  const handleBack = () => history.push('/admin/products/modelNumbers')
+  const handleBack = () => navigate('/admin/products/modelNumbers')
   const onClickEdit = () =>
-    history.push(
-      `/admin/products/modelNumbers/edit/${match.params.modelNumberId}`
-    )
+    navigate(`/admin/products/modelNumbers/edit/${modelNumberId}`)
   const handleDeleteSymptom = (symptom: string) => () =>
     setSymptomToRemove(symptom)
 
   const { loading, refetch, data, error } = useModelNumberQuery({
-    variables: { modelNumberId: match.params.modelNumberId },
+    variables: { modelNumberId: modelNumberId },
   })
   const modelNumber = data?.response?.modelNumber
   if (error) {
@@ -96,7 +89,7 @@ const View: React.FunctionComponent<RouteComponentProps<
     await linkSymptomToModelNumber({
       variables: {
         linked: false,
-        modelNumber: match.params.modelNumberId,
+        modelNumber: modelNumberId,
         symptomId: symptomToRemove || '',
       },
     })

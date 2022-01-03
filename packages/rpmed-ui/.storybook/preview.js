@@ -1,8 +1,9 @@
 import React from 'react'
+import { BrowserRouter } from 'react-router-dom'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { DndProvider } from 'react-dnd'
 import { addDecorator } from '@storybook/react'
-import '../src/scss/tailwind.css'
+import '../lib/rpmed-ui.css'
 
 export const parameters = {
   actions: { argTypesRegex: '^on[A-Z].*' },
@@ -25,14 +26,16 @@ const Layout = ({ children }) => {
 
 addDecorator((Story) => (
   <DndProvider backend={HTML5Backend}>
-    <Layout>
-      <link rel="preconnect" href="https://fonts.googleapis.com" />
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-      <link
-        href="https://fonts.googleapis.com/css2?family=Mulish:wght@200;400;600&display=swap"
-        rel="stylesheet"
-      />{' '}
-      <Story />
-    </Layout>
+    <BrowserRouter>
+      <Layout>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Mulish:wght@200;400;600&display=swap"
+          rel="stylesheet"
+        />{' '}
+        <Story />
+      </Layout>
+    </BrowserRouter>
   </DndProvider>
 ))

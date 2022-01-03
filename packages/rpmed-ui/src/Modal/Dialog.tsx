@@ -10,7 +10,7 @@ export interface DialogProps extends ModalProps {
   onConfirm: () => void
 }
 
-const MESSAGE_STYLES = 'text-md px-2 mb-4'
+const MESSAGE_STYLES = 'text-md px-2 mb-4 text-center justify-center z-50s z-60'
 
 export const Dialog: React.FC<DialogProps> = ({
   children,

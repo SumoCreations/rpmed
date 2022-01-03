@@ -2,18 +2,16 @@ import { faUsers } from '@fortawesome/pro-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
-import { RouteComponentProps } from 'react-router'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Actions, Content, GridNav, Layout, Toolbar } from 'rpmed-ui/lib/V1'
 
 const { useState } = React
 
-export const ControlsMenuView: React.FC<RouteComponentProps<{}>> = ({
-  history,
-}) => {
+export const ControlsMenuView: React.FC = () => {
+  const navigate = useNavigate()
   const [searchText, setSearchText] = useState('')
   const onClickOption = (route: string) => () =>
-    history.push(`/admin/controls/${route}`)
+    navigate(`/admin/controls/${route}`)
   const onSearchChange: React.ChangeEventHandler = event =>
     setSearchText((event.target as HTMLInputElement).value)
   return (

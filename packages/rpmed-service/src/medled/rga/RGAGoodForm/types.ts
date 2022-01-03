@@ -1,7 +1,7 @@
 import { FormikHelpers } from 'formik'
 import React from 'react'
 import { FeeStructure, ProductType } from 'rpmed-schema'
-import { Input } from 'rpmed-ui'
+import { Input } from 'rpmed-ui/lib/V1'
 
 export enum FormSection {
   ModelNumber,

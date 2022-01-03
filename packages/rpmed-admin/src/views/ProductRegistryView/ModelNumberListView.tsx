@@ -8,12 +8,10 @@ import {
 } from '@fortawesome/pro-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Formik } from 'formik'
-import { History } from 'history'
 import qs from 'query-string'
 import React, { useState } from 'react'
 import { Helmet } from 'react-helmet'
-import { RouteComponentProps } from 'react-router'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { ModelNumber, ProductType } from 'rpmed-schema'
 import {
   Actions,
@@ -36,30 +34,27 @@ import {
   ProductTypeSelectFn,
 } from './ProductTypeSelectField'
 
-const sendTo = (p: { history: History; url: string }) => () =>
-  p.history.push(p.url)
-
 interface IModelNumberProps {
-  history: History
   onDelete: (modelNumber: ModelNumber) => void
   filterText: string
   modelNumbers: ModelNumber[]
 }
 
-const ModelNumbersList: React.FunctionComponent<IModelNumberProps> = ({
-  history,
+const ModelNumbersList: React.FC<IModelNumberProps> = ({
   onDelete,
   filterText,
   modelNumbers,
 }) => {
+  const navigate = useNavigate()
+  const sendTo = (p: { url: string }) => () => navigate(p.url)
   const filterModelNumber = ({ description, id }: ModelNumber) =>
     filterText.length > 0
       ? [id, description]
-        .map(
-          val =>
-            val?.toLowerCase().indexOf(filterText.toLowerCase()) ?? -1 >= 0
-        )
-        .includes(true)
+          .map(
+            val =>
+              val?.toLowerCase().indexOf(filterText.toLowerCase()) ?? -1 >= 0
+          )
+          .includes(true)
       : true
 
   const onClickDelete = (modelNumber: ModelNumber) => () =>
@@ -67,44 +62,41 @@ const ModelNumbersList: React.FunctionComponent<IModelNumberProps> = ({
 
   const rows = modelNumbers
     ? modelNumbers.filter(filterModelNumber).map(model => [
-      <Link to={`/admin/products/modelNumbers/${model.id}`} key={model.id}>
-        {model.id}
-      </Link>,
-      model.description,
-      model.lotted ? 'YES' : 'NO',
-      `${model.warrantyTerm} mo`,
-      <Actions.Group key={`actions${model.id}`}>
-        <Actions.Primary
-          onClick={sendTo({
-            history,
-            url: `/admin/products/modelNumbers/${model.id}`,
-          })}
-        >
-          <FontAwesomeIcon icon={faEye} />
-        </Actions.Primary>
-        <Actions.Primary
-          onClick={sendTo({
-            history,
-            url: `/admin/products/modelNumbers/edit/${model.id}`,
-          })}
-        >
-          <FontAwesomeIcon icon={faPencil} />
-        </Actions.Primary>
-        <Actions.Primary
-          onClick={sendTo({
-            history,
-            url: `/admin/products/modelNumbers/new?${qs.stringify({
-              ...model,
-            })}`,
-          })}
-        >
-          <FontAwesomeIcon icon={faCopy} />
-        </Actions.Primary>
-        <Actions.Destructive onClick={onClickDelete(model)}>
-          <FontAwesomeIcon icon={faTrash} />
-        </Actions.Destructive>
-      </Actions.Group>,
-    ])
+        <Link to={`/admin/products/modelNumbers/${model.id}`} key={model.id}>
+          {model.id}
+        </Link>,
+        model.description,
+        model.lotted ? 'YES' : 'NO',
+        `${model.warrantyTerm} mo`,
+        <Actions.Group key={`actions${model.id}`}>
+          <Actions.Primary
+            onClick={sendTo({
+              url: `/admin/products/modelNumbers/${model.id}`,
+            })}
+          >
+            <FontAwesomeIcon icon={faEye} />
+          </Actions.Primary>
+          <Actions.Primary
+            onClick={sendTo({
+              url: `/admin/products/modelNumbers/edit/${model.id}`,
+            })}
+          >
+            <FontAwesomeIcon icon={faPencil} />
+          </Actions.Primary>
+          <Actions.Primary
+            onClick={sendTo({
+              url: `/admin/products/modelNumbers/new?${qs.stringify({
+                ...model,
+              })}`,
+            })}
+          >
+            <FontAwesomeIcon icon={faCopy} />
+          </Actions.Primary>
+          <Actions.Destructive onClick={onClickDelete(model)}>
+            <FontAwesomeIcon icon={faTrash} />
+          </Actions.Destructive>
+        </Actions.Group>,
+      ])
     : []
 
   return (
@@ -119,9 +111,8 @@ const ModelNumbersList: React.FunctionComponent<IModelNumberProps> = ({
   )
 }
 
-export const ModelNumberListView: React.FC<RouteComponentProps<{}>> = ({
-  history,
-}) => {
+export const ModelNumberListView: React.FC = () => {
+  const navigate = useNavigate()
   const [modelNumberToDelete, setModelNumberToDelete] = useState(
     null as ModelNumber | null
   )
@@ -131,7 +122,7 @@ export const ModelNumberListView: React.FC<RouteComponentProps<{}>> = ({
   const [searchText, setSearchText] = useState('')
   const confirmModelNumberToDelete = (modelNumber: ModelNumber) =>
     setModelNumberToDelete(modelNumber)
-  const onClickNew = () => history.push('/admin/products/modelNumbers/new')
+  const onClickNew = () => navigate('/admin/products/modelNumbers/new')
   const onSearchChange: React.ChangeEventHandler = event =>
     setSearchText((event.target as HTMLInputElement).value)
   const {
@@ -241,7 +232,6 @@ export const ModelNumberListView: React.FC<RouteComponentProps<{}>> = ({
                 <Errors.LoadingError error={error} />
               ) : (
                 <ModelNumbersList
-                  history={history}
                   onDelete={confirmModelNumberToDelete}
                   filterText={searchText}
                   modelNumbers={(modelNumbers ?? []) as ModelNumber[]}

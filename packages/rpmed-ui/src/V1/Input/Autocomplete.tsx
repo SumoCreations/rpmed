@@ -3,17 +3,17 @@ import * as React from 'react'
 import styled from '../styled-components'
 
 const Container = styled.div`
-  background: ${p => p.theme.colorContentAreaBackground};
+  background: ${(p) => p.theme.colorContentAreaBackground};
   display: flex;
   flex-direction: column;
   position: absolute;
   top: 100%;
   left: 0;
   min-width: 100%;
-  border-radius: ${p => p.theme.borderRadius};
-  border: 1px solid ${p => p.theme.colorContentAreaBorderSelected};
+  border-radius: ${(p) => p.theme.borderRadius};
+  border: 1px solid ${(p) => p.theme.colorContentAreaBorderSelected};
   box-shadow: 5px 5px 10px
-    ${p => transparentize(0.75)(p.theme.colorContentAreaBorderSelected)};
+    ${(p) => transparentize(0.75)(p.theme.colorContentAreaBorderSelected)};
   padding: 0;
   margin: 4px 0 0 0;
   z-index: 1;
@@ -27,9 +27,9 @@ const Suggestion = styled.div`
   list-style: none;
   padding: 0rem;
   border-bottom: 1px solid
-    ${p => transparentize(0.7)(p.theme.colorContentAreaBorderSelected)};
+    ${(p) => transparentize(0.7)(p.theme.colorContentAreaBorderSelected)};
   &:hover {
-    background: ${p => transparentize(0.9)(p.theme.colorPrimary)};
+    background: ${(p) => transparentize(0.9)(p.theme.colorPrimary)};
   }
 `
 
@@ -60,7 +60,7 @@ interface IAutocompleteProps {
 const makeOnClick = (
   option: IAutocompleteOption,
   handler?: AutoCompleteSelectHandler
-): React.MouseEventHandler => _ => handler && handler(option)
+): React.MouseEventHandler => (_) => handler && handler(option)
 
 interface IAutocompleteSuggestion {
   displayName: string | JSX.Element
@@ -83,16 +83,16 @@ const DetailContents = styled.p`
 
 const DetailHeader = styled.strong`
   font-weight: 600;
-  color: ${p => p.theme.colorPrimary};
+  color: ${(p) => p.theme.colorPrimary};
   text-transform: uppercase;
-  font-size: ${p => p.theme.inputTextSize};
+  font-size: ${(p) => p.theme.inputTextSize};
   margin: 0;
 `
 const DetailDescription = styled.span`
   margin: 0;
   padding: 0;
   display: flex;
-  font-size: ${p => p.theme.inputTextSize};
+  font-size: ${(p) => p.theme.inputTextSize};
   flex-shrink: 1;
 `
 
@@ -112,7 +112,9 @@ export const SuggestionDetailView = (props: {
   </DetailView>
 )
 
-export const AutocompleteSuggestion: React.FunctionComponent<IAutocompleteSuggestion> = p => (
+export const AutocompleteSuggestion: React.FC<IAutocompleteSuggestion> = (
+  p
+) => (
   <Suggestion>
     <Button onClick={p.onClick} type="button">
       {p.displayName}
@@ -124,11 +126,11 @@ interface ICustomAutocompleteProps {
   children: () => JSX.Element
 }
 
-export const CustomAutocomplete: React.FunctionComponent<ICustomAutocompleteProps> = ({
+export const CustomAutocomplete: React.FC<ICustomAutocompleteProps> = ({
   children,
 }) => <Container>{children()}</Container>
 
-export const Autocomplete: React.FunctionComponent<IAutocompleteProps> = ({
+export const Autocomplete: React.FC<IAutocompleteProps> = ({
   suggestions,
   onSelect,
 }) => (

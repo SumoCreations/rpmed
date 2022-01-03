@@ -1,0 +1,45 @@
+/**
+ * This injects Tailwind's base styles and any base styles registered by
+ * plugins.
+ */
+@tailwind base;
+
+/**
+  * This injects Tailwind's component classes and any component classes
+  * registered by plugins.
+  */
+@tailwind components;
+
+/**
+  * This injects Tailwind's utility classes and any utility classes registered
+  * by plugins.
+  */
+@tailwind utilities;
+
+/**
+  * Use this directive to control where Tailwind injects the hover, focus,
+  * responsive, dark mode, and other variants of each class.
+  *
+  * If omitted, Tailwind will append these classes to the very end of
+  * your stylesheet by default.
+  */
+@tailwind variants;
+
+.client__multi__select_container {
+  .client__multi__select__control {
+    @apply border border-gray-300;
+  }
+
+  .client__multi__select__value-container {
+    @apply py-1 px-2;
+  }
+
+  .client__multi__select__indicator-separator {
+    @apply bg-gray-300;
+  }
+
+  .client__multi__select__clear-indicator,
+  .client__multi__select__dropdown-indicator {
+    @apply text-gray-300;
+  }
+}

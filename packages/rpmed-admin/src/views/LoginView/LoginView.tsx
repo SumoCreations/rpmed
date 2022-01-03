@@ -1,53 +1,60 @@
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
 import { connect } from 'react-redux'
-import { Redirect, Route, Switch } from 'react-router-dom'
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom'
 import { Box } from 'rebass'
 import { Dispatch } from 'redux'
-import { ConditionalRoute } from '../../routes'
+import { RequireAnon } from '../../routes'
 import {
   ICredentials,
-  isAuthenticated,
   login,
   SessionActionTypes,
   updateSession,
 } from '../../session'
-import { IStoreState } from '../../store'
+import { LoginForm } from 'rpmed-ui'
 import { Brand, Card, Heading, Modal } from 'rpmed-ui/lib/V1'
 import { Link } from 'react-router-dom'
 import { ForgotPasswordView } from './ForgotPasswordView'
-import { LoginForm, LoginFormSubmitHandler } from './LoginForm'
 import { ResetPasswordView } from './ResetPasswordView'
 import { TokenView } from './TokenView'
+import { useState } from 'react'
 
 interface IProps {
   handleUpdatedCredentials: (creds: ICredentials) => SessionActionTypes
 }
 
 const View: React.FC<IProps> = ({ handleUpdatedCredentials }) => {
-  const handleSubmit: LoginFormSubmitHandler = async (values: any, formik) => {
-    const result = await login(values.email || '', values.password || '')
-    if (!result.errors && !result.data) {
-      formik.setErrors({
-        credentials: 'There was a problem connecting to the server.',
-      })
-    } else if (Object.keys(result.errors).length > 0) {
-      formik.setErrors({
-        credentials:
-          result.errors && result.errors.credentials
-            ? 'The username or password was incorrect.'
-            : Object.values(result.errors)[0] || '',
-      } as any)
-      formik.setSubmitting(false)
-    } else {
-      const credentials = result.data as ICredentials
-      handleUpdatedCredentials(credentials)
-    }
-  }
+  const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
   return (
     <React.Fragment>
       <Helmet title="Login to Your Account - RPMed Admin" />
-      <LoginForm onSubmit={handleSubmit} />
+      <LoginForm
+        onSubmit={async data => {
+          setLoading(true)
+          const result = await login(data.email || '', data.password || '')
+          setLoading(false)
+          console.log(result)
+          const error = Object.values(result.errors ?? {})[0]
+          console.log('error', error)
+          if (!result.errors && !result.data) {
+            return {
+              error: 'There was a problem connecting to the server.',
+            }
+          } else if (Object.keys(result.errors).length > 0) {
+            return {
+              error,
+              errors: result.errors,
+            } as any
+          } else {
+            const credentials = result.data as ICredentials
+            handleUpdatedCredentials(credentials)
+            navigate('/admin')
+          }
+          return undefined
+        }}
+        loading={loading}
+      />
       <Card.CenteredSection as="section">
         <Box paddingTop={3}>
           <Link to="/forgot">Forgot Your Password?</Link>
@@ -64,10 +71,7 @@ const mapDispatchToProps = (dispatch: Dispatch<SessionActionTypes>) => ({
 
 const DefaultLoginView = connect(null, mapDispatchToProps)(View)
 
-const RootLoginView: React.FC<{ authenticated: boolean }> = ({
-  authenticated,
-}) => {
-  const loggedIn = () => authenticated
+export const LoginView: React.FC = () => {
   return (
     <Modal.Container>
       <Helmet title="Login to Your Account - RPMed Admin" />
@@ -77,35 +81,29 @@ const RootLoginView: React.FC<{ authenticated: boolean }> = ({
           <Heading.One>Service Admin</Heading.One>
         </Modal.Heading>
         <Card.View>
-          <Switch>
-            <Route path="/token/:token">
-              <TokenView />
-            </Route>
-            <Route path="/login/reset">
-              <ResetPasswordView />
-            </Route>
-            <ConditionalRoute
+          <Routes>
+            <Route path="/token/:token" element={<TokenView />} />
+            <Route path="/login/reset" element={<ResetPasswordView />} />
+            <Route
               path="/forgot"
-              component={ForgotPasswordView}
-              redirectIf={loggedIn}
-              exact={true}
-              redirectPath={'/admin'}
+              element={
+                <RequireAnon>
+                  <ForgotPasswordView />
+                </RequireAnon>
+              }
             />
-            <ConditionalRoute
+            <Route
               path="/login"
-              component={DefaultLoginView}
-              redirectIf={loggedIn}
-              exact={true}
-              redirectPath={'/admin'}
+              element={
+                <RequireAnon>
+                  <DefaultLoginView />
+                </RequireAnon>
+              }
             />
-            <Redirect to="/login" />
-          </Switch>
+            <Route element={() => <Navigate to="/login" replace />} />
+          </Routes>
         </Card.View>
       </Modal.ContentRegion>
     </Modal.Container>
   )
 }
-
-export const LoginView = connect((state: IStoreState) => ({
-  authenticated: isAuthenticated(state.session),
-}))(RootLoginView)

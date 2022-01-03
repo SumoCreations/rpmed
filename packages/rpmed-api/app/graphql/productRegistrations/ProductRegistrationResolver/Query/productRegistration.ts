@@ -1,12 +1,20 @@
 import { Customer, ProductRegistration } from '../../../../models'
+import {
+  generateAuthorizationError,
+  isAuthorizedUser,
+  ServerContext,
+} from '../../../auth'
 import { ErrorProductRegistrationWithIDDoesNotExist } from '../productRegistrationErrors'
 import { IProductRegistrationQueryOutput } from './productRegistrationQueryTypes'
 
 export const productRegistration = async (
-  _,
+  context: ServerContext,
   args
 ): Promise<IProductRegistrationQueryOutput> => {
   try {
+    if (!isAuthorizedUser(context)) {
+      return generateAuthorizationError()
+    }
     const result = await ProductRegistration.find(args.id)
     if (!result) {
       return {

@@ -31,6 +31,9 @@ export const sendResetPasswordEmail: APIGatewayProxyHandler = async event => {
         resetLink: `${CLIENT_URL}/token/${token.partitionKey}`,
       },
     })
+    console.log(
+      `Sent reset password email to ${user.email} with token ${token.partitionKey}`
+    )
     return response(Status.OK, { success: true })
   } catch (e) {
     return response(Status.BadRequest, {}, { user: e.message })

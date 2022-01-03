@@ -10,10 +10,15 @@ import {
 } from '@fortawesome/pro-regular-svg-icons'
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
-import { Redirect, Route, RouteComponentProps, Switch } from 'react-router'
+import {
+  Navigate,
+  Route,
+  Routes,
+  useNavigate,
+  useLocation,
+} from 'react-router-dom'
 import { RgaStatus } from 'rpmed-schema'
 import { Indicators, SecondaryNav } from 'rpmed-ui/lib/V1'
-import { ModalState } from '../Modal'
 import { useRgaCounts } from './graphql'
 import { RGACreateView } from './RGACreateView'
 import { RGADetailView } from './RGADetailView/RGADetailView'
@@ -33,8 +38,10 @@ const renderCount = (count?: number | null) =>
     </SecondaryNav.Bubble>
   )) || <Indicators.Spinner />
 
-const View: React.FC<RouteComponentProps<{}>> = ({ history, location }) => {
+const View: React.FC = () => {
+  const location = useLocation()
   const { counts } = useRgaCounts()
+  const navigate = useNavigate()
   return (
     <SecondaryNav.View
       icon={faBoxAlt}
@@ -45,7 +52,7 @@ const View: React.FC<RouteComponentProps<{}>> = ({ history, location }) => {
           icon: faBarcodeAlt,
           label: 'Issued',
           onClick: () => {
-            history.push(`/admin/rga/${RgaStatus.Issued}`)
+            navigate(`/admin/rga/${RgaStatus.Issued}`)
           },
           selected: checkPath(
             location.pathname,
@@ -57,7 +64,7 @@ const View: React.FC<RouteComponentProps<{}>> = ({ history, location }) => {
           icon: faShippingTimed,
           label: 'Awaiting Arrival',
           onClick: () => {
-            history.push(`/admin/rga/${RgaStatus.AwaitingArrival}`)
+            navigate(`/admin/rga/${RgaStatus.AwaitingArrival}`)
           },
           selected: checkPath(
             location.pathname,
@@ -69,7 +76,7 @@ const View: React.FC<RouteComponentProps<{}>> = ({ history, location }) => {
           icon: faUserHardHat,
           label: 'Assessed',
           onClick: () => {
-            history.push(`/admin/rga/${RgaStatus.Assessing}`)
+            navigate(`/admin/rga/${RgaStatus.Assessing}`)
           },
           selected: checkPath(
             location.pathname,
@@ -81,7 +88,7 @@ const View: React.FC<RouteComponentProps<{}>> = ({ history, location }) => {
           icon: faNotesMedical,
           label: 'Repaired',
           onClick: () => {
-            history.push(`/admin/rga/${RgaStatus.Repairing}`)
+            navigate(`/admin/rga/${RgaStatus.Repairing}`)
           },
           selected: checkPath(
             location.pathname,
@@ -93,7 +100,7 @@ const View: React.FC<RouteComponentProps<{}>> = ({ history, location }) => {
           icon: faBoxCheck,
           label: 'Closed',
           onClick: () => {
-            history.push(`/admin/rga/${RgaStatus.Closed}`)
+            navigate(`/admin/rga/${RgaStatus.Closed}`)
           },
           selected: checkPath(
             location.pathname,
@@ -105,7 +112,7 @@ const View: React.FC<RouteComponentProps<{}>> = ({ history, location }) => {
           icon: faExclamationCircle,
           label: 'Delayed',
           onClick: () => {
-            history.push(`/admin/rga/${RgaStatus.Delayed}`)
+            navigate(`/admin/rga/${RgaStatus.Delayed}`)
           },
           selected: checkPath(
             location.pathname,
@@ -117,7 +124,7 @@ const View: React.FC<RouteComponentProps<{}>> = ({ history, location }) => {
           icon: faWindowClose,
           label: 'Canceled',
           onClick: () => {
-            history.push(`/admin/rga/${RgaStatus.Canceled}`)
+            navigate(`/admin/rga/${RgaStatus.Canceled}`)
           },
           selected: checkPath(
             location.pathname,
@@ -127,46 +134,26 @@ const View: React.FC<RouteComponentProps<{}>> = ({ history, location }) => {
       ]}
     >
       <Helmet title="RGAs - RPMed Service Admin" />
-      <ModalState location={location} history={history}>
-        {mState => (
-          <React.Fragment>
-            <Switch location={mState.location}>
-              <Route path="/admin/rga/new" component={RGACreateView} />
-              <Route
-                path="/admin/rga/:status"
-                component={RGAListView}
-                exact={true}
-              />
-              <Route
-                path="/admin/rga/:status/:rgaId"
-                component={RGADetailView}
-                exact={true}
-              />
-              <Route
-                path="/admin/rga/:status/:rgaId/service-form/:goodId"
-                component={ServiceFormView}
-                exact={true}
-              />
-              <Route
-                path="/admin/rga/update/:rgaId/details"
-                component={RGAEditView}
-              />
-              <Route
-                path="/admin/rga/update/:rgaId/SHIPPING"
-                component={RGAShippingUpdateView}
-              />
-              <Route
-                path="/admin/rga/update/:rgaId/:status"
-                component={RGAStatusUpdateView}
-              />
-              <Redirect to={`/admin/rga/${RgaStatus.Issued}`} />
-            </Switch>
-            {mState.isModal ? (
-              <Route path="/admin/rga/:rgaId" component={RGADetailView} />
-            ) : null}
-          </React.Fragment>
-        )}
-      </ModalState>
+      <Routes>
+        <Route path="new" element={<RGACreateView />} />
+        <Route path="update/:rgaId/details" element={<RGAEditView />} />
+        <Route
+          path="update/:rgaId/SHIPPING"
+          element={<RGAShippingUpdateView />}
+        />
+        <Route path="update/:rgaId/:status" element={<RGAStatusUpdateView />} />
+        <Route path=":status" element={<RGAListView />} />
+        <Route path=":status/:rgaId" element={<RGADetailView />} />
+        <Route
+          path=":status/:rgaId/service-form/:goodId"
+          element={<ServiceFormView />}
+        />
+        <Route path=":rgaId" element={<RGADetailView />} />
+        <Route
+          index
+          element={<Navigate to={`/admin/rga/${RgaStatus.Issued}`} />}
+        />
+      </Routes>
     </SecondaryNav.View>
   )
 }

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import { kebabCase } from "lodash"
+import { kebabCase } from 'lodash'
 import { Button, TextField, Fields } from '../Form'
 import { AbsoluteOverlay } from '../Indicators'
 import { useForm } from 'react-hook-form'
@@ -12,7 +12,14 @@ import {
 } from '@sumocreations/forms'
 import { camelCase } from 'lodash'
 import { ErrorList } from '../Form/ErrorList'
-import { AttachmentList, FilePreview, FileToEndpointFn, HandleAssociatedFileUpdateFn, TextAreaField, MimeTypes } from '../Form'
+import {
+  AttachmentList,
+  FilePreview,
+  FileToEndpointFn,
+  HandleAssociatedFileUpdateFn,
+  TextAreaField,
+  MimeTypes,
+} from '../Form'
 import { HandleDeleteFn, HandleFileUploadFn } from '..'
 
 export type DocumentFormValues = {
@@ -26,7 +33,7 @@ export type DocumentFormValues = {
 const schema = yup.object({
   title: yup.string().required('cannot be blank'),
   slug: yup.string().required('cannot be blank'),
-  fileKey: yup.string().required("cannot be blank"),
+  fileKey: yup.string().required('cannot be blank'),
   keywords: yup.string(),
   description: yup.string(),
 })
@@ -45,7 +52,7 @@ export const DocumentForm: React.FC<DocumentFormProps> = ({
   submitTitle,
   onRequestEndpoint: handleEndpoints,
   onAttachFile: handleAttachedFile,
-  previews
+  previews,
 }) => {
   const {
     handleSubmit,
@@ -54,18 +61,22 @@ export const DocumentForm: React.FC<DocumentFormProps> = ({
     setError,
     setValue,
     reset,
-    watch
+    watch,
   } = useForm<DocumentFormValues>({
     resolver: yupResolver(schema),
     mode: 'onBlur',
   })
 
-  const [slug, fileKey] = watch(["slug", "fileKey"])
+  const [slug, fileKey] = watch(['slug', 'fileKey'])
 
   useEffect(() => {
     const formatted = kebabCase(slug)
-    if (slug?.substr(-1) === " ") { return }
-    if (formatted && formatted.length > 0 && formatted !== slug) { setValue("slug", formatted) }
+    if (slug?.substr(-1) === ' ') {
+      return
+    }
+    if (formatted && formatted.length > 0 && formatted !== slug) {
+      setValue('slug', formatted)
+    }
   }, [slug, setValue])
 
   useDefaultValueListener<DocumentFormValues>(defaultValues, reset)
@@ -89,10 +100,10 @@ export const DocumentForm: React.FC<DocumentFormProps> = ({
   })
 
   const handleDeletedFile: HandleDeleteFn = () => {
-    setValue("fileKey", undefined)
+    setValue('fileKey', undefined)
   }
   const handleUploadedFile: HandleFileUploadFn = (file) => {
-    setValue("fileKey", file.id)
+    setValue('fileKey', file.id)
   }
 
   return (
@@ -134,11 +145,11 @@ export const DocumentForm: React.FC<DocumentFormProps> = ({
           onDelete={handleDeletedFile}
         />
         <input type="hidden" name="fileKey" value={fileKey} />
-        <ErrorList errors={formErrors as ErrorMap} />
-        <Button type="submit" className="mt-2 w-full">
-          {submitTitle ?? 'Save Document'}
-        </Button>
       </Fields>
+      <ErrorList errors={formErrors as ErrorMap} />
+      <Button type="submit" className="mt-2 w-full">
+        {submitTitle ?? 'Save Document'}
+      </Button>
       {loading ? <AbsoluteOverlay /> : null}
     </form>
   )

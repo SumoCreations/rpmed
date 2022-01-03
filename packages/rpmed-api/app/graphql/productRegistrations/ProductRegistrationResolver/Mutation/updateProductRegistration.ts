@@ -3,15 +3,23 @@ import {
   IProductRegistrationInput,
   ProductRegistration,
 } from '../../../../models'
+import {
+  ServerContext,
+  isAuthorizedUser,
+  generateAuthorizationError,
+} from '../../../auth'
 import { IProductRegistrationMutationOutput } from './productRegistrationMutationTypes'
 import { validateRegistrationInput } from './validateRegistrationInput'
 
 export const updateProductRegistration = async (
-  _: any,
+  context: ServerContext,
   {
     productRegistrationInput,
   }: { productRegistrationInput: IProductRegistrationInput }
 ): Promise<IProductRegistrationMutationOutput> => {
+  if (!isAuthorizedUser(context)) {
+    return generateAuthorizationError()
+  }
   const { errorResponse, input, customer } = await validateRegistrationInput(
     productRegistrationInput
   )
@@ -36,9 +44,7 @@ export const updateProductRegistration = async (
         {
           message:
             e.localizedMessage ||
-            `Could not update registration with id ${
-              productRegistrationInput.id
-            }`,
+            `Could not update registration with id ${productRegistrationInput.id}`,
           path: '_',
         },
       ],

@@ -1,13 +1,12 @@
 module.exports = {
-  content: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
+  content: [
+    './src/**/*.{js,jsx,ts,tsx}',
+    './public/index.html',
+    '../rpmed-admin/src/**/*.{js,jsx,ts,tsx}',
+    '../rpmed-service/src/**/*.{js,jsx,ts,tsx}',
+  ],
   darkMode: 'media', // or 'media' or 'class'
   theme: {
-    inset: {
-      0: 0,
-      auto: 'auto',
-      '1/2': '50%',
-      100: '100%',
-    },
     extend: {
       colors: {
         body: '#3b3a3d',
@@ -19,6 +18,12 @@ module.exports = {
         primary: '#4b5472',
         secondary: '#e6e5e8',
       },
+      // inset: {
+      //   0: 0,
+      //   auto: 'auto',
+      //   '1/2': '50%',
+      //   100: '100%',
+      // },
     },
   },
   variants: {

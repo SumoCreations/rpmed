@@ -1,48 +1,34 @@
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
-import { Redirect, Route, RouteComponentProps, Switch } from 'react-router'
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { ProductSymptomCreateView } from './ProductSymptomCreateView'
 import { ProductSymptomDetailView } from './ProductSymptomDetailView'
 import { ProductSymptomEditView } from './ProductSymptomEditView'
 import { ProductSymptomListView } from './ProductSymptomListView'
 import { ProductSymptomMapView } from './ProductSymptomMapView'
 
-const View: React.FC<RouteComponentProps> = ({ location }) => {
-  const RedirectToProductSymptomsTable = () => (
-    <Redirect to="/admin/products/symptoms/table" />
-  )
+const View: React.FC = () => {
+  const location = useLocation()
   return (
     <React.Fragment>
       <Helmet title="Product Symptoms - RPMed Service Admin" />
-      <Switch location={location}>
+      <Routes location={location}>
         <Route
-          path="/admin/products/symptoms/"
-          component={RedirectToProductSymptomsTable}
-          exact={true}
+          index
+          element={<Navigate to="/admin/products/symptoms/table" />}
+        />
+        <Route path="table" element={<ProductSymptomListView />} />
+        <Route path="map" element={<ProductSymptomMapView />} />
+        <Route path="new" element={<ProductSymptomCreateView />} />
+        <Route
+          path="edit/:productSymptomId"
+          element={<ProductSymptomEditView />}
         />
         <Route
-          path="/admin/products/symptoms/table"
-          component={ProductSymptomListView}
-          exact={true}
+          path=":productSymptomId"
+          element={<ProductSymptomDetailView />}
         />
-        <Route
-          path="/admin/products/symptoms/map"
-          component={ProductSymptomMapView}
-          exact={true}
-        />
-        <Route
-          path="/admin/products/symptoms/new"
-          component={ProductSymptomCreateView}
-        />
-        <Route
-          path="/admin/products/symptoms/edit/:productSymptomId"
-          component={ProductSymptomEditView}
-        />
-        <Route
-          path="/admin/products/symptoms/:productSymptomId"
-          component={ProductSymptomDetailView}
-        />
-      </Switch>
+      </Routes>
     </React.Fragment>
   )
 }

@@ -1,9 +1,9 @@
 import { Formik, FormikHelpers } from 'formik'
 import * as React from 'react'
-import { Link, useHistory } from 'react-router-dom'
-import { Card, Form, Input, TextFormContent } from 'rpmed-ui'
+import { Link, useNavigate } from 'react-router-dom'
+import { Card, Form, Input, TextFormContent } from 'rpmed-ui/lib/V1'
 import { RequiredEmail, validation } from '../../validations'
-import { useCreateRgaMutation } from './graphql'
+import { useCreateRgaMutation } from 'rpmed-schema'
 import { ShippingSpeedSelect } from './ShippingSpeedSelect'
 
 const validationSchema = validation({
@@ -21,9 +21,11 @@ export type RGAEntryFormSubmitHandler = (
   actions: FormikHelpers<IFormValues>
 ) => void
 
+const FormField = Input.Renderer<IFormValues>()
+
 export const CreateRgaView: React.FC = () => {
   const [createRga] = useCreateRgaMutation()
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const handleFormSubmit = async (
     values: IFormValues,
@@ -42,13 +44,13 @@ export const CreateRgaView: React.FC = () => {
     const rga =
       (result.data && result.data.response && result.data.response.rga) || null
     if (rga) {
-      history.push(`/medled/rga/${rga.id}`)
+      navigate(`/medled/rga/${rga.id}`)
     }
     return
   }
   return (
     <TextFormContent>
-      <p>
+      <p className="mb-4">
         This form is for commercial partners and resellers only. If you are a
         customer or end user please use our{' '}
         <Link to="/medled/service-request">service request</Link> form. If you
@@ -69,11 +71,11 @@ export const CreateRgaView: React.FC = () => {
               <Form.Form onSubmit={handleSubmit}>
                 <Form.Row>
                   <Form.RowItem size={Form.ItemSize.Long}>
-                    <Input.Field
+                    <FormField
                       name="email"
                       label="Email Address"
-                      placeholder="name@company.com"
                       required={true}
+                      type="text"
                     />
                   </Form.RowItem>
                   <Form.RowItem size={Form.ItemSize.Short}>

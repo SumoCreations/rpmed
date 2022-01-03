@@ -5,10 +5,7 @@ import { Box, Flex } from 'rebass'
 import { Dispatch } from 'redux'
 import { ICredentials, SessionActionTypes, updateSession } from '../../session'
 import { Card, Heading, Link } from 'rpmed-ui/lib/V1'
-import {
-  ForgotPasswordForm,
-  ForgotPasswordFormSubmitHandler,
-} from './ForgotPasswordForm'
+import { ForgotForm } from 'rpmed-ui'
 
 interface IProps {
   handleUpdatedCredentials: (creds: ICredentials) => SessionActionTypes
@@ -16,33 +13,7 @@ interface IProps {
 
 const View: React.FC<IProps> = () => {
   const [complete, setComplete] = useState(false)
-
-  const handleSubmit: ForgotPasswordFormSubmitHandler = async (
-    values,
-    formik
-  ) => {
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/auth/forgot`,
-        {
-          body: JSON.stringify({ email: values.email }),
-          method: 'POST',
-        }
-      )
-      const { errors } = await response.json()
-      if (errors && Object.keys(errors).length > 0) {
-        formik.setErrors(errors)
-        formik.setFieldError('_', Object.values(errors)[0] as string)
-        formik.setSubmitting(false)
-      } else {
-        setComplete(true)
-      }
-    } catch (e) {
-      formik.setFieldError('_', e.message)
-    }
-  }
-
-  console.log(process.env)
+  const [loading, setLoading] = useState(false)
 
   return (
     <React.Fragment>
@@ -55,7 +26,27 @@ const View: React.FC<IProps> = () => {
         </Flex>
       ) : (
         <React.Fragment>
-          <ForgotPasswordForm onSubmit={handleSubmit} />
+          <ForgotForm
+            onSubmit={async data => {
+              setLoading(true)
+              const response = await fetch(
+                `${process.env.REACT_APP_API_URL}/auth/forgot`,
+                {
+                  body: JSON.stringify({ email: data.email }),
+                  method: 'POST',
+                }
+              )
+              const { errors } = await response.json()
+              const error = Object.values(errors)[0]
+              if (error) {
+                return { error: Object.values(errors)[0] as string, errors }
+              }
+              setComplete(true)
+              setLoading(false)
+              return undefined
+            }}
+            loading={loading}
+          />
           <Card.CenteredSection as="section">
             <Box paddingTop={3}>
               <Link to="/login">Return to login.</Link>

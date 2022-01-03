@@ -38,7 +38,7 @@ const Results: React.FC<IResultProps> = ({
       productId,
       productType,
       search,
-    }
+    },
   })
   const modelNumbers = (data?.response?.modelNumbers ?? []) as ModelNumber[]
   return modelNumbers ? (
@@ -81,7 +81,7 @@ const Results: React.FC<IResultProps> = ({
   )
 }
 
-export const ModelNumberSelectField: React.FunctionComponent<IModelNumberSelectFieldProps> = props => {
+export const ModelNumberSelectField: React.FC<IModelNumberSelectFieldProps> = props => {
   return (
     <Input.FieldContainer margin={props.margin}>
       {props.label ? <Form.Label>{props.label}</Form.Label> : null}

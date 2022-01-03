@@ -1,18 +1,20 @@
-import { faArrowLeft } from '@fortawesome/pro-regular-svg-icons'
-import { faTimes } from '@fortawesome/pro-solid-svg-icons'
 import get from 'lodash.get'
 import React, { useState } from 'react'
 import { Flex } from 'rebass'
 import { ProductType, ValidationError, RgaGood } from 'rpmed-schema'
-import { Divider, Heading, IconButton, Indicators, Modal } from 'rpmed-ui'
-import { useCreateRgaGoodMutation, useUpdateRgaGoodMutation } from './graphql'
+import { Heading, Indicators } from 'rpmed-ui/lib/V1'
+import { Modal } from 'rpmed-ui'
+import {
+  useCreateRgaGoodMutation,
+  useUpdateRgaGoodMutation,
+} from 'rpmed-schema'
 import {
   FormSection,
   RGAGoodForm,
   RGAGoodFormSubmitHandler,
 } from './RGAGoodForm'
 
-export const CreateRGAGoodWidget: React.FunctionComponent<{
+export const CreateRGAGoodWidget: React.FC<{
   rgaId: string
   onDismiss?: () => void
   onSubmit?: () => void
@@ -91,25 +93,23 @@ export const CreateRGAGoodWidget: React.FunctionComponent<{
       2000
     )
   }
-  const handleBack = () => {
-    if (currentSection > 0) {
-      setCurrentSection(currentSection - 1)
-    }
-  }
+
+  const stages = [
+    'Model Info',
+    'Symptom Info',
+    'Warranty Info',
+    'Order Info',
+    'Customer Info',
+    'Shipping Info',
+  ]
 
   return (
-    <Modal.Dialog
-      size={Modal.Size.default}
-      onDismiss={handleDismiss || undefined}
+    <Modal
+      onClose={handleDismiss}
+      title={`${stages[currentSection]} (${currentSection + 1}/6)`}
+      open
     >
-      <Flex flexDirection="column" paddingTop={3}>
-        <Flex style={{ marginBottom: '1rem' }}>
-          {currentSection > 0 ? (
-            <IconButton icon={faArrowLeft} onClick={handleBack} />
-          ) : null}
-          <span style={{ display: 'flex', flexGrow: 1 }} />
-          <IconButton icon={faTimes} onClick={handleDismiss} />
-        </Flex>
+      <Flex flexDirection="column">
         {renderForm ? (
           <RGAGoodForm
             initialValues={{
@@ -147,6 +147,6 @@ export const CreateRGAGoodWidget: React.FunctionComponent<{
           </Heading.Section>
         )}
       </Flex>
-    </Modal.Dialog>
+    </Modal>
   )
 }

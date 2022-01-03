@@ -1,3 +1,1 @@
-import { ISessionState } from './types'
-
-export const isAuthenticated = (state: ISessionState) => state.isAuthenticated
+export const isAuthenticated = (state: any) => state.session.isAuthenticated

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Flex } from 'rebass'
 import * as Yup from 'yup'
 import { ModelNumber } from 'rpmed-schema'
-import { Form } from 'rpmed-ui'
+import { Form } from 'rpmed-ui/lib/V1'
 import * as Validation from '../../../validations'
 import { CustomerDetailsSection } from './CustomerDetailsSection'
 import { ModelNumberGrid } from './ModelNumberGrid'
@@ -27,7 +27,7 @@ const validationSchema = Yup.object({
   warrantied: Yup.boolean().required(),
 })
 
-export const RGAGoodForm: React.FunctionComponent<IRGAGoodFormProps> = ({
+export const RGAGoodForm: React.FC<IRGAGoodFormProps> = ({
   initialValues,
   initialSection,
   onSubmit,
@@ -106,6 +106,7 @@ export const RGAGoodForm: React.FunctionComponent<IRGAGoodFormProps> = ({
         }
 
         const handleSelectModel: ModelNumberSelectFn = m => {
+          console.log('SELECTED MODEL: ', m)
           setFieldValue('modelNumber', m.id)
           setFieldValue('lotted', m.lotted)
           setFieldValue('warrantyDescription', m.warrantyDescription)

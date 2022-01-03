@@ -1,21 +1,28 @@
 import { RGA } from '../../../../models'
-import { IRGAMutationOutput } from './rgaMutationTypes'
-import { MutationSubmitRgaForReviewArgs, RgaStatus } from '../../../../schema'
+import {
+  MutationSubmitRgaForReviewArgs,
+  RgaMutationOutput,
+  RgaStatus,
+} from 'rpmed-schema'
 import { ErrorRGAGoodCouldNotBeUpdated } from '../rgaErrors'
-
-type UpdateRGAMutation = (
-  context: any,
-  rgaInput: MutationSubmitRgaForReviewArgs
-) => Promise<IRGAMutationOutput>
+import {
+  generateAuthorizationError,
+  isAuthorized,
+  ServerContext,
+} from '../../../auth'
 
 /**
  * A GraphQL resolver that handles the 'UpdateRGA' mutation.
  */
-export const submitRGAForReview: UpdateRGAMutation = async (
+export const submitRGAForReview = async (
   _,
-  { id, notes }
-) => {
+  { id, notes }: MutationSubmitRgaForReviewArgs,
+  context: ServerContext
+): Promise<RgaMutationOutput> => {
   try {
+    if (!isAuthorized(context)) {
+      return generateAuthorizationError()
+    }
     console.log(`Attempting to find RGA with ID: ${id}`)
     const existing = await RGA.find(id)
     console.log(existing)

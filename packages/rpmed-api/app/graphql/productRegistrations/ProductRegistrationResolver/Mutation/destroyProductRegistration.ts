@@ -5,11 +5,19 @@ import {
   ErrorProductRegistrationWithIDDoesNotExist,
 } from '../productRegistrationErrors'
 import { IProductRegistrationMutationOutput } from './productRegistrationMutationTypes'
+import {
+  isAuthorizedUser,
+  ServerContext,
+  generateAuthorizationError,
+} from '../../../auth'
 
 export const destroyProductRegistration = async (
-  _: any,
+  context: ServerContext,
   { id }: { id: string }
 ): Promise<IProductRegistrationMutationOutput> => {
+  if (!isAuthorizedUser(context)) {
+    return generateAuthorizationError()
+  }
   const productRegistration = await ProductRegistration.find(id)
   if (!productRegistration) {
     return generateMutationError([ErrorProductRegistrationWithIDDoesNotExist])

@@ -2,7 +2,7 @@ import { faChevronLeft, faPencil } from '@fortawesome/pro-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
-import { RouteComponentProps } from 'react-router'
+
 import {
   ProductSymptom,
   AttachedImage,
@@ -25,10 +25,7 @@ import {
 import { ModelNumbersMap, ModelSelectHandlerFn } from './ModelNumbersMap'
 import { AssociatedPhotos } from './AssociatedPhotosView'
 import { FilePreview } from 'rpmed-ui'
-
-interface IProductSymptomRouterProps {
-  productSymptomId: string
-}
+import { useNavigate, useParams } from 'react-router-dom'
 
 /**
  * Converts a file preview from the file drop component into a type
@@ -190,18 +187,16 @@ const SymptomPhotoList: React.FC<ISymptomPhotoListProps> = ({
  * The primary summary view for a product symptom.
  * @param param0 The props for the view.
  */
-const View: React.FunctionComponent<RouteComponentProps<
-  IProductSymptomRouterProps
->> = ({ history, match }) => {
+const View: React.FC = () => {
+  const { productSymptomId = '' } = useParams()
   const { loading, data } = useProductSymptomQuery({
-    variables: { productSymptomId: match.params.productSymptomId ?? '' },
+    variables: { productSymptomId },
   })
+  const navigate = useNavigate()
   const productSymptom = data?.response.productSymptom
-  const handleBack = () => history.push('/admin/products/symptoms')
+  const handleBack = () => navigate('/admin/products/symptoms')
   const onClickEdit = () =>
-    history.push(
-      `/admin/products/symptoms/edit/${match.params.productSymptomId}`
-    )
+    navigate(`/admin/products/symptoms/edit/${productSymptomId}`)
 
   return (
     <Layout.Layout>
@@ -243,7 +238,7 @@ const View: React.FunctionComponent<RouteComponentProps<
                   ? productSymptom.associatedModelNumbers
                   : []) as string[]
               }
-              productSymptomId={match.params.productSymptomId}
+              productSymptomId={productSymptomId}
             />
           </Grid.Col>
         </Grid.Row>
@@ -252,7 +247,7 @@ const View: React.FunctionComponent<RouteComponentProps<
             <Divider.Light />
           </Grid.Col>
         </Grid.Row>
-        <SymptomPhotoList productSymptomId={match.params.productSymptomId} />
+        <SymptomPhotoList productSymptomId={productSymptomId} />
       </Content>
     </Layout.Layout>
   )

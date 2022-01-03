@@ -1,15 +1,18 @@
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
-import { BreadCrumb, ContentMainHeading, GridNav, View } from 'rpmed-ui'
+import { ContentMainHeading, GridNav, View } from 'rpmed-ui/lib/V1'
 import ProductGrid from './ProductGrid'
 import { IProductOption } from './products'
 import SymptomList from './SymptomList'
+import { useParams } from 'react-router-dom'
+import { BreadCrumbFromPage } from '../../pages'
 
 const { useState } = React
 
-const TroubleshootingView: React.FunctionComponent<{}> = () => {
+const TroubleshootingView: React.FC<{}> = () => {
   const [product, setProduct] = useState('')
   const [symptoms, setSymptoms] = useState([''])
+  const { slug = '' } = useParams<{ slug: string }>()
 
   const handleProductSelect = (selectedProduct: IProductOption) => {
     setProduct(selectedProduct.name)
@@ -35,11 +38,10 @@ const TroubleshootingView: React.FunctionComponent<{}> = () => {
         <meta charSet="utf-8" />
         <title>MedLED® Troubleshooting - Riverpoint Medical</title>
       </Helmet>
-      <BreadCrumb.Container>
-        <BreadCrumb.Link to="/medled/troubleshooting" primary={true}>
-          Troubleshooting
-        </BreadCrumb.Link>
-      </BreadCrumb.Container>
+      <BreadCrumbFromPage
+        slug={slug}
+        trail={[{ label: 'Troubleshooting', to: `/${slug}/troubleshooting` }]}
+      />
       <ContentMainHeading>MedLED® Troubleshooting</ContentMainHeading>
       <GridNav.SectionTitle>Choose Your Product</GridNav.SectionTitle>
       <ProductGrid

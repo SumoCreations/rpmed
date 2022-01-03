@@ -1,16 +1,19 @@
 import React from 'react'
 import { Flex } from 'rebass'
-import { Form, Divider, GridNav, Heading, Input } from 'rpmed-ui'
+import { Form, Input } from 'rpmed-ui/lib/V1'
 import { ModelNumber, Product } from 'rpmed-schema'
 import { ModelNumberSelectFn } from './ModelNumberSelectField'
 import { ProductSelectField, ProductSelectFn } from './ProductSelectField'
 import { IInteractiveSection } from './types'
-import { useModelNumbersQuery, useProductsQuery } from '../graphql'
+import { useModelNumbersQuery, useProductsQuery } from 'rpmed-schema'
+import { ItemList } from './ItemList'
 
 interface IModelNumberGridProps extends IInteractiveSection {
   onSelectProduct: ProductSelectFn
   onSelectModel: ModelNumberSelectFn
 }
+
+const FormField = Input.Renderer<{ serial?: string }>()
 
 /**
  * Presents a simple drill down for gathering the model number details
@@ -50,12 +53,11 @@ export const ModelNumberGrid: React.FC<IModelNumberGridProps> = ({
   })
   const modelNumbers = modelData?.response?.modelNumbers ?? []
 
-  const handleSelectModelClick = (
-    modelNumber?: ModelNumber
-  ): React.MouseEventHandler => e => {
-    e.preventDefault()
-    handleSelectModel(modelNumber as ModelNumber)
+  const handleSelectItem = (id?: string) => {
+    const model = modelNumbers.find(m => m?.id === id)
+    handleSelectModel(model as ModelNumber)
   }
+
   const handleDoesNotKnow = (e: React.MouseEvent) => {
     const unavailableProduct = products.find(
       (p: any) => p?.name.toLowerCase() === 'unknown'
@@ -64,11 +66,9 @@ export const ModelNumberGrid: React.FC<IModelNumberGridProps> = ({
     handleSelectModel(unknownModel[0] as ModelNumber)
     handleSubmit?.(e)
   }
-
+  console.log(values)
   return (
     <Flex flexDirection="column" width={1}>
-      <Heading.Section>Model Info (1/6)</Heading.Section>
-      <Divider.Light />
       <Flex flexDirection={['column', 'row']}>
         <ProductSelectField
           onDismiss={handleDismiss?.('productId')}
@@ -80,40 +80,19 @@ export const ModelNumberGrid: React.FC<IModelNumberGridProps> = ({
         />
       </Flex>
       {values.productId ? (
-        <GridNav.Container>
-          {modelNumbers.map((modelNumber, id) => {
-            return (
-              <GridNav.Item
-                key={`${modelNumber}Item${id}`}
-                selected={modelNumber?.id === values.modelNumber}
-              >
-                <GridNav.OverlayButton
-                  onClick={handleSelectModelClick(modelNumber as ModelNumber)}
-                />
-                <GridNav.ItemContent>
-                  <GridNav.ItemTitle>
-                    <GridNav.ItemLink to="/troubleshoot">
-                      {modelNumber?.id}
-                    </GridNav.ItemLink>
-                  </GridNav.ItemTitle>
-                  <GridNav.ItemDescription>
-                    {modelNumber?.description}
-                  </GridNav.ItemDescription>
-                </GridNav.ItemContent>
-              </GridNav.Item>
-            )
-          })}
-        </GridNav.Container>
+        <ItemList
+          onSelect={handleSelectItem}
+          items={modelNumbers.map(m => ({
+            id: m?.id ?? 'n/a',
+            selected: m?.id === values.modelNumber,
+            title: m?.id ?? 'n/a',
+            description: m?.description ?? '...',
+          }))}
+        />
       ) : null}
       {values.lotted ? (
         <Flex marginBottom="auto" width={[1]}>
-          <Input.Field
-            name="serial"
-            label="Serial Number"
-            placeholder="i.e. 'MC-161000-000000'"
-            type="text"
-            required={true}
-          />
+          <FormField name="serial" label="Serial Number" required={true} />
         </Flex>
       ) : null}
       <Flex marginTop={2}>

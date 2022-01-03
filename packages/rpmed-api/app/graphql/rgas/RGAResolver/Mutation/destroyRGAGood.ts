@@ -1,18 +1,31 @@
+import { RgaGoodMutationOutput, RgaStatus } from 'rpmed-schema'
 import { RGA, RGAGood } from '../../../../models'
+import {
+  ServerContext,
+  isAuthorized,
+  generateAuthorizationError,
+  isAuthorizedUser,
+} from '../../../auth'
 import {
   ErrorRGAGoodCouldNotBeDestroyed,
   ErrorRGAGoodWithIDDoesNotExist,
   ErrorRGAWithIDDoesNotExist,
 } from '../rgaErrors'
-import { IRGAGoodMutationOutput } from './rgaMutationTypes'
 
 export const destroyRGAGood = async (
-  _: any,
-  { rgaId, id }: { rgaId: string; id: string }
-): Promise<IRGAGoodMutationOutput> => {
+  _,
+  { rgaId, id }: { rgaId: string; id: string },
+  context: ServerContext
+): Promise<RgaGoodMutationOutput> => {
+  if (!isAuthorized(context)) {
+    return generateAuthorizationError()
+  }
   const rga = await RGA.find(rgaId)
   if (!rga) {
     return { success: false, errors: [ErrorRGAWithIDDoesNotExist] }
+  }
+  if (rga.status !== RgaStatus.Issued && !isAuthorizedUser(context)) {
+    return generateAuthorizationError()
   }
   const rgaGood = await RGAGood.find(rgaId, id)
   if (!rgaGood) {

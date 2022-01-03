@@ -3,15 +3,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import get from 'lodash.get'
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
-import { RouteComponentProps } from 'react-router'
+import { useNavigate } from 'react-router-dom'
 import { ErrorList } from 'rpmed-validation-schema'
 import { Actions, Card, Content, Layout, Toolbar } from 'rpmed-ui/lib/V1'
 import { useCreateUserMutation } from 'rpmed-schema'
 import { UserForm, UserFormSubmitHandler } from './UserForm'
 
-export const UserCreateView: React.FC<RouteComponentProps> = ({ history }) => {
+export const UserCreateView: React.FC = () => {
+  const navigate = useNavigate()
   const [createUser] = useCreateUserMutation()
-  const handleBack = () => history.push('/admin/controls/users')
+  const handleBack = () => navigate('/admin/controls/users')
   const handleSubmit: UserFormSubmitHandler = async (values, actions) => {
     const result = await createUser({
       variables: {
@@ -31,7 +32,7 @@ export const UserCreateView: React.FC<RouteComponentProps> = ({ history }) => {
       })
       return
     }
-    history.push('/admin/controls/users')
+    navigate('/admin/controls/users')
   }
   return (
     <Layout.Layout>

@@ -5,11 +5,9 @@ import {
   faTrash,
 } from '@fortawesome/pro-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { History } from 'history'
 import qs from 'query-string'
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
-import { RouteComponentProps } from 'react-router'
 import { Link } from 'react-router-dom'
 import {
   Actions,
@@ -23,14 +21,11 @@ import {
 } from 'rpmed-ui/lib/V1'
 import { DestroyDistributorButton } from './DestroyDistributorButton'
 import { Distributor, useDistributorsQuery } from 'rpmed-schema'
+import { useNavigate } from 'react-router-dom'
 
 const { useState } = React
 
-const sendTo = (p: { history: History; url: string }) => () =>
-  p.history.push(p.url)
-
 interface IDistributorProps {
-  history: History
   onDelete: (product: Distributor) => void
   filterText: string
   loading?: boolean
@@ -38,14 +33,16 @@ interface IDistributorProps {
   error: any
 }
 
-const Distributors: React.FunctionComponent<IDistributorProps> = ({
-  history,
+const Distributors: React.FC<IDistributorProps> = ({
   onDelete,
   filterText,
   loading,
   distributors,
   error,
 }) => {
+  const navigate = useNavigate()
+  const sendTo = (p: { url: string }) => () => navigate(p.url)
+
   if (loading) {
     return <p>Loading...</p>
   }
@@ -72,14 +69,11 @@ const Distributors: React.FunctionComponent<IDistributorProps> = ({
     p.domain,
     p.id,
     <Actions.Group key={`actions${p.id}`}>
-      <Actions.Primary
-        onClick={sendTo({ history, url: `/admin/distributors/${p.id}` })}
-      >
+      <Actions.Primary onClick={sendTo({ url: `/admin/distributors/${p.id}` })}>
         <FontAwesomeIcon icon={faPencil} />
       </Actions.Primary>
       <Actions.Primary
         onClick={sendTo({
-          history,
           url: `/admin/distributors/new?${qs.stringify({ ...p })}`,
         })}
       >
@@ -102,9 +96,8 @@ const Distributors: React.FunctionComponent<IDistributorProps> = ({
   )
 }
 
-export const DistributorListView: React.FC<RouteComponentProps<{}>> = ({
-  history,
-}) => {
+export const DistributorListView: React.FC = () => {
+  const navigate = useNavigate()
   const { loading, error, data, refetch } = useDistributorsQuery()
   const distributors = (data?.response.distributors ?? []) as Distributor[]
   const [productToDelete, setDistributorToDelete] = useState(
@@ -113,7 +106,7 @@ export const DistributorListView: React.FC<RouteComponentProps<{}>> = ({
   const [searchText, setSearchText] = useState('')
   const confirmDistributorToDelete = (product: Distributor) =>
     setDistributorToDelete(product)
-  const onClickNew = () => history.push('/admin/distributors/new')
+  const onClickNew = () => navigate('/admin/distributors/new')
   const onSearchChange: React.ChangeEventHandler = event =>
     setSearchText((event.target as HTMLInputElement).value)
   return (
@@ -138,7 +131,6 @@ export const DistributorListView: React.FC<RouteComponentProps<{}>> = ({
         </Toolbar.View>
         <Card.Flat>
           <Distributors
-            history={history}
             onDelete={confirmDistributorToDelete}
             filterText={searchText}
             loading={loading}

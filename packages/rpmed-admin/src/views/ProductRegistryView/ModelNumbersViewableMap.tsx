@@ -1,7 +1,7 @@
 import { faPlus, faSync } from '@fortawesome/pro-solid-svg-icons'
 import React from 'react'
 import { Helmet } from 'react-helmet'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Card, Content, Layout, Toolbar } from 'rpmed-ui/lib/V1'
 import {
   useModelNumbersViewableQuery,
@@ -10,7 +10,7 @@ import {
 import { ModelNumbersMap, ModelSelectHandlerFn } from '../ProductSymptomsView'
 
 export const ModelNumbersViewableMap: React.FC = () => {
-  const history = useHistory()
+  const navigate = useNavigate()
   const {
     loading,
     error,
@@ -24,7 +24,7 @@ export const ModelNumbersViewableMap: React.FC = () => {
   const viewableModels = data?.response?.modelNumbers ?? []
   const networkActive = loading || networkStatus === 4
   const handleRefresh = () => refetch()
-  const onClickNew = () => history.push('/admin/products/modelNumbers/new')
+  const onClickNew = () => navigate('/admin/products/modelNumbers/new')
   const [updateLotted] = useUpdateModelNumberViewableMutation()
   const handleSelectModel: ModelSelectHandlerFn = async ({
     modelNumber,

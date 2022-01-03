@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import qs from 'query-string'
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
-import { RouteComponentProps } from 'react-router'
+
 import { ValidationError } from 'rpmed-schema'
 import {
   Actions,
@@ -16,11 +16,14 @@ import {
 } from 'rpmed-ui/lib/V1'
 import { useCreateRGA } from './graphql'
 import { RGAForm, RGAFormSubmitHandler } from './RGAForm'
+import { useNavigate } from 'react-router-dom'
+
 const defaultSubmittedOn = new Date().toISOString()
 
-export const RGACreateView: React.FC<RouteComponentProps> = ({ history }) => {
+export const RGACreateView: React.FC = () => {
+  const navigate = useNavigate()
   const createRGA = useCreateRGA()
-  const handleBack = () => history.push('/admin/rga')
+  const handleBack = () => navigate('/admin/rga')
   const defaultValues = qs.parse(window.location.search)
   const handleSubmit: RGAFormSubmitHandler = async (values, actions) => {
     const result = await createRGA({
@@ -43,12 +46,12 @@ export const RGACreateView: React.FC<RouteComponentProps> = ({ history }) => {
       []) as ValidationError[]
     if (formErrors.length > 0) {
       formErrors.forEach(({ path, message }) => {
-        actions.setFieldError((path as any), message)
+        actions.setFieldError(path as any, message)
       })
       return
     }
     if (rga) {
-      history.push(`/admin/rga/${rga.status}/${rga.id}`)
+      navigate(`/admin/rga/${rga.status}/${rga.id}`)
     }
   }
   return (

@@ -4,16 +4,15 @@ import get from 'lodash.get'
 import qs from 'query-string'
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
-import { RouteComponentProps } from 'react-router'
+import { useNavigate } from 'react-router-dom'
 import { ErrorList } from 'rpmed-validation-schema'
 import { Actions, Card, Content, Layout, Toolbar } from 'rpmed-ui/lib/V1'
 import { useCreateProductMutation } from 'rpmed-schema'
 import { ProductForm, ProductFormSubmitHandler } from './ProductForm'
 
-export const ProductCreateView: React.FC<RouteComponentProps> = ({
-  history,
-}) => {
-  const handleBack = () => history.push('/admin/products')
+export const ProductCreateView: React.FC = () => {
+  const navigate = useNavigate()
+  const handleBack = () => navigate('/admin/products')
   const defaultValues = qs.parse(window.location.search)
   const [createProduct] = useCreateProductMutation()
   const handleSubmit: ProductFormSubmitHandler = async (values, actions) => {
@@ -33,7 +32,7 @@ export const ProductCreateView: React.FC<RouteComponentProps> = ({
       })
       return
     }
-    history.push('/admin/products')
+    navigate('/admin/products')
   }
   return (
     <Layout.Layout>

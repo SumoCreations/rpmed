@@ -3,7 +3,7 @@ import { useDestroyProductSymptomMutation } from 'rpmed-schema'
 
 type DestroyClickHandler = () => Promise<any>
 
-export const DestroyProductSymptomButton: React.FunctionComponent<{
+export const DestroyProductSymptomButton: React.FC<{
   id: string
   children: (onClick: DestroyClickHandler) => JSX.Element
 }> = ({ id, children }) => {

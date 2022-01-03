@@ -47,7 +47,7 @@ const CustomerList: React.FC<ICustomerListProps> = ({
   )
 }
 
-export const CustomerSelectField: React.FunctionComponent<ICustomerSelectProps> = props => {
+export const CustomerSelectField: React.FC<ICustomerSelectProps> = props => {
   return (
     <Input.FieldContainer>
       <Form.Label>{props.placeholder}</Form.Label>

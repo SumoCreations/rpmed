@@ -1,59 +1,41 @@
+import clsx from 'clsx'
 import * as React from 'react'
-import styled from '../styled-components'
 
-const ButtonGroupContainer = styled.ul`
-  display: flex;
-  flex-direction: row;
-  margin: 0;
-  padding: 0;
-  flex-grow: 1;
-`
-
-const ButtonGroupItem = styled.li`
-  list-style: none;
-  display: flex;
-  flex-grow: 1;
-  padding: 0;
-  margin: 0;
-
-  & + & {
-    margin-left: 0.5rem;
-  }
-`
-
-export const ButtonGroup: React.FunctionComponent<{}> = ({ children }) => (
-  <ButtonGroupContainer>
-    {React.Children.map(children, c => (
-      <ButtonGroupItem>{c} </ButtonGroupItem>
+export const ButtonGroup: React.FC<{}> = ({ children }) => (
+  <ul className="flex flex-grow">
+    {React.Children.map(children, (c) => (
+      <li className="ml-2 first:ml-0 flex">{c} </li>
     ))}
-  </ButtonGroupContainer>
+  </ul>
 )
 
-export const Button = styled.button<{ destructive?: boolean }>`
-  background: ${p =>
-    p.destructive
-      ? p.theme.colorButtonDestructive
-      : p.theme.colorButtonPrimary};
-  border-radius: ${p => p.theme.borderRadius};
-  border: 0;
-  font-family: ${p => p.theme.fontFamilyBody};
-  font-weight: bold;
-  color: ${p => p.theme.colorNavigationTextPrimary};
-  text-align: center;
-  width: auto;
-  font-size: ${p => p.theme.inputTextSize};
-  padding: ${p => p.theme.buttonPadding};
-  flex-grow: 1;
-  display: flex;
-  align-items: center;
-  width: 100%;
+interface Props {
+  destructive?: boolean
+  disabled?: boolean
+}
 
-  & > span {
-    display: block;
-    margin: auto;
-  }
+export type ButtonProps = Props & React.HTMLProps<HTMLButtonElement>
 
-  &:disabled {
-    opacity: 0.5;
-  }
-`
+const BUTTON_STYLES =
+  'rounded font-bold font-body text-white w-full text-center flex flex-grow align-center justify-center p-2'
+
+export const Button: React.FC<ButtonProps> = ({
+  children,
+  destructive,
+  disabled,
+  ...props
+}) => (
+  <button
+    {...(props as any)}
+    disabled={disabled}
+    className={clsx(
+      destructive ? 'bg-destructive' : 'bg-button',
+      disabled && 'opacity-50 disabled',
+      BUTTON_STYLES
+    )}
+  >
+    {React.Children.map(children, (child) => (
+      <span className="block m-auto">{child}</span>
+    ))}
+  </button>
+)

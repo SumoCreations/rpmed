@@ -1,4 +1,3 @@
-import { History } from 'history'
 import * as React from 'react'
 
 interface IModalStateFnParams {
@@ -17,15 +16,15 @@ interface IModalSwitchProps {
 export class ModalState extends React.Component<IModalSwitchProps> {
   private previousLocation = this.props.location
 
-  public componentWillUpdate(nextProps: IModalSwitchProps) {
-    const { location } = this.props
-    if (
-      nextProps.history.action !== 'POP' &&
-      (!location.state || !location.state.modal)
-    ) {
-      this.previousLocation = this.props.location
-    }
-  }
+  // public componentWillUpdate(nextProps: IModalSwitchProps) {
+  //   const { location } = this.props
+  //   if (
+  //     nextProps.history.action !== 'POP' &&
+  //     (!location.state || !location.state.modal)
+  //   ) {
+  //     this.previousLocation = this.props.location
+  //   }
+  // }
 
   public render() {
     const { location, children } = this.props

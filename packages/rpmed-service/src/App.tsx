@@ -1,84 +1,65 @@
-import { ApolloProvider } from '@apollo/react-hooks'
+import { ApolloProvider } from '@apollo/client'
 import React, { Component } from 'react'
 import { Helmet } from 'react-helmet'
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import { client } from './apolloClient'
 import { ContactView } from './contact'
-import {
-  HomeView,
-  MedledHomeView,
-  SurgicalHomeView,
-  OncologyHomeView,
-  SutureHomeView,
-} from './home'
+import { PageView, PageNotFoundView } from './pages'
 import * as MedLED from './medled'
-import { Content, defaultTheme, Header, Layout, ThemeProvider } from './ui'
-import { DownloadView, DownloadsView } from './downloads'
+import { defaultTheme, Header, ThemeProvider } from 'rpmed-ui/lib/V1'
+import { DownloadView } from './downloads'
 
 class App extends Component<{}, {}, any> {
   public render() {
     return (
       <ApolloProvider client={client}>
         <ThemeProvider theme={defaultTheme}>
-          <Layout>
+          <div className="flex min-h-screen flex-col flex-grow w-full bg-secondary">
             <Helmet>
               <meta charSet="utf-8" />
               <title>Resource Center - Riverpoint Medical</title>
             </Helmet>
             <Header.Primary />
             <Router>
-              <Content>
-                <Route path="/" exact={true} component={HomeView} />
-                <Route path="/medled" exact={true} component={MedledHomeView} />
-                <Route
-                  path="/surgical"
-                  exact={true}
-                  component={SurgicalHomeView}
-                />
-                <Route path="/suture" exact={true} component={SutureHomeView} />
-                <Route
-                  path="/oncology"
-                  exact={true}
-                  component={OncologyHomeView}
-                />
-                <Route
-                  path="/downloads/:category"
-                  component={DownloadsView}
-                  exact={true}
-                />
-                <Route
-                  path="/d/:downloadId"
-                  component={DownloadView}
-                  exact={true}
-                />
-                <Route
-                  path="/d/:category/:downloadId"
-                  exact={true}
-                  component={DownloadView}
-                />
-                <Route
-                  path="/medled/batteries/"
-                  component={MedLED.BatteryView}
-                />
-                <Route
-                  path="/medled/service-request/"
-                  component={MedLED.ServiceView}
-                />
-                <Route
-                  path="/medled/register/"
-                  component={MedLED.RegisterView}
-                />
-                <Route path="/medled/mission/" component={MedLED.MissionView} />
-                <Route path="/medled/quote/" component={MedLED.QuoteView} />
-                <Route path="/medled/rga/" component={MedLED.RGAView} />
-                <Route
-                  path="/medled/troubleshooting/"
-                  component={MedLED.TroubleshootingView}
-                />
-                <Route path="/contact/" component={ContactView} />
-              </Content>
+              <div
+                className="flex mx-auto w-full py-2 px-4 md:px-8"
+                style={{ maxWidth: '1170px' }}
+              >
+                <Routes>
+                  <Route path="/" element={<PageView />} />
+                  <Route path="/:slug" element={<PageView />} />
+                  <Route
+                    path="/:slug/d/:downloadId/*"
+                    element={<DownloadView />}
+                  />
+                  <Route
+                    path="/:slug/batteries/*"
+                    element={<MedLED.BatteryView />}
+                  />
+                  <Route
+                    path="/:slug/service-request/*"
+                    element={<MedLED.ServiceView />}
+                  />
+                  <Route
+                    path="/:slug/register/*"
+                    element={<MedLED.RegisterView />}
+                  />
+                  <Route
+                    path="/:slug/mission/*"
+                    element={<MedLED.MissionView />}
+                  />
+                  <Route path="/:slug/quote/*" element={<MedLED.QuoteView />} />
+                  <Route path="/:slug/rga/*" element={<MedLED.RGAView />} />
+                  <Route
+                    path="/:slug/troubleshooting/"
+                    element={<MedLED.TroubleshootingView />}
+                  />
+                  <Route path="/:slug/contact/" element={<ContactView />} />
+                  <Route element={<PageNotFoundView />} />
+                </Routes>
+              </div>
             </Router>
-          </Layout>
+          </div>
         </ThemeProvider>
       </ApolloProvider>
     )

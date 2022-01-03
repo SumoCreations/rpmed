@@ -4,7 +4,7 @@ import get from 'lodash.get'
 import qs from 'query-string'
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
-import { RouteComponentProps } from 'react-router'
+import { useNavigate } from 'react-router-dom'
 import { ErrorList } from 'rpmed-validation-schema'
 import { Actions, Card, Content, Layout, Toolbar } from 'rpmed-ui/lib/V1'
 import { useCreateProductSymptomMutation } from 'rpmed-schema'
@@ -13,11 +13,10 @@ import {
   ProductSymptomFormSubmitHandler,
 } from './ProductSymptomForm'
 
-export const ProductSymptomCreateView: React.FC<RouteComponentProps> = ({
-  history,
-}) => {
+export const ProductSymptomCreateView: React.FC = () => {
+  const navigate = useNavigate()
   const [createProductSymptom] = useCreateProductSymptomMutation()
-  const handleBack = () => history.push('/admin/products/symptoms')
+  const handleBack = () => navigate('/admin/products/symptoms')
   const handleSubmit: ProductSymptomFormSubmitHandler = async (
     values,
     actions
@@ -43,7 +42,7 @@ export const ProductSymptomCreateView: React.FC<RouteComponentProps> = ({
       })
       return
     }
-    history.push('/admin/products/symptoms')
+    navigate('/admin/products/symptoms')
   }
   const defaultValues = qs.parse(window.location.search)
   return (

@@ -2,7 +2,7 @@ import { faChevronLeft } from '@fortawesome/pro-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
-import { RouteComponentProps } from 'react-router'
+
 import { ValidationError } from 'rpmed-schema'
 import {
   Actions,
@@ -20,22 +20,19 @@ import {
   ProductSymptomForm,
   ProductSymptomFormSubmitHandler,
 } from './ProductSymptomForm'
+import { useNavigate, useParams } from 'react-router-dom'
 
-interface IProductSymptomRouterProps {
-  productSymptomId: string
-}
-
-const View: React.FunctionComponent<RouteComponentProps<
-  IProductSymptomRouterProps
->> = ({ history, match }) => {
-  const symptomId = match.params.productSymptomId
+const View: React.FC = () => {
+  const navigate = useNavigate()
+  const { productSymptomId = '' } = useParams()
   const [updateProductSymptom] = useUpdateProductSymptomMutation()
   const { loading, data } = useProductSymptomQuery({
-    variables: { productSymptomId: symptomId },
+    variables: { productSymptomId },
   })
   const productSymptom = data?.response.productSymptom
 
-  const handleBack = () => history.push(`/admin/products/symptoms/${symptomId}`)
+  const handleBack = () =>
+    navigate(`/admin/products/symptoms/${productSymptomId}`)
 
   const handleSubmit: ProductSymptomFormSubmitHandler = async (
     values,
@@ -47,7 +44,7 @@ const View: React.FunctionComponent<RouteComponentProps<
           careTip: values.careTip || '',
           faultCode: values.faultCode || '',
           fee: values.fee || false,
-          id: symptomId,
+          id: productSymptomId,
           name: values.name || '',
           preApproved: values.preApproved || false,
           solution: values.solution || '',
@@ -67,7 +64,7 @@ const View: React.FunctionComponent<RouteComponentProps<
       })
       return
     }
-    history.push(`/admin/products/symptoms/${symptomId}`)
+    navigate(`/admin/products/symptoms/${productSymptomId}`)
   }
 
   return (

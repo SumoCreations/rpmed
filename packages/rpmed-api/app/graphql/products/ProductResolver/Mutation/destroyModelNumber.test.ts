@@ -4,7 +4,7 @@ import {
   ModelNumber,
   Product,
 } from '../../../../models'
-import { ProductType } from '../../../../schema'
+import { ProductType } from 'rpmed-schema'
 import { destroyModelNumber } from './destroyModelNumber'
 
 const sampleParams = {

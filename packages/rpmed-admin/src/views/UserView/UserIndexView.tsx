@@ -6,10 +6,8 @@ import {
 } from '@fortawesome/pro-solid-svg-icons'
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
-import { Route, RouteComponentProps, Switch } from 'react-router'
+import { Route, Routes, useNavigate, useLocation } from 'react-router-dom'
 import { SecondaryNav } from 'rpmed-ui/lib/V1'
-import { ModalState } from '../Modal'
-
 import { UserCreateView } from './UserCreateView'
 import { UserDetailView } from './UserDetailView'
 import { UserListView } from './UserListView'
@@ -17,11 +15,9 @@ import { UserListView } from './UserListView'
 const checkPath = (path: string, test: string): boolean =>
   path.indexOf(test) > 0
 
-const View: React.FC<RouteComponentProps<{}>> = ({
-  match,
-  history,
-  location,
-}) => {
+const View: React.FC = () => {
+  const location = useLocation()
+  const navigate = useNavigate()
   return (
     <SecondaryNav.View
       icon={faUsers}
@@ -31,7 +27,7 @@ const View: React.FC<RouteComponentProps<{}>> = ({
           icon: faArrowLeft,
           label: 'Control Panel',
           onClick: () => {
-            history.push('/admin/controls/')
+            navigate('/admin/controls/')
           },
           selected: false,
         },
@@ -39,48 +35,29 @@ const View: React.FC<RouteComponentProps<{}>> = ({
           icon: faAddressBook,
           label: 'User Directory',
           onClick: () => {
-            history.push('/admin/controls/users/')
+            navigate('/admin/controls/users/')
           },
-          selected: match.isExact,
+          selected: location.pathname === '/admin/controls/users/',
         },
         {
           icon: faPlusCircle,
           label: 'Create User',
           onClick: () => {
-            history.push('/admin/controls/users/new')
+            navigate('/admin/controls/users/new')
           },
           selected: checkPath(location.pathname, 'new'),
         },
       ]}
     >
       <Helmet title="Users - RPMed Service Admin" />
-      <ModalState location={location} history={history}>
-        {mState => (
-          <React.Fragment>
-            <Switch location={mState.location}>
-              <Route
-                path="/admin/controls/users/"
-                component={UserListView}
-                exact={true}
-              />
-              <Route
-                path="/admin/controls/users/new"
-                component={UserCreateView}
-              />
-              <Route
-                path="/admin/controls/users/:userId"
-                component={UserDetailView}
-              />
-            </Switch>
-            {mState.isModal ? (
-              <Route
-                path="/admin/controls/users/:userId"
-                component={UserDetailView}
-              />
-            ) : null}
-          </React.Fragment>
-        )}
-      </ModalState>
+      <Routes>
+        <Route path="/admin/controls/users/" element={<UserListView />} />
+        <Route path="/admin/controls/users/new" element={<UserCreateView />} />
+        <Route
+          path="/admin/controls/users/:userId"
+          element={<UserDetailView />}
+        />
+      </Routes>
     </SecondaryNav.View>
   )
 }

@@ -1,22 +1,18 @@
 import jwtDecode from 'jwt-decode'
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
-import { useHistory, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Box, Flex } from 'rebass'
 import { ICredentials, updateSession } from '../../session'
 import { Form, Heading, Indicators, Para } from 'rpmed-ui/lib/V1'
-
-interface IParams {
-  token?: string
-}
 
 interface IProps {
   updateCredentials: (creds: ICredentials) => void
 }
 
 const TokenViewComponent: React.FC<IProps> = ({ updateCredentials }) => {
-  const history = useHistory()
-  const params = useParams<IParams>()
+  const navigate = useNavigate()
+  const params = useParams()
   const [error, setError] = useState('')
   useEffect(() => {
     if (params.token) {
@@ -28,7 +24,7 @@ const TokenViewComponent: React.FC<IProps> = ({ updateCredentials }) => {
           accessToken: params.token,
           refreshToken: 'invalid',
         })
-        history.replace(redirectPath)
+        navigate(redirectPath, { replace: true })
         return
       } catch (e) {
         // tslint:disable-next-line
@@ -36,8 +32,8 @@ const TokenViewComponent: React.FC<IProps> = ({ updateCredentials }) => {
       }
       setError('This access token link is invalid or may have expired.')
     }
-  }, [params.token, history, updateCredentials])
-  const returnHome = () => history.replace('/')
+  }, [params.token, navigate, updateCredentials])
+  const returnHome = () => navigate('/', { replace: true })
   return (
     <Flex flexDirection="column" margin="auto" style={{ maxWidth: '468px' }}>
       {error.length > 0 ? (

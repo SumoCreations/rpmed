@@ -2,8 +2,8 @@ import { ErrorMessage } from 'formik'
 import * as React from 'react'
 import { Box, Flex } from 'rebass'
 import { ProductSymptom } from 'rpmed-schema'
-import { Form, Indicators, Input } from 'rpmed-ui'
-import { useProductSymptomsQuery } from '../graphql'
+import { Form, Indicators, Input } from 'rpmed-ui/lib/V1'
+import { useProductSymptomsQuery } from 'rpmed-schema'
 
 export type ProductSymptomSelectFn = (p: ProductSymptom) => void
 
@@ -72,7 +72,7 @@ const SymptomResultListView: React.FC<ISymptomResultListProps> = ({
   )
 }
 
-export const ProductSymptomSelectField: React.FunctionComponent<IProductSymptomSelectProps> = props => {
+export const ProductSymptomSelectField: React.FC<IProductSymptomSelectProps> = props => {
   return (
     <Input.FieldContainer>
       <Form.Label>{props.placeholder}</Form.Label>

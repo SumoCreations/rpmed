@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Formik, FormikHelpers } from 'formik'
 import get from 'lodash.get'
 import React from 'react'
-import { RouteComponentProps } from 'react-router'
+
 import { Box, Flex, Text } from 'rebass'
 import { RequiredEmail } from 'rpmed-validation-schema'
 import * as Yup from 'yup'
@@ -33,11 +33,7 @@ import {
 } from 'rpmed-ui/lib/V1'
 import { useRGA, useUpdateShippingStatus } from './graphql'
 import { RGAStatusWidget } from './RGAStatusWidget'
-
-interface IRGARouterProps {
-  rgaId: string
-  status: RgaStatus
-}
+import { useNavigate, useParams } from 'react-router'
 
 interface IRGAUpdateStatusFormValues {
   status: RgaStatus
@@ -76,10 +72,11 @@ const validationSchema = Yup.object().shape({
 
 const FormField = Input.Renderer<IRGAUpdateStatusFormValues>()
 
-export const RGAShippingUpdateView: React.FC<RouteComponentProps<
-  IRGARouterProps
->> = ({ history, match }) => {
-  const { loading, rga } = useRGA(match.params.rgaId)
+export const RGAShippingUpdateView: React.FC = () => {
+  const params = useParams()
+  const navigate = useNavigate()
+
+  const { loading, rga } = useRGA(params.rgaId ?? '')
   const updateRgaShippingStatus = useUpdateShippingStatus()
   const handleSubmitForm = async (
     values: IRGAUpdateStatusFormValues,
@@ -87,7 +84,7 @@ export const RGAShippingUpdateView: React.FC<RouteComponentProps<
   ) => {
     const result = await updateRgaShippingStatus({
       variables: {
-        id: match.params.rgaId,
+        id: params.rgaId ?? '',
         notes: values.notes,
         shippingUpdates: values.shippingUpdates,
       },
@@ -104,11 +101,11 @@ export const RGAShippingUpdateView: React.FC<RouteComponentProps<
     const updatedRga =
       result.data && result.data.response && result.data.response.rga
     const status = updatedRga ? updatedRga.status : 'closed'
-    history.replace(`/admin/rga/${status}/${match.params.rgaId}`)
+    navigate(`/admin/rga/${status}/${params.rgaId}`, { replace: true })
   }
 
   const dismiss = () => {
-    history.goBack()
+    navigate(-1)
   }
 
   return (
@@ -125,7 +122,7 @@ export const RGAShippingUpdateView: React.FC<RouteComponentProps<
           <Box width={1} my="auto" mx={3}>
             <Flex flexDirection="column">
               <Heading.ToolBarOne>Ship RGA</Heading.ToolBarOne>
-              <Heading.ToolBarTwo>{match.params.rgaId}</Heading.ToolBarTwo>
+              <Heading.ToolBarTwo>{params.rgaId}</Heading.ToolBarTwo>
             </Flex>
           </Box>
         </Toolbar.View>
