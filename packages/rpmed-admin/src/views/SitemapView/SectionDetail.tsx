@@ -151,7 +151,7 @@ export const SectionDetail: React.FC<SectionProps> = ({
           </div>
         ) : null}
       </header>
-      <div className="flex flex-wrap bg-gray-100 p-2 mt-2 w-full pb-10">
+      <div className="grid grid-cols-3 gap-4 bg-gray-100 p-2 mt-2 w-full pb-10">
         {items.length < 1 ? (
           <div className="flex w-full p-6">
             <p className="text-center text-gray-600 m-auto">
