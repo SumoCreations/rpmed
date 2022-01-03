@@ -4,6 +4,8 @@ import { Divider, Form, Heading, Input } from 'rpmed-ui/lib/V1'
 
 import { IRgaGoodFormSection } from './types'
 
+const FormField = Input.Renderer<any>()
+
 /**
  * Presents any optional fields for partner related data and
  * correspondence with our own records.
@@ -14,13 +16,11 @@ export const PartnerDetailsSection: React.FC<IRgaGoodFormSection> = ({
   onSubmit: handleSubmit,
 }) => (
   <Flex flexDirection="column" width={1}>
-    <Heading.Section>Partner Info (4/6)</Heading.Section>
-    <Divider.Light />
     <Flex flexDirection={['column', 'row']} marginBottom={2}>
       <Flex marginRight={[0, 2]} width={[1, 1 / 2]}>
-        <Input.Field name="po" label="PO (Customer)" required={false} />
+        <FormField name="po" label="PO (Customer)" required={false} />
       </Flex>
-      <Input.Field
+      <FormField
         name="rma"
         label="RMA (Customer / Optional)"
         required={false}

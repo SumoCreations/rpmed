@@ -21,6 +21,8 @@ export type RGAEntryFormSubmitHandler = (
   actions: FormikHelpers<IFormValues>
 ) => void
 
+const FormField = Input.Renderer<IFormValues>()
+
 export const CreateRgaView: React.FC = () => {
   const [createRga] = useCreateRgaMutation()
   const navigate = useNavigate()
@@ -48,7 +50,7 @@ export const CreateRgaView: React.FC = () => {
   }
   return (
     <TextFormContent>
-      <p>
+      <p className="mb-4">
         This form is for commercial partners and resellers only. If you are a
         customer or end user please use our{' '}
         <Link to="/medled/service-request">service request</Link> form. If you
@@ -69,10 +71,11 @@ export const CreateRgaView: React.FC = () => {
               <Form.Form onSubmit={handleSubmit}>
                 <Form.Row>
                   <Form.RowItem size={Form.ItemSize.Long}>
-                    <Input.Field
+                    <FormField
                       name="email"
                       label="Email Address"
                       required={true}
+                      type="text"
                     />
                   </Form.RowItem>
                   <Form.RowItem size={Form.ItemSize.Short}>

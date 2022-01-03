@@ -19,7 +19,9 @@ const server = new ApolloServer({
     let approvedOrigin = false
     try {
       const allowedOrigins = process.env.ALLOWED_ORIGINS.split(',')
-      const { hostname } = new URL(event.headers['Origin'])
+      const { hostname } = new URL(
+        event.headers['origin'] ?? event.headers['Origin']
+      )
       approvedOrigin = allowedOrigins.includes(hostname)
     } catch (e) {
       approvedOrigin = false

@@ -20,7 +20,6 @@ export const ShippingDetailsSection: React.FC<IShippingDetailsSectionProps> = ({
   onSubmit: handleSubmit,
 }) => (
   <Flex flexDirection="column" width={1}>
-    <Heading.Section>Customer Shipping Info (6/6)</Heading.Section>
     <Form.Small>
       How & where should we ship this back to the customer.
     </Form.Small>

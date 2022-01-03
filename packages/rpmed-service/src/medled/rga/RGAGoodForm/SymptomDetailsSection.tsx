@@ -7,6 +7,8 @@ import {
 } from './ProductSymptomSelectField'
 import { IInteractiveSection } from './types'
 
+const FormField = Input.Renderer<any>()
+
 interface ISymptomDetailsSectionProps extends IInteractiveSection {
   onSelectSymptom: ProductSymptomSelectFn
   onToggleWarranty: () => any
@@ -104,7 +106,7 @@ export const SymptomDetailsSection: React.FC<ISymptomDetailsSectionProps> = ({
               </Flex>
             ) : null}
           </Flex>
-          <Input.Field
+          <FormField
             name="notes"
             label="Any specific notes?"
             required={false}

@@ -1,7 +1,7 @@
 import { faPlus, faTrash, faPencil } from '@fortawesome/pro-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Formik, FormikHelpers } from 'formik'
-import React, { useState } from 'react'
+import React from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { Box, Flex } from 'rebass'
 import { useQuery } from '../../routes'
@@ -47,16 +47,14 @@ interface IRGADetailFormValues {
   goods: RgaGood[]
 }
 
+const FormField = Input.Renderer<IRGADetailFormValues>()
+
 export const RgaDetailView: React.FC = () => {
   const { id = '' } = useParams<{ id: string }>()
-  const [userToken, setUserToken] = useState('')
 
   const navigate = useNavigate()
   const handleNavigation = (path: string) => () =>
     navigate(path, { replace: true })
-
-  const handleCaptcha = (token: string | null): void =>
-    setUserToken(token || '')
 
   const { loading, data, refetch } = useRgaQuery({
     variables: { rgaId: id },
@@ -128,13 +126,13 @@ export const RgaDetailView: React.FC = () => {
     actions.setSubmitting(false)
   }
 
-  const hasRequiredInfo = userToken.length > 0 && goods.length > 0
+  const hasRequiredInfo = goods.length > 0
   return (
     <TextFormContent>
-      <p>
+      <p className="py-2 text-primary">
         RGA Reference Number: <strong>{id.substr(0, 13)}</strong>
       </p>
-      <p>
+      <p className="py-2 mb-4">
         Add all applicable units and any associated customer information to your
         Return Good Authorization request. Providing the optional customer
         information will help expedite any current or future requests related to
@@ -223,7 +221,7 @@ export const RgaDetailView: React.FC = () => {
               <Card.View>
                 <Form.Row>
                   <Form.RowItem size={Form.ItemSize.Long}>
-                    <Input.Field
+                    <FormField
                       name="notes"
                       label="Is there anything else you'd like to let us to know?"
                       required={false}
@@ -233,7 +231,6 @@ export const RgaDetailView: React.FC = () => {
               </Card.View>
               <Card.View>
                 <Form.GeneralError name="_" />
-                <Form.Captcha onChange={handleCaptcha} test={true} />
                 <Form.Button
                   type="submit"
                   disabled={!hasRequiredInfo || !isValid || isSubmitting}

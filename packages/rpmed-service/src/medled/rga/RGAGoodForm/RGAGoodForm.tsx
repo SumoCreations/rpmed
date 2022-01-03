@@ -106,6 +106,7 @@ export const RGAGoodForm: React.FC<IRGAGoodFormProps> = ({
         }
 
         const handleSelectModel: ModelNumberSelectFn = m => {
+          console.log('SELECTED MODEL: ', m)
           setFieldValue('modelNumber', m.id)
           setFieldValue('lotted', m.lotted)
           setFieldValue('warrantyDescription', m.warrantyDescription)

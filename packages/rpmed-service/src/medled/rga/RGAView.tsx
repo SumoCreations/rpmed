@@ -1,10 +1,9 @@
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, useParams } from 'react-router-dom'
 import { ContentMainHeading, View } from 'rpmed-ui/lib/V1'
 import { CreateRgaView } from './CreateRgaView'
 import { RgaDetailView } from './RgaDetailView'
-import { useParams } from 'react-router-dom'
 import { BreadCrumbFromPage } from '../../pages'
 
 const RGAView: React.FC = () => {
@@ -22,12 +21,8 @@ const RGAView: React.FC = () => {
       />
       <ContentMainHeading>Return Good Authorization Request</ContentMainHeading>
       <Routes>
-        <Route path="/medled/rga/">
-          <CreateRgaView />
-        </Route>
-        <Route path="/medled/rga/:id">
-          <RgaDetailView />
-        </Route>
+        <Route index element={<CreateRgaView />}/>
+        <Route path="/:id" element={<RgaDetailView />}/>
       </Routes>
     </View>
   )

@@ -27,9 +27,10 @@ export const Button: React.FC<ButtonProps> = ({
 }) => (
   <button
     {...(props as any)}
+    disabled={disabled}
     className={clsx(
       destructive ? 'bg-destructive' : 'bg-button',
-      disabled && 'opacity-50',
+      disabled && 'opacity-50 disabled',
       BUTTON_STYLES
     )}
   >

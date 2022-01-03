@@ -29,27 +29,27 @@ class App extends Component<{}, {}, any> {
                   <Route path="/" element={<PageView />} />
                   <Route path="/:slug" element={<PageView />} />
                   <Route
-                    path="/:slug/d/:downloadId"
+                    path="/:slug/d/:downloadId/*"
                     element={<DownloadView />}
                   />
                   <Route
-                    path="/:slug/batteries/"
+                    path="/:slug/batteries/*"
                     element={<MedLED.BatteryView />}
                   />
                   <Route
-                    path="/:slug/service-request/"
+                    path="/:slug/service-request/*"
                     element={<MedLED.ServiceView />}
                   />
                   <Route
-                    path="/:slug/register/"
+                    path="/:slug/register/*"
                     element={<MedLED.RegisterView />}
                   />
                   <Route
-                    path="/:slug/mission/"
+                    path="/:slug/mission/*"
                     element={<MedLED.MissionView />}
                   />
-                  <Route path="/:slug/quote/" element={<MedLED.QuoteView />} />
-                  <Route path="/:slug/rga/" element={<MedLED.RGAView />} />
+                  <Route path="/:slug/quote/*" element={<MedLED.QuoteView />} />
+                  <Route path="/:slug/rga/*" element={<MedLED.RGAView />} />
                   <Route
                     path="/:slug/troubleshooting/"
                     element={<MedLED.TroubleshootingView />}

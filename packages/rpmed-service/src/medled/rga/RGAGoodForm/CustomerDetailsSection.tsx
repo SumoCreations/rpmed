@@ -23,7 +23,6 @@ export const CustomerDetailsSection: React.FC<ICustomerDetailsSectionProps> = ({
 }) => {
   return (
     <Flex flexDirection="column" width={1}>
-      <Heading.Section>Customer Info (5/6)</Heading.Section>
       <Form.Small>
         Automatically register this product for the customer.
       </Form.Small>
