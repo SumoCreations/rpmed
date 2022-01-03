@@ -224,7 +224,7 @@ workflows:
               only:
                 - develop
                 - staging
-                - main
+                - master
       - test_rpmed_admin:
           requires:
             - build
@@ -236,4 +236,4 @@ workflows:
               only:
                 - develop
                 - staging
-                - main
+                - master

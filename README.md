@@ -4,7 +4,7 @@ This monorepo contains several packages that make up the Riverpoint Medical cust
 
 ## Getting Started
 
-Ensure you have Node `12.x.0` and yarn installed. We recommend using [nvm](https://github.com/nvm-sh/nvm to easily manage which node version you're currently using. To install NVM:
+Ensure you have Node `16.13.1` and yarn installed. We recommend using [nvm](https://github.com/nvm-sh/nvm to easily manage which node version you're currently using. To install NVM:
 
 ```bash
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.36.0/install.sh | bash
@@ -13,8 +13,8 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.36.0/install.sh | bash
 Then run:
 
 ```bash
-nvm install 12.18.0
-nvm use 12.18.0
+nvm install 16.13.1
+nvm use 16.13.1
 ```
 
 Once you have the proper version of node installed you'll need to install yarn:
