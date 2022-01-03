@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react'
 import { Flex } from 'rebass'
-import { Form, GridNav } from 'rpmed-ui/lib/V1'
+import { Form } from 'rpmed-ui/lib/V1'
 import { useProductSymptomsQuery } from 'rpmed-schema'
 import { ProductSymptomSelectFn } from './ProductSymptomSelectField'
 import { IInteractiveSection } from './types'
 import { ProductSymptom } from 'rpmed-schema'
 import { ItemList } from './ItemList'
+import { useMemo } from 'react'
 
 interface ISymptomSelectGridProps extends IInteractiveSection {
   onSelectSymptom: ProductSymptomSelectFn
@@ -25,7 +26,9 @@ export const SymptomSelectGrid: React.FC<ISymptomSelectGridProps> = ({
   const { data } = useProductSymptomsQuery({
     variables: { search: '', modelNumber: values.modelNumber },
   })
-  const productSymptoms = data?.response?.productSymptoms ?? []
+  const productSymptoms = useMemo(() => {
+    return data?.response?.productSymptoms ?? []
+  }, [data])
   const sectionValid = (values.symptomId || '').length > 0
   const handleSelectItem = (id: string) => {
     const productSymptom = productSymptoms.find(ps => ps?.id === id)
@@ -56,7 +59,7 @@ export const SymptomSelectGrid: React.FC<ISymptomSelectGridProps> = ({
         handleSymptom(symptom as ProductSymptom)
       }
     }
-  }, [productSymptoms, values])
+  }, [productSymptoms, values, handleSymptom])
 
   return (
     <Flex flexDirection="column" width={1}>
