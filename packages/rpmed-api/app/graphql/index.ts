@@ -1,25 +1,5 @@
-import { makeExecutableSchema } from 'apollo-server-lambda'
-import * as base from './base'
-import * as customers from './customers'
-import * as distributors from './distributors'
-import * as productRegistrations from './productRegistrations'
-import * as products from './products'
-import * as productSymptoms from './productSymptoms'
-import * as rgas from './rgas'
-import * as uploads from './uploads'
-import * as users from './users'
-
-export const schemas = [
-  base,
-  customers,
-  distributors,
-  products,
-  productRegistrations,
-  productSymptoms,
-  users,
-  uploads,
-  rgas,
-]
+import { makeExecutableSchema } from '@graphql-tools/schema'
+import { schemas } from './schemas'
 
 export const schema = makeExecutableSchema({
   resolvers: schemas.map(s => s.resolvers),

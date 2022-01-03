@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon'
 import { isEmpty } from 'validator'
-import { RgaStatus } from '../schema'
+import { RgaStatus } from 'rpmed-schema'
 import { Distributor, IDistributor } from './distributor'
 import { IRGA, RGA } from './rga'
 

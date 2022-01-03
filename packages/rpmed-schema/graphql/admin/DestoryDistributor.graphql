@@ -1,0 +1,13 @@
+mutation DestroyDistributor($id: String!) {
+  response: destroyDistributor(id: $id) {
+    distributor {
+      id
+      name
+      domain
+    }
+    errors {
+      message
+      path
+    }
+  }
+}

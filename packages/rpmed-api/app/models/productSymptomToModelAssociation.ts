@@ -1,4 +1,4 @@
-import { getDynamoClient } from '../util'
+import { getDynamoClient } from 'api-utils'
 import { IModelNumber, ModelNumber } from './modelNumber'
 import { IProductSymptom, ProductSymptom } from './productSymptom'
 

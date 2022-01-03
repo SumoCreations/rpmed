@@ -1,7 +1,6 @@
 import * as Yup from 'yup'
 import * as email from '../../../../email'
-import { IUser, RGA, RGAGood, User } from '../../../../models'
-import * as oauth from '../../../../oauth'
+import { RGA, RGAGood } from '../../../../models'
 import {
   MutationUpdateRgaShippingStatusArgs,
   Rga,
@@ -10,37 +9,22 @@ import {
   RgaShippingCarrier,
   RgaShippingStatus,
   RgaStatus,
-} from '../../../../schema'
-import { generateMutationError } from '../../../../util'
+} from 'rpmed-schema'
+import { generateMutationError } from 'api-utils'
 import * as Validation from '../../../../validations'
-import {
-  ErrorRGAWithIDDoesNotExist,
-  ErrorUserProfileNotFound,
-} from '../rgaErrors'
+import { ErrorUserProfileNotFound } from '../rgaErrors'
 import { generateDocumentsForGood } from '../documentHelpers'
+import {
+  generateAuthorizationError,
+  isAuthorizedUser,
+  ServerContext,
+} from '../../../auth'
 
 type UpdateRgaStatusResolver = (
   parent: any,
   args: MutationUpdateRgaShippingStatusArgs,
   ctx: any
 ) => Promise<RgaMutationOutput>
-
-/**
- * Retrieves the current user ID from an access token
- * or temporary access token.
- * @param token The access token passed to the authorization context.
- */
-const getUserFromToken = async (token: string): Promise<IUser | null> => {
-  try {
-    const decoded: any = oauth.decode(token)
-    const user = await User.find(decoded.userId)
-    return user
-  } catch (e) {
-    // tslint:disable-next-line
-    console.log(e)
-  }
-  return null
-}
 
 const testForMessage: any = (s: any, r: any) => {
   return s === 'shipping' && r.length > 0
@@ -73,16 +57,16 @@ const validationSchema = Yup.object().shape({
 export const updateRGAShippingStatus: UpdateRgaStatusResolver = async (
   _,
   { id, notes, shippingUpdates },
-  ctx: any
+  ctx: ServerContext
 ) => {
   const existing = await RGA.find(id)
   if (!existing) {
     return { success: false, errors: [ErrorUserProfileNotFound] }
   }
 
-  const user = await getUserFromToken(ctx.authorization)
+  const user = isAuthorizedUser(ctx) ? await ctx.currentUser() : null
   if (!user) {
-    return { success: false, errors: [ErrorRGAWithIDDoesNotExist] }
+    return generateAuthorizationError()
   }
 
   try {

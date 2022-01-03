@@ -1,18 +1,28 @@
 import { Distributor, RGA } from '../../../../models'
-import { MutationCreateRgaArgs, RgaStatus } from '../../../../schema'
-import { generateMutationError } from '../../../../util'
+import {
+  MutationCreateRgaArgs,
+  RgaMutationOutput,
+  RgaStatus,
+} from 'rpmed-schema'
+import { generateMutationError } from 'api-utils'
 import * as Validation from '../../../../validations'
-import { IRGAMutationOutput } from './rgaMutationTypes'
-
-type CreateRGAMutation = (
-  context: any,
-  rgaInput: MutationCreateRgaArgs
-) => Promise<IRGAMutationOutput>
+import {
+  isAuthorized,
+  ServerContext,
+  generateAuthorizationError,
+} from '../../../auth'
 
 /**
  * A GraphQL resolver that handles the 'CreateRGA' mutation.
  */
-export const createRGA: CreateRGAMutation = async (_, { rgaInput }) => {
+export const createRGA = async (
+  _,
+  { rgaInput }: MutationCreateRgaArgs,
+  context: ServerContext
+): Promise<RgaMutationOutput> => {
+  if (!isAuthorized(context)) {
+    return generateAuthorizationError()
+  }
   try {
     await Validation.RGA.Default.validate(rgaInput, { abortEarly: false })
   } catch (e) {
@@ -29,5 +39,8 @@ export const createRGA: CreateRGAMutation = async (_, { rgaInput }) => {
     shippingSpeed: rgaInput.shippingSpeed || 'Ground',
     status: RgaStatus.Issued,
   })
-  return { rga: RGA.output(rga), success: true }
+  return {
+    rga: { ...RGA.output(rga), distributor: Distributor.output(distributor) },
+    success: true,
+  }
 }

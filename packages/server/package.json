@@ -1,0 +1,14 @@
+{
+  "name": "server",
+  "version": "0.1.0",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "scripts": {
+    "prettier": "prettier --config ../.prettierrc '**/*.{js,jsx}' --write",
+    "start": "node index.js"
+  },
+  "devDependencies": {
+    "jest": "26.6.0"
+  }
+}

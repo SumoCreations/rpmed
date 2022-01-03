@@ -1,0 +1,17 @@
+mutation CreateProductSymptom($productSymptomInput: NewProductSymptomInput!) {
+  response: createProductSymptom(productSymptomInput: $productSymptomInput) {
+    productSymptom {
+      id
+      name
+      fee
+      faultCode
+      synopsis
+      solution
+      careTip
+    }
+    errors {
+      message
+      path
+    }
+  }
+}

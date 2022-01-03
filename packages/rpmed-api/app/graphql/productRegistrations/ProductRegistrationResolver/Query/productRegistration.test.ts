@@ -1,4 +1,5 @@
 import { IProductRegistration, ProductRegistration } from '../../../../models'
+import { TST_ORIGIN_CTX, TST_USER_CTX } from '../../../auth'
 import {
   generateSampleParams,
   IRegistrationSampleParamOutput,
@@ -23,10 +24,9 @@ describe('Query', () => {
   describe('productRegistration', () => {
     test('should return a productRegistration if it exists', async () => {
       expect.assertions(6)
-      const output = await productRegistration(
-        {},
-        { id: existingProductRegistration.partitionKey }
-      )
+      const output = await productRegistration(TST_USER_CTX, {
+        id: existingProductRegistration.partitionKey,
+      })
       expect(output.success).toEqual(true)
       expect(output.productRegistration).toBeDefined()
       expect(output.productRegistrations).toBeUndefined()
@@ -41,9 +41,22 @@ describe('Query', () => {
       )
     })
 
+    test('should fail if not authorized', async () => {
+      expect.assertions(4)
+      const output = await productRegistration(TST_ORIGIN_CTX, {
+        id: existingProductRegistration.partitionKey,
+      })
+      expect(output.success).toEqual(false)
+      expect(output.productRegistration).toBeUndefined()
+      expect(output.productRegistrations).toBeUndefined()
+      expect(output.errors).toBeDefined()
+    })
+
     test('should return an error if it does not exist', async () => {
       expect.assertions(4)
-      const output = await productRegistration({}, { id: 'DOES-NOT-EXIST' })
+      const output = await productRegistration(TST_USER_CTX, {
+        id: 'DOES-NOT-EXIST',
+      })
       expect(output.success).toEqual(false)
       expect(output.productRegistration).toBeUndefined()
       expect(output.productRegistrations).toBeUndefined()

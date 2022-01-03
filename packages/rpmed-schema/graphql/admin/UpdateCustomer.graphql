@@ -1,0 +1,13 @@
+mutation UpdateCustomer($customerInput: ExistingCustomerInput!) {
+  response: updateCustomer(customerInput: $customerInput) {
+    customer {
+      id
+      name
+      email
+    }
+    errors {
+      message
+      path
+    }
+  }
+}

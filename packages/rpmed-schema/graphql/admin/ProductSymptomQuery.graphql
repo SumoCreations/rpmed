@@ -1,0 +1,26 @@
+query ProductSymptom($productSymptomId: String!) {
+  response: productSymptom(id: $productSymptomId) {
+    productSymptom {
+      id
+      name
+      faultCode
+      fee
+      preApproved
+      synopsis
+      solution
+      careTip
+      associatedModelNumbers
+      attachedImages {
+        id
+        position
+        status
+        url
+      }
+    }
+    errors {
+      message
+      path
+    }
+    success
+  }
+}

@@ -3,7 +3,7 @@ import * as email from './email'
 import { TemporaryAccessToken, User } from './models'
 import { response, Status } from './net'
 import { parseEmail } from './parsers'
-import { CLIENT_URL } from './util'
+import { CLIENT_URL } from 'api-utils'
 
 /**
  * Generates a temporary token and sends a forgot password email
@@ -31,6 +31,9 @@ export const sendResetPasswordEmail: APIGatewayProxyHandler = async event => {
         resetLink: `${CLIENT_URL}/token/${token.partitionKey}`,
       },
     })
+    console.log(
+      `Sent reset password email to ${user.email} with token ${token.partitionKey}`
+    )
     return response(Status.OK, { success: true })
   } catch (e) {
     return response(Status.BadRequest, {}, { user: e.message })

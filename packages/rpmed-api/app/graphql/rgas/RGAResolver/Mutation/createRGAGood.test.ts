@@ -7,8 +7,9 @@ import {
   ProductSymptom,
   RGA,
 } from '../../../../models'
-import { ProductType, RgaGoodStatus, RgaStatus } from '../../../../schema'
+import { ProductType, RgaGoodStatus, RgaStatus } from 'rpmed-schema'
 import { createRGAGood } from './createRGAGood'
+import { TST_ORIGIN_CTX } from '../../../auth'
 
 const RGA_ID = 'TEST-RGA-ID'
 const PRODUCT_ID = 'TEST-PRODUCT-ID'
@@ -82,35 +83,63 @@ describe('createRGAGood', () => {
     done()
   })
 
+  test('should fail if not authorized', async () => {
+    expect.assertions(1)
+    const output = await createRGAGood(
+      null,
+      {
+        rgaId: existingRGAId,
+        rgaGoodInput: {
+          ...sampleParams,
+          modelNumber: modelNumberId,
+          productType: ProductType.Headlight,
+          serial: 'TEST-123',
+          symptomId: existingSymptomId,
+        },
+      },
+      null
+    )
+    expect(output.success).toBe(false)
+  })
+
   test('should generate a new rga good if it is valid', async () => {
     expect.assertions(1)
-    const output = await createRGAGood(null, {
-      rgaId: existingRGAId,
-      rgaGoodInput: {
-        ...sampleParams,
-        modelNumber: modelNumberId,
-        productType: ProductType.Headlight,
-        serial: 'TEST-123',
-        symptomId: existingSymptomId,
+    const output = await createRGAGood(
+      null,
+      {
+        rgaId: existingRGAId,
+        rgaGoodInput: {
+          ...sampleParams,
+          modelNumber: modelNumberId,
+          productType: ProductType.Headlight,
+          serial: 'TEST-123',
+          symptomId: existingSymptomId,
+        },
       },
-    })
+      TST_ORIGIN_CTX
+    )
     expect(output.success).toBe(true)
   })
 
   test('should generate a product registration that matches the customer name / email', async () => {
     expect.assertions(2)
-    const output = await createRGAGood(null, {
-      rgaGoodInput: {
-        ...sampleParams,
-        modelNumber: modelNumberId,
-        productType: ProductType.Headlight,
-        serial: `${SERIAL}-2`,
-        symptomId: existingSymptomId,
+    const output = await createRGAGood(
+      null,
+      {
+        rgaGoodInput: {
+          ...sampleParams,
+          modelNumber: modelNumberId,
+          productType: ProductType.Headlight,
+          serial: `${SERIAL}-2`,
+          symptomId: existingSymptomId,
+        },
+        rgaId: existingRGAId,
       },
-      rgaId: existingRGAId,
-    })
-    const registration = await ProductRegistration.find(`${SERIAL}-2`)
+      TST_ORIGIN_CTX
+    )
+    const registration = await ProductRegistration.find(output.rgaGood?.id)
     const customer = await Customer.findByEmail(CUSTOMER_EMAIL)
+
     expect(output.success).toBe(true)
     expect(registration.customerId).toEqual(customer.partitionKey)
   })
@@ -130,16 +159,20 @@ describe('createRGAGood', () => {
       registeredOn: new Date().toISOString(),
       serial: `${SERIAL}-3`,
     })
-    const output = await createRGAGood(null, {
-      rgaId: existingRGAId,
-      rgaGoodInput: {
-        ...sampleParams,
-        modelNumber: modelNumberId,
-        productType: ProductType.Headlight,
-        serial: `${SERIAL}-3`,
-        symptomId: existingSymptomId,
+    const output = await createRGAGood(
+      null,
+      {
+        rgaId: existingRGAId,
+        rgaGoodInput: {
+          ...sampleParams,
+          modelNumber: modelNumberId,
+          productType: ProductType.Headlight,
+          serial: `${SERIAL}-3`,
+          symptomId: existingSymptomId,
+        },
       },
-    })
+      TST_ORIGIN_CTX
+    )
     const registration = await ProductRegistration.find(`${SERIAL}-3`)
     const customer = await Customer.findByEmail(CUSTOMER_EMAIL)
     expect(output.success).toBe(true)
@@ -151,16 +184,20 @@ describe('createRGAGood', () => {
   test('should skip the registration process if no customer credentials are provided', async () => {
     expect.assertions(2)
     const { customerEmail, customerName, ...remainingParams } = sampleParams
-    const output = await createRGAGood(null, {
-      rgaId: existingRGAId,
-      rgaGoodInput: {
-        ...remainingParams,
-        modelNumber: modelNumberId,
-        productType: ProductType.Headlight,
-        serial: `${SERIAL}-4`,
-        symptomId: existingSymptomId,
+    const output = await createRGAGood(
+      null,
+      {
+        rgaId: existingRGAId,
+        rgaGoodInput: {
+          ...remainingParams,
+          modelNumber: modelNumberId,
+          productType: ProductType.Headlight,
+          serial: `${SERIAL}-4`,
+          symptomId: existingSymptomId,
+        },
       },
-    })
+      TST_ORIGIN_CTX
+    )
     expect(output.success).toBe(true)
     const registration = await ProductRegistration.find(`${SERIAL}-4`)
     expect(registration).toBeNull()
@@ -168,43 +205,55 @@ describe('createRGAGood', () => {
 
   test('should fail if the RGA does not exist', async () => {
     expect.assertions(2)
-    const output = await createRGAGood(null, {
-      rgaId: 'some-other-existingRGAId',
-      rgaGoodInput: {
-        ...sampleParams,
-        productType: ProductType.Headlight,
-        symptomId: existingSymptomId,
+    const output = await createRGAGood(
+      null,
+      {
+        rgaId: 'some-other-existingRGAId',
+        rgaGoodInput: {
+          ...sampleParams,
+          productType: ProductType.Headlight,
+          symptomId: existingSymptomId,
+        },
       },
-    })
+      TST_ORIGIN_CTX
+    )
     expect(output.success).toBe(false)
     expect(output.errors.map(e => e.path)).toContain('rgaId')
   })
 
   test('should fail if the Model Number does not exist', async () => {
     expect.assertions(2)
-    const output = await createRGAGood(null, {
-      rgaId: existingRGAId,
-      rgaGoodInput: {
-        ...sampleParams,
-        productType: ProductType.Headlight,
-        symptomId: existingSymptomId,
+    const output = await createRGAGood(
+      null,
+      {
+        rgaId: existingRGAId,
+        rgaGoodInput: {
+          ...sampleParams,
+          productType: ProductType.Headlight,
+          symptomId: existingSymptomId,
+        },
       },
-    })
+      TST_ORIGIN_CTX
+    )
     expect(output.success).toBe(false)
     expect(output.errors.map(e => e.path)).toContain('modelNumber')
   })
 
   test('should fail if the Serial Number was already used in conjunction with another RGA', async () => {
     expect.assertions(2)
-    const output = await createRGAGood(null, {
-      rgaId: existingRGAId,
-      rgaGoodInput: {
-        ...sampleParams,
-        modelNumber: modelNumberId,
-        productType: ProductType.Headlight,
-        symptomId: existingSymptomId,
+    const output = await createRGAGood(
+      null,
+      {
+        rgaId: existingRGAId,
+        rgaGoodInput: {
+          ...sampleParams,
+          modelNumber: modelNumberId,
+          productType: ProductType.Headlight,
+          symptomId: existingSymptomId,
+        },
       },
-    })
+      TST_ORIGIN_CTX
+    )
     expect(output.success).toBe(false)
     expect(output.errors.map(e => e.path)).toContain('serial')
   })
@@ -219,7 +268,7 @@ describe('createRGAGood', () => {
         symptomId: existingSymptomId,
       },
     }
-    const output = await createRGAGood(null, invalidInput)
+    const output = await createRGAGood(null, invalidInput, TST_ORIGIN_CTX)
     expect(output.success).toBe(false)
     expect(output.errors.map(e => e.path)).toContain('customerEmail')
     expect(output.errors.map(e => e.path)).toContain('modelNumber')

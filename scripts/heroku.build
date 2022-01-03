@@ -1,0 +1,36 @@
+#!/bin/sh -e
+
+usage() {
+  echo "OVERVIEW: Build apps according to BUILD_ENV value. Meant to be used for Heroku deployment"
+  exit
+}
+
+if [ "$1" = '-h' ] || [ "$1" = '--help' ]; then
+  usage
+fi
+
+(
+  PROJECT_ROOT="$(cd $(dirname $0)/..; pwd)"
+
+  cd $PROJECT_ROOT
+
+  yarn workspace rpmed-schema build
+  echo "[POST-BUILD]: Built 'rpmed-schema' package."
+  yarn workspace utils build
+  echo "[POST-BUILD]: Built 'utils' package."
+  yarn workspace api-auth build
+  echo "[POST-BUILD]: Built 'api-auth' package."
+  yarn workspace session build
+  echo "[POST-BUILD]: Built 'session' package."
+  yarn workspace rpmed-ui build
+  if [ "$BUILD_ENV" = "rpmed-admin" ]; then
+    yarn workspace rpmed-admin build
+    echo "[POST-BUILD]: Built 'rpmed-admin' package."
+  elif [ "$BUILD_ENV" = "rpmed-portal-client" ]; then
+    yarn workspace rpmed-portal-client build
+    echo "[POST-BUILD]: Built 'rpmed-portal-client' package."
+  else
+    echo "Error: no build config for BUILD_ENV value '$BUILD_ENV'"
+    exit 1
+  fi
+)

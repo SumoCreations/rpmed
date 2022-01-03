@@ -1,5 +1,5 @@
-service:
-  name: rpmed-service-api
+service: rpmed-service-api
+variablesResolutionMode: 20210326
 
 plugins:
   - serverless-webpack
@@ -8,8 +8,13 @@ plugins:
   - serverless-domain-manager
 
 custom:
+  webpack:
+    webpackConfig: 'webpack.config.js' # Name of webpack configuration file
+    includeModules: true # Node modules configuration for packaging
+    packager: 'yarn' # Packager that will be used to package your external modules
   serverless-offline:
-    port: 4000
+    httpPort: 4000
+    useChildProcesses: true
   dynamodb:
     stages:
       - dev
@@ -20,10 +25,14 @@ custom:
     seed:
       dev:
         sources:
-          - table: ${self:service}-${opt:stage, self:provider.stage}-resources
+          - table: ${self:service}-${opt:stage, "dev"}-resources
             sources: [./seed/resources.json]
-          - table: ${self:service}-${opt:stage, self:provider.stage}-users-lookup
+          - table: ${self:service}-${opt:stage, "dev"}-users-lookup
             sources: [./seed/usersLookup.json]
+  allowedOrigins:
+    dev: 'localhost'
+    staging: '*'
+    prod: 'admin.medled.com,service.rpmed.com'
   adminEmail:
     dev: jim@sumocreations.com
     staging: jim@sumocreations.com
@@ -40,13 +49,17 @@ custom:
     dev: true
     staging: false
     prod: false
+  apolloVariant:
+    dev: dev
+    staging: staging
+    prod: current
   customDomain:
-    domainName: ${self:custom.domain.${opt:stage, self:provider.stage}}
+    domainName: ${self:custom.domain.${opt:stage, "dev"}}
     basePath: ''
-    stage: ${opt:stage, self:provider.stage}
+    stage: ${opt:stage, "dev"}
     createRoute53Record: true
-  generatedDocumentsBucket: ${self:service}-${opt:stage, self:provider.stage}-generated-documents
-  backgroundJobTopic: '${self:service}-${opt:stage, self:provider.stage}-sns-background-job'
+  generatedDocumentsBucket: ${self:service}-${opt:stage, "dev"}-generated-documents
+  backgroundJobTopic: '${self:service}-${opt:stage, "dev"}-sns-background-job'
   backgroundJobTopicTopicArn:
     dev:
       {
@@ -90,30 +103,36 @@ provider:
   runtime: nodejs12.x
   profile: rpmed-serverless
   region: us-west-2
+  lambdaHashingVersion: '20201221'
   environment:
-    ADMIN_EMAIL: ${self:custom.adminEmail.${opt:stage, self:provider.stage}}
+    APOLLO_KEY: service:RPMed-API:jAyBkz50LpxvPcXuP_b97g
+    APOLLO_GRAPH_ID: RPMed-API
+    APOLLO_GRAPH_VARIANT: ${self:custom.apolloVariant.${opt:stage, 'dev'}}
+    APOLLO_SCHEMA_REPORTING: true
+    ADMIN_EMAIL: ${self:custom.adminEmail.${opt:stage, 'dev'}}
     ACCESS_TOKEN_LIFESPAN: 5m
     REFRESH_TOKEN_LIFESPAN: 7d
     SALT_ROUNDS: 10
-    APOLLO_INTROSPECTION: ${self:custom.apolloIntrospection.${opt:stage, self:provider.stage}}
-    CLIENT_DOMAIN: ${self:custom.clientDomain.${opt:stage, self:provider.stage}}
+    ALLOWED_ORIGINS: ${self:custom.allowedOrigins.${opt:stage, 'dev'}}
+    APOLLO_INTROSPECTION: ${self:custom.apolloIntrospection.${opt:stage, 'dev'}}
+    CLIENT_DOMAIN: ${self:custom.clientDomain.${opt:stage, 'dev'}}
     RECAPTCHA_KEY: 6LdOqZoUAAAAAJ79IuWa4mU57Urnd-N6oxP4XhiR
     OAUTH_SIGNATURE: 'Ph$2\@!Rq<ev_W;:N(2+>Bwxez$3?;9~srf*nxiVJLz:lw7Djgs(Q/UhwmZ@"YLi<'
-    ATTACHED_IMAGES_BUCKET: ${self:service}-${opt:stage, self:provider.stage}-attached-images
+    ATTACHED_IMAGES_BUCKET: ${self:service}-${opt:stage, 'dev'}-attached-images
     GENERATED_DOCUMENTS_BUCKET: ${self:custom.generatedDocumentsBucket}
-    DYNAMODB_RESOURCES_TABLE: ${self:service}-${opt:stage, self:provider.stage}-resources
+    DYNAMODB_RESOURCES_TABLE: ${self:service}-${opt:stage, 'dev'}-resources
     DYNAMODB_RESOURCES_GSI_1: GSI_1
     DYNAMODB_RESOURCES_GSI_2: GSI_2
-    DYNAMODB_USER_LOOKUP_TABLE: ${self:service}-${opt:stage, self:provider.stage}-users-lookup
-    DYNAMODB_TOKEN_LOOKUP_TABLE: ${self:service}-${opt:stage, self:provider.stage}-tokens-lookup
+    DYNAMODB_USER_LOOKUP_TABLE: ${self:service}-${opt:stage, 'dev'}-users-lookup
+    DYNAMODB_TOKEN_LOOKUP_TABLE: ${self:service}-${opt:stage, 'dev'}-tokens-lookup
     SES_SOURCE_ARN: arn:aws:ses:us-west-2:426380452104:identity/rpmed-apps.com
-    PDF_RENDER_TOPIC_ARN: ${cf:rpmed-puppeteer-${opt:stage, self:provider.stage}.RenderTopicExport}
-    SNS_EXECUTE_BACKGROUND_JOB: ${self:custom.backgroundJobTopicTopicArn.${opt:stage, self:provider.stage}}
+    PDF_RENDER_TOPIC_ARN: ${cf:rpmed-puppeteer-${opt:stage, 'dev'}.RenderTopicExport}
+    SNS_EXECUTE_BACKGROUND_JOB: ${self:custom.backgroundJobTopicTopicArn.${opt:stage, 'dev'}}
   iamRoleStatements:
     - Effect: Allow
       Action:
         - sns:Publish
-      Resource: ${cf:rpmed-puppeteer-${opt:stage, self:provider.stage}.RenderTopicExport}
+      Resource: ${cf:rpmed-puppeteer-${opt:stage, 'dev'}.RenderTopicExport}
     - Effect: Allow
       Action:
         - sns:DeleteEndpoint
@@ -145,7 +164,7 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
         - dynamodb:BatchGetItem
-      Resource: 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:service}-${opt:stage, self:provider.stage}-*'
+      Resource: 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:service}-${opt:stage, "dev"}-*'
 
 functions:
   graphql:

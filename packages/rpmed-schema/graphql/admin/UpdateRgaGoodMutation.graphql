@@ -1,0 +1,58 @@
+mutation UpdateRGAGood(
+  $id: ID!
+  $rgaId: String!
+  $rgaGoodInput: RGAGoodInput!
+) {
+  response: updateRGAGood(id: $id, rgaId: $rgaId, rgaGoodInput: $rgaGoodInput) {
+    success
+    errors {
+      message
+      path
+    }
+    rgaId
+    rgaGood {
+      id
+      serviceId
+      customerId
+      customerEmail
+      customerName
+      customerPhone
+      customerStreet
+      customerStreet2
+      customerZip
+      customerCity
+      customerState
+      customerCountry
+      customerSpecialty
+      faultCode
+      serial
+      newSerial
+      lotted
+      preApproved
+      productId
+      productName
+      productType
+      symptomId
+      symptomDescription
+      symptomSolution
+      symptomSynopsis
+      modelNumber
+      resolutionFee {
+        distributor
+        endUser
+      }
+      po
+      rma
+      warrantied
+      warrantyTerm
+      warrantyDescription
+      notes
+      serviceFormUrl
+      customerLetterUrl
+      ssd
+      additionalComments
+      datePurchased
+      disposition
+    }
+  }
+}

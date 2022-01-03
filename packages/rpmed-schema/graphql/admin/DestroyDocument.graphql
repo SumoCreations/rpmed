@@ -1,0 +1,16 @@
+mutation DestroyDocument($id: String!) {
+  response: destroyDocument(id: $id) {
+    document {
+      id
+      title
+      keywords
+      description
+      slug
+    }
+    success
+    errors {
+      path
+      message
+    }
+  }
+}

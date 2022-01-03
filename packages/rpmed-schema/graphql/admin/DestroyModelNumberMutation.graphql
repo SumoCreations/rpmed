@@ -1,0 +1,11 @@
+mutation destroyModelNumber($id: ID!) {
+  response: destroyModelNumber(id: $id) {
+    modelNumber {
+      id
+    }
+    errors {
+      message
+      path
+    }
+  }
+}

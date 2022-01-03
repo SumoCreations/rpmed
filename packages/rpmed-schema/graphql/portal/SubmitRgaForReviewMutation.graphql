@@ -1,0 +1,16 @@
+mutation SubmitRGAForReview($id: ID!, $notes: String) {
+  submitRGAForReview(id: $id, notes: $notes) {
+    rga {
+      id
+      shippingSpeed
+      submittedOn
+      submittedBy
+      status
+    }
+    errors {
+      message
+      path
+    }
+    success
+  }
+}

@@ -1,0 +1,16 @@
+query Documents {
+  response: documents {
+    documents {
+      id
+      title
+      keywords
+      description
+      slug
+    }
+    success
+    errors {
+      path
+      message
+    }
+  }
+}

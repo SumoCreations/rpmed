@@ -1,0 +1,13 @@
+mutation UpdateDistributor($distributorInput: ExistingDistributorInput!) {
+  response: updateDistributor(distributorInput: $distributorInput) {
+    distributor {
+      id
+      name
+      domain
+    }
+    errors {
+      message
+      path
+    }
+  }
+}

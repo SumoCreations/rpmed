@@ -10,7 +10,7 @@ import {
   ModelNumber as ModelNumberType,
   ModelNumberQueryOutput,
   QueryModelNumbersArgs,
-} from '../../../../schema'
+} from 'rpmed-schema'
 
 /**
  * Retrieves all model numbers or a filtered search of some model numbers.

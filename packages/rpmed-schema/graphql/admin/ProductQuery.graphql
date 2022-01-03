@@ -1,0 +1,20 @@
+query Product($productId: String!) {
+  response: product(id: $productId) {
+    product {
+      id
+      name
+      description
+      modelNumbers {
+        id
+        description
+        lotted
+        warrantyTerm
+      }
+    }
+    errors {
+      path
+      message
+    }
+    success
+  }
+}

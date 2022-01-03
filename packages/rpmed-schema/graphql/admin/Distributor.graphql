@@ -1,0 +1,14 @@
+query Distributor($distributorId: String!) {
+  response: distributor(id: $distributorId) {
+    distributor {
+      id
+      name
+      domain
+    }
+    errors {
+      message
+      path
+    }
+    success
+  }
+}

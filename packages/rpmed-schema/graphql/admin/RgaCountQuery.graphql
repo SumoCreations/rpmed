@@ -1,0 +1,18 @@
+query RgaCounts {
+  rgaCount {
+    issued
+    delayed
+    awaitingArrival
+    received
+    assessing
+    repairing
+    shipping
+    closed
+    canceled
+    success
+    errors {
+      message
+      path
+    }
+  }
+}

@@ -1,0 +1,34 @@
+mutation UpdateRGAShippingStatus(
+  $id: ID!
+  $shippingUpdates: [RGAGoodShippingInput]
+  $notes: String
+) {
+  response: updateRGAShippingStatus(
+    id: $id
+    shippingUpdates: $shippingUpdates
+    notes: $notes
+  ) {
+    rga {
+      id
+      status
+      submittedBy
+      submittedOn
+      shippingSpeed
+      statusLog {
+        status
+        notes
+        updatedOn
+        updatedBy {
+          name
+          id
+          email
+        }
+      }
+    }
+    errors {
+      message
+      path
+    }
+    success
+  }
+}

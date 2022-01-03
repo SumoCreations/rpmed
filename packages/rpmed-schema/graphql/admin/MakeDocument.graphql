@@ -1,0 +1,18 @@
+mutation MakeDocument($documentInput: DocumentInput!) {
+  response: makeDocument(documentInput: $documentInput) {
+    document {
+      id
+      title
+      keywords
+      description
+      slug
+      fileKey
+      url
+    }
+    success
+    errors {
+      path
+      message
+    }
+  }
+}

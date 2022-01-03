@@ -1,5 +1,5 @@
 import { IProduct, ModelNumber, Product } from '../../../../models'
-import { ProductType } from '../../../../schema'
+import { ProductType } from 'rpmed-schema'
 import { destroyProduct } from './destroyProduct'
 
 const sampleParams = {

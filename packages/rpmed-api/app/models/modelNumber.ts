@@ -1,5 +1,6 @@
-import { ProductType } from '../schema'
-import { filterBlankAttributes, getDynamoClient } from '../util'
+import { ProductType } from 'rpmed-schema'
+import { getDynamoClient } from 'api-utils'
+import { filterBlankAttributes } from 'utils'
 
 /**
  * Dynamo DB Model:

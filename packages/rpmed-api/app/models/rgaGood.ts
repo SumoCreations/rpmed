@@ -1,6 +1,7 @@
 import { v4 as uuid } from 'uuid'
-import { FeeStructure, RgaGoodStatus } from '../schema'
-import { filterBlankAttributes, getDynamoClient, getS3Client } from '../util'
+import { FeeStructure, RgaGoodStatus, RgaGood, ProductType } from 'rpmed-schema'
+import { getDynamoClient, getS3Client } from 'api-utils'
+import { filterBlankAttributes } from 'utils'
 
 /**
  * Dynamo DB Model:
@@ -284,8 +285,9 @@ const output = ({
   sortKey,
   indexSortKey,
   ...rgaGood
-}: IRGAGood): IRGAGoodOutput => ({
+}: IRGAGood): RgaGood => ({
   ...rgaGood,
+  productType: rgaGood.productType as ProductType,
   id: rgaGood.id,
   lotted:
     typeof rgaGood.lotted === 'boolean'

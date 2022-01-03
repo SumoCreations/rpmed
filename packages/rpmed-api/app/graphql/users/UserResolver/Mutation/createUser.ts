@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid'
 import * as emailService from '../../../../email'
 import { IUserInput, TemporaryAccessToken, User } from '../../../../models'
-import { CLIENT_URL } from '../../../../util'
+import { CLIENT_URL } from 'api-utils'
 import * as Validation from '../../../../validations'
 import {
   ErrorUserCredentialsInvalid,
@@ -54,6 +54,7 @@ export const createUser = async (
     })
     return { user: User.output(user), success: true }
   } catch (e) {
+    console.log(e)
     return { success: false, errors: [ErrorUserCredentialsInvalid] }
   }
 }

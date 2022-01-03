@@ -1,0 +1,14 @@
+mutation CreateProduct($productInput: ProductInput!) {
+  response: createProduct(productInput: $productInput) {
+    product {
+      id
+      name
+      description
+    }
+    errors {
+      message
+      path
+    }
+    success
+  }
+}

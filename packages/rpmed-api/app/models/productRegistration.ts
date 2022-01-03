@@ -1,5 +1,6 @@
 import { v4 as uuid } from 'uuid'
-import { filterBlankAttributes, getDynamoClient } from '../util'
+import { getDynamoClient } from 'api-utils'
+import { filterBlankAttributes } from 'utils'
 
 /**
  * Dynamo DB Model:
@@ -129,9 +130,7 @@ const update = async ({
     registeredOn,
     sortKey: SECONDARY_KEY,
   }
-  const hsk = `${existingItem.productId}#${
-    existingItem.modelNumber
-  }#${customerId}`
+  const hsk = `${existingItem.productId}#${existingItem.modelNumber}#${customerId}`
   const params = {
     TransactItems: [
       {

@@ -1,9 +1,9 @@
-import { connectedQuery } from './connection'
+import { connectedQuery } from 'api-models'
 import { padStart } from 'lodash'
 import { DateTime } from 'luxon'
-import { RgaStatus } from '../schema'
-import { filterBlankAttributes, getDynamoClient } from '../util'
-
+import { Rga, RgaStatus } from 'rpmed-schema'
+import { getDynamoClient } from 'api-utils'
+import { filterBlankAttributes } from 'utils'
 /**
  * Dynamo DB Model:
  * RGA
@@ -364,9 +364,11 @@ const output = ({
   sortKey,
   indexSortKey,
   ...rga
-}: IRGA): IRGAOutput => {
+}: IRGA): Rga & { distributorId: string } => {
   const result = {
     ...rga,
+    distributor: null,
+    goods: null,
     id: partitionKey,
     status: rga.status || RgaStatus.Issued,
   }

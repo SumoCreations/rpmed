@@ -1,6 +1,6 @@
 import * as jwt from 'jsonwebtoken'
 import { v4 as uuid } from 'uuid'
-import { getDynamoClient } from '../util'
+import { getDynamoClient } from 'api-utils'
 
 /**
  * Dynamo DB Model:

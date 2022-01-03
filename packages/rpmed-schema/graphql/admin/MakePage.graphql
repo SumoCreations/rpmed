@@ -1,0 +1,30 @@
+mutation MakePage($pageInput: PageInput!) {
+  response: makePage(pageInput: $pageInput) {
+    page {
+      id
+      title
+      keywords
+      description
+      slug
+      sections {
+        id
+        name
+        position
+        items {
+          id
+          name
+          position
+          icon
+          url
+          target
+          type
+        }
+      }
+    }
+    success
+    errors {
+      path
+      message
+    }
+  }
+}

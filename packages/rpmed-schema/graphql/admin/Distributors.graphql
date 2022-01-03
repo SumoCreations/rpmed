@@ -1,0 +1,14 @@
+query Distributors {
+  response: distributors {
+    distributors {
+      id
+      name
+      domain
+    }
+    errors {
+      message
+      path
+    }
+    success
+  }
+}

@@ -8,17 +8,16 @@
   "main": "lib/index.js",
   "private": true,
   "sideEffects": false,
-  "engines": {
-    "node": "12.x.0"
-  },
   "scripts": {
     "build": "rm -rf ./lib && tsc",
+    "build-test": "rm -rf ./lib && tsc -m CommonJS",
     "test": "jest"
   },
   "eslintConfig": {
     "extends": "react-app"
   },
   "dependencies": {
+    "aws-sdk": "^2.1048.0",
     "bcryptjs": "^2.4.3"
   },
   "devDependencies": {
@@ -30,6 +29,6 @@
     "jest-raw-loader": "^1.0.1",
     "prettier": "^2.1.2",
     "ts-jest": "^26.4.1",
-    "typescript": "^3.7.0"
+    "typescript": "^4.0.5"
   }
 }

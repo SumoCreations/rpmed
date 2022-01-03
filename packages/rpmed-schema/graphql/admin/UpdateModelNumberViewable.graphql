@@ -1,0 +1,15 @@
+mutation UpdateModelNumberViewable($id: ID!, $publiclyViewable: Boolean!) {
+  response: updateModelNumberViewable(
+    id: $id
+    publiclyViewable: $publiclyViewable
+  ) {
+    modelNumber {
+      id
+      publiclyViewable
+    }
+    errors {
+      message
+      path
+    }
+  }
+}

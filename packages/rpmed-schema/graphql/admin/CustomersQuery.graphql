@@ -1,0 +1,14 @@
+query Customers($search: String) {
+  response: customers(search: $search) {
+    customers {
+      id
+      name
+      email
+    }
+    errors {
+      message
+      path
+    }
+    success
+  }
+}

@@ -5,7 +5,7 @@ import {
   Rga,
   RgaMutationOutput,
   RgaStatus,
-} from '../../../../schema'
+} from 'rpmed-schema'
 import {
   ErrorRGAWithIDDoesNotExist,
   ErrorUserProfileNotFound,

@@ -1,0 +1,14 @@
+mutation CreateDistributor($distributorInput: NewDistributorInput!) {
+  response: createDistributor(distributorInput: $distributorInput) {
+    distributor {
+      id
+      name
+      domain
+    }
+    errors {
+      message
+      path
+    }
+    success
+  }
+}

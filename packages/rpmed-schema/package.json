@@ -1,0 +1,42 @@
+{
+  "name": "rpmed-schema",
+  "version": "1.0.0",
+  "types": "./lib/index.d.ts",
+  "files": [
+    "lib"
+  ],
+  "main": "lib/index.js",
+  "private": true,
+  "sideEffects": false,
+  "scripts": {
+    "build": "graphql-codegen --config codegen.yml && rm -rf ./lib && tsc",
+    "build-test": "graphql-codegen --config codegen.yml && rm -rf ./lib && tsc -m CommonJS"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@apollo/client": "^3.5.6",
+    "@graphql-codegen/cli": "^2.3.0",
+    "@graphql-codegen/fragment-matcher": "^3.2.0",
+    "@graphql-codegen/introspection": "^2.1.0",
+    "@graphql-codegen/typescript": "^2.4.1",
+    "@graphql-codegen/typescript-operations": "^2.2.1",
+    "@graphql-codegen/typescript-react-apollo": "^3.2.2",
+    "@graphql-codegen/typescript-resolvers": "^2.4.2",
+    "@types/humps": "^1.1.2",
+    "@types/node": "12.6.8",
+    "@types/react": "17.0.34",
+    "@types/react-dom": "16.9.9",
+    "typescript": "^4.0.5"
+  }
+}

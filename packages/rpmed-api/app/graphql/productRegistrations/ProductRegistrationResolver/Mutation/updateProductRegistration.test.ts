@@ -1,4 +1,5 @@
 import { IProductRegistration, ProductRegistration } from '../../../../models'
+import { TST_ORIGIN_CTX, TST_USER_CTX } from '../../../auth'
 import {
   generateSampleParams,
   IRegistrationSampleParamOutput,
@@ -30,15 +31,28 @@ describe('updateProductRegistration', () => {
       id: registration.partitionKey,
       registeredOn: new Date().toISOString(),
     }
-    const output = await updateProductRegistration(null, {
+    const output = await updateProductRegistration(TST_USER_CTX, {
       productRegistrationInput,
     })
     expect(output.success).toBe(true)
   })
 
+  test('should fail if not an authorized user', async () => {
+    expect.assertions(1)
+    const productRegistrationInput = {
+      ...sample1.sampleParams,
+      id: registration.partitionKey,
+      registeredOn: new Date().toISOString(),
+    }
+    const output = await updateProductRegistration(TST_ORIGIN_CTX, {
+      productRegistrationInput,
+    })
+    expect(output.success).toBe(false)
+  })
+
   test('should fail if the productRegistration does not exist', async () => {
     expect.assertions(1)
-    const output = await updateProductRegistration(null, {
+    const output = await updateProductRegistration(TST_USER_CTX, {
       productRegistrationInput: {
         ...sample1.sampleParams,
         id: 'some-made-up-key',

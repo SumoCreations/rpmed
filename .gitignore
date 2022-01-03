@@ -11,3 +11,9 @@ jspm_packages
 /.vscode
 .DS_Store
 report.*.json
+
+lib
+.env
+/packages/rpmed-api/schema.graphql
+build
+/packages/rpmed-ui/src/css/tailwind.css

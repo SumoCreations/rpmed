@@ -1,0 +1,65 @@
+query RGA($rgaId: String!) {
+  response: rga(id: $rgaId) {
+    rga {
+      id
+      shippingSpeed
+      submittedOn
+      submittedBy
+      status
+      statusLog {
+        status
+        updatedOn
+        updatedBy {
+          id
+          name
+          email
+        }
+        notes
+      }
+      goods {
+        id
+        serviceId
+        customerEmail
+        customerId
+        customerName
+        customerLetterUrl
+        customerSpecialty
+        faultCode
+        serial
+        newSerial
+        lotted
+        preApproved
+        productId
+        productName
+        productType
+        symptomId
+        symptomDescription
+        symptomSolution
+        symptomSynopsis
+        modelNumber
+        resolutionFee {
+          distributor
+          endUser
+        }
+        po
+        rma
+        rgaId
+        warrantied
+        warrantyTerm
+        warrantyDescription
+        notes
+        serviceFormUrl
+        shippingSpeed
+        ssd
+        additionalComments
+        datePurchased
+        disposition
+      }
+    }
+    errors {
+      message
+      path
+    }
+    success
+  }
+}
