@@ -21,6 +21,7 @@ commands:
 
               staging)
                 echo 'export STAGE="staging"' >> $BASH_ENV
+                echo 'export SERVICE_REPO="rpmed-service-portal-staging"' >> $BASH_ENV
                 echo 'export ADMIN_REPO="rpmed-service-admin-staging"' >> $BASH_ENV
                 echo 'export REACT_APP_STAGE="staging"' >> $BASH_ENV
                 echo 'export APOLLO_GRAPH_VARIANT=staging' >> $BASH_ENV
@@ -28,6 +29,7 @@ commands:
 
               master)
                 echo 'export STAGE="prod"' >> $BASH_ENV
+                echo 'export SERVICE_REPO="rpmed-service-portal"' >> $BASH_ENV
                 echo 'export ADMIN_REPO="rpmed-service-admin"' >> $BASH_ENV
                 echo 'export REACT_APP_STAGE="prod"' >> $BASH_ENV
                 echo 'export APOLLO_GRAPH_VARIANT=prod' >> $BASH_ENV
@@ -35,6 +37,7 @@ commands:
 
               *)
                 echo 'export STAGE="dev"' >> $BASH_ENV
+                echo 'export SERVICE_REPO="rpmed-service-portal-dev"' >> $BASH_ENV
                 echo 'export ADMIN_REPO="rpmed-service-admin-dev"' >> $BASH_ENV
                 echo 'export REACT_APP_STAGE="dev"' >> $BASH_ENV
                 echo 'export APOLLO_GRAPH_VARIANT=dev' >> $BASH_ENV
@@ -168,13 +171,17 @@ jobs:
       tag: '16.13.1'
     resource_class: xlarge
     steps:
-      - aws-cli/setup:
-          profile-name: rpmed-serverless
-          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
-          aws-access-key-id: AWS_ACCESS_KEY_ID
-          aws-region: AWS_ACCESS_DEFAULT_REGION
       - test-workspace:
           workspace: 'rpmed-admin'
+
+  test_rpmed_service:
+    executor:
+      name: node/default
+      tag: '16.13.1'
+    resource_class: xlarge
+    steps:
+      - test-workspace:
+          workspace: 'rpmed-service'
 
   deploy_rpmed_api:
     executor:
@@ -209,6 +216,16 @@ jobs:
       - heroku/deploy-via-git:
           app-name: $ADMIN_REPO
 
+  deploy_rpmed_service:
+    executor:
+      name: heroku/default
+    steps:
+      - checkout
+      - setup-environment
+      - heroku/install
+      - heroku/deploy-via-git:
+          app-name: $SERVICE_REPO
+
 workflows:
   build_and_deploy:
     jobs:
@@ -229,6 +246,18 @@ workflows:
           requires:
             - build
       - deploy_rpmed_admin:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - develop
+                - staging
+                - master
+      - test_rpmed_service:
+          requires:
+            - build
+      - deploy_rpmed_service:
           requires:
             - build
           filters:
