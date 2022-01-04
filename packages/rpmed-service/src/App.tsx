@@ -27,6 +27,7 @@ class App extends Component<{}, {}, any> {
               >
                 <Routes>
                   <Route path="/" element={<PageView />} />
+                  <Route path="/d/:downloadId/*" element={<DownloadView />} />
                   <Route path="/:slug" element={<PageView />} />
                   <Route
                     path="/:slug/d/:downloadId/*"

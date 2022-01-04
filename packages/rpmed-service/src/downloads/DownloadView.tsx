@@ -41,15 +41,17 @@ const DownloadView: React.FC = () => {
 
   return (
     <article className="w-full flex flex-col relative px-8">
-      <BreadCrumbFromPage
-        slug={slug}
-        trail={[
-          {
-            label: title,
-            to: `/${slug}/d/${result?.slug}`,
-          },
-        ]}
-      />
+      {slug ? (
+        <BreadCrumbFromPage
+          slug={slug}
+          trail={[
+            {
+              label: title,
+              to: `/${slug}/d/${result?.slug}`,
+            },
+          ]}
+        />
+      ) : null}
       <ContentMainHeading>{title}</ContentMainHeading>
       {loading ? <AbsoluteOverlay /> : null}
       <TextFormContent>
