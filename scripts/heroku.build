@@ -26,9 +26,9 @@ fi
   if [ "$BUILD_ENV" = "rpmed-admin" ]; then
     yarn workspace rpmed-admin build
     echo "[POST-BUILD]: Built 'rpmed-admin' package."
-  elif [ "$BUILD_ENV" = "rpmed-portal-client" ]; then
-    yarn workspace rpmed-portal-client build
-    echo "[POST-BUILD]: Built 'rpmed-portal-client' package."
+  elif [ "$BUILD_ENV" = "rpmed-service" ]; then
+    yarn workspace rpmed-service build
+    echo "[POST-BUILD]: Built 'rpmed-service' package."
   else
     echo "Error: no build config for BUILD_ENV value '$BUILD_ENV'"
     exit 1
