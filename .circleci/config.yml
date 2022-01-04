@@ -149,6 +149,7 @@ jobs:
     executor:
       name: node/default
       tag: '16.13.1'
+    resource_class: xlarge
     steps:
       - checkout
       - setup-environment
