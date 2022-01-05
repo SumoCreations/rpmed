@@ -51,12 +51,9 @@ const View: React.FC = () => {
     >
       <Helmet title="Users - RPMed Service Admin" />
       <Routes>
-        <Route path="/admin/controls/users/" element={<UserListView />} />
-        <Route path="/admin/controls/users/new" element={<UserCreateView />} />
-        <Route
-          path="/admin/controls/users/:userId"
-          element={<UserDetailView />}
-        />
+        <Route index element={<UserListView />} />
+        <Route path="new" element={<UserCreateView />} />
+        <Route path=":userId" element={<UserDetailView />} />
       </Routes>
     </SecondaryNav.View>
   )
