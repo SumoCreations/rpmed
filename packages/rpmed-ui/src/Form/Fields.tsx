@@ -54,8 +54,13 @@ export const Fields: React.FC<FieldsProps> = ({
       className,
     ])}
   >
-    {React.Children.map(children, (child: any, index) =>
-      child ? (
+    {React.Children.map(children, (child: any, index) => {
+      const isNotControlled =
+        !child?.props?.onChange &&
+        !child?.props?.value &&
+        !child?.props?.onSelect
+      const canBeRegistered = child?.props?.name || child?.props?.nested
+      return child ? (
         <li
           className={concatStyles([
             child?.props.type === 'hidden' ? 'w-0 h-0' : ITEM_STYLE,
@@ -64,24 +69,24 @@ export const Fields: React.FC<FieldsProps> = ({
               : RESPONSIVE_GROWTH_STYLE,
           ])}
         >
-          {child?.props?.name || child?.props?.nested
+          {isNotControlled && canBeRegistered
             ? React.createElement(child.type, {
-              ...{
-                ...child.props,
-                errors,
-                key: `child${child.type}${index}${child?.props?.name ?? ''}`,
-                ...(child?.props?.name ? register(child?.props?.name) : {}),
-              },
-            })
+                ...{
+                  ...child.props,
+                  errors,
+                  key: `child${child.type}${index}${child?.props?.name ?? ''}`,
+                  ...(child?.props?.name ? register(child?.props?.name) : {}),
+                },
+              })
             : React.createElement(child.type, {
-              ...{
-                ...child.props,
-                key: `child${child.type}${index}`,
-              },
-            })}
+                ...{
+                  ...child.props,
+                  key: `child${child.type}${index}`,
+                },
+              })}
         </li>
       ) : null
-    )}
+    })}
   </ul>
 )
 

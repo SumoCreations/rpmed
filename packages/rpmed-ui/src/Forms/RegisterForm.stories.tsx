@@ -35,6 +35,20 @@ const args: RegisterFormProps = {
     console.log('Submitted', values)
     return undefined
   },
+  modelOptions: [
+    {
+      name: 'KLS-123',
+      id: '123',
+    },
+    {
+      name: 'KLS-222',
+      id: '222',
+    },
+    {
+      name: 'KLS-333',
+      id: '333',
+    },
+  ],
   defaultValues: { name: 'John Ferguson', hospital: 'Hospital 1' } as any,
 }
 
