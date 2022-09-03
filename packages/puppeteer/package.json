@@ -41,7 +41,8 @@
     "chrome-aws-lambda": "^5.5.0",
     "humps": "^2.0.1",
     "jsonwebtoken": "^8.5.1",
-    "ws": "^6.2.1"
+    "ws": "^6.2.1",
+    "api-utils": "*"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.66",
