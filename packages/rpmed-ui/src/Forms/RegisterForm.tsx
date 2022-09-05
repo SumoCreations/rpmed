@@ -15,12 +15,16 @@ import { ErrorList } from '../Form/ErrorList'
 export type RegisterFormValues = {
   name: string
   email: string
-  hospital: string
-  phoneNumber: string
-  zipcode: string
+  phone: string
+  zip: string
   modelNumber: string
   serial: string
   website: string
+  street: string
+  street2: string
+  country: string
+  state: string
+  city: string
 }
 
 const schema = yup.object({
@@ -30,10 +34,10 @@ const schema = yup.object({
   purchasedFrom: yup.string().required('cannot be blank'),
   name: yup.string().required('cannot be blank'),
   email: yup.string().email().required('cannot be blank'),
-  phoneNumber: yup.string().required('cannot be blank'),
-  address: yup.string().required('cannot be blank'),
-  address2: yup.string(),
-  zipCode: yup.string().required('cannot be blank'),
+  phone: yup.string().required('cannot be blank'),
+  street: yup.string().required('cannot be blank'),
+  street2: yup.string(),
+  zip: yup.string().required('cannot be blank'),
   city: yup.string().required('cannot be blank'),
   state: yup.string().required('cannot be blank'),
   country: yup.string().required('cannot be blank'),
@@ -135,15 +139,15 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
           className="w-full"
         />
         <TextField
-          name="address"
+          name="street"
           label="Address"
           placeholder="Street Address"
           className="w-full"
         />
         <TextField
-          name="address2"
+          name="street2"
           label="Address Line 2"
-          placeholder="(optional)"
+          placeholder="(optional) i.e. unit number"
           className="w-full"
         />
         <Fields register={register} nested grow>
@@ -162,7 +166,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
         </Fields>
         <Fields register={register} nested grow>
           <TextField
-            name="zipcode"
+            name="zip"
             label="Zip Code"
             placeholder="Zip Code"
             className="w-full"
@@ -174,7 +178,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
             className="w-full"
           />
         </Fields>
-        <TextField name="phoneNumber" label="Phone Number" className="w-full" />
+        <TextField name="phone" label="Phone Number" className="w-full" />
       </Fields>
       <ErrorList errors={formErrors as ErrorMap} />
       <Button type="submit" className="mt-2 w-full">
