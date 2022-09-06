@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Route, Routes, useLocation } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import { BatteryRecyclingIndexView } from '../BatteryRecyclingView'
 import { ControlsIndexView } from '../ControlsView'
 import { CustomerIndexView } from '../CustomerView'
@@ -12,7 +12,6 @@ import { SitemapIndexView } from '../SitemapView'
 import { AdminNavigation } from './AdminNavigation'
 
 const View: React.FC = () => {
-  const location = useLocation()
   return (
     <AdminNavigation>
       <Routes>
