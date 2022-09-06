@@ -3,12 +3,10 @@ import { Helmet } from 'react-helmet'
 import { ContentMainHeading, TextFormContent } from 'rpmed-ui/lib/V1'
 import { ContactForm } from 'rpmed-ui'
 import { useParams } from 'react-router-dom'
-import { useFindPageWithSlugQuery } from 'rpmed-schema'
 import { BreadCrumbFromPage } from '../pages'
 
 const ContactView: React.FC<{}> = () => {
   const { slug = '' } = useParams<{ slug: string }>()
-  const { data } = useFindPageWithSlugQuery({ variables: { slug } })
   return (
     <article className="flex flex-col w-full">
       <Helmet>
