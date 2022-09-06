@@ -31,9 +31,13 @@ describe('updateProductRegistration', () => {
       id: registration.partitionKey,
       registeredOn: new Date().toISOString(),
     }
-    const output = await updateProductRegistration(TST_USER_CTX, {
-      productRegistrationInput,
-    })
+    const output = await updateProductRegistration(
+      null,
+      {
+        productRegistrationInput,
+      },
+      TST_USER_CTX
+    )
     expect(output.success).toBe(true)
   })
 
@@ -44,20 +48,28 @@ describe('updateProductRegistration', () => {
       id: registration.partitionKey,
       registeredOn: new Date().toISOString(),
     }
-    const output = await updateProductRegistration(TST_ORIGIN_CTX, {
-      productRegistrationInput,
-    })
+    const output = await updateProductRegistration(
+      null,
+      {
+        productRegistrationInput,
+      },
+      TST_ORIGIN_CTX
+    )
     expect(output.success).toBe(false)
   })
 
   test('should fail if the productRegistration does not exist', async () => {
     expect.assertions(1)
-    const output = await updateProductRegistration(TST_USER_CTX, {
-      productRegistrationInput: {
-        ...sample1.sampleParams,
-        id: 'some-made-up-key',
+    const output = await updateProductRegistration(
+      null,
+      {
+        productRegistrationInput: {
+          ...sample1.sampleParams,
+          id: 'some-made-up-key',
+        },
       },
-    })
+      TST_ORIGIN_CTX
+    )
     expect(output.success).toBe(false)
   })
 })

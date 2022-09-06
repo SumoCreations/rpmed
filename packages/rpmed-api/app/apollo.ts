@@ -35,6 +35,7 @@ const server = new ApolloServer({
       currentSession = authorization ? decode(authorization) : null
       authorized = currentSession ? true : false
     } catch (e) {
+      console.log("Couldn't decode session", e)
       authorized = false
     }
     return {

@@ -12,6 +12,7 @@ jspm_packages
 .DS_Store
 report.*.json
 
+.turbo
 lib
 .env
 /packages/rpmed-api/schema.graphql

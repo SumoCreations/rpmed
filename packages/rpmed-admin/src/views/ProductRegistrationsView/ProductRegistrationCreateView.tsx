@@ -32,7 +32,7 @@ export const ProductRegistrationCreateView: React.FC = () => {
           modelNumber: values.modelNumber || '',
           registeredOn: values.registeredOn || '',
           serial: (values.serial as string) || '',
-        },
+        } as any,
       },
     })
     actions.setSubmitting(false)

@@ -12,10 +12,11 @@ import { IProductRegistrationMutationOutput } from './productRegistrationMutatio
 import { validateRegistrationInput } from './validateRegistrationInput'
 
 export const updateProductRegistration = async (
-  context: ServerContext,
+  _,
   {
     productRegistrationInput,
-  }: { productRegistrationInput: IProductRegistrationInput }
+  }: { productRegistrationInput: IProductRegistrationInput },
+  context: ServerContext
 ): Promise<IProductRegistrationMutationOutput> => {
   if (!isAuthorizedUser(context)) {
     return generateAuthorizationError()

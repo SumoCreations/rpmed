@@ -15,13 +15,13 @@ import { filterBlankAttributes } from 'utils'
  *
  * The table structure in dynamo DB is as follows:
  *
- * ----------------------------------------------------------------------
- * |                    | (GS1 Partition Key) | (GS1 Sort Key)
- * ----------------------------------------------------------------------
- * | Partition Key      | Sort Key            | HSK
- * ----------------------------------------------------------------------
- * | Serial/UUID        | CONST               | ProductId#ModelNumber#customerId
- * ----------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------------
+ * |                    | (GS1 Partition Key) | (GS1 Sort Key)                      | (GS2 Sort Key)
+ * ------------------------------------------------------------------------------------------------------
+ * | Partition Key      | Sort Key            | HSK                                 | SHSK
+ * ------------------------------------------------------------------------------------------------------
+ * | Serial/UUID        | CONST               | ProductId#ModelNumber#customerId    | registeredOn
+ * ------------------------------------------------------------------------------------------------------
  *
  * This allows for the following access patterns:
  *
@@ -30,6 +30,7 @@ import { filterBlankAttributes } from 'utils'
  * 3. Fetch all product registrations (Sort Key matches 'CONST')
  * 4. Fetch all product registrations for a given product (HSK begins with ProductId)
  * 5. Fetch all product registrations for a given product configuration (HSK matches #ProductId#ModelNumber)
+ * 6. Fetch all product registrations sorted by date registered (GS2 PK matches CONST)
  */
 
 const client = getDynamoClient()
@@ -58,6 +59,8 @@ export interface IProductRegistration {
   modelNumber: string
   registeredOn: string
   partitionKey: string
+  indexSortKey: string
+  secondaryIndexSortKey: string
   serial?: string
   sortKey: string
 }
@@ -92,8 +95,9 @@ const create = async ({
     productId,
     serial,
     sortKey: SECONDARY_KEY,
+    indexSortKey: `${productId}#${modelNumber}#${customerId}`,
+    secondaryIndexSortKey: registrationInput.registeredOn,
   }
-  const hsk = `${productId}#${modelNumber}#${customerId}`
   const params = {
     TransactItems: [
       {
@@ -101,7 +105,6 @@ const create = async ({
           ConditionExpression: 'attribute_not_exists(partitionKey)',
           Item: {
             ...filterBlankAttributes(item),
-            indexSortKey: hsk,
           },
           TableName: process.env.DYNAMODB_RESOURCES_TABLE,
         },
@@ -122,10 +125,12 @@ const update = async ({
   customerId,
   id,
   registeredOn,
+  ...input
 }: IProductRegistrationInput): Promise<IProductRegistration> => {
   const existingItem = await find(id)
   const item: IProductRegistration = {
     ...existingItem,
+    ...input,
     customerId,
     registeredOn,
     sortKey: SECONDARY_KEY,
@@ -220,9 +225,10 @@ const all = async (): Promise<IProductRegistration[]> => {
     ExpressionAttributeValues: {
       ':rkey': SECONDARY_KEY,
     },
-    IndexName: 'GSI_1',
+    IndexName: 'GSI_2',
     KeyConditionExpression: 'sortKey = :rkey',
     TableName: process.env.DYNAMODB_RESOURCES_TABLE,
+    ScanIndexForward: false,
   }
   const result = await client.query(searchParams).promise()
   return result.Items ? (result.Items as IProductRegistration[]) : []
@@ -263,6 +269,8 @@ const destroy = async (id: string): Promise<boolean> => {
 const output = ({
   partitionKey,
   sortKey,
+  secondaryIndexSortKey,
+  indexSortKey,
   ...productRegistation
 }: IProductRegistration): IProductRegistrationOutput => {
   const result = {

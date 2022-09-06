@@ -8,8 +8,9 @@ import { ErrorProductRegistrationWithIDDoesNotExist } from '../productRegistrati
 import { IProductRegistrationQueryOutput } from './productRegistrationQueryTypes'
 
 export const productRegistration = async (
-  context: ServerContext,
-  args
+  _,
+  args,
+  context: ServerContext
 ): Promise<IProductRegistrationQueryOutput> => {
   try {
     if (!isAuthorizedUser(context)) {

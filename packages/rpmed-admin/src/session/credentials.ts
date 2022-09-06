@@ -20,3 +20,7 @@ export const getCurrentUserId = (): string => {
 
 export const accessTokenPresent = (): boolean =>
   !isEmpty(getCookie(Token.Access) || '')
+
+export const refreshTokenPresent = (): boolean =>
+  !isEmpty(getCookie(Token.Refresh) || '') &&
+  getCookie(Token.Refresh) !== 'invalid'

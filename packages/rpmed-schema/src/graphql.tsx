@@ -226,15 +226,33 @@ export type ExistingDistributorInput = {
 
 /** A set of fields used to create or update a registration. */
 export type ExistingProductRegistrationInput = {
+  /** The customer's city. */
+  city?: InputMaybe<Scalars['String']>;
+  /** The customer's country. */
+  country?: InputMaybe<Scalars['String']>;
   /** The id of the customer associated to the registration. */
   customerId: Scalars['String'];
   id: Scalars['ID'];
   /** The model number for representing the specific product configuration being registered. */
   modelNumber: Scalars['String'];
+  /** The customer's phoneNumber. */
+  phone?: InputMaybe<Scalars['String']>;
+  /** The date the product was purchased. */
+  purchaseDate: Scalars['String'];
+  /** The vendor who sold the product. */
+  purchasedFrom: Scalars['String'];
   /** The date the product was registered. */
   registeredOn: Scalars['String'];
   /** The serial number associate to the product if it is lotted. */
   serial?: InputMaybe<Scalars['String']>;
+  /** The customer's state. */
+  state?: InputMaybe<Scalars['String']>;
+  /** The street address of the customer. */
+  street?: InputMaybe<Scalars['String']>;
+  /** An additional address line i.e. unit number etc. if necessary. */
+  street2?: InputMaybe<Scalars['String']>;
+  /** The customer's zipcode. */
+  zip?: InputMaybe<Scalars['String']>;
 };
 
 /** A set of fields used to create or update a symptom. */
@@ -758,14 +776,32 @@ export type NewDistributorInput = {
 
 /** A set of fields used to create or update a registration. */
 export type NewProductRegistrationInput = {
+  /** The customer's city. */
+  city?: InputMaybe<Scalars['String']>;
+  /** The customer's country. */
+  country?: InputMaybe<Scalars['String']>;
   /** The id of the customer associated to the registration. */
   customerId: Scalars['String'];
   /** The model number for representing the specific product configuration being registered. */
   modelNumber: Scalars['String'];
+  /** The customer's phoneNumber. */
+  phone?: InputMaybe<Scalars['String']>;
+  /** The date the product was purchased. */
+  purchaseDate: Scalars['String'];
+  /** The vendor who sold the product. */
+  purchasedFrom: Scalars['String'];
   /** The date the product was registered. */
   registeredOn: Scalars['String'];
   /** The serial number associate to the product if it is lotted. */
   serial?: InputMaybe<Scalars['String']>;
+  /** The customer's state. */
+  state?: InputMaybe<Scalars['String']>;
+  /** The street address of the customer. */
+  street?: InputMaybe<Scalars['String']>;
+  /** An additional address line i.e. unit number etc. if necessary. */
+  street2?: InputMaybe<Scalars['String']>;
+  /** The customer's zipcode. */
+  zip?: InputMaybe<Scalars['String']>;
 };
 
 /** A set of fields used to create or update a symptom. */
@@ -965,22 +1001,40 @@ export type ProductQueryOutput = {
 /** A troubleshooting registration for a product. */
 export type ProductRegistration = {
   __typename?: 'ProductRegistration';
+  /** The customer's city. */
+  city?: Maybe<Scalars['String']>;
+  /** The customer's country. */
+  country?: Maybe<Scalars['String']>;
   /** The customer profile associated to the registration. */
-  customer: Customer;
+  customer?: Maybe<Customer>;
   /** The id of the customer the product has been registered. */
-  customerId: Scalars['String'];
+  customerId?: Maybe<Scalars['String']>;
   /** The unique identifier for this registration */
   id: Scalars['ID'];
   /** Indicates whether or not the registration belongs to a lotted model number. */
   lotted?: Maybe<Scalars['Boolean']>;
   /** The the model number of the product that has been registered. */
-  modelNumber: Scalars['String'];
+  modelNumber?: Maybe<Scalars['String']>;
+  /** The customer's phone number. */
+  phone?: Maybe<Scalars['String']>;
   /** The id of the product that has been registered. */
-  productId: Scalars['String'];
+  productId?: Maybe<Scalars['String']>;
+  /** The date the product was purchased. */
+  purchaseDate?: Maybe<Scalars['String']>;
+  /** The vendor who sold the product. */
+  purchasedFrom?: Maybe<Scalars['String']>;
   /** The date the product was registered. */
-  registeredOn: Scalars['String'];
+  registeredOn?: Maybe<Scalars['String']>;
   /** The serial number associated to the product if applicable. */
   serial?: Maybe<Scalars['String']>;
+  /** The customer's state. */
+  state?: Maybe<Scalars['String']>;
+  /** The street address of the customer. */
+  street?: Maybe<Scalars['String']>;
+  /** An additional address line i.e. unit number etc. if necessary. */
+  street2?: Maybe<Scalars['String']>;
+  /** The customer's zipcode. */
+  zip?: Maybe<Scalars['String']>;
 };
 
 /** The result of a mutation applied to a registration. */
@@ -1784,7 +1838,7 @@ export type CreateProductRegistrationMutationVariables = Exact<{
 }>;
 
 
-export type CreateProductRegistrationMutation = { __typename?: 'Mutation', response: { __typename?: 'ProductRegistrationMutationOutput', success: boolean, productRegistration?: { __typename?: 'ProductRegistration', id: string, modelNumber: string, productId: string, customerId: string, serial?: string | null | undefined, customer: { __typename?: 'Customer', id: string, email?: string | null | undefined, name?: string | null | undefined } } | null | undefined, errors?: Array<{ __typename?: 'ValidationError', path: string, message: string } | null | undefined> | null | undefined } };
+export type CreateProductRegistrationMutation = { __typename?: 'Mutation', response: { __typename?: 'ProductRegistrationMutationOutput', success: boolean, productRegistration?: { __typename?: 'ProductRegistration', id: string, modelNumber?: string | null | undefined, productId?: string | null | undefined, customerId?: string | null | undefined, serial?: string | null | undefined, customer?: { __typename?: 'Customer', id: string, email?: string | null | undefined, name?: string | null | undefined } | null | undefined } | null | undefined, errors?: Array<{ __typename?: 'ValidationError', path: string, message: string } | null | undefined> | null | undefined } };
 
 export type CreateProductSymptomMutationVariables = Exact<{
   productSymptomInput: NewProductSymptomInput;
@@ -2009,12 +2063,12 @@ export type ProductRegistrationQueryVariables = Exact<{
 }>;
 
 
-export type ProductRegistrationQuery = { __typename?: 'Query', response: { __typename?: 'ProductRegistrationQueryOutput', success: boolean, productRegistration?: { __typename?: 'ProductRegistration', id: string, productId: string, customerId: string, lotted?: boolean | null | undefined, serial?: string | null | undefined, modelNumber: string, registeredOn: string, customer: { __typename?: 'Customer', id: string, name?: string | null | undefined, email?: string | null | undefined } } | null | undefined, errors?: Array<{ __typename?: 'ValidationError', message: string, path: string } | null | undefined> | null | undefined } };
+export type ProductRegistrationQuery = { __typename?: 'Query', response: { __typename?: 'ProductRegistrationQueryOutput', success: boolean, productRegistration?: { __typename?: 'ProductRegistration', id: string, productId?: string | null | undefined, customerId?: string | null | undefined, modelNumber?: string | null | undefined, serial?: string | null | undefined, lotted?: boolean | null | undefined, street?: string | null | undefined, street2?: string | null | undefined, phone?: string | null | undefined, city?: string | null | undefined, state?: string | null | undefined, zip?: string | null | undefined, country?: string | null | undefined, registeredOn?: string | null | undefined, purchaseDate?: string | null | undefined, purchasedFrom?: string | null | undefined, customer?: { __typename?: 'Customer', id: string, name?: string | null | undefined, email?: string | null | undefined } | null | undefined } | null | undefined, errors?: Array<{ __typename?: 'ValidationError', message: string, path: string } | null | undefined> | null | undefined } };
 
 export type ProductRegistrationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ProductRegistrationsQuery = { __typename?: 'Query', response: { __typename?: 'ProductRegistrationQueryOutput', success: boolean, productRegistrations?: Array<{ __typename?: 'ProductRegistration', id: string, productId: string, customerId: string, serial?: string | null | undefined, modelNumber: string, customer: { __typename?: 'Customer', id: string, name?: string | null | undefined, email?: string | null | undefined } } | null | undefined> | null | undefined, errors?: Array<{ __typename?: 'ValidationError', message: string, path: string } | null | undefined> | null | undefined } };
+export type ProductRegistrationsQuery = { __typename?: 'Query', response: { __typename?: 'ProductRegistrationQueryOutput', success: boolean, productRegistrations?: Array<{ __typename?: 'ProductRegistration', id: string, productId?: string | null | undefined, customerId?: string | null | undefined, registeredOn?: string | null | undefined, purchaseDate?: string | null | undefined, purchasedFrom?: string | null | undefined, serial?: string | null | undefined, modelNumber?: string | null | undefined, customer?: { __typename?: 'Customer', id: string, name?: string | null | undefined, email?: string | null | undefined } | null | undefined } | null | undefined> | null | undefined, errors?: Array<{ __typename?: 'ValidationError', message: string, path: string } | null | undefined> | null | undefined } };
 
 export type ProductSymptomQueryVariables = Exact<{
   productSymptomId: Scalars['String'];
@@ -2113,7 +2167,7 @@ export type UpdateProductRegistrationMutationVariables = Exact<{
 }>;
 
 
-export type UpdateProductRegistrationMutation = { __typename?: 'Mutation', response: { __typename?: 'ProductRegistrationMutationOutput', success: boolean, productRegistration?: { __typename?: 'ProductRegistration', id: string, modelNumber: string, productId: string, customerId: string, serial?: string | null | undefined, customer: { __typename?: 'Customer', id: string, email?: string | null | undefined, name?: string | null | undefined } } | null | undefined, errors?: Array<{ __typename?: 'ValidationError', path: string, message: string } | null | undefined> | null | undefined } };
+export type UpdateProductRegistrationMutation = { __typename?: 'Mutation', response: { __typename?: 'ProductRegistrationMutationOutput', success: boolean, productRegistration?: { __typename?: 'ProductRegistration', id: string, modelNumber?: string | null | undefined, productId?: string | null | undefined, customerId?: string | null | undefined, serial?: string | null | undefined, customer?: { __typename?: 'Customer', id: string, email?: string | null | undefined, name?: string | null | undefined } | null | undefined } | null | undefined, errors?: Array<{ __typename?: 'ValidationError', path: string, message: string } | null | undefined> | null | undefined } };
 
 export type UpdateProductSymptomMutationVariables = Exact<{
   productSymptomInput: ExistingProductSymptomInput;
@@ -4050,9 +4104,19 @@ export const ProductRegistrationDocument = gql`
         name
         email
       }
-      lotted
-      serial
       modelNumber
+      serial
+      lotted
+      street
+      street2
+      phone
+      city
+      state
+      zip
+      country
+      registeredOn
+      purchaseDate
+      purchasedFrom
       registeredOn
     }
     errors {
@@ -4103,6 +4167,9 @@ export const ProductRegistrationsDocument = gql`
         name
         email
       }
+      registeredOn
+      purchaseDate
+      purchasedFrom
       serial
       modelNumber
     }
@@ -5960,14 +6027,23 @@ export type ProductQueryOutputResolvers<ContextType = any, ParentType extends Re
 };
 
 export type ProductRegistrationResolvers<ContextType = any, ParentType extends ResolversParentTypes['ProductRegistration'] = ResolversParentTypes['ProductRegistration']> = {
-  customer?: Resolver<ResolversTypes['Customer'], ParentType, ContextType>;
-  customerId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  city?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  country?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  customer?: Resolver<Maybe<ResolversTypes['Customer']>, ParentType, ContextType>;
+  customerId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   lotted?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
-  modelNumber?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  productId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  registeredOn?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  modelNumber?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  phone?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  productId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  purchaseDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  purchasedFrom?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  registeredOn?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   serial?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  state?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  street?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  street2?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  zip?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

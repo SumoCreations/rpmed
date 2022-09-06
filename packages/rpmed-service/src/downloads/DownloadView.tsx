@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { ContentMainHeading, Form, TextFormContent } from 'rpmed-ui/lib/V1'
 import { AbsoluteOverlay, Clipboard } from 'rpmed-ui'
-import { documents } from './documents'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDownload } from '@fortawesome/pro-solid-svg-icons'
 import { useQuery } from '../routes'
@@ -81,6 +80,7 @@ const DownloadView: React.FC = () => {
               width="100%"
               height="700px"
               className="mt-4 mb-12"
+              title="document preview"
             ></iframe>
           )}
         </div>

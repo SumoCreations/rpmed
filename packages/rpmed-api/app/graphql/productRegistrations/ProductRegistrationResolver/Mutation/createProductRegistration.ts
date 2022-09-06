@@ -6,18 +6,20 @@ import {
 import {
   generateAuthorizationError,
   isAuthorized,
+  isAuthorizedOrigin,
   ServerContext,
 } from '../../../auth'
 import { IProductRegistrationMutationOutput } from './productRegistrationMutationTypes'
 import { validateRegistrationInput } from './validateRegistrationInput'
 
 export const createProductRegistration = async (
-  context: ServerContext,
+  _,
   {
     productRegistrationInput,
-  }: { productRegistrationInput: IProductRegistrationInput }
+  }: { productRegistrationInput: IProductRegistrationInput },
+  context: ServerContext
 ): Promise<IProductRegistrationMutationOutput> => {
-  if (!isAuthorized(context)) {
+  if (!isAuthorized(context) && !isAuthorizedOrigin(context)) {
     return generateAuthorizationError()
   }
   const { errorResponse, input, customer } = await validateRegistrationInput(

@@ -50,7 +50,7 @@ const ProductRegistrations: React.FC<IProductRegistrationProps> = ({
   }
   const filterProductRegistration = ({ customer, id }: ProductRegistration) =>
     filterText.length > 0
-      ? [id, customer.name, customer.email]
+      ? [id, customer?.name, customer?.email]
           .map(
             val =>
               (val?.toLowerCase().indexOf(filterText.toLowerCase()) ?? -1) >= 0
@@ -64,8 +64,11 @@ const ProductRegistrations: React.FC<IProductRegistrationProps> = ({
     <Link to={`/admin/registrations/${p.id}`} key={p.id}>
       {p.id}
     </Link>,
-    <Link to={`/admin/customers/${p.customerId}`} key={p.customerId}>
-      {p.customer.name}
+    <Link
+      to={`/admin/customers/${p.customerId}`}
+      key={p.customerId ?? `customerFor${p.id}`}
+    >
+      {p.customer?.name}
     </Link>,
     <Link
       to={`/admin/products/modelNumbers/${p.modelNumber}`}
@@ -73,6 +76,7 @@ const ProductRegistrations: React.FC<IProductRegistrationProps> = ({
     >
       {p.modelNumber}
     </Link>,
+    p.registeredOn,
     <Actions.Group key={`actions${p.id}`}>
       <Actions.Primary
         onClick={sendTo({ url: `/admin/registrations/${p.id}` })}
@@ -98,7 +102,13 @@ const ProductRegistrations: React.FC<IProductRegistrationProps> = ({
       initialSortColumnIndex={0}
       sortable={[true, true, false, false]}
       rows={rows}
-      headings={['Serial / ID', 'Customer', 'Model Number', 'Product', '']}
+      headings={[
+        'Serial / ID',
+        'Customer',
+        'Model Number',
+        'Registered On',
+        '',
+      ]}
     />
   )
 }

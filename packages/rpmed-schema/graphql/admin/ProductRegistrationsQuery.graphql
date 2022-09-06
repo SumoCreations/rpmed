@@ -9,6 +9,9 @@ query ProductRegistrations {
         name
         email
       }
+      registeredOn
+      purchaseDate
+      purchasedFrom
       serial
       modelNumber
     }

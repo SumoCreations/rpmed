@@ -12,23 +12,23 @@ export const ProductRegistrationTypeDef = gql`
     """
     The date the product was registered.
     """
-    registeredOn: String!
+    registeredOn: String
     """
     The customer profile associated to the registration.
     """
-    customer: Customer!
+    customer: Customer
     """
     The id of the customer the product has been registered.
     """
-    customerId: String!
+    customerId: String
     """
     The id of the product that has been registered.
     """
-    productId: String!
+    productId: String
     """
     The the model number of the product that has been registered.
     """
-    modelNumber: String!
+    modelNumber: String
     """
     The serial number associated to the product if applicable.
     """
@@ -37,6 +37,42 @@ export const ProductRegistrationTypeDef = gql`
     Indicates whether or not the registration belongs to a lotted model number.
     """
     lotted: Boolean
+    """
+    The vendor who sold the product.
+    """
+    purchasedFrom: String
+    """
+    The date the product was purchased.
+    """
+    purchaseDate: String
+    """
+    The street address of the customer.
+    """
+    street: String
+    """
+    An additional address line i.e. unit number etc. if necessary.
+    """
+    street2: String
+    """
+    The customer's city.
+    """
+    city: String
+    """
+    The customer's state.
+    """
+    state: String
+    """
+    The customer's zipcode.
+    """
+    zip: String
+    """
+    The customer's country.
+    """
+    country: String
+    """
+    The customer's phone number.
+    """
+    phone: String
   }
 `
 
@@ -122,6 +158,42 @@ export const typeDefs = gql`
     The date the product was registered.
     """
     registeredOn: String!
+    """
+    The vendor who sold the product.
+    """
+    purchasedFrom: String!
+    """
+    The date the product was purchased.
+    """
+    purchaseDate: String!
+    """
+    The street address of the customer.
+    """
+    street: String
+    """
+    An additional address line i.e. unit number etc. if necessary.
+    """
+    street2: String
+    """
+    The customer's city.
+    """
+    city: String
+    """
+    The customer's state.
+    """
+    state: String
+    """
+    The customer's zipcode.
+    """
+    zip: String
+    """
+    The customer's country.
+    """
+    country: String
+    """
+    The customer's phoneNumber.
+    """
+    phone: String
   }
 
   """
@@ -145,6 +217,42 @@ export const typeDefs = gql`
     The date the product was registered.
     """
     registeredOn: String!
+    """
+    The vendor who sold the product.
+    """
+    purchasedFrom: String!
+    """
+    The date the product was purchased.
+    """
+    purchaseDate: String!
+    """
+    The street address of the customer.
+    """
+    street: String
+    """
+    An additional address line i.e. unit number etc. if necessary.
+    """
+    street2: String
+    """
+    The customer's city.
+    """
+    city: String
+    """
+    The customer's state.
+    """
+    state: String
+    """
+    The customer's zipcode.
+    """
+    zip: String
+    """
+    The customer's country.
+    """
+    country: String
+    """
+    The customer's phoneNumber.
+    """
+    phone: String
   }
 
   extend type Mutation {

@@ -16,6 +16,7 @@ import store from './store'
 import { UiProvider } from 'rpmed-ui'
 import { defaultTheme, ThemeProvider } from 'rpmed-ui/lib/V1'
 import { AdminView, LoginView, TokenView } from './views'
+import { Toaster } from 'react-hot-toast'
 
 class App extends Component<{}, {}, any> {
   public componentDidMount() {
@@ -62,6 +63,7 @@ class App extends Component<{}, {}, any> {
                     <Route path="/" element={<Navigate to="/login" />} />
                   </Routes>
                 </Router>
+                <Toaster />
               </DndProvider>
             </UiProvider>
           </ThemeProvider>

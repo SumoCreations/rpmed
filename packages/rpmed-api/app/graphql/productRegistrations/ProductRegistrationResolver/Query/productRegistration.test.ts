@@ -24,9 +24,13 @@ describe('Query', () => {
   describe('productRegistration', () => {
     test('should return a productRegistration if it exists', async () => {
       expect.assertions(6)
-      const output = await productRegistration(TST_USER_CTX, {
-        id: existingProductRegistration.partitionKey,
-      })
+      const output = await productRegistration(
+        null,
+        {
+          id: existingProductRegistration.partitionKey,
+        },
+        TST_USER_CTX
+      )
       expect(output.success).toEqual(true)
       expect(output.productRegistration).toBeDefined()
       expect(output.productRegistrations).toBeUndefined()
@@ -43,9 +47,13 @@ describe('Query', () => {
 
     test('should fail if not authorized', async () => {
       expect.assertions(4)
-      const output = await productRegistration(TST_ORIGIN_CTX, {
-        id: existingProductRegistration.partitionKey,
-      })
+      const output = await productRegistration(
+        null,
+        {
+          id: existingProductRegistration.partitionKey,
+        },
+        TST_ORIGIN_CTX
+      )
       expect(output.success).toEqual(false)
       expect(output.productRegistration).toBeUndefined()
       expect(output.productRegistrations).toBeUndefined()
@@ -54,9 +62,13 @@ describe('Query', () => {
 
     test('should return an error if it does not exist', async () => {
       expect.assertions(4)
-      const output = await productRegistration(TST_USER_CTX, {
-        id: 'DOES-NOT-EXIST',
-      })
+      const output = await productRegistration(
+        null,
+        {
+          id: 'DOES-NOT-EXIST',
+        },
+        TST_USER_CTX
+      )
       expect(output.success).toEqual(false)
       expect(output.productRegistration).toBeUndefined()
       expect(output.productRegistrations).toBeUndefined()

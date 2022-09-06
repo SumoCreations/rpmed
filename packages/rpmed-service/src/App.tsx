@@ -8,7 +8,7 @@ import { PageView, PageNotFoundView } from './pages'
 import * as MedLED from './medled'
 import { defaultTheme, Header, ThemeProvider } from 'rpmed-ui/lib/V1'
 import { DownloadView } from './downloads'
-
+import { Toaster } from 'react-hot-toast'
 class App extends Component<{}, {}, any> {
   public render() {
     return (
@@ -61,6 +61,7 @@ class App extends Component<{}, {}, any> {
               </div>
             </Router>
           </div>
+          <Toaster />
         </ThemeProvider>
       </ApolloProvider>
     )

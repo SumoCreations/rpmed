@@ -110,6 +110,20 @@ const renderForm = ({
           </Form.RowItem>
         </Form.Row>
       ) : null}
+      {values.street ? (
+        <div className="my-1 grid grid-cols-2 gap-4">
+          <strong>Address</strong>
+
+          <ol className="flex flex-col">
+            <li>{values.street}</li>
+            {values.street2 ? <li>{values.street2}</li> : undefined}
+            <li>{values.city}</li>
+            <li>{values.state}</li>
+            <li>{values.zip}</li>
+            <li>{values.country}</li>
+          </ol>
+        </div>
+      ) : null}
       <Form.GeneralError name="_" />
       <Form.Button type="submit" disabled={cannotSubmit}>
         <span>
