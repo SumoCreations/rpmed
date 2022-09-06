@@ -1,5 +1,5 @@
 import { Formik } from 'formik'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Flex } from 'rebass'
 import * as Yup from 'yup'
 import { ModelNumber } from 'rpmed-schema'
@@ -37,13 +37,16 @@ export const RGAGoodForm: React.FC<IRGAGoodFormProps> = ({
   const [formSection, setSection] = useState(FormSection.ModelNumber)
   const [modelNumber, setModel] = useState(null as ModelNumber | null)
 
-  const updateSection = (section: FormSection) => {
-    if (onSectionChange) {
-      onSectionChange(section)
-    }
-    console.log(`Updating section to ${section}`)
-    setSection(section)
-  }
+  const updateSection = useCallback(
+    (section: FormSection) => {
+      if (onSectionChange) {
+        onSectionChange(section)
+      }
+      console.log(`Updating section to ${section}`)
+      setSection(section)
+    },
+    [setSection, onSectionChange]
+  )
 
   const handleReset = () => {
     // This handler isn't firing as expected so we're resetting the form via state in the parent.

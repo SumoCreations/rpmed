@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
 import { ContentMainHeading, TextFormContent } from 'rpmed-ui/lib/V1'
-import { BreadCrumb, ContactForm } from 'rpmed-ui'
+import { ContactForm } from 'rpmed-ui'
 import { useParams } from 'react-router-dom'
 import { useFindPageWithSlugQuery } from 'rpmed-schema'
 import { BreadCrumbFromPage } from '../pages'

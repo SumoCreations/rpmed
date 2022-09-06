@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box, Flex } from 'rebass'
-import { Divider, Form, Heading, Indicators } from 'rpmed-ui/lib/V1'
+import { Divider, Form, Indicators } from 'rpmed-ui/lib/V1'
 import { FormField, IInteractiveSection, IRGAGoodFormValues } from './types'
 import { ShippingSpeedSelect } from '../RgaShippingSpeedSelect'
 import { faAddressCard } from '@fortawesome/pro-solid-svg-icons'

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Flex } from 'rebass'
-import { Divider, Form, Heading, Input } from 'rpmed-ui/lib/V1'
+import { Form, Input } from 'rpmed-ui/lib/V1'
 
 import { IRgaGoodFormSection } from './types'
 
