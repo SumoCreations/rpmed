@@ -7,6 +7,8 @@ import {
 import { IProductRegistrationQueryOutput } from './productRegistrationQueryTypes'
 
 export const productRegistrations = async (
+  _: any,
+  _args: any,
   context: ServerContext
 ): Promise<IProductRegistrationQueryOutput> => {
   if (!isAuthorizedUser(context)) {
@@ -17,12 +19,19 @@ export const productRegistrations = async (
     return {
       productRegistrations: results.map(ProductRegistration.output).map(o => ({
         ...o,
-        customer: async () =>
-          Customer.output(await Customer.find(o.customerId)),
+        customer: async () => {
+          try {
+            return Customer.output(await Customer.find(o.customerId))
+          } catch (e) {
+            console.log('Could not fetch customer', e)
+            return null
+          }
+        },
       })),
       success: true,
     }
   } catch (e) {
+    console.log("We've got an error: ", e)
     return {
       errors: [
         {

@@ -2,11 +2,22 @@ import { Customer, ICustomer, ICustomerInput } from '../../../../models'
 import * as Validation from '../../../../validations'
 import { ErrorCustomerCredentialsInvalid } from '../customerErrors'
 import { ICustomerMutationOutput } from './customerMutationTypes'
+import {
+  ServerContext,
+  generateAuthorizationError,
+  isAuthorizedUser,
+  isAuthorizedOrigin,
+} from '../../../auth'
 
 export const createCustomer = async (
   _: any,
-  { customerInput }: { customerInput: ICustomerInput }
+  { customerInput }: { customerInput: ICustomerInput },
+  context: ServerContext
 ): Promise<ICustomerMutationOutput> => {
+  if (!isAuthorizedUser(context) && !isAuthorizedOrigin(context)) {
+    return generateAuthorizationError()
+  }
+
   try {
     await Validation.Customer.Default.validate(customerInput, {
       abortEarly: false,
@@ -21,12 +32,7 @@ export const createCustomer = async (
   try {
     let customer: ICustomer
     if (existingCustomer) {
-      customer = await Customer.update({
-        id: existingCustomer.id,
-        email,
-        name,
-        ...inputs,
-      })
+      customer = existingCustomer
     } else {
       customer = await Customer.create({
         email,
@@ -36,6 +42,7 @@ export const createCustomer = async (
     }
     return { customer: Customer.output(customer), success: true }
   } catch (e) {
+    console.log('Customer Failure:', e)
     return { success: false, errors: [ErrorCustomerCredentialsInvalid] }
   }
 }

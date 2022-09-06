@@ -1,5 +1,9 @@
 import { getCookie, removeCookie, setCookie } from 'react-simple-cookie-store'
-import { accessTokenPresent, getCurrentUserId } from './credentials'
+import {
+  accessTokenPresent,
+  getCurrentUserId,
+  refreshTokenPresent,
+} from './credentials'
 import {
   ICredentials,
   SessionActionTypes,
@@ -22,7 +26,7 @@ export const updateSession = (newSession: ICredentials): SessionActionTypes => {
   updateCredentials(newSession)
   return {
     payload: {
-      isAuthenticated: accessTokenPresent(),
+      isAuthenticated: accessTokenPresent() && refreshTokenPresent(),
       userId: getCurrentUserId(),
     },
     type: UPDATE_SESSION,

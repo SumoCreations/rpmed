@@ -28,7 +28,11 @@ describe('Query', () => {
       await ProductRegistration.create({ ...example1.sampleParams })
       await ProductRegistration.create({ ...example2.sampleParams })
 
-      const output = await productRegistrations(TST_USER_CTX)
+      const output = await productRegistrations(
+        undefined,
+        undefined,
+        TST_USER_CTX
+      )
       expect(output.success).toEqual(true)
       expect(output.productRegistration).toBeUndefined()
       expect(output.productRegistrations).toBeDefined()
@@ -38,7 +42,7 @@ describe('Query', () => {
 
   test('should fail if not authorized', async () => {
     expect.assertions(4)
-    const output = await productRegistrations(null)
+    const output = await productRegistrations(undefined, undefined, null)
     expect(output.success).toEqual(false)
     expect(output.productRegistration).toBeUndefined()
     expect(output.productRegistrations).toBeUndefined()

@@ -9,9 +9,19 @@ query ProductRegistration($productRegistrationId: String!) {
         name
         email
       }
-      lotted
-      serial
       modelNumber
+      serial
+      lotted
+      street
+      street2
+      phone
+      city
+      state
+      zip
+      country
+      registeredOn
+      purchaseDate
+      purchasedFrom
       registeredOn
     }
     errors {

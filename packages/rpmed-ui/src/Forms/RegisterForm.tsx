@@ -25,6 +25,8 @@ export type RegisterFormValues = {
   country: string
   state: string
   city: string
+  purchasedFrom: string
+  purchaseDate: string
 }
 
 const schema = yup.object({
@@ -46,6 +48,9 @@ const schema = yup.object({
 export interface RegisterFormProps extends FormProps<RegisterFormValues> {
   loading?: boolean
   modelOptions: SelectOption[]
+  customerHeading?: string
+  purchaseHeading?: string
+  disableCustomerFields?: boolean
 }
 
 export const RegisterForm: React.FC<RegisterFormProps> = ({
@@ -54,6 +59,9 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
   defaultValues,
   submitTitle,
   modelOptions,
+  customerHeading = 'Tell us about you:',
+  purchaseHeading = "Tell us about the product you're registering:",
+  disableCustomerFields = false,
 }) => {
   const {
     handleSubmit,
@@ -97,9 +105,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
   return (
     <form onSubmit={handleFormSubmit} className="relative">
       <Fields register={register} errors={formErrors} grow className="pb-2">
-        <h3 className="text-md font-bold mt-4">
-          Tell us about the product you're registering:
-        </h3>
+        <h3 className="text-md font-bold mt-4">{purchaseHeading}</h3>
         <SelectField
           name="modelNumber"
           label="Model Number"
@@ -123,13 +129,14 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
             placeholder="Vendor or store name."
           />
         </Fields>
-        <h3 className="text-md font-bold mt-4">Tell us about you:</h3>
+        <h3 className="text-md font-bold mt-4">{customerHeading}</h3>
         <TextField
           name="name"
           label="Name"
           placeholder="Full Name"
           ref={field}
           className="w-full"
+          disabled={disableCustomerFields}
         />
         <TextField
           name="email"
@@ -137,6 +144,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
           placeholder="address@example.com"
           ref={field}
           className="w-full"
+          disabled={disableCustomerFields}
         />
         <TextField
           name="street"

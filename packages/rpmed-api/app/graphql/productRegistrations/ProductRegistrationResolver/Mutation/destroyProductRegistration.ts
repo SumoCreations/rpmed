@@ -12,8 +12,9 @@ import {
 } from '../../../auth'
 
 export const destroyProductRegistration = async (
-  context: ServerContext,
-  { id }: { id: string }
+  _,
+  { id }: { id: string },
+  context: ServerContext
 ): Promise<IProductRegistrationMutationOutput> => {
   if (!isAuthorizedUser(context)) {
     return generateAuthorizationError()

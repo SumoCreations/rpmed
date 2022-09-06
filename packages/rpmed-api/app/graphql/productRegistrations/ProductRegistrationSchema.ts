@@ -40,11 +40,11 @@ export const ProductRegistrationTypeDef = gql`
     """
     The vendor who sold the product.
     """
-    purchasedFrom: String!
+    purchasedFrom: String
     """
     The date the product was purchased.
     """
-    purchaseDate: String!
+    purchaseDate: String
     """
     The street address of the customer.
     """

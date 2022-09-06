@@ -60,14 +60,6 @@ export const validateRegistrationInput = async (
         success: false,
       },
     }
-  } else if (!relatedModel.lotted && hasSerial) {
-    // Verify there is no serial present for a non lotted product.
-    return {
-      errorResponse: {
-        errors: [E.ErrorProductRegistrationWithSerialMustBeBlank],
-        success: false,
-      },
-    }
   }
 
   // Ensure the product registration exists if an ID is passed

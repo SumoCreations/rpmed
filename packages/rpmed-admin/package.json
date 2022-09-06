@@ -34,6 +34,7 @@
     "react-dropzone": "^10.1.5",
     "react-google-recaptcha": "^1.0.5",
     "react-helmet": "^5.2.1",
+    "react-hot-toast": "^2.3.0",
     "react-redux": "^7.1.0",
     "react-router": "^6",
     "react-router-dom": "^6",

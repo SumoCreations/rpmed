@@ -59,7 +59,10 @@ const RegisterView: React.FC<{}> = () => {
         },
       },
     })
-    await registerProduct({
+    if ((customerResponse.errors?.length ?? 0) > 0) {
+      toast.error('Could not register your product due to an unforeseen error.')
+    }
+    const registration = await registerProduct({
       variables: {
         productRegistrationInput: {
           ...values,
@@ -68,6 +71,9 @@ const RegisterView: React.FC<{}> = () => {
         },
       },
     })
+    if ((registration.errors?.length ?? 0) > 0) {
+      toast.error('Could not register your product due to an unforeseen error.')
+    }
     toast.success('Your product has been registered!')
     setRegistered(true)
     return undefined

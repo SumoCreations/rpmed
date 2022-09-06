@@ -13,7 +13,6 @@ import { AdminNavigation } from './AdminNavigation'
 
 const View: React.FC = () => {
   const location = useLocation()
-  console.log(location)
   return (
     <AdminNavigation>
       <Routes>

@@ -14,63 +14,63 @@ import {
   Toolbar,
 } from 'rpmed-ui/lib/V1'
 import {
+  useModelNumbersQuery,
   useProductRegistrationQuery,
   useUpdateProductRegistrationMutation,
 } from 'rpmed-schema'
-import {
-  ProductRegistrationForm,
-  ProductRegistrationFormSubmitHandler,
-  IProductRegistrationFormValues,
-} from './ProductRegistrationForm'
+import toast from 'react-hot-toast'
+// import {
+//   ProductRegistrationForm,
+//   ProductRegistrationFormSubmitHandler,
+//   IProductRegistrationFormValues,
+// } from './ProductRegistrationForm'
+import { RegisterForm, RegisterFormProps } from 'rpmed-ui'
 
 const View: React.FC = () => {
   const navigate = useNavigate()
   const { productRegistrationId = '' } = useParams()
   const handleBack = () => navigate('/admin/registrations')
-  const [updateProductRegistration] = useUpdateProductRegistrationMutation()
+  const [
+    updateProductRegistration,
+    { loading: updating },
+  ] = useUpdateProductRegistrationMutation()
   const { loading, data } = useProductRegistrationQuery({
     variables: {
       productRegistrationId,
     },
   })
+  const { loading: loadingModels, data: modelsData } = useModelNumbersQuery()
+  const modelNumbers =
+    modelsData?.response?.modelNumbers?.map(m => ({
+      id: m?.id ?? '',
+      name: m?.id ?? '',
+    })) ?? []
+
   const productRegistration = data?.response.productRegistration
-  const initialValues = {
-    customerId: productRegistration?.customerId,
-    customerName: (get(productRegistration, 'customer.name') as string) || '',
-    id: productRegistration?.id,
-    lotted: productRegistration?.lotted as boolean,
-    modelNumber: productRegistration?.modelNumber,
-    productId: productRegistration?.productId,
-    registeredOn: productRegistration?.registeredOn as string,
-    registeredOnDisplayDate: new Date(
-      productRegistration?.registeredOn as string
-    ).toLocaleDateString(),
-    serial: productRegistration?.serial,
-  }
-  const handleSubmit: ProductRegistrationFormSubmitHandler = async (
-    values,
-    actions
-  ) => {
+  const handleSubmit: RegisterFormProps['onSubmit'] = async ({
+    name,
+    email,
+    website,
+    ...values
+  }) => {
     const result = await updateProductRegistration({
       variables: {
         productRegistrationInput: {
-          customerId: values.customerId ?? '',
           id: productRegistration?.id ?? '',
-          modelNumber: values.modelNumber ?? '',
-          registeredOn: values.registeredOn ?? '',
-          serial: (values.serial as string) ?? '',
-        },
+          customerId: productRegistration?.customerId || '',
+          registeredOn: productRegistration?.registeredOn || '',
+          ...values,
+        } as any,
       },
     })
-    actions.setSubmitting(false)
     const errors = (get(result, 'data.response.errors') || []) as ErrorList
     if (errors.length > 0) {
-      errors.forEach(({ path, message }) => {
-        actions.setFieldError(path as any, message)
-      })
-      return
+      toast.error('Could not update product registration.')
+      return undefined
     }
-    navigate('/admin/registrations')
+    toast.success('Successfully updated registration.')
+    // navigate('/admin/registrations')
+    return undefined
   }
   return (
     <Layout.Layout>
@@ -86,17 +86,35 @@ const View: React.FC = () => {
         </Toolbar.View>
         <Card.Flat>
           <Helmet
-            title={`${productRegistration?.customer.name ||
+            title={`${productRegistration?.customer?.name ||
               'Loading Product Registration'} - RPMed Service Admin`}
           />
-          {loading ? (
-            <Indicators.Spinner size="lg" />
-          ) : (
-            <h2>{productRegistration?.customer.name}</h2>
-          )}
-          <ProductRegistrationForm
-            initialValues={initialValues as IProductRegistrationFormValues}
+          {loading ? <Indicators.Spinner size="lg" /> : undefined}
+          <RegisterForm
+            defaultValues={{
+              name: (get(productRegistration, 'customer.name') as string) || '',
+              email:
+                (get(productRegistration, 'customer.email') as string) || '',
+              modelNumber: productRegistration?.modelNumber ?? '',
+              purchaseDate: productRegistration?.purchaseDate as string,
+              purchasedFrom: productRegistration?.purchasedFrom as string,
+              serial: productRegistration?.serial as string,
+              street: productRegistration?.street as string,
+              street2: productRegistration?.street2 ?? '',
+              city: productRegistration?.city as string,
+              state: productRegistration?.state as string,
+              zip: productRegistration?.zip as string,
+              country: productRegistration?.country as string,
+              phone: productRegistration?.phone as string,
+              website: '',
+            }}
+            loading={loadingModels || loading || updating}
             onSubmit={handleSubmit}
+            modelOptions={modelNumbers}
+            customerHeading="Customer Details:"
+            purchaseHeading="Product Details:"
+            disableCustomerFields
+            submitTitle="Update Registration Details"
           />
         </Card.Flat>
       </Content>
