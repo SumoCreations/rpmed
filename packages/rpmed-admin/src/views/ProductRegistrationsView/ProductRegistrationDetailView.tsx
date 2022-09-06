@@ -34,7 +34,7 @@ const View: React.FC = () => {
     updateProductRegistration,
     { loading: updating },
   ] = useUpdateProductRegistrationMutation()
-  const { loading, data } = useProductRegistrationQuery({
+  const { loading, data, refetch } = useProductRegistrationQuery({
     variables: {
       productRegistrationId,
     },
@@ -68,6 +68,7 @@ const View: React.FC = () => {
       toast.error('Could not update product registration.')
       return undefined
     }
+    refetch()
     toast.success('Successfully updated registration.')
     // navigate('/admin/registrations')
     return undefined
