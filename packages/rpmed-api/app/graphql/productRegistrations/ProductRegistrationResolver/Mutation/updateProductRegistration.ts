@@ -29,12 +29,6 @@ export const updateProductRegistration = async (
   }
   try {
     const productRegistration = await ProductRegistration.update(input)
-    console.log('UPDATE PRODUCT REGISTRATION', input)
-    console.log('UPDATED PRODUCT REGISTRATION', productRegistration)
-    console.log(
-      'ProductRegistration.output(productRegistration)',
-      ProductRegistration.output(productRegistration)
-    )
     return {
       productRegistration: {
         ...ProductRegistration.output(productRegistration),
