@@ -105,30 +105,6 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
   return (
     <form onSubmit={handleFormSubmit} className="relative">
       <Fields register={register} errors={formErrors} grow className="pb-2">
-        <h3 className="text-md font-bold mt-4">{purchaseHeading}</h3>
-        <SelectField
-          name="modelNumber"
-          label="Model Number"
-          className="w-full"
-          options={modelOptions}
-          onSelect={onSelectModel}
-          value={modelNumber ?? ''}
-        />
-        <TextField name="serial" label="Serial Number" className="w-full" />
-        <Fields register={register} nested grow>
-          <TextField
-            name="purchaseDate"
-            label="Date Purchased"
-            className="w-full"
-            type="date"
-          />
-          <TextField
-            name="purchasedFrom"
-            label="Where did you purchase this product?"
-            className="w-full"
-            placeholder="Vendor or store name."
-          />
-        </Fields>
         <h3 className="text-md font-bold mt-4">{customerHeading}</h3>
         <TextField
           name="name"
@@ -187,6 +163,30 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
           />
         </Fields>
         <TextField name="phone" label="Phone Number" className="w-full" />
+      </Fields>
+      <h3 className="text-md font-bold mt-4">{purchaseHeading}</h3>
+      <SelectField
+        name="modelNumber"
+        label="Model Number"
+        className="w-full"
+        options={modelOptions}
+        onSelect={onSelectModel}
+        value={modelNumber ?? ''}
+      />
+      <TextField name="serial" label="Serial Number" className="w-full" />
+      <Fields register={register} nested grow>
+        <TextField
+          name="purchaseDate"
+          label="Date Purchased"
+          className="w-full"
+          type="date"
+        />
+        <TextField
+          name="purchasedFrom"
+          label="Where did you purchase this product?"
+          className="w-full"
+          placeholder="Vendor or store name."
+        />
       </Fields>
       <ErrorList errors={formErrors as ErrorMap} />
       <Button type="submit" className="mt-2 w-full">

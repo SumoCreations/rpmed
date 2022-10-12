@@ -28,7 +28,7 @@ export const sendResetPasswordEmail: APIGatewayProxyHandler = async event => {
       to: [`${user.firstName} ${user.lastName} <${user.email}>`],
       variables: {
         firstName: user.firstName,
-        resetLink: `${CLIENT_URL}/token/${token.partitionKey}`,
+        resetLink: `${CLIENT_URL()}/token/${token.partitionKey}`,
       },
     })
     console.log(

@@ -66,18 +66,20 @@ export interface IUserOutput {
  */
 const create = async ({ id, ...userInput }: IUserInput): Promise<IUser> => {
   const hashedPassword = await hashPassword(userInput.password)
+  const email = userInput.email.toLowerCase()
   const item: IUser = {
     ...userInput,
     partitionKey: uuid(),
     password: hashedPassword,
     sortKey: SECONDARY_KEY,
+    email,
   }
   const params = {
     TransactItems: [
       {
         Put: {
           ConditionExpression: 'attribute_not_exists(email)',
-          Item: { email: item.email, id: item.partitionKey },
+          Item: { email, id: item.partitionKey },
           TableName: process.env.DYNAMODB_USER_LOOKUP_TABLE,
         },
       },
@@ -86,7 +88,7 @@ const create = async ({ id, ...userInput }: IUserInput): Promise<IUser> => {
           ConditionExpression: 'attribute_not_exists(id)',
           Item: {
             ...item,
-            indexSortKey: [item.lastName, item.firstName, item.email].join('#'),
+            indexSortKey: [item.lastName, item.firstName, email].join('#'),
           },
           TableName: process.env.DYNAMODB_RESOURCES_TABLE,
         },
@@ -109,21 +111,21 @@ const update = async ({ id, ...userInput }: IUserInput): Promise<IUser> => {
    * Delete the previous email address associated with the user if it
    * has been changed.
    */
-  if (existingUser.email !== userInput.email) {
+  if (existingUser.email.toLowerCase() !== userInput.email.toLowerCase()) {
     transactions.push({
       Put: {
         ConditionExpression: 'attribute_not_exists(email)',
-        Item: { email: userInput.email, id },
+        Item: { email: userInput.email.toLowerCase(), id },
         TableName: process.env.DYNAMODB_USER_LOOKUP_TABLE,
       },
     })
-    const existingEmail = await findEmail(userInput.email)
+    const existingEmail = await findEmail(userInput.email.toLowerCase())
     if (existingEmail) {
       transactions.push({
         DELETE: {
           Key: {
-            email: userInput.email,
-            userId: id,
+            email: existingEmail.email,
+            userId: existingEmail.id,
           },
           TableName: process.env.DYNAMODB_USER_LOOKUP_TABLE,
         },
@@ -144,12 +146,12 @@ const update = async ({ id, ...userInput }: IUserInput): Promise<IUser> => {
         '#password': 'password',
       },
       ExpressionAttributeValues: {
-        ':email': userInput.email,
+        ':email': userInput.email.toLowerCase(),
         ':firstName': userInput.firstName,
         ':indexSortKey': [
           userInput.lastName,
           userInput.firstName,
-          userInput.email,
+          userInput.email.toLowerCase(),
         ].join('#'),
         ':lastName': userInput.lastName,
         ':password': hashedPassword,
@@ -213,7 +215,7 @@ const all = async (): Promise<IUser[]> => {
 const findEmail = async (email: string): Promise<IEmailLookup | null> => {
   const lookUpParams = {
     Key: {
-      email,
+      email: email.toLowerCase(),
     },
     TableName: process.env.DYNAMODB_USER_LOOKUP_TABLE,
   }
