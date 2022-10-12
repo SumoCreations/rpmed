@@ -32,7 +32,7 @@ custom:
   allowedOrigins:
     dev: 'localhost'
     staging: '*'
-    prod: 'admin.medled.com,service.rpmed.com'
+    prod: 'admin.medled.com,admin.rpmed.com,service.rpmed.com'
   adminEmail:
     dev: jim@sumocreations.com
     staging: jim@sumocreations.com
@@ -44,7 +44,7 @@ custom:
   clientDomain:
     dev: dev-admin.rpmed-apps.com
     staging: staging-admin.rpmed-apps.com
-    prod: admin.medled.com
+    prod: admin.rpmed.com
   apolloIntrospection:
     dev: true
     staging: false
