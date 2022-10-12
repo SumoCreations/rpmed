@@ -1,7 +1,12 @@
 import { ApolloProvider } from '@apollo/client'
 import React, { Component } from 'react'
 import { Helmet } from 'react-helmet'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from 'react-router-dom'
 import { client } from './apolloClient'
 import { ContactView } from './contact'
 import { PageView, PageNotFoundView } from './pages'
@@ -27,6 +32,12 @@ class App extends Component<{}, {}, any> {
               >
                 <Routes>
                   <Route path="/" element={<PageView />} />
+                  <Route
+                    path="/d/zimmerbiomet/juggerknot"
+                    element={
+                      <Navigate to="/zimmer-biomet/d/juggerknot" replace />
+                    }
+                  />
                   <Route path="/d/:downloadId/*" element={<DownloadView />} />
                   <Route path="/:slug" element={<PageView />} />
                   <Route
