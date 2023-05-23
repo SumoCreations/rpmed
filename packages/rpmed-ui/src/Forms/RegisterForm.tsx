@@ -173,8 +173,8 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
         onSelect={onSelectModel}
         value={modelNumber ?? ''}
       />
-      <TextField name="serial" label="Serial Number" className="w-full" />
       <Fields register={register} nested grow>
+        <TextField name="serial" label="Serial Number" className="w-full" />
         <TextField
           name="purchaseDate"
           label="Date Purchased"
