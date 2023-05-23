@@ -1,5 +1,5 @@
 import { ApolloProvider } from '@apollo/client'
-import React, { Component, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { Helmet } from 'react-helmet'
 import {
   BrowserRouter as Router,
