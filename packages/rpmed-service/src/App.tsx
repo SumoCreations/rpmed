@@ -20,7 +20,6 @@ const App: React.FC<{}> = () => {
     const currentLocation = window.location.href // get the current location
     const url = new URL(currentLocation) // parse the current location
 
-    // check if the hostname starts with 'service.www'
     if (url.hostname.startsWith('service.www')) {
       // replace 'service.www' with 'service' in the hostname
       const newHostname = url.hostname.replace('service.www', 'service')
